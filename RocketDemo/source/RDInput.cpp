@@ -126,8 +126,8 @@ void RocketInput::update(float dt) {
     int up   = false;
     int down = false;
 
-#ifndef CU_TOUCH_SCREEN
     // DESKTOP CONTROLS
+#ifndef CU_TOUCH_SCREEN
     Keyboard* keys = Input::get<Keyboard>();
 
     // Map "keyboard" events to the current frame boundary
@@ -222,6 +222,8 @@ void RocketInput::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
  */
 void RocketInput::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
     // Gesture has ended.  Give it meaning.
+	CULog("Begin Touch Position: %s", _dtouch.toString().c_str());
+	CULog("End Touch Position: %s", event.position.toString().c_str());
     Vec2 diff = event.position-_dtouch;
     bool fast = (event.timestamp.ellapsedMillis(_timestamp) < EVENT_SWIPE_TIME);
     _keyReset = fast && diff.x < -EVENT_SWIPE_LENGTH;
