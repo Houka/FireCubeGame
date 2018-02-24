@@ -32,7 +32,7 @@ using namespace cugl;
 /** How fast we must swipe left or right for a gesture */
 #define EVENT_SWIPE_TIME   1000
 /** How far we must turn the tablet for the accelerometer to register */
-#define EVENT_ACCEL_THRESH  M_PI/10.0f
+#define EVENT_ACCEL_THRESH  M_PI/9.0f
 /** The key for the event handlers */
 #define LISTENER_KEY        1
 
