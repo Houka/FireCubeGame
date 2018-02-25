@@ -162,7 +162,7 @@ void PolyInput::clear() {
 
 	_currentTouch = Vec2::ZERO;
 	_previousTouch = Vec2::ZERO;
-  _pandelta = Vec2::ZERO;
+	_pandelta = Vec2::ZERO;
 
 	_mousepan = false;
 }

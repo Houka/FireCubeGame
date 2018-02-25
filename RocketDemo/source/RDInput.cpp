@@ -35,7 +35,10 @@ using namespace cugl;
 #define EVENT_ACCEL_THRESH  M_PI/10.0f
 /** The key for the event handlers */
 #define LISTENER_KEY        1
-
+/** The number of fingers to be used for a pan gesture */
+#define NUM_PAN_FINGERS 2
+/** The modification factor for force calculation based on mouse vector */
+#define MOD_FACTOR 100.0f
 
 #pragma mark -
 #pragma mark Input Controller
@@ -55,6 +58,7 @@ _keyDown(false),
 _keyReset(false),
 _keyDebug(false),
 _keyExit(false),
+_mousepan(false),
 _horizontal(0.0f),
 _vertical(0.0f) {
 }
@@ -69,6 +73,10 @@ void RocketInput::dispose() {
     if (_active) {
 #ifndef CU_TOUCH_SCREEN
         Input::deactivate<Keyboard>();
+		Mouse* mouse = Input::get<Mouse>();
+		mouse->removePressListener(LISTENER_KEY);
+		mouse->removeReleaseListener(LISTENER_KEY);
+		mouse->removeDragListener(LISTENER_KEY);
 #else
         Input::deactivate<Accelerometer>();
         Touchscreen* touch = Input::get<Touchscreen>();
@@ -94,7 +102,21 @@ bool RocketInput::init() {
     
     // Only process keyboard on desktop
 #ifndef CU_TOUCH_SCREEN
-    success = Input::activate<Keyboard>();
+	success = Input::activate<Keyboard>();
+	success = success && Input::activate<Mouse>();
+	Mouse* mouse = Input::get<Mouse>();
+	// Set pointer awareness to always so listening for drags registers
+	// See addDragListener for an explanation
+	mouse->setPointerAwareness(cugl::Mouse::PointerAwareness::ALWAYS);
+	mouse->addPressListener(LISTENER_KEY, [=](const cugl::MouseEvent& event, Uint8 clicks, bool focus) {
+		this->mouseDownCB(event, clicks, focus);
+	});
+	mouse->addReleaseListener(LISTENER_KEY, [=](const cugl::MouseEvent& event, Uint8 clicks, bool focus) {
+		this->mouseUpCB(event, clicks, focus);
+	});
+	mouse->addMotionListener(LISTENER_KEY, [=](const cugl::MouseEvent& event, const cugl::Vec2& previous, bool focus) {
+		this->mouseMovedCB(event, previous, focus);
+	}); 
 #else
     success = Input::activate<Accelerometer>();
     Touchscreen* touch = Input::get<Touchscreen>();
@@ -155,17 +177,34 @@ void RocketInput::update(float dt) {
     _resetPressed = _keyReset;
     _debugPressed = _keyDebug;
     _exitPressed  = _keyExit;
+
+	if (_mousepan) {
+		_pandelta = _currentTouch - _previousTouch;
+		_pandelta.y *= -1.0f;
+	}
+	else {
+		_pandelta.x = 0.0f;
+		_pandelta.y = 0.0f;
+	}
+
+	CULog("Delta Mouse Move: %s", _pandelta.toString().c_str());
+	CULog("Delta Mouse X: %4.2f", _pandelta.x);
     
     // Directional controls
     _horizontal = 0.0f;
-    if (rght) {
-        _horizontal += 1.0f;
+    _vertical = 0.0f;
+
+    if (_mousepan) {
+        _horizontal += _pandelta.x/MOD_FACTOR;
+		_vertical += _pandelta.y/MOD_FACTOR;
     }
+
+	if (rght) {
+		_horizontal += 1.0f;
+	}
     if (left) {
         _horizontal -= 1.0f;
     }
-
-    _vertical = 0.0f;
     if (up) {
         _vertical += 1.0f;
     }
@@ -230,4 +269,47 @@ void RocketInput::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
     _keyExit  = fast && diff.x > EVENT_SWIPE_LENGTH;
     _keyDebug = fast && diff.y > EVENT_SWIPE_LENGTH;
     _keyUp = false;
+}
+
+
+#pragma mark -
+#pragma mark Mouse Callbacks
+
+/**
+* Called when a mouse button is initially pressed
+*
+* @param  event    The event storing the mouse state
+* @param  clicks   The number of recent clicks, including this one
+* @parm   focus	   Whether the listener currently has focus
+*/
+void RocketInput::mouseDownCB(const cugl::MouseEvent& event, Uint8 clicks, bool focus) {
+	_currentTouch = event.position;
+	_previousTouch = event.position;
+	_mousepan = true;
+}
+
+/**
+* Called when a mouse button is released
+*
+* @param  event    The event storing the mouse state
+* @param  clicks   The number of recent clicks, including this one
+* @parm   focus	   Whether the listener currently has focus
+*/
+void RocketInput::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, bool focus) {
+	_currentTouch = event.position;
+	_previousTouch = event.position;
+	_mousepan = false;
+}
+
+/**
+* Called when the mouse is moved while held down
+*
+* @param  event    The event storing the mouse state
+* @param  previous The previous position of the mouse
+* @parm   focus	   Whether the listener currently has focus
+*/
+void RocketInput::mouseMovedCB(const cugl::MouseEvent& event, const Vec2& previous, bool focus) {
+	if (_mousepan) {
+		_currentTouch = event.position;
+	}
 }
