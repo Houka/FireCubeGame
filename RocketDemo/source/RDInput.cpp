@@ -38,7 +38,7 @@ using namespace cugl;
 /** The number of fingers to be used for a pan gesture */
 #define NUM_PAN_FINGERS 2
 /** The modification factor for force calculation based on mouse vector */
-#define MOD_FACTOR 100.0f
+#define MOD_FACTOR 500.0f
 
 #pragma mark -
 #pragma mark Input Controller
@@ -179,30 +179,36 @@ void RocketInput::update(float dt) {
     _exitPressed  = _keyExit;
 
 	if (_mousepan) {
+		//CULog("in mouse pan");
 		_pandelta = _currentTouch - _previousTouch;
 		_pandelta.y *= -1.0f;
 	}
 	else {
-		_pandelta.x = 0.0f;
-		_pandelta.y = 0.0f;
+		//_pandelta.x = 0.0f;
+		//_pandelta.y = 0.0f;
 	}
 
 	CULog("Delta Mouse Move: %s", _pandelta.toString().c_str());
-	CULog("Delta Mouse X: %4.2f", _pandelta.x);
+	//CULog("Delta Mouse X: %4.2f", _pandelta.x);
+	//CULog("%ds", _mousepan);
     
     // Directional controls
     _horizontal = 0.0f;
     _vertical = 0.0f;
 
-    if (_mousepan) {
+    if (!_mousepan) {
+		CULog("in mouse pan");
         _horizontal += _pandelta.x/MOD_FACTOR;
 		_vertical += _pandelta.y/MOD_FACTOR;
+		//_mousepan = !_mousepan;
     }
 
 	if (rght) {
+		CULog("in right");
 		_horizontal += 1.0f;
 	}
     if (left) {
+		CULog("in left");
         _horizontal -= 1.0f;
     }
     if (up) {

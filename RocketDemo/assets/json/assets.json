@@ -14,7 +14,7 @@
         "crate02": {
             "file":     "textures/crate02.png"
         },
-        "rocket": {
+        "player": {
             "file":     "textures/player.png"
         },
         "flames": {

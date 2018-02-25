@@ -82,7 +82,7 @@ float GOAL_POS[] = { 6, 12};
 /** The key for the earth texture in the asset manager */
 #define EARTH_TEXTURE       "earth"
 /** The key for the rocket texture in the asset manager */
-#define ROCK_TEXTURE        "rocket"
+#define ROCK_TEXTURE        "player"
 /** The key for the win door texture in the asset manager */
 #define GOAL_TEXTURE        "goal"
 /** The key prefix for the multiple crate assets */
@@ -113,7 +113,7 @@ float GOAL_POS[] = { 6, 12};
 
 // Physics constants for initialization
 /** Density of non-crate objects */
-#define BASIC_DENSITY       0.0f
+#define BASIC_DENSITY       1.0f
 /** Density of the crate objects */
 #define CRATE_DENSITY       1.0f
 /** Friction of non-crate objects */
@@ -121,9 +121,9 @@ float GOAL_POS[] = { 6, 12};
 /** Friction of the crate objects */
 #define CRATE_FRICTION      0.2f
 /** Angular damping of the crate objects */
-#define CRATE_DAMPING       1.0f
+#define CRATE_DAMPING       0.0f
 /** Collision restitution for all objects */
-#define BASIC_RESTITUTION   0.1f
+#define BASIC_RESTITUTION   0.75f
 /** Threshold for generating sound on collision */
 #define SOUND_THRESHOLD     3
 
@@ -235,7 +235,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const Rect& re
     _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _debugnode->setPosition(Vec2::ZERO);
 
-    _winnode = Label::alloc("VICTORY!",_assets->get<Font>(PRIMARY_FONT));
+    _winnode = Label::alloc(":D",_assets->get<Font>(PRIMARY_FONT));
 	_winnode->setAnchor(Vec2::ANCHOR_CENTER);
     _winnode->setPosition(dimen/2.0f);
     _winnode->setForeground(STATIC_COLOR);
