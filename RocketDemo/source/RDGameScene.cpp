@@ -323,7 +323,7 @@ void GameScene::populate() {
     _goalDoor->setRestitution(0.0f);
     _goalDoor->setSensor(true);
     
-    addObstacle(_goalDoor,sprite,0); // Put this at the very back
+    //addObstacle(_goalDoor,sprite,0); // Put this at the very back
     
 #pragma mark : Wall polygon 1
     // Create ground pieces
