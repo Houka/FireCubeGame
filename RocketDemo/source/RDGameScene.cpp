@@ -46,7 +46,7 @@ using namespace cugl;
 /** Height of the game world in Box2d units */
 #define DEFAULT_HEIGHT  18.0f
 /** The default value of gravity (going down) */
-#define DEFAULT_GRAVITY -4.9f
+#define DEFAULT_GRAVITY 0.0f
 
 /** To automate the loading of crate files */
 #define NUM_CRATES 2
