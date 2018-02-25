@@ -307,23 +307,23 @@ void GameScene::populate() {
     std::shared_ptr<Texture> image = _assets->get<Texture>(GOAL_TEXTURE);
     
     // Create obstacle
-    //Vec2 goalPos = ((Vec2)GOAL_POS);
-    //Size goalSize = image->getSize()/_scale;
-    //std::shared_ptr<PolygonNode> sprite = PolygonNode::allocWithTexture(image);
+    Vec2 goalPos = ((Vec2)GOAL_POS);
+    Size goalSize = image->getSize()/_scale;
+    std::shared_ptr<PolygonNode> sprite = PolygonNode::allocWithTexture(image);
     
     
-    //_goalDoor = BoxObstacle::alloc(goalPos,goalSize);
-    //_goalDoor->setName("door");
-    //_goalDoor->setDebugColor(STATIC_COLOR);
+    _goalDoor = BoxObstacle::alloc(goalPos,goalSize);
+    _goalDoor->setName("door");
+    _goalDoor->setDebugColor(STATIC_COLOR);
     
     // Set the physics attributes
-    //_goalDoor->setBodyType(b2_staticBody);
-    //_goalDoor->setDensity(0.0f);
-    //_goalDoor->setFriction(0.0f);
-    //_goalDoor->setRestitution(0.0f);
-    //_goalDoor->setSensor(true);
+    _goalDoor->setBodyType(b2_staticBody);
+    _goalDoor->setDensity(0.0f);
+    _goalDoor->setFriction(0.0f);
+    _goalDoor->setRestitution(0.0f);
+    _goalDoor->setSensor(true);
     
-    //addObstacle(_goalDoor,sprite,0); // Put this at the very back
+    addObstacle(_goalDoor,sprite,0); // Put this at the very back
     
 #pragma mark : Wall polygon 1
     // Create ground pieces
