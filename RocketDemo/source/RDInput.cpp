@@ -195,13 +195,22 @@ void RocketInput::update(float dt) {
     // Directional controls
     _horizontal = 0.0f;
     _vertical = 0.0f;
+	bool apply = false;
 
     if (!_mousepan) {
 		CULog("in mouse pan");
-        _horizontal += _pandelta.x/MOD_FACTOR;
-		_vertical += _pandelta.y/MOD_FACTOR;
-		//_mousepan = !_mousepan;
-    }
+        _horizontal -= _pandelta.x/MOD_FACTOR;
+		_vertical -= _pandelta.y/MOD_FACTOR;
+		_mousepan = !_mousepan;
+		//apply = !apply;
+	}
+	else {
+		_horizontal = 0.0f;
+		_vertical = 0.0f;
+	}
+
+	if (apply) {
+	}
 
 	if (rght) {
 		CULog("in right");

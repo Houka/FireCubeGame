@@ -95,6 +95,7 @@ bool RocketModel::init(const Vec2& pos, const Size& size) {
     setFriction(DEFAULT_FRICTION);
     setRestitution(DEFAULT_RESTITUTION);
     setFixedRotation(true);
+	setLinearDamping(1.0f);
     
     return true;
 }
@@ -132,7 +133,7 @@ void RocketModel::applyForce() {
     netforce *= _affine;
     
     // Apply force to the rocket BODY, not the rocket
-    _body->ApplyForceToCenter(b2Vec2(netforce.x,netforce.y), true);
+    _body->ApplyLinearImpulseToCenter(b2Vec2(netforce.x,netforce.y), true);
 }
 
 /**
