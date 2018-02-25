@@ -86,7 +86,7 @@ float GOAL_POS[] = { 6, 12};
 /** The key for the win door texture in the asset manager */
 #define GOAL_TEXTURE        "goal"
 /** The key prefix for the multiple crate assets */
-#define CRATE_PREFIX        "crate"
+#define ENEMY_TEXTURE        "enemy"
 /** The key for the fire textures in the asset manager */
 #define MAIN_FIRE_TEXTURE   "flames"
 #define RGHT_FIRE_TEXTURE   "flames-right"
@@ -403,18 +403,15 @@ void GameScene::populate() {
     std::srand((int)std::time(0));
     for (int ii = 0; ii < 15; ii++) {
         // Pick a crate and random and generate the key
-        int indx = (std::rand() % 2 == 0 ? 2 : 1);
-        std::stringstream ss;
-        ss << CRATE_PREFIX << (indx < 10 ? "0" : "" ) << indx;
-
+        
         // Create the sprite for this crate
-        image  = _assets->get<Texture>(ss.str());
+        image  = _assets->get<Texture>(ENEMY_TEXTURE);
 
         Vec2 boxPos(BOXES[2*ii], BOXES[2*ii+1]);
-        Size boxSize(image->getSize()/_scale);
-        auto crate = BoxObstacle::alloc(boxPos,boxSize);
+        float radius = image->getSize().getIHeight()/(_scale * 1.75); //using a stupid magic number to make the wheel collider match the image
+        auto crate = WheelObstacle::alloc(boxPos,radius);
         crate->setDebugColor(DYNAMIC_COLOR);
-        crate->setName(ss.str());
+        crate->setName(ENEMY_TEXTURE);
         crate->setAngleSnap(0);             // Snap to the nearest degree
 
         // Set the physics attributes
@@ -422,10 +419,11 @@ void GameScene::populate() {
         crate->setFriction(CRATE_FRICTION);
         crate->setAngularDamping(CRATE_DAMPING);
         crate->setRestitution(BASIC_RESTITUTION);
+        crate->setLinearDamping(1);
 
         sprite = PolygonNode::allocWithTexture(image);
 		sprite->setAnchor(Vec2::ANCHOR_CENTER);
-        addObstacle(crate,sprite,1+indx);   // PUT SAME TEXTURES IN SAME LAYER!!!
+        addObstacle(crate,sprite,1+ii);   // PUT SAME TEXTURES IN SAME LAYER!!!
 
     }
 
@@ -523,11 +521,6 @@ void GameScene::update(float dt) {
     _rocket->setFX(_input.getHorizontal() * _rocket->getThrust());
     _rocket->setFY(_input.getVertical() * _rocket->getThrust());
     _rocket->applyForce();
-
-    // Animate the three burners
-    updateBurner(RocketModel::Burner::MAIN,  _rocket->getFY() >  1);
-    updateBurner(RocketModel::Burner::LEFT,  _rocket->getFX() >  1);
-    updateBurner(RocketModel::Burner::RIGHT, _rocket->getFX() <  -1);
 
     // Turn the physics engine crank.
     _world->update(dt);

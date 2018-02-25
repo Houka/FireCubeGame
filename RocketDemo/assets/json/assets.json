@@ -8,11 +8,8 @@
 		"goal": {
 			"file":     "textures/goaldoor.png"
 		},
-        "crate01": {
-            "file":     "textures/crate01.png"
-        },
-        "crate02": {
-            "file":     "textures/crate02.png"
+        "enemy": {
+            "file":     "textures/enemy.png"
         },
         "player": {
             "file":     "textures/player.png"
