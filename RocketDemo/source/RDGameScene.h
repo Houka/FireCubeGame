@@ -73,6 +73,7 @@ protected:
     /** Whether or not debug mode is active */
     bool _debug;
     
+    bool _gameOver;
     
 #pragma mark Internal Object Management
     /**
@@ -259,6 +260,8 @@ public:
      * Resets the status of the game so that we can play again.
      */
     void reset();
+    
+    void removeEnemy(EnemyModel* enemy);
     
     
 #pragma mark -

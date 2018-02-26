@@ -31,6 +31,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <set>
 
 using namespace cugl;
 
@@ -70,6 +71,8 @@ float BOXES[] = { 14.5f, 14.25f,
                   13.0f,  7.50f, 16.0f,  7.50f,
                   11.5f,  5.25f, 14.5f,  5.25f, 17.5f, 5.25f,
                   10.0f,  3.00f, 13.0f,  3.00f, 16.0f, 3.00f, 19.0f, 3.0f};
+
+std::set<SimpleObstacle*> obstaclesScheduledForRemoval;
 
 /** The initial rocket position */
 float ROCK_POS[] = {24,  4};
@@ -289,7 +292,7 @@ void GameScene::reset() {
     _world->clear();
     _worldnode->removeAllChildren();
     _debugnode->removeAllChildren();
-    
+    _gameOver = false;
     setComplete(false);
     populate();
 }
@@ -446,6 +449,7 @@ void GameScene::populate() {
 	_enemy = EnemyModel::alloc(enemyPos, enemySize);
 	_enemy->setDrawScale(_scale);
 	_enemy->setDebugColor(DYNAMIC_COLOR);
+    _enemy->setName(ENEMY_TEXTURE);
 
 	auto enemyNode = PolygonNode::allocWithTexture(image);
 	enemyNode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -511,6 +515,8 @@ void GameScene::addObstacle(const std::shared_ptr<cugl::Obstacle>& obj,
 void GameScene::update(float dt) {
     _input.update(dt);
     
+    if(_gameOver)
+        reset();
     // Process the toggled key commands
     if (_input.didDebug()) { setDebug(!isDebug()); }
     if (_input.didReset()) { reset(); }
@@ -549,6 +555,9 @@ void GameScene::update(float dt) {
         if(timeout < 0) timeout = 0.0f;
         so->setCollisionTimeout(timeout);
     }
+    
+    // Since items may be deleted, garbage collect
+    _world->garbageCollect();
 
     // Turn the physics engine crank.
     _world->update(dt);
@@ -581,6 +590,19 @@ void GameScene::updateBurner(RocketModel::Burner burner, bool on) {
     
 }
 
+void GameScene::removeEnemy(EnemyModel* enemy){
+    // do not attempt to remove a bullet that has already been removed
+    if (enemy->isRemoved()) {
+        return;
+    }
+    CULog("Ship Node %s", enemy->getName().c_str());
+    _worldnode->removeChild(enemy->getShipNode());
+//    _world->removeObstacle(enemy);
+    enemy->setDebugScene(nullptr);
+    enemy->markRemoved(true);
+    CULog("REMOVING ENEMY");
+}
+
 /**
  * Processes the start of a collision
  *
@@ -591,16 +613,28 @@ void GameScene::updateBurner(RocketModel::Burner burner, bool on) {
  * @param  contact  The two bodies that collided
  */
 void GameScene::beginContact(b2Contact* contact) {
-//    b2Body* body1 = contact->GetFixtureA()->GetBody();
-//    b2Body* body2 = contact->GetFixtureB()->GetBody();
-//    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
-//    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
-//    if(so1->getLinearVelocity().isNearZero()){
-//        so2->setShouldStop(true);
-//    }
-//    if(so2->getLinearVelocity().isNearZero()){
-//        so1->setShouldStop(true);
-//    }
+    b2Body* body1 = contact->GetFixtureA()->GetBody();
+    b2Body* body2 = contact->GetFixtureB()->GetBody();
+    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+    if(so1->getName() == BOUNDARY){
+        CULog("MARKED FOR REMOVAL");
+        if(so2->getName()==ENEMY_TEXTURE){
+            removeEnemy((EnemyModel*) so2);
+        }
+        if(so2 == _rocket.get()){
+            _gameOver = true;
+        }
+    }
+    if(so2->getName() == BOUNDARY){
+        CULog("MARKED FOR REMOVAL");
+        if(so1->getName()==ENEMY_TEXTURE){
+            removeEnemy((EnemyModel*) so1);
+        }
+        if(so1 == _rocket.get()){
+            _gameOver = true;
+        }
+    }
 }
 
 /**
