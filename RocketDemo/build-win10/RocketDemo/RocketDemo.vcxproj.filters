@@ -36,6 +36,9 @@
     <ClInclude Include="..\..\source\RDRocketModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="RDEnemyModel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\main.cpp">
@@ -54,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\RDGameScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RDEnemyModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

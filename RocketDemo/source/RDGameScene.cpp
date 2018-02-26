@@ -73,6 +73,7 @@ float BOXES[] = { 14.5f, 14.25f,
 
 /** The initial rocket position */
 float ROCK_POS[] = {24,  4};
+float ROCK_POS1[] = { 14,  10 };
 /** The goal door position */
 float GOAL_POS[] = { 6, 12};
 
@@ -381,13 +382,13 @@ void GameScene::populate() {
 #pragma mark : Crates
     std::srand((int)std::time(0));
     for (int ii = 0; ii < 15; ii++) {
-        // Pick a crate and random and generate the key
+        // Pick a crate at random and generate the key
         
         // Create the sprite for this crate
         image  = _assets->get<Texture>(ENEMY_TEXTURE);
 
         Vec2 boxPos(BOXES[2*ii], BOXES[2*ii+1]);
-        float radius = image->getSize().getIHeight()/(_scale * 1.75); //using a stupid magic number to make the wheel collider match the image
+        float radius = image->getSize().getIHeight()/(_scale * 1.85f); //using a stupid magic number to make the wheel collider match the image
         auto crate = WheelObstacle::alloc(boxPos,radius);
         crate->setDebugColor(DYNAMIC_COLOR);
         crate->setName(ENEMY_TEXTURE);
@@ -402,7 +403,7 @@ void GameScene::populate() {
 
         sprite = PolygonNode::allocWithTexture(image);
 		sprite->setAnchor(Vec2::ANCHOR_CENTER);
-        addObstacle(crate,sprite,1+ii);   // PUT SAME TEXTURES IN SAME LAYER!!!
+        //addObstacle(crate,sprite,1+ii);   // PUT SAME TEXTURES IN SAME LAYER!!!
 
     }
 
@@ -433,6 +434,25 @@ void GameScene::populate() {
     _worldnode->addChild(rocketNode,3);
     _rocket->setDebugScene(_debugnode);
     _world->addObstacle(_rocket);
+
+#pragma mark : Rocket
+	Vec2 rockPos1 = ((Vec2)ROCK_POS1);
+	image = _assets->get<Texture>(ENEMY_TEXTURE);
+	Size rockSize1(image->getSize() / _scale);
+
+	_rocket1 = EnemyModel::alloc(rockPos1, rockSize1);
+	_rocket1->setDrawScale(_scale);
+	_rocket1->setDebugColor(DYNAMIC_COLOR);
+
+	auto rocketNode1 = PolygonNode::allocWithTexture(image);
+	rocketNode1->setAnchor(Vec2::ANCHOR_CENTER);
+	_rocket1->setShipNode(rocketNode1);
+
+	// Create the polygon node (empty, as the model will initialize)
+	_worldnode->addChild(rocketNode1, 3);
+	_rocket1->setDebugScene(_debugnode);
+	_world->addObstacle(_rocket1);
+
 }
 
 /**

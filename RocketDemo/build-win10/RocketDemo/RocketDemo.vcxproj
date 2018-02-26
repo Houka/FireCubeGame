@@ -191,6 +191,7 @@
     <ClInclude Include="..\..\source\RDInput.h" />
     <ClInclude Include="..\..\source\RDLoadingScene.h" />
     <ClInclude Include="..\..\source\RDRocketModel.h" />
+    <ClInclude Include="RDEnemyModel.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +201,7 @@
     <ClCompile Include="..\..\source\RDInput.cpp" />
     <ClCompile Include="..\..\source\RDLoadingScene.cpp" />
     <ClCompile Include="..\..\source\RDRocketModel.cpp" />
+    <ClCompile Include="RDEnemyModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RocketDemo.rc" />
