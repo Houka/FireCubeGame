@@ -46,8 +46,8 @@ int main(int argc, char * argv[]) {
     RocketApp app;
     
     // Set the properties of your application
-    app.setName("Rocket Demo");
-    app.setOrganization("GDIAC");
+    app.setName("Coalide");
+    app.setOrganization("FireCube");
     app.setHighDPI(true);
 
     //app.setFullscreen(true);

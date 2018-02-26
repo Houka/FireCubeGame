@@ -63,13 +63,13 @@
                                 "pushable" : [0,100,29,171,100,200,171,171,200,100,171,29,100,0,29,29],
                                 "visible"  : false,
                                 "anchor"   : [0.5,0.5],
-                                "scale"    : 1.85
+                                "scale"    : 0.75
                             },
                             "layout" : {
                                 "x_anchor" : "center",
                                 "y_anchor" : "middle",
                                 "x_offset" :  0.035,
-                                "y_offset" : -0.175
+                                "y_offset" : -0.575
                             }
                         }
 
