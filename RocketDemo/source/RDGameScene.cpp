@@ -645,6 +645,7 @@ void GameScene::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
 
     // Use Ian Parberry's method to compute a speed threshold
     b2Body* body1 = contact->GetFixtureA()->GetBody();
+<<<<<<< HEAD
     b2Body* body2 = contact->GetFixtureB()->GetBody();
     SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
     SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
@@ -653,6 +654,16 @@ void GameScene::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
     }
     if(so2->getLinearVelocity().isNearZero() && !so1->getLinearVelocity().isNearZero() && so2->getCollisionTimeout() == 0){
         so1->setShouldStop(true);
+=======
+    b2Body* body2 = contact->GetFixtureB()->GetBody();
+    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+    if(so1->getLinearVelocity().isNearZero(1.5f) && !so2->getLinearVelocity().isNearZero(1.5f) && so1->getCollisionTimeout() == 0){
+        so2->setShouldStop(true);
+    }
+    if(so2->getLinearVelocity().isNearZero(1.5f) && !so1->getLinearVelocity().isNearZero(1.5f) && so2->getCollisionTimeout() == 0){
+        so1->setShouldStop(true);
+>>>>>>> origin/ara93-testing
     }
     b2WorldManifold worldManifold;
     contact->GetWorldManifold(&worldManifold);
