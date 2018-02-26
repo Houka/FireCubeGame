@@ -28,6 +28,7 @@
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <vector>
 #include "RDRocketModel.h"
+#include "RDEnemyModel.h"
 #include "RDInput.h"
 
 /**
@@ -64,6 +65,8 @@ protected:
     std::shared_ptr<cugl::BoxObstacle> _goalDoor;
     /** Reference to the rocket/player avatar */
     std::shared_ptr<RocketModel> _rocket;
+	/** Reference to the enemy avatar */
+	std::shared_ptr<EnemyModel> _enemy;
 
     /** Whether we have completed this "game" */
     bool _complete;

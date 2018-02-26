@@ -73,6 +73,8 @@ float BOXES[] = { 14.5f, 14.25f,
 
 /** The initial rocket position */
 float ROCK_POS[] = {24,  4};
+/** The initial enemy position */
+float ENEM_POS[] = { 14,  10 };
 /** The goal door position */
 float GOAL_POS[] = { 6, 12};
 
@@ -381,13 +383,13 @@ void GameScene::populate() {
 #pragma mark : Crates
     std::srand((int)std::time(0));
     for (int ii = 0; ii < 15; ii++) {
-        // Pick a crate and random and generate the key
+        // Pick a crate at random and generate the key
         
         // Create the sprite for this crate
         image  = _assets->get<Texture>(ENEMY_TEXTURE);
 
         Vec2 boxPos(BOXES[2*ii], BOXES[2*ii+1]);
-        float radius = image->getSize().getIHeight()/(_scale * 1.75); //using a stupid magic number to make the wheel collider match the image
+        float radius = image->getSize().getIHeight()/(_scale * 1.85f); //using a stupid magic number to make the wheel collider match the image
         auto crate = WheelObstacle::alloc(boxPos,radius);
         crate->setDebugColor(DYNAMIC_COLOR);
         crate->setName(ENEMY_TEXTURE);
@@ -404,7 +406,7 @@ void GameScene::populate() {
 
         sprite = PolygonNode::allocWithTexture(image);
 		sprite->setAnchor(Vec2::ANCHOR_CENTER);
-        addObstacle(crate,sprite,1+ii);   // PUT SAME TEXTURES IN SAME LAYER!!!
+        //addObstacle(crate,sprite,1+ii);   // PUT SAME TEXTURES IN SAME LAYER!!!
 
     }
 
@@ -435,6 +437,25 @@ void GameScene::populate() {
     _worldnode->addChild(rocketNode,3);
     _rocket->setDebugScene(_debugnode);
     _world->addObstacle(_rocket);
+
+#pragma mark : Enemy
+	Vec2 enemyPos = ((Vec2)ENEM_POS);
+	image = _assets->get<Texture>(ENEMY_TEXTURE);
+	Size enemySize(image->getSize() / _scale);
+
+	_enemy = EnemyModel::alloc(enemyPos, enemySize);
+	_enemy->setDrawScale(_scale);
+	_enemy->setDebugColor(DYNAMIC_COLOR);
+
+	auto enemyNode = PolygonNode::allocWithTexture(image);
+	enemyNode->setAnchor(Vec2::ANCHOR_CENTER);
+	_enemy->setShipNode(enemyNode);
+
+	// Create the polygon node (empty, as the model will initialize)
+	_worldnode->addChild(enemyNode, 3);
+	_enemy->setDebugScene(_debugnode);
+	_world->addObstacle(_enemy);
+
 }
 
 /**

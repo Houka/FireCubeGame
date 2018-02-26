@@ -137,7 +137,11 @@ void RocketModel::applyForce() {
 	//CULog("( %f , %f )", vel.x, vel.y);
 	//CULog("Velocity Length: %f", vel.Length());
 	if (vel.Length() < 2.5f) {
-    _body->ApplyLinearImpulseToCenter(b2Vec2(netforce.x,netforce.y), true);
+		_shipNode->setColor(Color4::WHITE);
+		_body->ApplyLinearImpulseToCenter(b2Vec2(netforce.x, netforce.y), true);
+	}
+	else {
+		_shipNode->setColor(Color4::RED);
 	}
 }
 

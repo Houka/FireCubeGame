@@ -187,6 +187,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\source\HelloApp.h" />
     <ClInclude Include="..\..\source\RDApp.h" />
+    <ClInclude Include="..\..\source\RDEnemyModel.h" />
     <ClInclude Include="..\..\source\RDGameScene.h" />
     <ClInclude Include="..\..\source\RDInput.h" />
     <ClInclude Include="..\..\source\RDLoadingScene.h" />
@@ -196,6 +197,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\RDApp.cpp" />
+    <ClCompile Include="..\..\source\RDEnemyModel.cpp" />
     <ClCompile Include="..\..\source\RDGameScene.cpp" />
     <ClCompile Include="..\..\source\RDInput.cpp" />
     <ClCompile Include="..\..\source\RDLoadingScene.cpp" />
