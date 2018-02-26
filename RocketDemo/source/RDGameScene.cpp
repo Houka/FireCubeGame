@@ -539,12 +539,13 @@ void GameScene::update(float dt) {
 	Vec2 rocket_pos = _rocket->getPosition();
 	Vec2 enemy_pos = _enemy->getPosition();
 
-	//_world.get()
+	//_world->getObstacles();
 
-	Vec2 direction = rocket_pos.subtract(enemy_pos).divide(4.0f).normalize();
+	Vec2 direction = rocket_pos.subtract(enemy_pos).normalize().scale(2.0f);
+	//direction = direction * 2.0f;
 	
-	float rand_x = (-0.75f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.75f + 0.75f)));
-	float rand_y = (-0.75f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.75f + 0.75f)));
+	float rand_x = (-0.25f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.25f + 0.25f)));
+	float rand_y = (-0.25f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.25f + 0.25f)));
 
 	direction = direction + Vec2(rand_x, rand_y);
 
@@ -568,7 +569,7 @@ void GameScene::update(float dt) {
 	if (counter < 5.0f) {
 		_enemy->getBody()->ApplyLinearImpulseToCenter(b2Vec2(direction.x, direction.y), true);
 		//_enemy->setLinearVelocity(direction / 1.5f);
-		_enemy->getBody()->SetLinearDamping(0.5f);
+		_enemy->getBody()->SetLinearDamping(0.15f);
 	}
 	//_enemy->setLinearVelocity(direction / 1.5f);
 	//_enemy->setLinearDamping(1.5f);
