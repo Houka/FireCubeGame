@@ -270,7 +270,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const Rect& re
     
     // XNA nostalgia
 	Color4f background_color = Color4f(1.0f, 0.97255f, 0.86275f, 1.0f);
-    Application::get()->setClearColor(background_color);
+	Color4f background_color1 = Color4f(0.9333333f, 0.8745f, 0.8f, 1.0f);
+    Application::get()->setClearColor(background_color1);
     return true;
 }
 
