@@ -73,6 +73,8 @@ protected:
     int _angSnap;
     /** Cache of factor to snap rotation of image to physics body */
     unsigned long _angFact;
+    /** flag that is set in begin contact and used in end contact */
+    bool _shouldStop;
 
     
 #pragma mark -
@@ -640,6 +642,10 @@ public:
             _bodyinfo.angularDamping = value;
         }
     }
+    
+    void setShouldStop(bool inc) { _shouldStop = inc; }
+    
+    bool getShouldStop() { return _shouldStop; }
     
     
 #pragma mark -

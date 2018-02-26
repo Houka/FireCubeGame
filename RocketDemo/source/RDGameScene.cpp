@@ -217,6 +217,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const Rect& re
     _world->onBeginContact = [this](b2Contact* contact) {
         beginContact(contact);
     };
+    _world->onEndContact = [this](b2Contact* contact) {
+        endContact(contact);
+    };
     _world->beforeSolve = [this](b2Contact* contact, const b2Manifold* oldManifold) {
         beforeSolve(contact,oldManifold);
     };
@@ -420,6 +423,7 @@ void GameScene::populate() {
         crate->setAngularDamping(CRATE_DAMPING);
         crate->setRestitution(BASIC_RESTITUTION);
         crate->setLinearDamping(1);
+        
 
         sprite = PolygonNode::allocWithTexture(image);
 		sprite->setAnchor(Vec2::ANCHOR_CENTER);
@@ -565,11 +569,37 @@ void GameScene::updateBurner(RocketModel::Burner burner, bool on) {
 void GameScene::beginContact(b2Contact* contact) {
     b2Body* body1 = contact->GetFixtureA()->GetBody();
     b2Body* body2 = contact->GetFixtureB()->GetBody();
-    
-    // If we hit the "win" door, we are done
-    if((body1->GetUserData() == _rocket.get() && body2->GetUserData() == _goalDoor.get()) ||
-       (body1->GetUserData() == _goalDoor.get() && body2->GetUserData() == _rocket.get())) {
-        setComplete(true);
+    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+    if(so1->getLinearVelocity().isNearZero()){
+        so2->setShouldStop(true);
+    }
+    if(so2->getLinearVelocity().isNearZero()){
+        so1->setShouldStop(true);
+    }
+}
+
+/**
+ * Processes the start of a collision
+ *
+ * This method is called when we first get a collision between two objects.  We use
+ * this method to test if it is the "right" kind of collision.  In particular, we
+ * use it to test if we make it to the win door.
+ *
+ * @param  contact  The two bodies that collided
+ */
+void GameScene::endContact(b2Contact* contact) {
+    b2Body* body1 = contact->GetFixtureA()->GetBody();
+    b2Body* body2 = contact->GetFixtureB()->GetBody();
+    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+    if(so1->getShouldStop()){
+        so1->setLinearVelocity(0,0);
+        so1->setShouldStop(false);
+    }
+    if(so2->getShouldStop()){
+        so2->setLinearVelocity(0, 0);
+        so2->setShouldStop(false);
     }
 }
 
