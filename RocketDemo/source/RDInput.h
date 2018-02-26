@@ -74,6 +74,7 @@ protected:
 	bool _mousepan;
 	/** The panning distance from the player input */
 	cugl::Vec2 _pandelta;
+	bool _touch;
     
 public:
 #pragma mark -

@@ -32,7 +32,7 @@ using namespace cugl;
 /** How fast we must swipe left or right for a gesture */
 #define EVENT_SWIPE_TIME   1000
 /** How far we must turn the tablet for the accelerometer to register */
-#define EVENT_ACCEL_THRESH  M_PI/10.0f
+#define EVENT_ACCEL_THRESH  M_PI/0.001f
 /** The key for the event handlers */
 #define LISTENER_KEY        1
 /** The number of fingers to be used for a pan gesture */
@@ -54,6 +54,7 @@ _resetPressed(false),
 _debugPressed(false),
 _exitPressed(false),
 _keyUp(false),
+_touch(true),
 _keyDown(false),
 _keyReset(false),
 _keyDebug(false),
@@ -193,23 +194,30 @@ void RocketInput::update(float dt) {
 	//CULog("%ds", _mousepan);
     
     // Directional controls
-    _horizontal = 0.0f;
-    _vertical = 0.0f;
+    //_horizontal = 0.0f;
+    //_vertical = 0.0f;
 	bool apply = false;
 
-    if (!_mousepan) {
-		//CULog("in mouse pan");
-        _horizontal -= _pandelta.x/MOD_FACTOR;
-		_vertical -= _pandelta.y/MOD_FACTOR;
-		_mousepan = !_mousepan;
+	//CULog("%d", _keyUp);
+
+    if (!_mousepan || _touch) {
+		if (_touch) {
+			Vec2 diff = _previousTouch - _currentTouch;
+			_horizontal += diff.x/MOD_FACTOR;
+			_vertical -= diff.y/MOD_FACTOR;
+			_touch = false;
+		}
+		else {
+			_horizontal -= _pandelta.x/MOD_FACTOR;
+			_vertical -= _pandelta.y/MOD_FACTOR;
+			_mousepan = !_mousepan;
+		}
+		CULog("in mouse pan");
 		//apply = !apply;
 	}
 	else {
 		_horizontal = 0.0f;
 		_vertical = 0.0f;
-	}
-
-	if (apply) {
 	}
 
 	if (rght) {
@@ -261,11 +269,12 @@ void RocketInput::clear() {
  */
 void RocketInput::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
     // All touches correspond to key up
-    _keyUp = true;
+    //_keyUp = true;
      
     // Update the touch location for later gestures
     _timestamp = event.timestamp;
     _dtouch = event.position;
+	_previousTouch = event.position;
 }
  
 /**
@@ -278,12 +287,18 @@ void RocketInput::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
     // Gesture has ended.  Give it meaning.
 	CULog("Begin Touch Position: %s", _dtouch.toString().c_str());
 	CULog("End Touch Position: %s", event.position.toString().c_str());
+	_currentTouch = event.position;
     Vec2 diff = event.position-_dtouch;
-    bool fast = (event.timestamp.ellapsedMillis(_timestamp) < EVENT_SWIPE_TIME);
-    _keyReset = fast && diff.x < -EVENT_SWIPE_LENGTH;
-    _keyExit  = fast && diff.x > EVENT_SWIPE_LENGTH;
-    _keyDebug = fast && diff.y > EVENT_SWIPE_LENGTH;
-    _keyUp = false;
+	Vec2 start = _dtouch;
+	Vec2 end = event.position;
+	//_horizontal -= diff.x/MOD_FACTOR;
+	//_vertical -= diff.y/MOD_FACTOR;
+	_touch = true;
+    //bool fast = (event.timestamp.ellapsedMillis(_timestamp) < EVENT_SWIPE_TIME);
+    //_keyReset = fast && diff.x < -EVENT_SWIPE_LENGTH;
+    //_keyExit  = fast && diff.x > EVENT_SWIPE_LENGTH;
+    //_keyDebug = fast && diff.y > EVENT_SWIPE_LENGTH;
+    //_keyUp = false;
 }
 
 
