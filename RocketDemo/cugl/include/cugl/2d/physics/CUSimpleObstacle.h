@@ -75,6 +75,8 @@ protected:
     unsigned long _angFact;
     /** flag that is set in begin contact and used in end contact */
     bool _shouldStop;
+    /** timeout to ignore collisions */
+    float _collisionTimeout;
 
     
 #pragma mark -
@@ -646,6 +648,10 @@ public:
     void setShouldStop(bool inc) { _shouldStop = inc; }
     
     bool getShouldStop() { return _shouldStop; }
+    
+    float getCollisionTimeout() { return _collisionTimeout;}
+    
+    void setCollisionTimeout(float inc) { _collisionTimeout = inc;}
     
     
 #pragma mark -

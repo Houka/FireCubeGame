@@ -73,7 +73,7 @@ using namespace cugl;
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
 bool RocketModel::init(const Vec2& pos, const Size& size) {
-    BoxObstacle::init(pos,size);
+    CapsuleObstacle::init(pos,size);
     std::string name("rocket");
     setName(name);
     

@@ -48,7 +48,7 @@
  * The other way is to create a subclass of a physics object and have it track
  * its own scene graph node.  This class is an example of the latter.
  */
-class RocketModel : public cugl::BoxObstacle {
+class RocketModel : public cugl::CapsuleObstacle {
 private:
     /** This macro disables the copy constructor (not allowed on scene graphs) */
     CU_DISALLOW_COPY_AND_ASSIGN(RocketModel);
@@ -106,7 +106,7 @@ public:
      * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate a model on
      * the heap, use one of the static constructors instead.
      */
-    RocketModel(void) : BoxObstacle(), _drawscale(1.0f), _mainCycle(false), _leftCycle(false), _rghtCycle(false) { }
+    RocketModel(void) : CapsuleObstacle(), _drawscale(1.0f), _mainCycle(false), _leftCycle(false), _rghtCycle(false) { }
     
     /**
      * Destroys this rocket, releasing all resources.

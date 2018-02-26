@@ -399,6 +399,8 @@ void GameScene::populate() {
         crate->setAngularDamping(CRATE_DAMPING);
         crate->setRestitution(BASIC_RESTITUTION);
         crate->setLinearDamping(1);
+        crate->setFixedRotation(true);
+
 
         sprite = PolygonNode::allocWithTexture(image);
 		sprite->setAnchor(Vec2::ANCHOR_CENTER);
@@ -500,6 +502,21 @@ void GameScene::update(float dt) {
     _rocket->setFX(_input.getHorizontal() * _rocket->getThrust());
     _rocket->setFY(_input.getVertical() * _rocket->getThrust());
     _rocket->applyForce();
+    
+    std::vector<std::shared_ptr<Obstacle> > obstacles = _world->getObstacles();
+    for(std::shared_ptr<cugl::Obstacle> o : obstacles){
+        SimpleObstacle* so = (SimpleObstacle*)o->getBody()->GetUserData();
+        if(so->getShouldStop()){
+            CULog("STOPPING OBJECT - %s", so->getName().c_str());
+            so->setShouldStop(false);
+            so->setLinearVelocity(0,0);
+            so->setCollisionTimeout(.25f);
+        }
+        float timeout = so->getCollisionTimeout();
+        timeout -= dt;
+        if(timeout < 0) timeout = 0.0f;
+        so->setCollisionTimeout(timeout);
+    }
 
     // Turn the physics engine crank.
     _world->update(dt);
@@ -542,16 +559,16 @@ void GameScene::updateBurner(RocketModel::Burner burner, bool on) {
  * @param  contact  The two bodies that collided
  */
 void GameScene::beginContact(b2Contact* contact) {
-    b2Body* body1 = contact->GetFixtureA()->GetBody();
-    b2Body* body2 = contact->GetFixtureB()->GetBody();
-    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
-    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
-    if(so1->getLinearVelocity().isNearZero()){
-        so2->setShouldStop(true);
-    }
-    if(so2->getLinearVelocity().isNearZero()){
-        so1->setShouldStop(true);
-    }
+//    b2Body* body1 = contact->GetFixtureA()->GetBody();
+//    b2Body* body2 = contact->GetFixtureB()->GetBody();
+//    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+//    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+//    if(so1->getLinearVelocity().isNearZero()){
+//        so2->setShouldStop(true);
+//    }
+//    if(so2->getLinearVelocity().isNearZero()){
+//        so1->setShouldStop(true);
+//    }
 }
 
 /**
@@ -564,18 +581,20 @@ void GameScene::beginContact(b2Contact* contact) {
  * @param  contact  The two bodies that collided
  */
 void GameScene::endContact(b2Contact* contact) {
-    b2Body* body1 = contact->GetFixtureA()->GetBody();
-    b2Body* body2 = contact->GetFixtureB()->GetBody();
-    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
-    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
-    if(so1->getShouldStop()){
-        so1->setLinearVelocity(0,0);
-        so1->setShouldStop(false);
-    }
-    if(so2->getShouldStop()){
-        so2->setLinearVelocity(0, 0);
-        so2->setShouldStop(false);
-    }
+//    b2Body* body1 = contact->GetFixtureA()->GetBody();
+//    b2Body* body2 = contact->GetFixtureB()->GetBody();
+//    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+//    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+//    if(so1->getShouldStop()){
+//        so1->setLinearVelocity(0,0);
+//        so1->setShouldStop(false);
+//        CULog("\n\n\nSTOPPING - %s\n", so1->getName().c_str());
+//    }
+//    if(so2->getShouldStop()){
+//        so2->setLinearVelocity(0, 0);
+//        so2->setShouldStop(false);
+//        CULog("\n\n\nSTOPPING - %s\n", so2->getName().c_str());
+//    }
 }
 
 /**
@@ -589,11 +608,20 @@ void GameScene::endContact(b2Contact* contact) {
  * @param  oldManfold  	The collision manifold before contact
  */
 void GameScene::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
+    CULog("CONTACT......");
     float speed = 0;
 
     // Use Ian Parberry's method to compute a speed threshold
     b2Body* body1 = contact->GetFixtureA()->GetBody();
     b2Body* body2 = contact->GetFixtureB()->GetBody();
+    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+    if(so1->getLinearVelocity().isNearZero() && !so2->getLinearVelocity().isNearZero() && so1->getCollisionTimeout() == 0){
+        so2->setShouldStop(true);
+    }
+    if(so2->getLinearVelocity().isNearZero() && !so1->getLinearVelocity().isNearZero() && so2->getCollisionTimeout() == 0){
+        so1->setShouldStop(true);
+    }
     b2WorldManifold worldManifold;
     contact->GetWorldManifold(&worldManifold);
     b2PointState state1[2], state2[2];
