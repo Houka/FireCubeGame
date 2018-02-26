@@ -534,6 +534,8 @@ void GameScene::update(float dt) {
             so->setCollisionTimeout(.25f);
         }
         float timeout = so->getCollisionTimeout();
+        if(timeout!= 0)
+            CULog("OBJECT - %s - timeout - %f", so->getName().c_str(), timeout);
         timeout -= dt;
         if(timeout < 0) timeout = 0.0f;
         so->setCollisionTimeout(timeout);
@@ -637,10 +639,10 @@ void GameScene::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
     b2Body* body2 = contact->GetFixtureB()->GetBody();
     SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
     SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
-    if(so1->getLinearVelocity().isNearZero() && !so2->getLinearVelocity().isNearZero() && so1->getCollisionTimeout() == 0){
+    if(so1->getLinearVelocity().isNearZero(1.5f) && !so2->getLinearVelocity().isNearZero(1.5f) && so1->getCollisionTimeout() == 0){
         so2->setShouldStop(true);
     }
-    if(so2->getLinearVelocity().isNearZero() && !so1->getLinearVelocity().isNearZero() && so2->getCollisionTimeout() == 0){
+    if(so2->getLinearVelocity().isNearZero(1.5f) && !so1->getLinearVelocity().isNearZero(1.5f) && so2->getCollisionTimeout() == 0){
         so1->setShouldStop(true);
     }
     b2WorldManifold worldManifold;
