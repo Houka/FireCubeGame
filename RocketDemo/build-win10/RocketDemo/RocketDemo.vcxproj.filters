@@ -36,7 +36,7 @@
     <ClInclude Include="..\..\source\RDRocketModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="RDEnemyModel.h">
+    <ClInclude Include="..\..\source\RDEnemyModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,7 +59,7 @@
     <ClCompile Include="..\..\source\RDGameScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RDEnemyModel.cpp">
+    <ClCompile Include="..\..\source\RDEnemyModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -33,8 +33,8 @@
 //  Author: Walker White
 //  Version: 1/10/17
 //
-#ifndef __RD_ROCKET_MODEL_H__
-#define __RD_ROCKET_MODEL_H__
+#ifndef __RD_ENEMY_MODEL_H__
+#define __RD_ENEMY_MODEL_H__
 #include <cugl/cugl.h>
 
 /** The thrust factor to convert player input into thrust */

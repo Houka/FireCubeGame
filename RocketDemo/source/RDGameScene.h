@@ -65,7 +65,8 @@ protected:
     std::shared_ptr<cugl::BoxObstacle> _goalDoor;
     /** Reference to the rocket/player avatar */
     std::shared_ptr<RocketModel> _rocket;
-	std::shared_ptr<EnemyModel> _rocket1;
+	/** Reference to the enemy avatar */
+	std::shared_ptr<EnemyModel> _enemy;
 
     /** Whether we have completed this "game" */
     bool _complete;

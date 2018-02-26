@@ -187,21 +187,21 @@
   <ItemGroup>
     <ClInclude Include="..\..\source\HelloApp.h" />
     <ClInclude Include="..\..\source\RDApp.h" />
+    <ClInclude Include="..\..\source\RDEnemyModel.h" />
     <ClInclude Include="..\..\source\RDGameScene.h" />
     <ClInclude Include="..\..\source\RDInput.h" />
     <ClInclude Include="..\..\source\RDLoadingScene.h" />
     <ClInclude Include="..\..\source\RDRocketModel.h" />
-    <ClInclude Include="RDEnemyModel.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\RDApp.cpp" />
+    <ClCompile Include="..\..\source\RDEnemyModel.cpp" />
     <ClCompile Include="..\..\source\RDGameScene.cpp" />
     <ClCompile Include="..\..\source\RDInput.cpp" />
     <ClCompile Include="..\..\source\RDLoadingScene.cpp" />
     <ClCompile Include="..\..\source\RDRocketModel.cpp" />
-    <ClCompile Include="RDEnemyModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RocketDemo.rc" />

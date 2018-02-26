@@ -73,7 +73,8 @@ float BOXES[] = { 14.5f, 14.25f,
 
 /** The initial rocket position */
 float ROCK_POS[] = {24,  4};
-float ROCK_POS1[] = { 14,  10 };
+/** The initial enemy position */
+float ENEM_POS[] = { 14,  10 };
 /** The goal door position */
 float GOAL_POS[] = { 6, 12};
 
@@ -435,23 +436,23 @@ void GameScene::populate() {
     _rocket->setDebugScene(_debugnode);
     _world->addObstacle(_rocket);
 
-#pragma mark : Rocket
-	Vec2 rockPos1 = ((Vec2)ROCK_POS1);
+#pragma mark : Enemy
+	Vec2 enemyPos = ((Vec2)ENEM_POS);
 	image = _assets->get<Texture>(ENEMY_TEXTURE);
-	Size rockSize1(image->getSize() / _scale);
+	Size enemySize(image->getSize() / _scale);
 
-	_rocket1 = EnemyModel::alloc(rockPos1, rockSize1);
-	_rocket1->setDrawScale(_scale);
-	_rocket1->setDebugColor(DYNAMIC_COLOR);
+	_enemy = EnemyModel::alloc(enemyPos, enemySize);
+	_enemy->setDrawScale(_scale);
+	_enemy->setDebugColor(DYNAMIC_COLOR);
 
-	auto rocketNode1 = PolygonNode::allocWithTexture(image);
-	rocketNode1->setAnchor(Vec2::ANCHOR_CENTER);
-	_rocket1->setShipNode(rocketNode1);
+	auto enemyNode = PolygonNode::allocWithTexture(image);
+	enemyNode->setAnchor(Vec2::ANCHOR_CENTER);
+	_enemy->setShipNode(enemyNode);
 
 	// Create the polygon node (empty, as the model will initialize)
-	_worldnode->addChild(rocketNode1, 3);
-	_rocket1->setDebugScene(_debugnode);
-	_world->addObstacle(_rocket1);
+	_worldnode->addChild(enemyNode, 3);
+	_enemy->setDebugScene(_debugnode);
+	_world->addObstacle(_enemy);
 
 }
 
