@@ -95,7 +95,7 @@ bool RocketModel::init(const Vec2& pos, const Size& size) {
     setFriction(DEFAULT_FRICTION);
     setRestitution(DEFAULT_RESTITUTION);
     setFixedRotation(true);
-	setLinearDamping(1.0f);
+	setLinearDamping(0.55f);
     
     return true;
 }

@@ -73,10 +73,19 @@ float BOXES[] = { 4.5f, 4.25f,
                   17.5f,  5.25f, 14.5f,  17.25f, 1.5f, 5.25f,
                   17.0f,  3.00f, 9.0f,  3.00f, 16.0f, 3.00f, 8.0f, 3.0f};
 
+float BOXES1[] = {	3.0f, 2.5f,
+					3.0f, 15.5f, 
+					29.0f, 2.5f,
+					29.0f,  15.5f, 
+					16.0f,  4.75f, 
+					16.0f, 13.25f,
+					8.0f, 9.0f
+};
+
 /** The initial rocket position */
-float ROCK_POS[] = {24,  4};
+float ROCK_POS[] = {24,  9};
 /** The initial enemy position */
-float ENEM_POS[] = { 5,  5 };
+float ENEM_POS[] = { 16,  9 };
 /** The goal door position */
 float GOAL_POS[] = { 6, 12};
 
@@ -260,7 +269,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, const Rect& re
     setDebug(false);
     
     // XNA nostalgia
-    Application::get()->setClearColor(Color4f::CORNFLOWER);
+	Color4f background_color = Color4f(1.0f, 0.97255f, 0.86275f, 1.0f);
+    Application::get()->setClearColor(background_color);
     return true;
 }
 
@@ -445,12 +455,13 @@ void GameScene::populate() {
 
 #pragma mark : Enemy
 	//std::srand((int)std::time(0));
-	for (int ii = 0; ii < 5; ii++) {
+	for (int ii = 0; ii < 7; ii++) {
 
+		Vec2 enemyPos(BOXES1[2 * ii], BOXES1[2 * ii + 1]);
 		//Vec2 enemyPos = ((Vec2)ENEM_POS);
-		float x = ENEM_POS[0];
-		float y = ENEM_POS[1];
-		Vec2 enemyPos = (Vec2(x + ii * 2, y + ii * 2));
+		//float x = ENEM_POS[0];
+		//float y = ENEM_POS[1];
+		//Vec2 enemyPos = (Vec2(x + ii * 2, y + ii * 2));
 		//Vec2 enemyPos = (ENEM_POS[2 * ii], ENEM_POS[2 * ii + 1]);
 		image = _assets->get<Texture>(ENEMY_TEXTURE);
 		Size enemySize(image->getSize() / _scale);
@@ -546,7 +557,7 @@ void GameScene::update(float dt) {
 
 	//_world->getObstacles();
 
-	Vec2 direction = rocket_pos.subtract(enemy_pos).normalize().scale(2.0f);
+	Vec2 direction = rocket_pos.subtract(enemy_pos).normalize().scale(15.0f);
 	//direction = direction * 2.0f;
 	
 	float rand_x = (-0.25f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.25f + 0.25f)));
@@ -571,14 +582,23 @@ void GameScene::update(float dt) {
 		counter = 0.0f;
 	}
 
-	if (_enemy->getBody() && counter < 5.0f) {
-		_enemy->getBody()->ApplyLinearImpulseToCenter(b2Vec2(direction.x, direction.y), true);
+	if (_enemy->getBody() && counter < 1.0f) {
+		_enemy->setFX(direction.x);
+		_enemy->setFY(direction.y);
+		//_enemy->getBody()->ApplyLinearImpulseToCenter(b2Vec2(direction.x, direction.y), true);
+		_enemy->applyForce();
 		//_enemy->setLinearVelocity(direction / 1.5f);
-		_enemy->getBody()->SetLinearDamping(0.15f);
+		//_enemy->getBody()->SetLinearDamping(0.55f);
 	}
 	//_enemy->setLinearVelocity(direction / 1.5f);
 	//_enemy->setLinearDamping(1.5f);
-	//_enemy->applyForce();
+
+	if (_enemy->getBody() && _enemy->getBody()->GetLinearVelocity().Length() < 2.5f) {
+		_enemy->getShipNode()->setColor(Color4::WHITE);
+	}
+	else {
+		_enemy->getShipNode()->setColor(Color4::RED);
+	}
 
     std::vector<std::shared_ptr<Obstacle> > obstacles = _world->getObstacles();
     for(std::shared_ptr<cugl::Obstacle> o : obstacles){
