@@ -326,7 +326,7 @@ void GameScene::populate() {
     _goalDoor->setRestitution(0.0f);
     _goalDoor->setSensor(true);
     
-    addObstacle(_goalDoor,sprite,0); // Put this at the very back
+    //addObstacle(_goalDoor,sprite,0); // Put this at the very back
     
 #pragma mark : Wall polygon 1
     // Create ground pieces
@@ -423,7 +423,6 @@ void GameScene::populate() {
         crate->setAngularDamping(CRATE_DAMPING);
         crate->setRestitution(BASIC_RESTITUTION);
         crate->setLinearDamping(1);
-        
 
         sprite = PolygonNode::allocWithTexture(image);
 		sprite->setAnchor(Vec2::ANCHOR_CENTER);
