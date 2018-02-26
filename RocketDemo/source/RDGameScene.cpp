@@ -64,17 +64,17 @@ float WALL2[] = {32.0f, 18.0f, 32.0f,  0.0f, 16.0f,  0.0f,
                  31.0f, 17.0f, 16.0f, 17.0f, 16.0f, 18.0f};
 
 /** The positions of the crate pyramid */
-float BOXES[] = { 14.5f, 14.25f,
-                  13.0f, 12.00f, 16.0f, 12.00f,
-                  11.5f,  9.75f, 14.5f,  9.75f, 17.5f, 9.75f,
-                  13.0f,  7.50f, 16.0f,  7.50f,
-                  11.5f,  5.25f, 14.5f,  5.25f, 17.5f, 5.25f,
-                  10.0f,  3.00f, 13.0f,  3.00f, 16.0f, 3.00f, 19.0f, 3.0f};
+float BOXES[] = { 4.5f, 4.25f,
+                  9.0f, 12.00f, 10.0f, 12.00f,
+                  11.5f,  9.75f, 17.5f,  1.75f, 7.5f, 9.75f,
+                  11.0f,  7.50f, 16.0f,  7.50f,
+                  17.5f,  5.25f, 14.5f,  17.25f, 1.5f, 5.25f,
+                  17.0f,  3.00f, 9.0f,  3.00f, 16.0f, 3.00f, 8.0f, 3.0f};
 
 /** The initial rocket position */
 float ROCK_POS[] = {24,  4};
 /** The initial enemy position */
-float ENEM_POS[] = { 14,  10 };
+float ENEM_POS[] = { 5,  5 };
 /** The goal door position */
 float GOAL_POS[] = { 6, 12};
 
@@ -385,7 +385,7 @@ void GameScene::populate() {
     
 #pragma mark : Crates
     std::srand((int)std::time(0));
-    for (int ii = 0; ii < 15; ii++) {
+    for (int ii = 0; ii < 5; ii++) {
         // Pick a crate at random and generate the key
         
         // Create the sprite for this crate
@@ -442,22 +442,31 @@ void GameScene::populate() {
     _world->addObstacle(_rocket);
 
 #pragma mark : Enemy
-	Vec2 enemyPos = ((Vec2)ENEM_POS);
-	image = _assets->get<Texture>(ENEMY_TEXTURE);
-	Size enemySize(image->getSize() / _scale);
+	//std::srand((int)std::time(0));
+	for (int ii = 0; ii < 5; ii++) {
 
-	_enemy = EnemyModel::alloc(enemyPos, enemySize);
-	_enemy->setDrawScale(_scale);
-	_enemy->setDebugColor(DYNAMIC_COLOR);
+		//Vec2 enemyPos = ((Vec2)ENEM_POS);
+		float x = ENEM_POS[0];
+		float y = ENEM_POS[1];
+		Vec2 enemyPos = (Vec2(x + ii * 2, y + ii * 2));
+		//Vec2 enemyPos = (ENEM_POS[2 * ii], ENEM_POS[2 * ii + 1]);
+		image = _assets->get<Texture>(ENEMY_TEXTURE);
+		Size enemySize(image->getSize() / _scale);
 
-	auto enemyNode = PolygonNode::allocWithTexture(image);
-	enemyNode->setAnchor(Vec2::ANCHOR_CENTER);
-	_enemy->setShipNode(enemyNode);
+		_enemy = EnemyModel::alloc(enemyPos, enemySize);
+		_enemy->setDrawScale(_scale);
+		_enemy->setDebugColor(DYNAMIC_COLOR);
 
-	// Create the polygon node (empty, as the model will initialize)
-	_worldnode->addChild(enemyNode, 3);
-	_enemy->setDebugScene(_debugnode);
-	_world->addObstacle(_enemy);
+		auto enemyNode = PolygonNode::allocWithTexture(image);
+		enemyNode->setAnchor(Vec2::ANCHOR_CENTER);
+		_enemy->setShipNode(enemyNode);
+
+		// Create the polygon node (empty, as the model will initialize)
+		_worldnode->addChild(enemyNode, 3);
+		_enemy->setDebugScene(_debugnode);
+		_world->addObstacle(_enemy);
+
+	}
 
 }
 
@@ -530,6 +539,8 @@ void GameScene::update(float dt) {
 	Vec2 rocket_pos = _rocket->getPosition();
 	Vec2 enemy_pos = _enemy->getPosition();
 
+	//_world.get()
+
 	Vec2 direction = rocket_pos.subtract(enemy_pos).divide(4.0f).normalize();
 	
 	float rand_x = (-0.75f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.75f + 0.75f)));
@@ -556,6 +567,7 @@ void GameScene::update(float dt) {
 
 	if (counter < 5.0f) {
 		_enemy->getBody()->ApplyLinearImpulseToCenter(b2Vec2(direction.x, direction.y), true);
+		//_enemy->setLinearVelocity(direction / 1.5f);
 		_enemy->getBody()->SetLinearDamping(0.5f);
 	}
 	//_enemy->setLinearVelocity(direction / 1.5f);
