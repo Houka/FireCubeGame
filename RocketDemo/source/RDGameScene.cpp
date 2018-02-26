@@ -389,6 +389,7 @@ void GameScene::update(float dt) {
 	// Since items may be deleted, garbage collect
 	_gamestate->getPhysicsWorld()->garbageCollect();
 
+	//CULog(_gamestate->getPhysicsWorld()->getGravity().toString().c_str());
 	// Turn the physics engine crank.
 	_gamestate->getPhysicsWorld()->update(dt);
 }

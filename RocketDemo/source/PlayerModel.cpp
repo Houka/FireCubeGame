@@ -46,6 +46,16 @@ using namespace cugl;
 /** The number of frames for the afterburner */
 #define FIRE_FRAMES     4
 
+// Default physics values
+/** The density of this rocket */
+#define DEFAULT_DENSITY 1.0f
+/** The friction of this rocket */
+#define DEFAULT_FRICTION 0.1f
+/** The restitution of this rocket */
+#define DEFAULT_RESTITUTION 0.4f
+
+#define DEFAULT_THRUST 300000.0f
+
 #pragma mark -
 #pragma mark Constructors
 
@@ -70,6 +80,14 @@ bool PlayerModel::init(const Vec2& pos, const Size& size) {
 	setName(name);
 
 	_shipNode = nullptr;
+
+	setDensity(DEFAULT_DENSITY);
+	setFriction(DEFAULT_FRICTION);
+	setRestitution(DEFAULT_RESTITUTION);
+	setThrust(DEFAULT_THRUST);
+	setFixedRotation(true);
+	setLinearDamping(0.55f);
+	setForce(cugl::Vec2(0, 0));
 
 	return true;
 }
@@ -99,10 +117,11 @@ void PlayerModel::applyForce() {
 		return;
 	}
 	// Orient the force with rotation.
+	/*CULog(to_string(_force.y).c_str());*/
 	Vec4 netforce(_force.x, _force.y, 0.0f, 1.0f);
 	Mat4::createRotationZ(getAngle(), &_affine);
 	netforce *= _affine;
-
+	//CULog(to_string(netforce.y).c_str());
 	// Apply force to the rocket BODY, not the rocket
 	_body->ApplyForceToCenter(b2Vec2(netforce.x, netforce.y), true);
 }
@@ -124,12 +143,12 @@ void PlayerModel::update(float delta) {
 	//CULog("Updating.");
 	Obstacle::update(delta);
 	if (_shipNode != nullptr) {
-		CULog(getPosition().toString().c_str());
-		_shipNode->setPosition(getPosition());
+		//CULog(getPosition().toString().c_str());
+		//CULog(to_string(_drawscale).c_str();
+		_shipNode->setPosition(getPosition()*_drawscale);
 		_shipNode->setAngle(getAngle());
 	}
 }
-
 
 
 /**

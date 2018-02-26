@@ -58,6 +58,7 @@ using namespace cugl;
 #define DEFAULT_FRICTION 0.1f
 /** The restitution of this rocket */
 #define DEFAULT_RESTITUTION 0.4f
+#define DEFAULT_GRAVITY 0.0f
 
 #pragma mark -
 #pragma mark Constructors
@@ -141,8 +142,9 @@ bool GameState::preload(const std::shared_ptr<cugl::JsonValue>& json) {
 	int worldH = canvasH / tileH;
 	_worldDim.size.set(worldW, worldH);
 
-	_physicsWorld = cugl::ObstacleWorld::alloc(_worldDim);
-
+	_physicsWorld = cugl::ObstacleWorld::alloc(_worldDim, cugl::Vec2(0,DEFAULT_GRAVITY));
+	_physicsWorld->setGravity(cugl::Vec2(0, 0));
+	//CULog(_physicsWorld->getGravity().toString().c_str());
 	// Create the arena
 	if (!loadWorld(json, worldW, worldH)) {
 		CUAssertLog(false, "Failed to load world");
@@ -366,8 +368,8 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	}
 
 	_root = node;
-	_scale.set(_root->getContentSize().width / _worldDim.size.width,
-		_root->getContentSize().height / _worldDim.size.height);
+	_scale.set(_canvasDim.getIWidth() / _worldDim.size.width,
+		_canvasDim.getIHeight() / _worldDim.size.height);
 
 	// Create, but transfer ownership to root
 	_worldnode = Node::alloc();
@@ -437,7 +439,7 @@ void GameState::addObstacle(const std::shared_ptr<cugl::Obstacle>& obj,
 	//CULog(pos.toString().c_str());
 	cugl::Size x = _physicsWorld->getBounds().size;
 	//CULog(x.toString().c_str());
-	_physicsWorld->addObstacle(obj);
+	//_physicsWorld->addObstacle(obj);
 	obj->setDebugScene(_debugnode);
 	obj->setActive(false);
 	// Position the scene graph node (enough for static objects)
