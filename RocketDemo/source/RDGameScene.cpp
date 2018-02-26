@@ -524,11 +524,22 @@ void GameScene::update(float dt) {
     _rocket->setFY(_input.getVertical() * _rocket->getThrust());
     _rocket->applyForce();
     
+	Vec2 rocket_pos = _rocket->getPosition();
+	Vec2 enemy_pos = _enemy->getPosition();
+
+	Vec2 direction = rocket_pos.subtract(enemy_pos);
+
+	//CULog("%s", direction.length.toString());
+
+	_enemy->setFX(direction.x * _enemy->getThrust());
+	_enemy->setFY(direction.y * _enemy->getThrust());
+	_enemy->applyForce();
+
     std::vector<std::shared_ptr<Obstacle> > obstacles = _world->getObstacles();
     for(std::shared_ptr<cugl::Obstacle> o : obstacles){
         SimpleObstacle* so = (SimpleObstacle*)o->getBody()->GetUserData();
         if(so->getShouldStop()){
-            CULog("STOPPING OBJECT - %s", so->getName().c_str());
+            //CULog("STOPPING OBJECT - %s", so->getName().c_str());
             so->setShouldStop(false);
             so->setLinearVelocity(0,0);
             so->setCollisionTimeout(.25f);
@@ -629,7 +640,7 @@ void GameScene::endContact(b2Contact* contact) {
  * @param  oldManfold  	The collision manifold before contact
  */
 void GameScene::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
-    CULog("CONTACT......");
+    //CULog("CONTACT......");
     float speed = 0;
 
     // Use Ian Parberry's method to compute a speed threshold
