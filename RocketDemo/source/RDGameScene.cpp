@@ -78,6 +78,8 @@ float ENEM_POS[] = { 14,  10 };
 /** The goal door position */
 float GOAL_POS[] = { 6, 12};
 
+float counter = 0.0f;
+
 #pragma mark Assset Constants
 /** The key for the water texture in the asset manager */
 #define WATER_TEXTURE       "water"
@@ -127,6 +129,7 @@ float GOAL_POS[] = { 6, 12};
 #define BASIC_RESTITUTION   0.75f
 /** Threshold for generating sound on collision */
 #define SOUND_THRESHOLD     3
+
 
 
 #pragma mark -
@@ -527,12 +530,27 @@ void GameScene::update(float dt) {
 	Vec2 rocket_pos = _rocket->getPosition();
 	Vec2 enemy_pos = _enemy->getPosition();
 
-	Vec2 direction = rocket_pos.subtract(enemy_pos);
+	Vec2 direction = rocket_pos.subtract(enemy_pos).divide(4.0f).normalize();
 
-	//CULog("%s", direction.length.toString());
+	//CULog("%f", direction.length());
 
 	//_enemy->setFX(direction.x * _enemy->getThrust());
 	//_enemy->setFY(direction.y * _enemy->getThrust());
+
+	counter++;
+
+	//CULog("%f", counter);
+
+	if (counter > 200.0f) {
+		counter = 0.0f;
+	}
+
+	if (counter < 10.0f) {
+		_enemy->getBody()->ApplyLinearImpulseToCenter(b2Vec2(direction.x, direction.y), true);
+		_enemy->getBody()->SetLinearDamping(1.5f);
+	}
+	//_enemy->setLinearVelocity(direction / 1.5f);
+	//_enemy->setLinearDamping(1.5f);
 	//_enemy->applyForce();
 
     std::vector<std::shared_ptr<Obstacle> > obstacles = _world->getObstacles();
