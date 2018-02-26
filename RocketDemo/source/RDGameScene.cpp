@@ -78,7 +78,7 @@ float ENEM_POS[] = { 14,  10 };
 /** The goal door position */
 float GOAL_POS[] = { 6, 12};
 
-float counter = 0.0f;
+float counter = 50.0f;
 
 #pragma mark Assset Constants
 /** The key for the water texture in the asset manager */
@@ -531,6 +531,15 @@ void GameScene::update(float dt) {
 	Vec2 enemy_pos = _enemy->getPosition();
 
 	Vec2 direction = rocket_pos.subtract(enemy_pos).divide(4.0f).normalize();
+	
+	float rand_x = (-0.75f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.75f + 0.75f)));
+	float rand_y = (-0.75f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.75f + 0.75f)));
+
+	direction = direction + Vec2(rand_x, rand_y);
+
+	//CULog("Vector: %s", direction.toString().c_str());
+	//CULog("Rand: %f", rand_x);
+	//CULog("Rand: %f", rand_y);
 
 	//CULog("%f", direction.length());
 
@@ -545,9 +554,9 @@ void GameScene::update(float dt) {
 		counter = 0.0f;
 	}
 
-	if (counter < 10.0f) {
+	if (counter < 5.0f) {
 		_enemy->getBody()->ApplyLinearImpulseToCenter(b2Vec2(direction.x, direction.y), true);
-		_enemy->getBody()->SetLinearDamping(1.5f);
+		_enemy->getBody()->SetLinearDamping(0.5f);
 	}
 	//_enemy->setLinearVelocity(direction / 1.5f);
 	//_enemy->setLinearDamping(1.5f);
