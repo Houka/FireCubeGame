@@ -56,14 +56,12 @@ using namespace cugl;
 // IMPORTANT: Note that Box2D units do not equal drawing units
 /** The wall vertices */
 float WALL1[] = { 0.0f, 18.0f, 16.0f, 18.0f, 16.0f, 17.0f,
-                  8.0f, 15.0f,  1.0f, 17.0f,  2.0f,  7.0f,
-                  3.0f,  5.0f,  3.0f,  1.0f, 16.0f,  1.0f,
+                  8.0f, 17.0f,  1.0f, 17.0f,  1.0f,  7.0f,
+                  1.0f,  5.0f,  1.0f,  1.0f, 16.0f,  1.0f,
                  16.0f,  0.0f,  0.0f,  0.0f};
 float WALL2[] = {32.0f, 18.0f, 32.0f,  0.0f, 16.0f,  0.0f,
-                 16.0f,  1.0f, 31.0f,  1.0f, 30.0f, 10.0f,
-                 31.0f, 16.0f, 16.0f, 17.0f, 16.0f, 18.0f};
-float WALL3[] = { 4.0f, 10.5f,  8.0f, 10.5f,
-                  8.0f,  9.5f,  4.0f,  9.5f};
+                 16.0f,  1.0f, 31.0f,  1.0f, 31.0f, 10.0f,
+                 31.0f, 17.0f, 16.0f, 17.0f, 16.0f, 18.0f};
 
 /** The positions of the crate pyramid */
 float BOXES[] = { 14.5f, 14.25f,
@@ -79,8 +77,8 @@ float ROCK_POS[] = {24,  4};
 float GOAL_POS[] = { 6, 12};
 
 #pragma mark Assset Constants
-/** The key for the earth texture in the asset manager */
-#define EARTH_TEXTURE       "earth"
+/** The key for the water texture in the asset manager */
+#define WATER_TEXTURE       "water"
 /** The key for the rocket texture in the asset manager */
 #define ROCK_TEXTURE        "player"
 /** The key for the win door texture in the asset manager */
@@ -91,6 +89,7 @@ float GOAL_POS[] = { 6, 12};
 #define MAIN_FIRE_TEXTURE   "flames"
 #define RGHT_FIRE_TEXTURE   "flames-right"
 #define LEFT_FIRE_TEXTURE   "flames-left"
+#define BOUNDARY            "wall"
 
 /** Color to outline the physics nodes */
 #define STATIC_COLOR    Color4::YELLOW
@@ -331,7 +330,7 @@ void GameScene::populate() {
 #pragma mark : Wall polygon 1
     // Create ground pieces
     // All walls share the same texture
-    image  = _assets->get<Texture>(EARTH_TEXTURE);
+    image  = _assets->get<Texture>(WATER_TEXTURE);
     std::string wname = "wall";
 
     // Create the polygon outline
@@ -367,7 +366,7 @@ void GameScene::populate() {
     wallobj = PolygonObstacle::alloc(wall2);
     wallobj->setDebugColor(STATIC_COLOR);
     wallobj->setName(wname);
-    
+
     // Set the physics attributes
     wallobj->setBodyType(b2_staticBody);
     wallobj->setDensity(BASIC_DENSITY);
@@ -377,29 +376,6 @@ void GameScene::populate() {
     // Add the scene graph nodes to this object
     wall2 *= _scale;
     sprite = PolygonNode::allocWithTexture(image,wall2);
-    addObstacle(wallobj,sprite,1);  // All walls share the same texture
-
-    
-#pragma mark : Wall polygon 3
-    Poly2 wall3(WALL3,8);
-    triangulator.set(wall3);
-    triangulator.calculate();
-    wall3.setIndices(triangulator.getTriangulation());
-    wall3.setType(Poly2::Type::SOLID);
-
-    wallobj = PolygonObstacle::alloc(wall3);
-    wallobj->setDebugColor(STATIC_COLOR);
-    wallobj->setName(wname);
-
-    // Set the physics attributes
-    wallobj->setBodyType(b2_staticBody);
-    wallobj->setDensity(BASIC_DENSITY);
-    wallobj->setFriction(BASIC_FRICTION);
-    wallobj->setRestitution(BASIC_RESTITUTION);
-
-    // Add the scene graph nodes to this object
-    wall3 *= _scale;
-    sprite = PolygonNode::allocWithTexture(image,wall3);
     addObstacle(wallobj,sprite,1);  // All walls share the same texture
     
 #pragma mark : Crates
