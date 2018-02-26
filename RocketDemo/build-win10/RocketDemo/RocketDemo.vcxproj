@@ -78,6 +78,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IntDir>$(ProjectDir)$(Platform)\$(Configuration)\</IntDir>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -185,7 +186,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\source\GameState.h" />
+    <ClInclude Include="..\..\source\TileModel.h" />
     <ClInclude Include="..\..\source\HelloApp.h" />
+    <ClInclude Include="..\..\source\LevelConstants.h" />
+    <ClInclude Include="..\..\source\LevelController.h" />
+    <ClInclude Include="..\..\source\PlayerModel.h" />
     <ClInclude Include="..\..\source\RDApp.h" />
     <ClInclude Include="..\..\source\RDGameScene.h" />
     <ClInclude Include="..\..\source\RDInput.h" />
@@ -194,12 +200,15 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\GameState.cpp" />
+    <ClCompile Include="..\..\source\LevelController.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\RDApp.cpp" />
     <ClCompile Include="..\..\source\RDGameScene.cpp" />
     <ClCompile Include="..\..\source\RDInput.cpp" />
     <ClCompile Include="..\..\source\RDLoadingScene.cpp" />
     <ClCompile Include="..\..\source\RDRocketModel.cpp" />
+    <ClCompile Include="..\..\source\TileModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="RocketDemo.rc" />

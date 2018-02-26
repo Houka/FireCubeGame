@@ -16,6 +16,7 @@
 #include <cugl/cugl.h>
 #include "RDGameScene.h"
 #include "RDLoadingScene.h"
+#include "GameState.h"
 
 /**
  * This class represents the application root for the ship demo.

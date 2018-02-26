@@ -11,6 +11,7 @@
 //  Version: 1/10/17
 //
 #include "RDApp.h"
+#include "LevelConstants.h"
 
 using namespace cugl;
 
@@ -43,6 +44,7 @@ void RocketApp::onStartup() {
     _assets->attach<Texture>(TextureLoader::alloc()->getHook());
     _assets->attach<Sound>(SoundLoader::alloc()->getHook());
     _assets->attach<Node>(SceneLoader::alloc()->getHook());
+	_assets->attach<GameState>(GenericLoader<GameState>::alloc()->getHook());
 
     // Create a "loading" screen
     _loaded = false;
@@ -51,6 +53,7 @@ void RocketApp::onStartup() {
     // Que up the other assets
     AudioEngine::start();
     _assets->loadDirectoryAsync("json/assets.json",nullptr);
+	_assets->loadAsync<GameState>(PROTO_LEVEL_KEY, PROTO_LEVEL_FILE, nullptr);
     
     Application::onStartup(); // YOU MUST END with call to parent
 }
