@@ -62,7 +62,8 @@ protected:
 
     // Physics objects for the game
     /** Reference to the rocket/player avatar */
-    std::shared_ptr<RocketModel> _rocket;
+    std::shared_ptr<RocketModel> _player;
+	//std::shared_ptr<EnemyModel> _enemy;
 
     /** Whether we have completed this "game" */
     bool _complete;

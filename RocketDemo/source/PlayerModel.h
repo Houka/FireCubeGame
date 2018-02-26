@@ -1,6 +1,6 @@
 //
-//  RDRocketModel.h
-//  Rocket Demo
+//  JSRocketModel.h
+//  JSON Demo
 //
 //  This encapsulates all of the information for the rocket demo.  Note how this
 //  class combines physics and animation.  This is a good template for models in
@@ -30,15 +30,12 @@
 //
 //  This file is based on the CS 3152 PhysicsDemo Lab by Don Holden, 2007
 //
-//  Author: Walker White
-//  Version: 1/10/17
+//  Author: Walker White and Anthony Perello
+//  Version: 3/12/17
 //
 #ifndef __PLAYER_MODEL_H__
-#define __PLAYER_MODEL_H__
+#define __PLAYER_H__
 #include <cugl/cugl.h>
-
-/** The thrust factor to convert player input into thrust */
-#define DEFAULT_THRUST 30.0f
 
 /**
 * This class is the player avatar for the rocket lander game.
@@ -51,54 +48,24 @@
 class PlayerModel : public cugl::BoxObstacle {
 private:
 	/** This macro disables the copy constructor (not allowed on scene graphs) */
-	CU_DISALLOW_COPY_AND_ASSIGN(RocketModel);
+	CU_DISALLOW_COPY_AND_ASSIGN(PlayerModel);
 
 protected:
 	/** The force to apply to this rocket */
 	cugl::Vec2 _force;
+	/** The thrust of the rocket */
+	float _thrust;
 
 	/** The scene graph node for the rocket ship */
 	std::shared_ptr<cugl::Node> _shipNode;
-
-	/** The animation node for the main afterburner */
-	std::shared_ptr<cugl::AnimationNode> _mainBurner;
-	/** The associated sound for the main afterburner */
-	std::string _mainSound;
-	/** The animation phase for the main afterburner */
-	bool _mainCycle;
-
-	/** The animation node for the left side burner */
-	std::shared_ptr<cugl::AnimationNode> _leftBurner;
-	/** The associated sound for the left side burner */
-	std::string _leftSound;
-	/** The animation phase for the left side burner */
-	bool _leftCycle;
-
-	/** The texture filmstrip for the left animation node */
-	std::shared_ptr<cugl::AnimationNode> _rghtBurner;
-	/** The associated sound for the right side burner */
-	std::string _rghtSound;
-	/** The animation phase for the right side burner */
-	bool _rghtCycle;
+	/** The texture key for the ship */
+	std::string _shipTexture;
 
 	/** Cache object for transforming the force according the object angle */
 	cugl::Mat4 _affine;
 	float _drawscale;
 
 public:
-	/**
-	* Enumeration to identify the rocket afterburner
-	*/
-	enum class Burner : int {
-		/** The main afterburner */
-		MAIN,
-		/** The left side thruster */
-		LEFT,
-		/** The right side thruster */
-		RIGHT
-	};
-
-
 #pragma mark Constructors
 	/**
 	* Creates a new rocket at the origin.
@@ -106,12 +73,12 @@ public:
 	* NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate a model on
 	* the heap, use one of the static constructors instead.
 	*/
-	RocketModel(void) : BoxObstacle(), _drawscale(1.0f), _mainCycle(false), _leftCycle(false), _rghtCycle(false) { }
+	PlayerModel(void) : BoxObstacle() { }
 
 	/**
 	* Destroys this rocket, releasing all resources.
 	*/
-	virtual ~RocketModel(void) { dispose(); }
+	virtual ~PlayerModel(void) { dispose(); }
 
 	/**
 	* Disposes all resources and assets of this rocket
@@ -185,8 +152,8 @@ public:
 	*
 	* @return a newly allocate rocket at the origin.
 	*/
-	static std::shared_ptr<RocketModel> alloc() {
-		std::shared_ptr<RocketModel> result = std::make_shared<RocketModel>();
+	static std::shared_ptr<PlayerModel> alloc() {
+		std::shared_ptr<PlayerModel> result = std::make_shared<PlayerModel>();
 		return (result->init() ? result : nullptr);
 	}
 
@@ -205,8 +172,8 @@ public:
 	*
 	* @return a newly allocated rocket with the given position
 	*/
-	static std::shared_ptr<RocketModel> alloc(const cugl::Vec2& pos) {
-		std::shared_ptr<RocketModel> result = std::make_shared<RocketModel>();
+	static std::shared_ptr<PlayerModel> alloc(const cugl::Vec2& pos) {
+		std::shared_ptr<PlayerModel> result = std::make_shared<PlayerModel>();
 		return (result->init(pos) ? result : nullptr);
 	}
 
@@ -225,8 +192,8 @@ public:
 	*
 	* @return a newly allocated rocket with the given position
 	*/
-	static std::shared_ptr<RocketModel> alloc(const cugl::Vec2& pos, const cugl::Size& size) {
-		std::shared_ptr<RocketModel> result = std::make_shared<RocketModel>();
+	static std::shared_ptr<PlayerModel> alloc(const cugl::Vec2& pos, const cugl::Size& size) {
+		std::shared_ptr<PlayerModel> result = std::make_shared<PlayerModel>();
 		return (result->init(pos, size) ? result : nullptr);
 	}
 
@@ -251,6 +218,13 @@ public:
 	* @param value  the force applied to this rocket.
 	*/
 	void setForce(const cugl::Vec2& value) { _force.set(value); }
+
+	/**
+	* Sets thethrust of this rocket.
+	*
+	* @param value  the thrust of this rocket
+	*/
+	void setThrust(float value) { _thrust = value; }
 
 	/**
 	* Returns the x-component of the force applied to this rocket.
@@ -300,7 +274,7 @@ public:
 	*
 	* @return the amount of thrust that this rocket has.
 	*/
-	float getThrust() const { return DEFAULT_THRUST; }
+	float getThrust() const { return _thrust; }
 
 
 #pragma mark -
@@ -317,75 +291,24 @@ public:
 	const std::shared_ptr<cugl::Node>& getShipNode() const { return _shipNode; }
 
 	/**
-	* Sets the scene graph node representing this rocket.
+	* Returns the texture (key) for this ship
 	*
-	* By storing a reference to the scene graph node, the model can update
-	* the node to be in sync with the physics info. It does this via the
-	* {@link Obstacle#update(float)} method.
+	* The value returned is not a Texture2D value.  Instead, it is a key for
+	* accessing the texture from the asset manager.
 	*
-	* If the animation nodes are not null, this method will remove them from
-	* the previous scene and add them to the new one.
-	*
-	* @param node  The scene graph node representing this rocket.
+	* @return the texture (key) for this ship
 	*/
-	void setShipNode(const std::shared_ptr<cugl::Node>& node);
+	const std::string& getTextureKey() const { return _shipTexture; }
 
 	/**
-	* Returns the animation node for the given afterburner
+	* Returns the texture (key) for this ship
 	*
-	* The model tracks the animation nodes separately from the main scene
-	* graph node (even though they are childing of this node).  That is so
-	* we can encapsulate the animation cycle.
+	* The value returned is not a Texture2D value.  Instead, it is a key for
+	* accessing the texture from the asset manager.
 	*
-	* @param  burner   The enumeration to identify the afterburner
-	*
-	* @return the animation node for the given afterburner
+	* @param  strip    the texture (key) for this ship
 	*/
-	const std::shared_ptr<cugl::AnimationNode>& getBurnerStrip(Burner burner) const;
-
-	/**
-	* Sets the animation node for the given afterburner
-	*
-	* The model tracks the animation nodes separately from the main scene
-	* graph node (even though they are childing of this node).  That is so
-	* we can encapsulate the animation cycle.
-	* @param burner    The enumeration to identify the afterburner
-	* @param strip     The animation node for the given afterburner
-	*/
-	void setBurnerStrip(Burner burner, const std::shared_ptr<cugl::Texture>& texture);
-
-	/**
-	* Returns the key for the sound to accompany the given afterburner
-	*
-	* The key should either refer to a valid sound loaded in the AssetManager or
-	* be empty ("").  If the key is "", then no sound will play.
-	*
-	* @param burner    The enumeration to identify the afterburner
-	*
-	* @return the key for the sound to accompany the given afterburner
-	*/
-	const std::string& getBurnerSound(Burner burner) const;
-
-	/**
-	* Sets the key for the sound to accompany the given afterburner
-	*
-	* The key should either refer to a valid sound loaded in the AssetManager or
-	* be empty ("").  If the key is "", then no sound will play.
-	*
-	* @param burner    The enumeration to identify the afterburner
-	* @param key       The key for the sound to accompany the main afterburner
-	*/
-	void setBurnerSound(Burner burner, const std::string& key);
-
-	/**
-	* Animates the given burner.
-	*
-	* If the animation is not active, it will reset to the initial animation frame.
-	*
-	* @param burner    The reference to the rocket burner
-	* @param on        Whether the animation is active
-	*/
-	void animateBurner(Burner burner, bool on);
+	void setTextureKey(const std::string& strip) { _shipTexture = strip; }
 
 	/**
 	* Sets the ratio of the ship sprite to the physics body
@@ -439,7 +362,8 @@ public:
 	* @param delta Timing values from parent loop
 	*/
 	virtual void update(float delta) override;
+
+	void setShipNode(const std::shared_ptr<cugl::Node>& node) { _shipNode = node; }
 };
 
-#endif /* __RD_ROCKET_MODEL_H__ */
-#pragma once
+#endif /* __PLAYER_MODEL_H__ */

@@ -40,6 +40,7 @@
 #include <cugl/io/CUJsonReader.h>
 
 class TileModel;
+class PlayerModel;
 
 class GameState : public cugl::Asset {
 public:
@@ -82,6 +83,7 @@ protected:
 	std::shared_ptr<cugl::Node> _debugnode;
 	/** The level drawing scale (difference between physics and drawing coordinates) */
 	cugl::Vec2 _scale;
+	std::shared_ptr<PlayerModel> _player;
 
 public:
 #pragma mark Constructors
@@ -195,10 +197,14 @@ public:
 	
 	bool loadTile(cugl::Vec2 tilePos, cugl::Size tileDim, TILE_TYPE tileType);
 
+	bool loadEntities(const std::shared_ptr<cugl::JsonValue>& json);
+
 	cugl::Rect getWorldDim() { return _worldDim; }
 
 	std::shared_ptr<cugl::ObstacleWorld> getPhysicsWorld() { return _physicsWorld; }
 
+	std::shared_ptr<PlayerModel> getPlayer() { return _player; }
+	
 	/**
 	* Sets the scene graph node for drawing purposes.
 	*

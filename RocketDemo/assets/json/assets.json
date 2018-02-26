@@ -46,7 +46,13 @@
         },
 		"r_land_base": {
             "file":     "textures/combined_right.png"
-        }
+        },
+		"player": {
+			"file":     "textures/player.png"
+		},
+		"enemy": {
+			"file":     "textures/enemy.png"
+		}
 	},
     "soundfx": {
         "bump": {

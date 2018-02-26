@@ -36,6 +36,7 @@
 #include "GameState.h"
 #include "LevelConstants.h"
 #include "TileModel.h"
+#include "PlayerModel.h"
 
 
 using namespace cugl;
@@ -147,6 +148,12 @@ bool GameState::preload(const std::shared_ptr<cugl::JsonValue>& json) {
 		return false;
 	}
 
+	// Create the player and enemy(s)
+	if (!loadEntities(json)) {
+		CUAssertLog(false, "Failed to load player");
+		return false;
+	}
+
 
 	return true;
 }
@@ -167,7 +174,6 @@ bool GameState::loadWorld(const std::shared_ptr<JsonValue>& json, int worldW, in
 		for (int i = worldH-1; i >= 0; i--) {
 			for (int j = 0; j < worldW; j++) {
 				int tileVal = worldData[count]*10;
-				CULog(to_string(tileVal).c_str());
 
 				TILE_TYPE tileType;
 				switch (tileVal) {
@@ -294,6 +300,58 @@ bool GameState::loadTile(Vec2 tilePos, Size tileDim, TILE_TYPE tileType) {
 	return success;
 }
 
+bool GameState::loadEntities(const std::shared_ptr<cugl::JsonValue>& json) {
+	bool success = false;
+	auto protoObjectsLayer = json->get(LAYERS_FIELD)->get(1);
+	if (protoObjectsLayer != nullptr) {
+		success = true;
+
+		auto objectsData = protoObjectsLayer->get(DATA_FIELD)->asFloatArray();
+
+		cugl::Vec2 playerPos;
+		cugl::Vec2 enemyPos;
+		int count = 0;
+		for (int i = _worldDim.size.getIHeight() - 1; i >= 0; i--) {
+			for (int j = 0; j < _worldDim.size.getIWidth(); j++) {
+				int objVal = objectsData[count] * 10;
+				if (objVal == 40) {
+					playerPos = cugl::Vec2(j,i);
+				}
+				else if (objVal == 41) {
+					enemyPos = cugl::Vec2(j,i);
+				}
+				count++;
+			}
+		}
+
+		_player = PlayerModel::alloc(playerPos, _tileDim);
+		_player->setDrawScale(_scale.x);
+		_player->setName("player");
+		_player->setTextureKey("player");
+
+		_player->setBodyType(b2_dynamicBody);
+
+		/*_enemy = EnemyModel::alloc(enemyPos, _tileDim);
+		_enemy->setDrawScale(_scale.x);
+		_enemy->setName("enemy");
+		_enemy->setTextureKey("enemy");*/
+		
+		if (success) {
+			_physicsWorld->addObstacle(_player);
+		}
+		else {
+			CUAssertLog(false, "Failed to add player object.");
+			_player = nullptr;
+			//_enemy = nullptr;
+		}
+	}
+	else {
+		CUAssertLog(false, "Failed to load objects layer.");
+	}
+	return success;
+}
+
+
 void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	if (_root != nullptr) {
 		clearRootNode();
@@ -327,15 +385,15 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		addObstacle(tile, sprite, TILE_PRIORITY + indx);   // PUT SAME TEXTURES IN SAME LAYER!!!
 	}
 
-	//if (_rocket != nullptr) {
-	//	auto rocketNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_rocket->getTextureKey()));
-	//	_rocket->setShipNode(rocketNode, _assets);
-	//	_rocket->setDrawScale(_scale.x);
+	if (_player != nullptr) {
+		auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()));
+		_player->setShipNode(playerNode);
+		_player->setDrawScale(_scale.x);
 
-	//	// Create the polygon node (empty, as the model will initialize)
-	//	_worldnode->addChild(rocketNode, ROCKET_PRIORITY);
-	//	_rocket->setDebugScene(_debugnode);
-	//}
+		// Create the polygon node (empty, as the model will initialize)
+		_worldnode->addChild(playerNode, ENTITY_PRIORITY);
+		_player->setDebugScene(_debugnode);
+	}
 }
 
 /**
@@ -357,14 +415,14 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 void GameState::addObstacle(const std::shared_ptr<cugl::Obstacle>& obj,
 	const std::shared_ptr<cugl::Node>& node,
 	int zOrder) {
-
+	node->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
 	cugl::Vec2 pos = obj->getPosition();
-	CULog(pos.toString().c_str());
+	//CULog(pos.toString().c_str());
 	cugl::Size x = _physicsWorld->getBounds().size;
-	CULog(x.toString().c_str());
+	//CULog(x.toString().c_str());
 	_physicsWorld->addObstacle(obj);
 	obj->setDebugScene(_debugnode);
-
+	obj->setActive(false);
 	// Position the scene graph node (enough for static objects)
 	node->setPosition(obj->getPosition()*_scale);
 	_worldnode->addChild(node, zOrder);
@@ -378,3 +436,4 @@ void GameState::addObstacle(const std::shared_ptr<cugl::Obstacle>& obj,
 		});
 	}
 }
+

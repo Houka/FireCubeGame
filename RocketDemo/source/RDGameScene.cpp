@@ -27,6 +27,7 @@
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 #include <Box2D/Collision/b2Collision.h>
+#include "PlayerModel.h"
 
 #include <ctime>
 #include <string>
@@ -251,10 +252,10 @@ void GameScene::update(float dt) {
 	}
 
 	// Apply the force to the rocket
-	/*std::shared_ptr<RocketModel> rocket = _gamestate->getRocket();
-	rocket->setFX(_input.getHorizontal() * rocket->getThrust());
-	rocket->setFY(_input.getVertical() * rocket->getThrust());
-	rocket->applyForce();*/
+	std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
+	player->setFX(_input.getHorizontal() * player->getThrust());
+	player->setFY(_input.getVertical() * player->getThrust());
+	player->applyForce();
 
 	// Animate the three burners
 	/*updateBurner(RocketModel::Burner::MAIN, rocket->getFY() >  1);
@@ -263,33 +264,6 @@ void GameScene::update(float dt) {
 
 	// Turn the physics engine crank.
 	_gamestate->getPhysicsWorld()->update(dt);
-}
-
-/**
- * Updates that animation for a single burner
- *
- * This method is here instead of the the rocket model because of our philosophy
- * that models should always be lightweight.  Animation includes sounds and other
- * assets that we do not want to process in the model
- *
- * @param  burner   The rocket burner to animate
- * @param  on       Whether to turn the animation on or off
- */
-void GameScene::updateBurner(RocketModel::Burner burner, bool on) {
-    std::string sound = _rocket->getBurnerSound(burner);
-    if (on) {
-        _rocket->animateBurner(burner, true);
-        if (!AudioEngine::get()->isActiveEffect(sound) && sound.size() > 0) {
-            auto source = _assets->get<Sound>(sound);
-            AudioEngine::get()->playEffect(sound,source,true,source->getVolume());
-        }
-    } else {
-        _rocket->animateBurner(burner, false);
-        if (AudioEngine::get()->isActiveEffect(sound)) {
-            AudioEngine::get()->stopEffect(sound);
-        }
-    }
-    
 }
 
 void GameScene::activateWorldCollisions(const std::shared_ptr<ObstacleWorld>& physicsWorld) {
@@ -327,6 +301,7 @@ void GameScene::beginContact(b2Contact* contact) {
  * @param  oldManfold  	The collision manifold before contact
  */
 void GameScene::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
+	CULog("Colliding!");
     float speed = 0;
 
     // Use Ian Parberry's method to compute a speed threshold

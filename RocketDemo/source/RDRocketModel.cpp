@@ -171,34 +171,30 @@ void RocketModel::update(float delta) {
  *
  * @param node  The scene graph node representing this rocket.
  */
-void RocketModel::setShipNode(const std::shared_ptr<cugl::Node>& node) {
-    if (_shipNode != nullptr) {
-        if (_mainBurner != nullptr) {
-            _shipNode->removeChild(_mainBurner);
-        }
-        if (_leftBurner != nullptr) {
-            _shipNode->removeChild(_leftBurner);
-        }
-        if (_rghtBurner != nullptr) {
-            _shipNode->removeChild(_rghtBurner);
-        }
-    }
-    _shipNode = node;
-    if (_mainBurner != nullptr) {
-        _mainBurner->setPosition(_shipNode->getContentSize().width/2.0f,
-                                 _shipNode->getContentSize().height-
-                                 _mainBurner->getContentSize().height/2.0f);
-        _shipNode->addChild(_mainBurner);
-    }
-    if (_leftBurner != nullptr) {
-        _leftBurner->setPosition(_shipNode->getContentSize()/2.0f);
-        _shipNode->addChild(_leftBurner);
-    }
-    if (_rghtBurner != nullptr) {
-        _rghtBurner->setPosition(_shipNode->getContentSize()/2.0f);
-        _shipNode->addChild(_rghtBurner);
-    }
+void RocketModel::setShipNode(const std::shared_ptr<cugl::Node>& node, const std::shared_ptr<cugl::AssetManager>& assets) {
+	if (_shipNode != nullptr) {
+		if (_mainBurner != nullptr) {
+			_shipNode->removeChild(_mainBurner);
+		}
+		if (_leftBurner != nullptr) {
+			_shipNode->removeChild(_leftBurner);
+		}
+		if (_rghtBurner != nullptr) {
+			_shipNode->removeChild(_rghtBurner);
+		}
+	}
+	_shipNode = node;
+
+	_mainBurner->setPosition(_shipNode->getContentSize().width / 2.0f,
+		_shipNode->getContentSize().height -
+		_mainBurner->getContentSize().height / 2.0f);
+	_shipNode->addChild(_mainBurner);
+	_leftBurner->setPosition(_shipNode->getContentSize() / 2.0f);
+	_shipNode->addChild(_leftBurner);
+	_rghtBurner->setPosition(_shipNode->getContentSize() / 2.0f);
+	_shipNode->addChild(_rghtBurner);
 }
+
 
 
 /**

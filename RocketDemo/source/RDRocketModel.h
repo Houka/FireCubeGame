@@ -57,6 +57,7 @@ protected:
     /** The force to apply to this rocket */
     cugl::Vec2 _force;
 
+	std::string _shipTexture;
     /** The scene graph node for the rocket ship */
     std::shared_ptr<cugl::Node> _shipNode;
     
@@ -328,7 +329,7 @@ public:
      *
      * @param node  The scene graph node representing this rocket.
      */
-    void setShipNode(const std::shared_ptr<cugl::Node>& node);
+	void setShipNode(const std::shared_ptr<cugl::Node>& node, const std::shared_ptr<cugl::AssetManager>& assets);
 
     /**
      * Returns the animation node for the given afterburner
@@ -439,6 +440,10 @@ public:
      * @param delta Timing values from parent loop
      */
     virtual void update(float delta) override;
+
+	void setTextureKey(const std::string& strip) { _shipTexture = strip; }
+
+	const std::string& getTextureKey() const { return _shipTexture; }
 };
 
 #endif /* __RD_ROCKET_MODEL_H__ */
