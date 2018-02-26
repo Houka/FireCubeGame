@@ -133,7 +133,12 @@ void RocketModel::applyForce() {
     netforce *= _affine;
     
     // Apply force to the rocket BODY, not the rocket
+	b2Vec2 vel = _body->GetLinearVelocity();
+	//CULog("( %f , %f )", vel.x, vel.y);
+	//CULog("Velocity Length: %f", vel.Length());
+	if (vel.Length() < 2.5f) {
     _body->ApplyLinearImpulseToCenter(b2Vec2(netforce.x,netforce.y), true);
+	}
 }
 
 /**

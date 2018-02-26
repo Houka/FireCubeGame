@@ -188,7 +188,7 @@ void RocketInput::update(float dt) {
 		//_pandelta.y = 0.0f;
 	}
 
-	CULog("Delta Mouse Move: %s", _pandelta.toString().c_str());
+	//CULog("Delta Mouse Move: %s", _pandelta.toString().c_str());
 	//CULog("Delta Mouse X: %4.2f", _pandelta.x);
 	//CULog("%ds", _mousepan);
     
@@ -198,7 +198,7 @@ void RocketInput::update(float dt) {
 	bool apply = false;
 
     if (!_mousepan) {
-		CULog("in mouse pan");
+		//CULog("in mouse pan");
         _horizontal -= _pandelta.x/MOD_FACTOR;
 		_vertical -= _pandelta.y/MOD_FACTOR;
 		_mousepan = !_mousepan;
@@ -213,11 +213,11 @@ void RocketInput::update(float dt) {
 	}
 
 	if (rght) {
-		CULog("in right");
+		//CULog("in right");
 		_horizontal += 1.0f;
 	}
     if (left) {
-		CULog("in left");
+		//CULog("in left");
         _horizontal -= 1.0f;
     }
     if (up) {
