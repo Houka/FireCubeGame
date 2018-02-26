@@ -28,6 +28,7 @@
 #include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <vector>
 #include "RDRocketModel.h"
+#include "RDEnemyModel.h"
 #include "RDInput.h"
 #include "GameState.h"
 
@@ -61,9 +62,8 @@ protected:
     float _scale;
 
     // Physics objects for the game
-    /** Reference to the rocket/player avatar */
-    std::shared_ptr<RocketModel> _player;
-	//std::shared_ptr<EnemyModel> _enemy;
+	/** Reference to the enemy avatar */
+	std::shared_ptr<EnemyModel> _enemy;
 
     /** Whether we have completed this "game" */
     bool _complete;
@@ -78,7 +78,8 @@ protected:
 	* @param world the physics world to activate world collision callbacks on
 	*/
 	void activateWorldCollisions(const std::shared_ptr<cugl::ObstacleWorld>& world);
-    
+
+    bool _gameOver;
     
 #pragma mark Internal Object Management
     /**
@@ -211,6 +212,12 @@ public:
      */
     void updateBurner(RocketModel::Burner burner, bool on);
 
+    /**
+     * Resets the status of the game so that we can play again.
+     */
+    void reset();
+    
+    void removeEnemy(EnemyModel* enemy);
     
 #pragma mark -
 #pragma mark Collision Handling
@@ -219,6 +226,17 @@ public:
      *
      * This method is called when we first get a collision between two objects. 
      * We use this method to test if it is the "right" kind of collision.  In 
+     * particular, we use it to test if we make it to the win door.
+     *
+     * @param  contact  The two bodies that collided
+     */
+    void endContact(b2Contact* contact);
+    
+    /**
+     * Processes the start of a collision
+     *
+     * This method is called when we first get a collision between two objects.
+     * We use this method to test if it is the "right" kind of collision.  In
      * particular, we use it to test if we make it to the win door.
      *
      * @param  contact  The two bodies that collided

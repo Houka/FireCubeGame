@@ -53,6 +53,10 @@ private:
     cugl::Vec2 _dtouch;
     /** The timestamp for the beginning of the current gesture */
     cugl::Timestamp _timestamp;
+	/** The last touch location for the current gesture */
+	cugl::Vec2 _previousTouch;
+	/** The current touch location for the current gesture */
+	cugl::Vec2 _currentTouch;
 
 protected:
     // INPUT RESULTS
@@ -66,6 +70,10 @@ protected:
     float _horizontal;
     /** How much did we move vertically? */
     float _vertical;
+	/** Whether or not are in an active mouse pan */
+	bool _mousepan;
+	/** The panning distance from the player input */
+	cugl::Vec2 _pandelta;
     
 public:
 #pragma mark -
@@ -184,6 +192,44 @@ public:
      * @param event The associated event
      */
     void touchEndedCB(const cugl::TouchEvent& event, bool focus);
+
+#pragma mark -
+#pragma mark Mouse Callbacks
+
+/**
+* Called when a mouse button is initially pressed
+*
+* This is called in addition to the touch event, as mouse events are
+* all touch events. The mousepan boolean keeps them both from
+* being processed in future events.
+*
+* @param  event    The event storing the mouse state
+* @param  clicks   The number of recent clicks, including this one
+* @parm   focus	   Whether the listener currently has focus
+*/
+void    mouseDownCB(const cugl::MouseEvent& event, Uint8 clicks, bool focus);
+
+/**
+* Called when a mouse button is released
+*
+* This is called in addition to the touch event, as mouse events are
+* all touch events. The mousepan boolean keeps them both from
+* being processed in future events.
+*
+* @param  event    The event storing the mouse state
+* @param  clicks   The number of recent clicks, including this one
+* @parm   focus	   Whether the listener currently has focus
+*/
+void    mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, bool focus);
+
+/**
+* Called when the mouse moves
+*
+* @param  event    The event storing the mouse state
+* @param  previous The previous position of the mouse
+* @parm   focus	   Whether the listener currently has focus
+*/
+void    mouseMovedCB(const cugl::MouseEvent& event, const cugl::Vec2& previous, bool focus);
 
 };
 

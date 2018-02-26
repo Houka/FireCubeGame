@@ -1,21 +1,18 @@
 {
 	"textures": {
-		"earth": {
-			"file":     "textures/earthtile.png",
+		"water": {
+			"file":     "textures/water_small.png",
             "wrapS":    "repeat",
             "wrapT":    "repeat"
 		},
 		"goal": {
 			"file":     "textures/goaldoor.png"
 		},
-        "crate01": {
-            "file":     "textures/crate01.png"
+        "enemy": {
+            "file":     "textures/enemy.png"
         },
-        "crate02": {
-            "file":     "textures/crate02.png"
-        },
-        "rocket": {
-            "file":     "textures/rocket.png"
+        "player": {
+            "file":     "textures/player.png"
         },
         "flames": {
             "file":     "textures/flames.png"

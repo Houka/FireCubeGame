@@ -41,6 +41,7 @@
 
 class TileModel;
 class PlayerModel;
+class EnemyModel;
 
 class GameState : public cugl::Asset {
 public:
@@ -84,6 +85,7 @@ protected:
 	/** The level drawing scale (difference between physics and drawing coordinates) */
 	cugl::Vec2 _scale;
 	std::shared_ptr<PlayerModel> _player;
+	std::shared_ptr<EnemyModel> _enemy;
 
 public:
 #pragma mark Constructors
@@ -204,6 +206,8 @@ public:
 	std::shared_ptr<cugl::ObstacleWorld> getPhysicsWorld() { return _physicsWorld; }
 
 	std::shared_ptr<PlayerModel> getPlayer() { return _player; }
+
+	std::shared_ptr<EnemyModel> getEnemy() { return _enemy; }
 	
 	/**
 	* Sets the scene graph node for drawing purposes.

@@ -36,6 +36,7 @@
     <ClInclude Include="..\..\source\RDRocketModel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="..\..\source\GameState.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -49,6 +50,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\TileModel.h">
+=======
+    <ClInclude Include="..\..\source\RDEnemyModel.h">
+>>>>>>> 026afeecd9abb6c01d72ac3f4c4ea8e09b31d7b0
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,6 +75,7 @@
     <ClCompile Include="..\..\source\RDGameScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="..\..\source\GameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -81,6 +86,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\PlayerModel.cpp">
+=======
+    <ClCompile Include="..\..\source\RDEnemyModel.cpp">
+>>>>>>> 026afeecd9abb6c01d72ac3f4c4ea8e09b31d7b0
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

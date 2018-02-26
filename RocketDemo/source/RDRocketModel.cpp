@@ -73,7 +73,7 @@ using namespace cugl;
  * @return  true if the obstacle is initialized properly, false otherwise.
  */
 bool RocketModel::init(const Vec2& pos, const Size& size) {
-    BoxObstacle::init(pos,size);
+    CapsuleObstacle::init(pos,size);
     std::string name("rocket");
     setName(name);
     
@@ -95,6 +95,7 @@ bool RocketModel::init(const Vec2& pos, const Size& size) {
     setFriction(DEFAULT_FRICTION);
     setRestitution(DEFAULT_RESTITUTION);
     setFixedRotation(true);
+	setLinearDamping(1.0f);
     
     return true;
 }
@@ -132,7 +133,16 @@ void RocketModel::applyForce() {
     netforce *= _affine;
     
     // Apply force to the rocket BODY, not the rocket
-    _body->ApplyForceToCenter(b2Vec2(netforce.x,netforce.y), true);
+	b2Vec2 vel = _body->GetLinearVelocity();
+	//CULog("( %f , %f )", vel.x, vel.y);
+	//CULog("Velocity Length: %f", vel.Length());
+	if (vel.Length() < 2.5f) {
+		_shipNode->setColor(Color4::WHITE);
+		_body->ApplyLinearImpulseToCenter(b2Vec2(netforce.x, netforce.y), true);
+	}
+	else {
+		_shipNode->setColor(Color4::RED);
+	}
 }
 
 /**

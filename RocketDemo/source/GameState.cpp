@@ -37,6 +37,7 @@
 #include "LevelConstants.h"
 #include "TileModel.h"
 #include "PlayerModel.h"
+#include "RDEnemyModel.h"
 
 
 using namespace cugl;
@@ -331,6 +332,12 @@ bool GameState::loadEntities(const std::shared_ptr<cugl::JsonValue>& json) {
 
 		_player->setBodyType(b2_dynamicBody);
 
+		_enemy = EnemyModel::alloc(enemyPos, _tileDim);
+		_enemy->setDrawScale(_scale.x);
+		_enemy->setName("enemy");
+		_enemy->setTextureKey("enemy");
+
+
 		/*_enemy = EnemyModel::alloc(enemyPos, _tileDim);
 		_enemy->setDrawScale(_scale.x);
 		_enemy->setName("enemy");
@@ -338,11 +345,12 @@ bool GameState::loadEntities(const std::shared_ptr<cugl::JsonValue>& json) {
 		
 		if (success) {
 			_physicsWorld->addObstacle(_player);
+			_physicsWorld->addObstacle(_enemy);
 		}
 		else {
 			CUAssertLog(false, "Failed to add player object.");
 			_player = nullptr;
-			//_enemy = nullptr;
+			_enemy = nullptr;
 		}
 	}
 	else {
@@ -393,6 +401,15 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		// Create the polygon node (empty, as the model will initialize)
 		_worldnode->addChild(playerNode, ENTITY_PRIORITY);
 		_player->setDebugScene(_debugnode);
+	}
+
+	if (_enemy != nullptr) {
+		auto enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_enemy->getTextureKey()));
+		_enemy->setShipNode(enemyNode);
+		_enemy->setDrawScale(_scale.x);
+		
+		_worldnode->addChild(enemyNode, ENTITY_PRIORITY);
+		_enemy->setDebugScene(_debugnode);
 	}
 }
 

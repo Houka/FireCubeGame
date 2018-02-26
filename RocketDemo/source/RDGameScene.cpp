@@ -33,6 +33,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <set>
 
 using namespace cugl;
 
@@ -48,7 +49,55 @@ using namespace cugl;
 /** Height of the game world in Box2d units */
 #define DEFAULT_HEIGHT  18.0f
 /** The default value of gravity (going down) */
-#define DEFAULT_GRAVITY -4.9f
+#define DEFAULT_GRAVITY 0.0f
+
+/** To automate the loading of crate files */
+#define NUM_CRATES 2
+
+// Since these appear only once, we do not care about the magic numbers.
+// In an actual game, this information would go in a data file.
+// IMPORTANT: Note that Box2D units do not equal drawing units
+/** The wall vertices */
+float WALL1[] = { 0.0f, 18.0f, 16.0f, 18.0f, 16.0f, 17.0f,
+                  8.0f, 17.0f,  1.0f, 17.0f,  1.0f,  7.0f,
+                  1.0f,  5.0f,  1.0f,  1.0f, 16.0f,  1.0f,
+                 16.0f,  0.0f,  0.0f,  0.0f};
+float WALL2[] = {32.0f, 18.0f, 32.0f,  0.0f, 16.0f,  0.0f,
+                 16.0f,  1.0f, 31.0f,  1.0f, 31.0f, 10.0f,
+                 31.0f, 17.0f, 16.0f, 17.0f, 16.0f, 18.0f};
+
+/** The positions of the crate pyramid */
+
+float BOXES[] = { 4.5f, 4.25f,
+                  9.0f, 12.00f, 10.0f, 12.00f,
+                  11.5f,  9.75f, 17.5f,  1.75f, 7.5f, 9.75f,
+                  11.0f,  7.50f, 16.0f,  7.50f,
+                  17.5f,  5.25f, 14.5f,  17.25f, 1.5f, 5.25f,
+                  17.0f,  3.00f, 9.0f,  3.00f, 16.0f, 3.00f, 8.0f, 3.0f};
+
+/** The initial rocket position */
+float ROCK_POS[] = {24,  4};
+/** The initial enemy position */
+float ENEM_POS[] = { 5,  5 };
+/** The goal door position */
+float GOAL_POS[] = { 6, 12};
+
+float counter = 50.0f;
+
+#pragma mark Assset Constants
+/** The key for the water texture in the asset manager */
+#define WATER_TEXTURE       "water"
+/** The key for the rocket texture in the asset manager */
+#define ROCK_TEXTURE        "player"
+/** The key for the win door texture in the asset manager */
+#define GOAL_TEXTURE        "goal"
+/** The key prefix for the multiple crate assets */
+#define ENEMY_TEXTURE        "enemy"
+/** The key for the fire textures in the asset manager */
+#define MAIN_FIRE_TEXTURE   "flames"
+#define RGHT_FIRE_TEXTURE   "flames-right"
+#define LEFT_FIRE_TEXTURE   "flames-left"
+#define BOUNDARY            "wall"
 
 /** Color to outline the physics nodes */
 #define STATIC_COLOR    Color4::YELLOW
@@ -71,7 +120,7 @@ using namespace cugl;
 
 // Physics constants for initialization
 /** Density of non-crate objects */
-#define BASIC_DENSITY       0.0f
+#define BASIC_DENSITY       1.0f
 /** Density of the crate objects */
 #define CRATE_DENSITY       1.0f
 /** Friction of non-crate objects */
@@ -79,11 +128,12 @@ using namespace cugl;
 /** Friction of the crate objects */
 #define CRATE_FRICTION      0.2f
 /** Angular damping of the crate objects */
-#define CRATE_DAMPING       1.0f
+#define CRATE_DAMPING       0.0f
 /** Collision restitution for all objects */
-#define BASIC_RESTITUTION   0.1f
+#define BASIC_RESTITUTION   0.75f
 /** Threshold for generating sound on collision */
 #define SOUND_THRESHOLD     3
+
 
 
 #pragma mark -
@@ -150,7 +200,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets) {
 	_rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
 	_rootnode->setPosition(Vec2::ZERO);
 
-	_winnode = Label::alloc("VICTORY!", _assets->get<Font>(PRIMARY_FONT));
+	_winnode = Label::alloc(":D", _assets->get<Font>(PRIMARY_FONT));
+	_winnode->setAnchor(Vec2::ANCHOR_CENTER);
 	_winnode->setPosition(dimen / 2.0f);
 	_winnode->setForeground(STATIC_COLOR);
 	_winnode->setVisible(false);
@@ -170,6 +221,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets) {
     
     _active = true;
     _complete = false;
+	_gameOver = false;
     //setDebug(false);
     
     // XNA nostalgia
@@ -181,16 +233,35 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets) {
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void GameScene::dispose() {
-    if (_active) {
+	if (_active) {
+		removeAllChildren();
 		_input.dispose();
 		_rootnode = nullptr;
 		_winnode = nullptr;
 		_loadnode = nullptr;
 		_gamestate = nullptr;
+		_active = false;
 		_complete = false;
 		_debug = false;
 		Scene::dispose();
-    }
+	}
+}
+
+
+#pragma mark -
+#pragma mark Level Layout
+
+/**
+ * Resets the status of the game so that we can play again.
+ *
+ * This method disposes of the world and creates a new one.
+ */
+void GameScene::reset() {
+    _gamestate->getPhysicsWorld()->clear();
+    _rootnode->removeAllChildren();
+    //_debugnode->removeAllChildren();
+    _gameOver = false;
+    setComplete(false);
 }
 
 
@@ -233,9 +304,11 @@ void GameScene::update(float dt) {
 		}
 	}
 	_input.update(dt);
-
+	if (_gameOver) { reset(); }
 	// Process the toggled key commands
-	// if (_input.didDebug()) { setDebug(!isDebug()); }
+	//if (_input.didDebug()) { setDebug(!isDebug()); }
+	//auto x = _gamestate->getPhysicsWorld()->getObstacles();
+
 	if (_input.didReset()) {
 		// Unload the level but keep in memory temporarily
 		_assets->unload<GameState>(PROTO_LEVEL_KEY);
@@ -257,10 +330,64 @@ void GameScene::update(float dt) {
 	player->setFY(_input.getVertical() * player->getThrust());
 	player->applyForce();
 
-	// Animate the three burners
-	/*updateBurner(RocketModel::Burner::MAIN, rocket->getFY() >  1);
-	updateBurner(RocketModel::Burner::LEFT, rocket->getFX() >  1);
-	updateBurner(RocketModel::Burner::RIGHT, rocket->getFX() <  -1);*/
+	std::shared_ptr<EnemyModel> enemy = _gamestate->getEnemy();
+
+	Vec2 rocket_pos = player->getPosition();
+	Vec2 enemy_pos = enemy->getPosition();
+
+	//_world->getObstacles();
+
+	Vec2 direction = rocket_pos.subtract(enemy_pos).normalize().scale(2.0f);
+	//direction = direction * 2.0f;
+
+	float rand_x = (-0.25f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.25f + 0.25f)));
+	float rand_y = (-0.25f) + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.25f + 0.25f)));
+
+	direction = direction + Vec2(rand_x, rand_y);
+
+	//CULog("Vector: %s", direction.toString().c_str());
+	//CULog("Rand: %f", rand_x);
+	//CULog("Rand: %f", rand_y);
+
+	//CULog("%f", direction.length());
+
+	//_enemy->setFX(direction.x * _enemy->getThrust());
+	//_enemy->setFY(direction.y * _enemy->getThrust());
+
+	counter++;
+
+	//CULog("%f", counter);
+
+	if (counter > 200.0f) {
+		counter = 0.0f;
+	}
+
+	if (enemy->getBody() && counter < 5.0f) {
+		enemy->getBody()->ApplyLinearImpulseToCenter(b2Vec2(direction.x, direction.y), true);
+		//_enemy->setLinearVelocity(direction / 1.5f);
+		enemy->getBody()->SetLinearDamping(0.15f);
+	}
+	//_enemy->setLinearVelocity(direction / 1.5f);
+	//_enemy->setLinearDamping(1.5f);
+	//_enemy->applyForce();
+
+	std::vector<std::shared_ptr<Obstacle> > obstacles = _gamestate->getPhysicsWorld()->getObstacles();
+	for (std::shared_ptr<cugl::Obstacle> o : obstacles) {
+		SimpleObstacle* so = (SimpleObstacle*)o->getBody()->GetUserData();
+		if (so->getShouldStop()) {
+			//CULog("STOPPING OBJECT - %s", so->getName().c_str());
+			so->setShouldStop(false);
+			so->setLinearVelocity(0, 0);
+			so->setCollisionTimeout(.25f);
+		}
+		float timeout = so->getCollisionTimeout();
+		timeout -= dt;
+		if (timeout < 0) timeout = 0.0f;
+		so->setCollisionTimeout(timeout);
+	}
+
+	// Since items may be deleted, garbage collect
+	_gamestate->getPhysicsWorld()->garbageCollect();
 
 	// Turn the physics engine crank.
 	_gamestate->getPhysicsWorld()->update(dt);
@@ -276,6 +403,19 @@ void GameScene::activateWorldCollisions(const std::shared_ptr<ObstacleWorld>& ph
 	};
 }
 
+void GameScene::removeEnemy(EnemyModel* enemy){
+    // do not attempt to remove a bullet that has already been removed
+    if (enemy->isRemoved()) {
+        return;
+    }
+    CULog("Ship Node %s", enemy->getName().c_str());
+    _rootnode->removeChild(enemy->getShipNode());
+//    _world->removeObstacle(enemy);
+    enemy->setDebugScene(nullptr);
+    enemy->markRemoved(true);
+    CULog("REMOVING ENEMY");
+}
+
 /**
  * Processes the start of a collision
  *
@@ -288,6 +428,55 @@ void GameScene::activateWorldCollisions(const std::shared_ptr<ObstacleWorld>& ph
 void GameScene::beginContact(b2Contact* contact) {
     b2Body* body1 = contact->GetFixtureA()->GetBody();
     b2Body* body2 = contact->GetFixtureB()->GetBody();
+    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+	
+	std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
+
+    if(so1->getName() == "water"){
+        CULog("MARKED FOR REMOVAL");
+        if(so2->getName()==ENEMY_TEXTURE){
+            removeEnemy((EnemyModel*) so2);
+        }
+        if(so2 == player.get()){
+            _gameOver = true;
+        }
+    }
+    if(so2->getName() == "water"){
+        CULog("MARKED FOR REMOVAL");
+        if(so1->getName()==ENEMY_TEXTURE){
+            removeEnemy((EnemyModel*) so1);
+        }
+        if(so1 == player.get()){
+            _gameOver = true;
+        }
+    }
+}
+
+/**
+ * Processes the start of a collision
+ *
+ * This method is called when we first get a collision between two objects.  We use
+ * this method to test if it is the "right" kind of collision.  In particular, we
+ * use it to test if we make it to the win door.
+ *
+ * @param  contact  The two bodies that collided
+ */
+void GameScene::endContact(b2Contact* contact) {
+//    b2Body* body1 = contact->GetFixtureA()->GetBody();
+//    b2Body* body2 = contact->GetFixtureB()->GetBody();
+//    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+//    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+//    if(so1->getShouldStop()){
+//        so1->setLinearVelocity(0,0);
+//        so1->setShouldStop(false);
+//        CULog("\n\n\nSTOPPING - %s\n", so1->getName().c_str());
+//    }
+//    if(so2->getShouldStop()){
+//        so2->setLinearVelocity(0, 0);
+//        so2->setShouldStop(false);
+//        CULog("\n\n\nSTOPPING - %s\n", so2->getName().c_str());
+//    }
 }
 
 /**
@@ -301,12 +490,20 @@ void GameScene::beginContact(b2Contact* contact) {
  * @param  oldManfold  	The collision manifold before contact
  */
 void GameScene::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
-	CULog("Colliding!");
+    //CULog("CONTACT......");
     float speed = 0;
 
     // Use Ian Parberry's method to compute a speed threshold
     b2Body* body1 = contact->GetFixtureA()->GetBody();
     b2Body* body2 = contact->GetFixtureB()->GetBody();
+    SimpleObstacle* so1 = (SimpleObstacle*)(body1->GetUserData());
+    SimpleObstacle* so2 = (SimpleObstacle*)(body2->GetUserData());
+    if(so1->getLinearVelocity().isNearZero(1.5f) && !so2->getLinearVelocity().isNearZero(1.5f) && so1->getCollisionTimeout() == 0){
+        so2->setShouldStop(true);
+    }
+    if(so2->getLinearVelocity().isNearZero(1.5f) && !so1->getLinearVelocity().isNearZero(1.5f) && so2->getCollisionTimeout() == 0){
+        so1->setShouldStop(true);
+    }
     b2WorldManifold worldManifold;
     contact->GetWorldManifold(&worldManifold);
     b2PointState state1[2], state2[2];

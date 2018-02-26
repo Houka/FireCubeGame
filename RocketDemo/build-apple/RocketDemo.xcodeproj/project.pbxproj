@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		081C73B42043BCD3000D997C /* RDEnemyModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 081C73B02043BCD3000D997C /* RDEnemyModel.cpp */; };
+		081C73B52043BCD3000D997C /* RDEnemyModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 081C73B02043BCD3000D997C /* RDEnemyModel.cpp */; };
 		EB122D991E281EE70019E2D1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB122D981E281EE70019E2D1 /* CoreGraphics.framework */; };
 		EB122D9B1E281EFC0019E2D1 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB122D9A1E281EFC0019E2D1 /* ImageIO.framework */; };
 		EB122DB71E281F7E0019E2D1 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = EB3B95851E25B1FA00314284 /* sounds */; };
@@ -87,6 +89,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		081C73B02043BCD3000D997C /* RDEnemyModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RDEnemyModel.cpp; sourceTree = "<group>"; };
+		081C73B62043BCDD000D997C /* RDEnemyModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RDEnemyModel.h; sourceTree = "<group>"; };
 		EB122D981E281EE70019E2D1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		EB122D9A1E281EFC0019E2D1 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		EB122DA01E281F4A0019E2D1 /* Rocket Demo (iOS).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rocket Demo (iOS).app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -235,6 +239,8 @@
 		EBB1AC281DF8C75400C353B0 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				081C73B62043BCDD000D997C /* RDEnemyModel.h */,
+				081C73B02043BCD3000D997C /* RDEnemyModel.cpp */,
 				EBB1AC2B1DF8C76D00C353B0 /* main.cpp */,
 				EB3B95771E25B1E000314284 /* RDApp.h */,
 				EB3B95761E25B1E000314284 /* RDApp.cpp */,
@@ -482,6 +488,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB122DBE1E28203D0019E2D1 /* main.cpp in Sources */,
+				081C73B52043BCD3000D997C /* RDEnemyModel.cpp in Sources */,
 				EB122DBF1E28203D0019E2D1 /* RDApp.cpp in Sources */,
 				EB8ADF5F201E54160037306F /* RDGameScene.cpp in Sources */,
 				EB122DC11E28203D0019E2D1 /* RDInput.cpp in Sources */,
@@ -495,6 +502,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBB1AC2D1DF8C76D00C353B0 /* main.cpp in Sources */,
+				081C73B42043BCD3000D997C /* RDEnemyModel.cpp in Sources */,
 				EB3B95801E25B1E000314284 /* RDApp.cpp in Sources */,
 				EB8ADF5E201E54130037306F /* RDGameScene.cpp in Sources */,
 				EB3B95821E25B1E000314284 /* RDInput.cpp in Sources */,
