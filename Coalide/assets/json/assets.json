@@ -1,0 +1,37 @@
+{
+  "textures": {
+    "player": {
+			"file":     "textures/player.png"
+		},
+		"enemy": {
+			"file":     "textures/enemy.png"
+		},
+    "water": {
+      "file": "textures/water_small.png"
+    },
+    "island": {
+      "file": "textures/land_small.png"
+    },
+    "island_base": {
+      "file": "textures/combined_small.png"
+    },
+    "land": {
+      "file": "textures/land_small.png"
+    },
+    "l_land_base": {
+      "file": "textures/combined_left.png"
+    },
+    "land_base": {
+      "file": "textures/combined_middle.png"
+    },
+    "r_land_base": {
+      "file": "textures/combined_right.png"
+    }
+  },
+	"fonts": {
+		"charlemagne": {
+			"file":     "fonts/Charlemagne.ttf",
+			"size":     64
+		}
+	}
+}

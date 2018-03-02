@@ -1,0 +1,145 @@
+//
+//	EnemyModel.h
+//	Coalide
+//
+#ifndef __ENEMY_MODEL_H__
+#define __ENEMY_H__
+#include <cugl/cugl.h>
+
+using namespace cugl;
+
+
+/**
+* This class is the enemy avatar.
+*/
+class EnemyModel : public CapsuleObstacle {
+protected:
+	/** The scene graph node for the enemy */
+	std::shared_ptr<Node> _node;
+	/** The texture key for the enemy */
+	std::string _texture;
+
+	/** The force to apply to this enemy */
+	Vec2 _force;
+
+	/** The ratio of the enemy sprite to the physics body */
+	float _drawscale;
+
+public:
+#pragma mark Constructors
+	/**
+	* Creates a new enemy at the origin.
+	*/
+	EnemyModel(void) : CapsuleObstacle() { }
+
+	/**
+	* Destroys this enemy, releasing all resources.
+	*/
+	virtual ~EnemyModel(void) { dispose(); }
+
+	/**
+	* Disposes all resources and assets of this enemy.
+	*/
+	void dispose();
+
+	/**
+	* Initializes a new enemy with the given position and size.
+	*
+	* @param  pos		Initial position in world coordinates
+	* @param  size   	The dimensions of the sprite.
+	*
+	* @return  true if the obstacle is initialized properly, false otherwise.
+	*/
+	virtual bool init(const Vec2& pos, const Size& size) override;
+
+
+#pragma mark Static Constructors
+	/**
+	* Returns a newly allocated enemy with the given position and size
+	*
+	* @param pos   Initial position in world coordinates
+	* @param size  The dimensions of the sprite.
+	*
+	* @return a newly allocated enemy with the given position
+	*/
+	static std::shared_ptr<EnemyModel> alloc(const Vec2& pos, const Size& size) {
+		std::shared_ptr<EnemyModel> result = std::make_shared<EnemyModel>();
+		return (result->init(pos, size) ? result : nullptr);
+	}
+
+#pragma mark -
+#pragma mark Accessors
+	/**
+	* Returns the force applied to this enemy.
+	*
+	* @return the force applied to this enemy.
+	*/
+	const Vec2& getForce() const { return _force; }
+
+	/**
+	* Sets the force applied to this enemy.
+	*
+	* @param value the force applied to this enemy.
+	*/
+	void setForce(const Vec2& value) { _force.set(value); }
+
+	/**
+	* Returns the scene graph node representing this enemy.
+	*
+	* @return the scene graph node representing this enemy.
+	*/
+	const std::shared_ptr<Node>& getNode() const { return _node; }
+
+	/**
+	* Sets the scene graph node representing this enemy.
+	*
+	* @param node  The scene graph node representing this enemy.
+	*/
+	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
+
+	/**
+	* Returns the texture (key) for this enemy.
+	*
+	* @return the texture (key) for this enemy.
+	*/
+	const std::string& getTextureKey() const { return _texture; }
+
+	/**
+	* Returns the texture (key) for this enemy.
+	*
+	* @param strip the texture (key) for this enemy.
+	*/
+	void setTextureKey(const std::string& strip) { _texture = strip; }
+
+	/**
+	* Returns the ratio of the enemy sprite to the physics body.
+	*
+	* @return the ratio of the enemy sprite to the physics body.
+	*/
+	float getDrawScale() const { return _drawscale; }
+
+	/**
+	* Sets the ratio of the enemy sprite to the physics body.
+	*
+	* @param scale The ratio of the enemy sprite to the physics body.
+	*/
+	void setDrawScale(float scale) { _drawscale = scale; }
+
+
+#pragma mark -
+#pragma mark Physics
+	/**
+	* Applies the force to the body of this enemy.
+	*/
+	void applyForce();
+
+	/**
+	* Updates the object's physics state (NOT GAME LOGIC). This is the method
+	* that updates the scene graph and is called agter collision resolution.
+	*
+	* @param dt Timing values from parent loop
+	*/
+	virtual void update(float dt) override;
+};
+
+#endif /* __PLAYER_MODEL_H__ */
