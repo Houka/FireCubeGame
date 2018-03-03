@@ -1,31 +1,26 @@
 {
   "textures": {
-    "player": {
-			"file":     "textures/player.png"
-		},
-		"enemy": {
-			"file":     "textures/enemy.png"
-		},
-    "water": {
-      "file": "textures/water_small.png"
-    },
-    "island": {
-      "file": "textures/land_small.png"
-    },
-    "island_base": {
-      "file": "textures/combined_small.png"
-    },
-    "land": {
-      "file": "textures/land_small.png"
-    },
-    "l_land_base": {
-      "file": "textures/combined_left.png"
-    },
-    "land_base": {
-      "file": "textures/combined_middle.png"
-    },
-    "r_land_base": {
-      "file": "textures/combined_right.png"
+    "protosheet": {
+      "file": "textures/tileset.png",
+      "atlas": {
+        "player": [ 0, 5, 400, 35 ],
+        "enemy": [ 16, 45, 384, 75 ],
+        "water": [ 0, 0, 32, 32 ],
+        "island": [ 0, 32, 32, 64 ],
+        "island_base": [ 0, 64, 64, 96 ],
+        "land": [ 64, 32, 128, 64 ],
+        "nw_land": [ 32, 0, 64, 32 ],
+        "n_land": [ 64, 0, 96, 32 ],
+        "ne_land": [ 96, 0, 128, 32 ],
+        "e_land": [ 96, 32, 128, 64 ],
+        "se_land": [ 96, 64, 128, 96 ],
+        "s_land": [ 64, 64, 96, 96 ],
+        "sw_land": [ 32, 64, 64, 96 ],
+        "w_land": [ 32, 32, 64, 64 ],
+        "l_land_base": [ 32, 96, 64, 128 ],
+        "c_land_base": [ 64, 96, 96, 128 ],
+        "r_land_base": [ 96, 96, 128, 128 ]
+      }
     }
   },
 	"fonts": {
