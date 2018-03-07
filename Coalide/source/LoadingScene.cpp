@@ -50,8 +50,6 @@ bool LoadingScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
 		this->_active = down;
 	});
 
-	CULog(_bar->getPosition().toString().c_str());
-
 	Application::get()->setClearColor(Color4(192, 192, 192, 255));
 	addChild(layer);
 	return true;

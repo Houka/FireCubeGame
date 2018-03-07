@@ -3,95 +3,23 @@
     "protosheet": {
       "file": "textures/tileset.png",
       "atlas": {
-        "player": [ 0, 5, 400, 35 ],
-        "enemy": [ 16, 45, 384, 75 ],
+        "player": [ 128, 0, 160, 32 ],
+        "enemy": [ 128, 32, 160, 64 ],
         "water": [ 0, 0, 32, 32 ],
         "island": [ 0, 32, 32, 64 ],
-        "island_base": [ 0, 64, 64, 96 ],
-        "land": [ 64, 32, 128, 64 ],
-        "nw_land": [ 32, 0, 64, 32 ],
-        "n_land": [ 64, 0, 96, 32 ],
-        "ne_land": [ 96, 0, 128, 32 ],
-        "e_land": [ 96, 32, 128, 64 ],
-        "se_land": [ 96, 64, 128, 96 ],
-        "s_land": [ 64, 64, 96, 96 ],
-        "sw_land": [ 32, 64, 64, 96 ],
-        "w_land": [ 32, 32, 64, 64 ],
-        "l_land_base": [ 32, 96, 64, 128 ],
-        "c_land_base": [ 64, 96, 96, 128 ],
-        "r_land_base": [ 96, 96, 128, 128 ]
-      }
-    }
-  },
-  "scenes": {
-    "units": {
-      "type": "Node",
-      "format": {
-        "type": "Anchored"
-      },
-      "children": {
-        "player": {
-          "type": "Image",
-          "data": {
-            "texture": "player"
-          }
-        },
-        "enemy": {
-          "type": "Image",
-          "data": {
-            "texture": "enemy"
-          }
-        }
-      }
-    },
-    "terrain": {
-      "type": "Node",
-      "format": {
-        "type": "Anchored"
-      },
-      "children": {
-        "water": {
-          "type": "Image",
-          "data": {
-            "texture": "water"
-          }
-        },
-        "island": {
-          "type": "Image",
-          "data": {
-            "texture": "island"
-          }
-        },
-        "island-base": {
-          "type": "Image",
-          "data": {
-            "texture": "island_base"
-          }
-        },
-        "land": {
-          "type": "Image",
-          "data": {
-            "texture": "land"
-          }
-        },
-        "l-land-base": {
-          "type": "Image",
-          "data": {
-            "texture": "l_land_base"
-          }
-        },
-        "c-land-base": {
-          "type": "Image",
-          "data": {
-            "texture": "c_land_base"
-          }
-        },
-        "r-land-base": {
-          "type": "Image",
-          "data": {
-            "texture": "r_land_base"
-          }
-        }
+        "islandBase": [ 0, 64, 32, 96 ],
+        "land": [ 64, 32, 96, 64 ],
+        "nwLand": [ 32, 0, 64, 32 ],
+        "nLand": [ 64, 0, 96, 32 ],
+        "neLand": [ 96, 0, 128, 32 ],
+        "eLand": [ 96, 32, 128, 64 ],
+        "seLand": [ 96, 64, 128, 96 ],
+        "sLand": [ 64, 64, 96, 96 ],
+        "swLand": [ 32, 64, 64, 96 ],
+        "wLand": [ 32, 32, 64, 64 ],
+        "lLandBase": [ 32, 96, 64, 128 ],
+        "cLandBase": [ 64, 96, 96, 128 ],
+        "rLandBase": [ 96, 96, 128, 128 ]
       }
     }
   },

@@ -18,22 +18,6 @@ using namespace cugl;
 #pragma mark Constructors
 
 /**
-* Creates a game state.
-*/
-LevelController(const std::shared_ptr<cugl::AssetManager>& assets) : Asset(), _world(nullptr), _player(nullptr), _gamestate(nullptr), _levelBuilt(false) {
-	// Slice the spritesheet
-	_playerSprite = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("units_player"));
-	_enemySprite = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("units_enemy"));
-	_waterTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_water"));
-	_islandTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_island"));
-	_islandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_island_base"));
-	_landTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_land"));
-	_leftLandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_l_land_base"));
-	_centerLandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_c_land_base"));
-	_rightLandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_r_land_base"));
-}
-
-/**
 * Disposes all resources and assets of this game state.
 *
 * Any assets owned by this object will be immediately released.  Once
@@ -190,39 +174,63 @@ bool LevelController::loadTile(Vec2 tilePos, GameState::TILE_TYPE tileType) {
 	// crate->setName(reader.getKey());
 	switch (tileType) {
 	case GameState::TILE_TYPE::WATER:
-		tile->setTextureKey("water");
+		tile->setTextureKey("protosheet_water");
 		tile->setName("water");
 		break;
 	case GameState::TILE_TYPE::ISLAND_BASE:
-		tile->setTextureKey("island_base");
-		tile->setName("island_base");
+		tile->setTextureKey("protosheet_islandBase");
+		tile->setName("island-base");
 		break;
 	case GameState::TILE_TYPE::ISLAND:
-		tile->setTextureKey("island");
+		tile->setTextureKey("protosheet_island");
 		tile->setName("island");
 		break;
 	case GameState::TILE_TYPE::NW_LAND:
+		tile->setTextureKey("protosheet_nwLand");
+		tile->setName("nw-land");
+		break;
 	case GameState::TILE_TYPE::W_LAND:
+		tile->setTextureKey("protosheet_wLand");
+		tile->setName("w-land");
+		break;
 	case GameState::TILE_TYPE::SW_LAND:
+		tile->setTextureKey("protosheet_swLand");
+		tile->setName("sw-land");
+		break;
 	case GameState::TILE_TYPE::N_LAND:
+		tile->setTextureKey("protosheet_nLand");
+		tile->setName("n-land");
+		break;
 	case GameState::TILE_TYPE::LAND:
-	case GameState::TILE_TYPE::S_LAND:
-	case GameState::TILE_TYPE::NE_LAND:
-	case GameState::TILE_TYPE::E_LAND:
-	case GameState::TILE_TYPE::SE_LAND:
-		tile->setTextureKey("land");
+		tile->setTextureKey("protosheet_land");
 		tile->setName("land");
 		break;
+	case GameState::TILE_TYPE::S_LAND:
+		tile->setTextureKey("protosheet_sLand");
+		tile->setName("s-land");
+		break;
+	case GameState::TILE_TYPE::NE_LAND:
+		tile->setTextureKey("protosheet_neLand");
+		tile->setName("ne-land");
+		break;
+	case GameState::TILE_TYPE::E_LAND:
+		tile->setTextureKey("protosheet_eLand");
+		tile->setName("e-land");
+		break;
+	case GameState::TILE_TYPE::SE_LAND:
+		tile->setTextureKey("protosheet_seLand");
+		tile->setName("se-land");
+		break;
 	case GameState::TILE_TYPE::L_LAND_BASE:
-		tile->setTextureKey("l_land_base");
-		tile->setName("l_land_base");
+		tile->setTextureKey("protosheet_lLandBase");
+		tile->setName("l-land-base");
 		break;
 	case GameState::TILE_TYPE::LAND_BASE:
-		tile->setTextureKey("land_base");
-		tile->setName("land_base");
+		tile->setTextureKey("protosheet_cLandBase");
+		tile->setName("land-base");
 		break;
 	case GameState::TILE_TYPE::R_LAND_BASE:
-		tile->setTextureKey("r_land_base");
+		tile->setTextureKey("protosheet_rLandBase");
 		tile->setName("r_land_base");
 		break;
 	default:
@@ -265,7 +273,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 					std::shared_ptr<EnemyModel> enemy = EnemyModel::alloc(Vec2(j,i), UNIT_DIM);
 					enemy->setDrawScale(_scale.x);
 					enemy->setName("enemy" + enemyN);
-					enemy->setTextureKey("enemy");
+					enemy->setTextureKey("protosheet_enemy");
 					enemy->setBodyType(b2_dynamicBody);
 
 					_world->addObstacle(enemy);

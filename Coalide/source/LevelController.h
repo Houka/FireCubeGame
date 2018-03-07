@@ -42,7 +42,7 @@ public:
 	* NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate a model on
 	* the heap, use one of the static constructors instead.
 	*/
-	LevelController(const std::shared_ptr<cugl::AssetManager>& assets);
+	LevelController() : Asset(), _world(nullptr), _player(nullptr), _gamestate(nullptr), _levelBuilt(false) { }
 
 	/**
 	* Destroys this game state, releasing all resources.
