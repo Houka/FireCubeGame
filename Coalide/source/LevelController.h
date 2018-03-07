@@ -42,7 +42,7 @@ public:
 	* NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate a model on
 	* the heap, use one of the static constructors instead.
 	*/
-	LevelController() : Asset(), _world(nullptr), _player(nullptr), _gamestate(nullptr), _levelBuilt(false) { }
+	LevelController(const std::shared_ptr<cugl::AssetManager>& assets);
 
 	/**
 	* Destroys this game state, releasing all resources.
@@ -87,7 +87,7 @@ public:
 #pragma mark -
 #pragma mark Level Loading
 	/** Loads the floor tiles */
-	bool loadEnvironment(const std::shared_ptr<JsonValue>& json);
+	bool loadTerrain(const std::shared_ptr<JsonValue>& json);
 
 	/** Loads a single floor tile */
 	bool loadTile(Vec2 tilePos, GameState::TILE_TYPE tileType);

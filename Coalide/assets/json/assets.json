@@ -23,6 +23,78 @@
       }
     }
   },
+  "scenes": {
+    "units": {
+      "type": "Node",
+      "format": {
+        "type": "Anchored"
+      },
+      "children": {
+        "player": {
+          "type": "Image",
+          "data": {
+            "texture": "player"
+          }
+        },
+        "enemy": {
+          "type": "Image",
+          "data": {
+            "texture": "enemy"
+          }
+        }
+      }
+    },
+    "terrain": {
+      "type": "Node",
+      "format": {
+        "type": "Anchored"
+      },
+      "children": {
+        "water": {
+          "type": "Image",
+          "data": {
+            "texture": "water"
+          }
+        },
+        "island": {
+          "type": "Image",
+          "data": {
+            "texture": "island"
+          }
+        },
+        "island-base": {
+          "type": "Image",
+          "data": {
+            "texture": "island_base"
+          }
+        },
+        "land": {
+          "type": "Image",
+          "data": {
+            "texture": "land"
+          }
+        },
+        "l-land-base": {
+          "type": "Image",
+          "data": {
+            "texture": "l_land_base"
+          }
+        },
+        "c-land-base": {
+          "type": "Image",
+          "data": {
+            "texture": "c_land_base"
+          }
+        },
+        "r-land-base": {
+          "type": "Image",
+          "data": {
+            "texture": "r_land_base"
+          }
+        }
+      }
+    }
+  },
 	"fonts": {
 		"charlemagne": {
 			"file":     "fonts/Charlemagne.ttf",

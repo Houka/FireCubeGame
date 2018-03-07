@@ -18,6 +18,22 @@ using namespace cugl;
 #pragma mark Constructors
 
 /**
+* Creates a game state.
+*/
+LevelController(const std::shared_ptr<cugl::AssetManager>& assets) : Asset(), _world(nullptr), _player(nullptr), _gamestate(nullptr), _levelBuilt(false) {
+	// Slice the spritesheet
+	_playerSprite = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("units_player"));
+	_enemySprite = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("units_enemy"));
+	_waterTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_water"));
+	_islandTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_island"));
+	_islandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_island_base"));
+	_landTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_land"));
+	_leftLandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_l_land_base"));
+	_centerLandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_c_land_base"));
+	_rightLandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_r_land_base"));
+}
+
+/**
 * Disposes all resources and assets of this game state.
 *
 * Any assets owned by this object will be immediately released.  Once
@@ -68,7 +84,7 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
 	_world = ObstacleWorld::alloc(_bounds, cugl::Vec2(0, DEFAULT_GRAVITY));
 	
 	// Create the arena
-	if (!loadEnvironment(json)) {
+	if (!loadTerrain(json)) {
 		CUAssertLog(false, "Failed to load world");
 		return false;
 	}
@@ -84,7 +100,7 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
 	return true;
 }
 
-bool LevelController::loadEnvironment(const std::shared_ptr<JsonValue>& json) {
+bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 	bool success = false;
 	auto protoWorldLayer = json->get(LAYERS_FIELD)->get(0);
 	if (protoWorldLayer != nullptr) {

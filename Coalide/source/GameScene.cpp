@@ -52,6 +52,17 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	_collisions.init();
 	_ai.init();
 
+	//// Slice the spritesheet
+	//_playerSprite = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("units_player"));
+	//_enemySprite = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("units_enemy"));
+	//_waterTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_water"));
+	//_islandTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_island"));
+	//_islandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_island_base"));
+	//_landTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_land"));
+	//_leftLandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_l_land_base"));
+	//_centerLandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_c_land_base"));
+	//_rightLandBaseTexture = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("terrain_r_land_base"));
+
 	// Get the loaded level
 	_gamestate = assets->get<LevelController>(PROTO_LEVEL_KEY)->getGameState();
 	
