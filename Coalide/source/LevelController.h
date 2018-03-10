@@ -6,6 +6,7 @@
 #define __LEVEL_CONTROLLER_H__
 #include <cugl/cugl.h>
 #include "GameState.h"
+#include "Constants.h"
 
 using namespace cugl;
 
@@ -30,7 +31,7 @@ protected:
 	std::vector<std::shared_ptr<EnemyModel>> _enemies;
 	std::vector<std::shared_ptr<TileModel>> _tiles;
 
-	GameState::TILE_TYPE** _board;
+	TILE_TYPE** _board;
 
 	bool _levelBuilt;
 
@@ -90,7 +91,7 @@ public:
 	bool loadTerrain(const std::shared_ptr<JsonValue>& json);
 
 	/** Loads a single floor tile */
-	bool loadTile(Vec2 tilePos, GameState::TILE_TYPE tileType);
+	bool loadTile(Vec2 tilePos, TILE_TYPE tileType);
 
 	/** Loads the player, enemies, and inanimate objects */
 	bool loadUnits(const std::shared_ptr<JsonValue>& json);

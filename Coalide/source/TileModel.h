@@ -6,6 +6,7 @@
 #define __TILE_MODEL_H__
 
 #include <cugl/2d/physics/CUBoxObstacle.h>
+#include "Constants.h"
 
 using namespace cugl;
 
@@ -166,7 +167,7 @@ public:
 	* Returns true if the tile is water
 	*/
 	boolean isWater() {
-		return _tileType == WATER;
+		return _tileType == TILE_TYPE::WATER;
 	}
 
 #pragma mark -

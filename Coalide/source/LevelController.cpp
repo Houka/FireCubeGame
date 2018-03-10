@@ -3,7 +3,6 @@
 //  Coalide
 //
 #include "LevelController.h"
-#include "Constants.h"
 #include "GameState.h"
 #include "PlayerModel.h"
 #include "EnemyModel.h"
@@ -94,10 +93,10 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 		int worldH = _bounds.size.getIHeight();
 
 		auto worldData = protoWorldLayer->get(DATA_FIELD)->asFloatArray();
-		_board = new GameState::TILE_TYPE*[worldH];
+		_board = new TILE_TYPE*[worldH];
 		
 		for (int i = 0; i < worldH; i++) {
-			_board[i] = new GameState::TILE_TYPE[worldW];
+			_board[i] = new TILE_TYPE[worldW];
 		}
 
 		int count = 0;
@@ -105,52 +104,52 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 			for (int j = 0; j < worldW; j++) {
 				int tileVal = worldData[count] * 10;
 
-				GameState::TILE_TYPE tileType;
+				TILE_TYPE tileType;
 				switch (tileVal) {
 				case 0:
-					tileType = GameState::TILE_TYPE::WATER;
+					tileType = TILE_TYPE::WATER;
 					break;
 				case 1:
-					tileType = GameState::TILE_TYPE::ISLAND;
+					tileType = TILE_TYPE::ISLAND;
 					break;
 				case 2:
-					tileType = GameState::TILE_TYPE::ISLAND_BASE;
+					tileType = TILE_TYPE::ISLAND_BASE;
 					break;
 				case 10:
-					tileType = GameState::TILE_TYPE::NW_LAND;
+					tileType = TILE_TYPE::NW_LAND;
 					break;
 				case 11:
-					tileType = GameState::TILE_TYPE::W_LAND;
+					tileType = TILE_TYPE::W_LAND;
 					break;
 				case 12:
-					tileType = GameState::TILE_TYPE::SW_LAND;
+					tileType = TILE_TYPE::SW_LAND;
 					break;
 				case 13:
-					tileType = GameState::TILE_TYPE::L_LAND_BASE;
+					tileType = TILE_TYPE::L_LAND_BASE;
 					break;
 				case 20:
-					tileType = GameState::TILE_TYPE::N_LAND;
+					tileType = TILE_TYPE::N_LAND;
 					break;
 				case 21:
-					tileType = GameState::TILE_TYPE::LAND;
+					tileType = TILE_TYPE::LAND;
 					break;
 				case 22:
-					tileType = GameState::TILE_TYPE::S_LAND;
+					tileType = TILE_TYPE::S_LAND;
 					break;
 				case 23:
-					tileType = GameState::TILE_TYPE::LAND_BASE;
+					tileType = TILE_TYPE::LAND_BASE;
 					break;
 				case 30:
-					tileType = GameState::TILE_TYPE::NE_LAND;
+					tileType = TILE_TYPE::NE_LAND;
 					break;
 				case 31:
-					tileType = GameState::TILE_TYPE::E_LAND;
+					tileType = TILE_TYPE::E_LAND;
 					break;
 				case 32:
-					tileType = GameState::TILE_TYPE::SE_LAND;
+					tileType = TILE_TYPE::SE_LAND;
 					break;
 				case 33:
-					tileType = GameState::TILE_TYPE::R_LAND_BASE;
+					tileType = TILE_TYPE::R_LAND_BASE;
 					break;
 				default:
 					CUAssertLog(false, "Invalid tile value.");
@@ -164,7 +163,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 	return success;
 }
 
-bool LevelController::loadTile(Vec2 tilePos, GameState::TILE_TYPE tileType) {
+bool LevelController::loadTile(Vec2 tilePos, TILE_TYPE tileType) {
 	bool success = true;
 
 	// Get the object, which is automatically retained

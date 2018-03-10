@@ -3,7 +3,6 @@
 //	Coalide
 //
 #include "GameState.h"
-#include "Constants.h"
 #include "PlayerModel.h"
 #include "EnemyModel.h"
 #include "TileModel.h"

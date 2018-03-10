@@ -9,6 +9,7 @@
 #include <vector>
 #include <cugl/assets/CUAsset.h>
 #include <cugl/io/CUJsonReader.h>
+#include "Constants.h"
 
 using namespace cugl;
 
@@ -30,29 +31,6 @@ class TileModel;
 * during scene graph initialization.
 */
 class GameState {
-public:
-	/**
-	* Enumeration to identify the rocket afterburner
-	*/
-	enum class TILE_TYPE : int {
-		WATER,
-		ISLAND,
-		ISLAND_BASE,
-		LAND,
-		NW_LAND,
-		N_LAND,
-		NE_LAND,
-		E_LAND,
-		SE_LAND,
-		S_LAND,
-		SW_LAND,
-		W_LAND,
-		L_LAND_BASE,
-		LAND_BASE,
-		R_LAND_BASE
-	};
-
-
 protected:
 	Rect _bounds;
 	Vec2 _gravity;
