@@ -23,6 +23,7 @@ class TileModel : public BoxObstacle {
 protected:
 	std::shared_ptr<Node> _node;
 	std::string _tileTexture;
+	TILE_TYPE _tileType;
 	
 	float _drawscale;
 
@@ -113,6 +114,11 @@ public:
 #pragma mark -
 #pragma mark Accessors
 	/**
+	* Sets the tile type.
+	*/
+	void setType(TILE_TYPE tileType) { _tileType = tileType; }
+
+	/**
 	* Returns the scene graph node representing this floor tile.
 	*
 	* @return the scene graph node representing this floor tile.
@@ -153,6 +159,15 @@ public:
 	* @param scale The ratio of the sprite to the physics body.
 	*/
 	void setDrawScale(float scale) { _drawscale = scale; }
+
+#pragma mark -
+#pragma mark Type Checkers
+	/**
+	* Returns true if the tile is water
+	*/
+	boolean isWater() {
+		return _tileType == WATER;
+	}
 
 #pragma mark -
 #pragma mark Update

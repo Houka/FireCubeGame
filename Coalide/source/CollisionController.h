@@ -10,6 +10,10 @@ using namespace cugl;
 
 
 class CollisionController {
+protected:
+	std::vector<b2JointDef*> _jointsToCreate;
+	std::vector<b2Joint*> _jointsToDestroy;
+
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -46,5 +50,9 @@ public:
 	* @param  contact  The collision manifold before contact
 	*/
 	void beforeSolve(b2Contact* contact, const b2Manifold* oldManifold);
+
+	void endContact(b2Contact* contact);
+
+	void addDestroyFrictionJoints(std::shared_ptr<ObstacleWorld> world);
 };
 #endif /* __COLLISION_CONTROLLER_H__ */

@@ -173,74 +173,60 @@ bool LevelController::loadTile(Vec2 tilePos, GameState::TILE_TYPE tileType) {
 	// Using the key makes too many sounds
 	// crate->setName(reader.getKey());
 	switch (tileType) {
-	case GameState::TILE_TYPE::WATER:
+	case TILE_TYPE::WATER:
 		tile->setTextureKey("protosheet_water");
-		tile->setName("water");
 		break;
-	case GameState::TILE_TYPE::ISLAND_BASE:
+	case TILE_TYPE::ISLAND_BASE:
 		tile->setTextureKey("protosheet_islandBase");
-		tile->setName("island-base");
 		break;
-	case GameState::TILE_TYPE::ISLAND:
+	case TILE_TYPE::ISLAND:
 		tile->setTextureKey("protosheet_island");
-		tile->setName("island");
 		break;
-	case GameState::TILE_TYPE::NW_LAND:
+	case TILE_TYPE::NW_LAND:
 		tile->setTextureKey("protosheet_nwLand");
-		tile->setName("nw-land");
 		break;
-	case GameState::TILE_TYPE::W_LAND:
+	case TILE_TYPE::W_LAND:
 		tile->setTextureKey("protosheet_wLand");
-		tile->setName("w-land");
 		break;
-	case GameState::TILE_TYPE::SW_LAND:
+	case TILE_TYPE::SW_LAND:
 		tile->setTextureKey("protosheet_swLand");
-		tile->setName("sw-land");
 		break;
-	case GameState::TILE_TYPE::N_LAND:
+	case TILE_TYPE::N_LAND:
 		tile->setTextureKey("protosheet_nLand");
-		tile->setName("n-land");
 		break;
-	case GameState::TILE_TYPE::LAND:
+	case TILE_TYPE::LAND:
 		tile->setTextureKey("protosheet_land");
-		tile->setName("land");
 		break;
-	case GameState::TILE_TYPE::S_LAND:
+	case TILE_TYPE::S_LAND:
 		tile->setTextureKey("protosheet_sLand");
-		tile->setName("s-land");
 		break;
-	case GameState::TILE_TYPE::NE_LAND:
+	case TILE_TYPE::NE_LAND:
 		tile->setTextureKey("protosheet_neLand");
-		tile->setName("ne-land");
 		break;
-	case GameState::TILE_TYPE::E_LAND:
+	case TILE_TYPE::E_LAND:
 		tile->setTextureKey("protosheet_eLand");
-		tile->setName("e-land");
 		break;
-	case GameState::TILE_TYPE::SE_LAND:
+	case TILE_TYPE::SE_LAND:
 		tile->setTextureKey("protosheet_seLand");
-		tile->setName("se-land");
 		break;
-	case GameState::TILE_TYPE::L_LAND_BASE:
+	case TILE_TYPE::L_LAND_BASE:
 		tile->setTextureKey("protosheet_lLandBase");
-		tile->setName("l-land-base");
 		break;
-	case GameState::TILE_TYPE::LAND_BASE:
+	case TILE_TYPE::LAND_BASE:
 		tile->setTextureKey("protosheet_cLandBase");
-		tile->setName("land-base");
 		break;
-	case GameState::TILE_TYPE::R_LAND_BASE:
+	case TILE_TYPE::R_LAND_BASE:
 		tile->setTextureKey("protosheet_rLandBase");
-		tile->setName("r_land_base");
 		break;
 	default:
 		CUAssertLog(false, "Invalid tile type.");
 		break;
 	}
 
+	tile->setType(tileType);
 	tile->setBodyType(b2_staticBody);
 	tile->setDrawScale(_scale.x);
-	// _world->addObstacle(tile);
+	//_world->addObstacle(tile);
 	
 	_tiles.push_back(tile);
 

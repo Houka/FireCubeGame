@@ -21,6 +21,7 @@
 #define DEFAULT_HEIGHT  18.0f
 
 #define DEFAULT_GRAVITY 0.0f
+#define GRAVITY	9.8f
 
 #define UNIT_DIM Vec2(1,1)
 
@@ -55,5 +56,28 @@
 #define PROTO_LEVEL_FILE   "json/map.json"
 /** The key for our loaded level */
 #define PROTO_LEVEL_KEY    "protolevel"
+
+#pragma mark -
+#pragma mark Tile Types
+/**
+* Enumeration to identify the rocket afterburner
+*/
+enum class TILE_TYPE : int {
+	WATER,
+	ISLAND,
+	ISLAND_BASE,
+	LAND,
+	NW_LAND,
+	N_LAND,
+	NE_LAND,
+	E_LAND,
+	SE_LAND,
+	S_LAND,
+	SW_LAND,
+	W_LAND,
+	L_LAND_BASE,
+	LAND_BASE,
+	R_LAND_BASE
+};
 
 #endif /* defined(__LEVEL_CONSTANTS_H__) */
