@@ -5,6 +5,8 @@
 
 #include "PlayerModel.h"
 
+#define IMPULSE_SCALE .05
+
 void PlayerModel::dispose() { }
 
 /**
@@ -34,9 +36,11 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 }
 
 /**
-* Applies the force to the body of this player
+* Applies the impulse to the body of this player
 */
-void PlayerModel::applyForce() { }
+void PlayerModel::applyLinearImpulse(Vec2& impulse) {
+    _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * b2Vec2(impulse.x,impulse.y), true);
+}
 
 /**
 * Updates the object's physics state (NOT GAME LOGIC). This is the method

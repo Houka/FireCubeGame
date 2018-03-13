@@ -8,6 +8,7 @@
 #include <Box2D/Collision/b2Collision.h>
 #include "Constants.h"
 #include "LevelController.h"
+#include "PlayerModel.h"
 
 #include <string>
 
@@ -51,6 +52,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// Initialize the controllers used in the game mode
 	_collisions.init();
 	_ai.init();
+    _input.init();
+
 
 	// Get the loaded level
 	_gamestate = assets->get<LevelController>(PROTO_LEVEL_KEY)->getGameState();
@@ -196,6 +199,12 @@ void GameScene::update(float dt) {
 		CULog("Shutting down");
 		Application::get()->quit();
 	}
+    
+    if(_input.didSling(true)){
+        cugl::Vec2 sling = _input.getLatestSlingVector();
+        PlayerModel* player = _gamestate->getPlayer().get();
+        player->applyLinearImpulse(sling);
+    }
 
 	// Update the physics world
 	_gamestate->getWorld()->update(dt);

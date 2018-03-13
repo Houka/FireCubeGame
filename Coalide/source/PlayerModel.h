@@ -17,8 +17,6 @@ protected:
 	std::shared_ptr<Node> _node;
 	std::string _texture;
 
-	Vec2 _force;
-
 	float _drawscale;
 
 public:
@@ -65,20 +63,6 @@ public:
 
 #pragma mark -
 #pragma mark Accessors
-	/**
-	* Returns the force applied to thes player.
-	*
-	* @return the force applied to the player.
-	*/
-	const Vec2& getForce() const { return _force; }
-
-	/**
-	* Sets the force applied to the player.
-	*
-	* @param value the force applied to the player.
-	*/
-	void setForce(const Vec2& value) { _force.set(value); }
-
 	/**
 	* Returns the scene graph node representing the player.
 	*
@@ -127,7 +111,7 @@ public:
 	/**
 	* Applies the force to the body of this player
 	*/
-	void applyForce();
+    void applyLinearImpulse(Vec2& impulse);
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method 

@@ -11,6 +11,22 @@ private:
 	bool _debugPressed;
 	bool _resetPressed;
 	bool _exitPressed;
+    bool _didSling;
+    /** Is this inputController active */
+    bool _active = false;
+    /** Whether or not are in an active mouse pan */
+    bool _mousepan;
+    // TOUCH SUPPORT
+    /** The initial touch location for the current gesture */
+    cugl::Vec2 _initTouch;
+    /** The latest vector that represents a sling movement */
+    cugl::Vec2 _latestSling;
+    /** The timestamp for the beginning of the current gesture */
+    cugl::Timestamp _timestamp;
+    /** The last touch location for the current gesture */
+    cugl::Vec2 _previousTouch;
+    /** The current touch location for the current gesture */
+    cugl::Vec2 _currentTouch;
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -88,7 +104,46 @@ public:
 
 
 #pragma mark -
+#pragma mark Mouse Callbacks
+    
+    /**
+     * Called when a mouse button is initially pressed
+     *
+     * This is called in addition to the touch event, as mouse events are
+     * all touch events. The mousepan boolean keeps them both from
+     * being processed in future events.
+     *
+     * @param  event    The event storing the mouse state
+     * @param  clicks   The number of recent clicks, including this one
+     * @parm   focus       Whether the listener currently has focus
+     */
+    void    mouseDownCB(const cugl::MouseEvent& event, Uint8 clicks, bool focus);
+    
+    /**
+     * Called when a mouse button is released
+     *
+     * This is called in addition to the touch event, as mouse events are
+     * all touch events. The mousepan boolean keeps them both from
+     * being processed in future events.
+     *
+     * @param  event    The event storing the mouse state
+     * @param  clicks   The number of recent clicks, including this one
+     * @parm   focus       Whether the listener currently has focus
+     */
+    void    mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, bool focus);
+    
+    /**
+     * Called when the mouse moves
+     *
+     * @param  event    The event storing the mouse state
+     * @param  previous The previous position of the mouse
+     * @parm   focus       Whether the listener currently has focus
+     */
+    void    mouseMovedCB(const cugl::MouseEvent& event, const cugl::Vec2& previous, bool focus);
+    
+#pragma mark -
 #pragma mark Touch Callbacks
+    
 	/**
 	* Callback for the beginning of a touch event
 	*
@@ -104,6 +159,23 @@ public:
 	* @param event The associated event
 	*/
 	void touchEndedCB(const cugl::TouchEvent& event, bool focus);
+    
+#pragma mark Polling
+    
+    /**
+     * A polling method to ask if the user entered a sling command
+     *
+     * @param shouldReset       If this is true then the next call to didSling
+     *                          will return false until a different sling vector is input
+     */
+    bool didSling(bool shouldReset = false);
+    
+    /**
+     * A polling method return the latest sling vector
+     */
+    cugl::Vec2 getLatestSlingVector() const {
+        return _latestSling;
+    }
 
 };
 

@@ -30,16 +30,12 @@ void CollisionController::dispose() { }
 * @param  contact  The two bodies that collided
 */
 void CollisionController::beginContact(b2Contact* contact) {
-	b2Fixture* fixtureA = contact->GetFixtureA();
-	b2Fixture* fixtureB = contact->GetFixtureB();
-
-	SimpleObstacle* soA = (SimpleObstacle*)(fixtureA->GetUserData());
-	SimpleObstacle* soB = (SimpleObstacle*)(fixtureB->GetUserData());
+    b2Body* bodyA = contact->GetFixtureA()->GetBody();
+    b2Body* bodyB = contact->GetFixtureB()->GetBody();
+    SimpleObstacle* soA = (SimpleObstacle*)(bodyA->GetUserData());
+    SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
 
 	if ((soA->getName() == "player" || soA->getName() == "enemy") && soB->getName() == "tile") {
-		b2Body* bodyA = fixtureA->GetBody();
-		b2Body* bodyB = fixtureB->GetBody();
-		
 		b2FrictionJointDef* jointDef;
 		
 		jointDef->localAnchorA.SetZero();
