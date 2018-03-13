@@ -5,6 +5,7 @@
 #ifndef __PLAYER_MODEL_H__
 #define __PLAYER_H__
 #include <cugl/cugl.h>
+#include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
 
 using namespace cugl;
 
@@ -80,9 +81,14 @@ public:
 	void setForce(const Vec2& value) { _force.set(value); }
 
 	/**
-	* Returns the friction joint with the ground.
+	* Sets the friction of the friction joint with the ground.
 	*/
-	std::shared_ptr<b2FrictionJoint> getFrictionJoint() { return _frictionJoint; }
+	void setFriction(float friction) { _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
+
+	/**
+	* Sets the friction joint with the ground.
+	*/
+	float getFriction() { return _frictionJoint->GetMaxForce(); }
 
 	/**
 	* Sets the friction joint with the ground.
@@ -137,7 +143,7 @@ public:
 	/**
 	* Applies the force to the body of this player
 	*/
-	void applyForce();
+    void applyLinearImpulse(Vec2& impulse);
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method 
@@ -146,6 +152,14 @@ public:
 	* @param dt Timing values from parent loop
 	*/
 	virtual void update(float dt) override;
+    
+#pragma mark -
+#pragma mark Logic
+    /**
+     * Returns true if the player is moving slow enough to sling
+     */
+    bool canSling();
+    
 };
 
 #endif /* __PLAYER_MODEL_H__ */

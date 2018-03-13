@@ -32,7 +32,7 @@ protected:
 	std::vector<std::shared_ptr<TileModel>> _tiles;
 	std::shared_ptr<BoxObstacle> _terrain;
 
-	TILE_TYPE** _board;
+	float** _board;
 
 	bool _levelBuilt;
 

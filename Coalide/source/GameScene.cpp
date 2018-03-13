@@ -8,6 +8,8 @@
 #include <Box2D/Collision/b2Collision.h>
 #include "Constants.h"
 #include "LevelController.h"
+#include "PlayerModel.h"
+#include "EnemyModel.h"
 
 #include <string>
 
@@ -51,6 +53,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// Initialize the controllers used in the game mode
 	_collisions.init();
 	_ai.init();
+    _input.init();
+
 
 	// Get the loaded level
 	_gamestate = assets->get<LevelController>(PROTO_LEVEL_KEY)->getGameState();
@@ -195,6 +199,41 @@ void GameScene::update(float dt) {
 	if (_input.didExit()) {
 		CULog("Shutting down");
 		Application::get()->quit();
+	}
+	
+	PlayerModel* player = _gamestate->getPlayer().get();
+
+    if(_input.didSling(true) && player->canSling()){
+        cugl::Vec2 sling = _input.getLatestSlingVector();
+        player->applyLinearImpulse(sling);
+    }
+    
+    std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
+    for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove){
+        EnemyModel* enemy = std::get<0>(pair);
+        Vec2 sling = std::get<1>(pair);
+        enemy->applyLinearImpulse(sling);
+    }
+
+	Vec2 player_pos = player->getPosition();
+	if (player_pos.x > 0 && player_pos.y > 0 && player_pos.x < _gamestate->getBounds().size.getIWidth() && player_pos.y < _gamestate->getBounds().size.getIHeight()) {
+		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
+		player->setFriction(0);
+	}
+	else {
+		player->setFriction(0);
+	}
+
+	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
+		EnemyModel* enemy = _gamestate->getEnemies()[i].get();
+		Vec2 enemy_pos = enemy->getPosition();
+		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
+			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
+			enemy->setFriction(0);
+		}
+		else {
+			enemy->setFriction(0);
+		}
 	}
 
 	// Update the physics world

@@ -9,7 +9,7 @@
 using namespace cugl;
 
 /** The ID for the button listener */
-#define LISTENER_ID 1
+#define LISTENER_ID 2
 
 #pragma mark -
 #pragma mark Constructors
@@ -85,7 +85,7 @@ void LoadingScene::update(float dt) {
 		if (_progress >= 1) {
 			_progress = 1.0f;
 			_button->setVisible(true);
-			_button->activate(1);
+			_button->activate(LISTENER_ID);
 		}
 		_bar->setProgress(_progress);
 	}

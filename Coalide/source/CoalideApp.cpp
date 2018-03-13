@@ -43,13 +43,11 @@ void CoalideApp::onStartup() {
     _assets->attach<Font>(FontLoader::alloc()->getHook());
 	_assets->attach<Node>(SceneLoader::alloc()->getHook());
 	_assets->attach<LevelController>(GenericLoader<LevelController>::alloc()->getHook());
-	
-	_input.init();
 
 	// Create a "loading" screen
 	_loaded = false;
 	_loadingScene.init(_assets);
-	
+    	
     // This reads the given JSON file and uses it to load all other assets
     _assets->loadDirectory("json/assets.json");
 

@@ -43,36 +43,7 @@ void CollisionController::beginContact(b2Contact* contact) { }
 * @param  contact  The two bodies that collided
 * @param  contact  The collision manifold before contact
 */
-void CollisionController::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
-	b2Fixture* fixtureA = contact->GetFixtureA();
-	b2Fixture* fixtureB = contact->GetFixtureB();
-
-	b2Body* bodyA = fixtureA->GetBody();
-	b2Body* bodyB = fixtureB->GetBody();
-
-	SimpleObstacle* soA = (SimpleObstacle*)(bodyA->GetUserData());
-	SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
-
-	if (soB->getName() == TILE_NAME) {
-		if (soA->getName() == PLAYER_NAME) {
-			((PlayerModel*)soA)->getFrictionJoint()->SetMaxForce(((TileModel*)soB)->getFriction());
-		}
-		else if (soB->getName() == ENEMY_NAME) {
-			((EnemyModel*)soA)->getFrictionJoint()->SetMaxForce(((TileModel*)soB)->getFriction());
-		}
-		contact->SetEnabled(false);
-	}
-
-	if (soA->getName() == TILE_NAME) {
-		if (soB->getName() == PLAYER_NAME) {
-			((PlayerModel*)soB)->getFrictionJoint()->SetMaxForce(((TileModel*)soA)->getFriction());
-		}
-		else if (soB->getName() == ENEMY_NAME) {
-			((EnemyModel*)soB)->getFrictionJoint()->SetMaxForce(((TileModel*)soA)->getFriction());
-		}
-		contact->SetEnabled(false);
-	}
-}
+void CollisionController::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) { }
 
 
 void CollisionController::endContact(b2Contact* contact) { }

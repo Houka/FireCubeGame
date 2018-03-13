@@ -177,7 +177,7 @@ public:
 	/**
 	* Returns true if the tile is water
 	*/
-	boolean isWater() {
+	bool isWater() {
 		return _tileType == TILE_TYPE::WATER;
 	}
 

@@ -14,6 +14,8 @@
 /** This is adjusted by screen aspect ratio to get the height */
 #define GAME_WIDTH 1024
 
+#define CATEGORY_TERRAIN 0x0001
+
 #pragma mark -
 #pragma mark Model Constants
 

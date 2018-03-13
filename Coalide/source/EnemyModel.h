@@ -3,11 +3,12 @@
 //	Coalide
 //
 #ifndef __ENEMY_MODEL_H__
-#define __ENEMY_H__
+#define __ENEMY_MODEL_H__
 #include <cugl/cugl.h>
+#include <cugl/util/CUTimestamp.h>
+#include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
 
 using namespace cugl;
-
 
 /**
 * This class is the enemy avatar.
@@ -26,6 +27,9 @@ protected:
 
 	/** The ratio of the enemy sprite to the physics body */
 	float _drawscale;
+    
+    /** timeout timer for enemy slinging */
+    Timestamp _previousTime;
 
 public:
 #pragma mark Constructors
@@ -86,9 +90,9 @@ public:
 	void setForce(const Vec2& value) { _force.set(value); }
 
 	/**
-	* Returns the friction joint with the ground.
+	* Sets the friction of the friction joint with the ground.
 	*/
-	std::shared_ptr<b2FrictionJoint> getFrictionJoint() { return _frictionJoint; }
+	void setFriction(float friction) { _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
 
 	/**
 	* Sets the friction joint with the ground.
@@ -137,13 +141,24 @@ public:
 	*/
 	void setDrawScale(float scale) { _drawscale = scale; }
 
+#pragma mark -
+#pragma mark Logic
+    /**
+     * Returns true if the enemy is moving slow enough to sling
+     */
+    bool canSling();
+    
+    /**
+     * Returns true if the enough time has elapsed since the last sling
+     */
+    bool timeoutElapsed();
 
 #pragma mark -
 #pragma mark Physics
-	/**
-	* Applies the force to the body of this enemy.
-	*/
-	void applyForce();
+    /**
+     * Applies the force to the body of this enemy
+     */
+    void applyLinearImpulse(Vec2& impulse);
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method

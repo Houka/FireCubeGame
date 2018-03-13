@@ -6,6 +6,9 @@
 #include "PlayerModel.h"
 #include "Constants.h"
 
+#define IMPULSE_SCALE .05
+#define MAX_SPEED_FOR_SLING 2
+
 void PlayerModel::dispose() { }
 
 /**
@@ -25,7 +28,6 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		_node = nullptr;
 
 		setDensity(1.0f);
-		setFriction(0.1f);
 		setRestitution(0.4f);
 
 		return true;
@@ -34,9 +36,18 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 }
 
 /**
-* Applies the force to the body of this player
+* Applies the impulse to the body of this player
 */
-void PlayerModel::applyForce() { }
+void PlayerModel::applyLinearImpulse(Vec2& impulse) {
+    _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * b2Vec2(impulse.x,impulse.y), true);
+}
+
+/**
+ * Returns true if the player is moving slow enough to sling
+ */
+bool PlayerModel::canSling(){
+    return _body->GetLinearVelocity().Length() <= MAX_SPEED_FOR_SLING;
+}
 
 /**
 * Updates the object's physics state (NOT GAME LOGIC). This is the method
@@ -49,5 +60,10 @@ void PlayerModel::update(float dt) {
 	if (_node != nullptr) {
 		_node->setPosition(getPosition()*_drawscale);
 		_node->setAngle(getAngle());
+        if(!canSling()){
+           _node->setColor(Color4::RED);
+        } else {
+            _node->setColor(Color4::WHITE);
+        }
 	}
 }
