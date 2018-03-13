@@ -11,6 +11,9 @@
 #include "CollisionController.h"
 #include "AIController.h"
 #include "GameState.h"
+#include "LevelController.h"
+#include "PlayerModel.h"
+#include "EnemyModel.h"
 
 using namespace cugl;
 

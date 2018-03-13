@@ -8,6 +8,7 @@
 #define MAX_SPEED_FOR_SLING 2
 #define IMPULSE_SCALE 8
 #define SLING_TIMEOUT 5000
+#define COLLISION_TIMEOUT 0
 
 using namespace cugl;
 
@@ -79,5 +80,9 @@ void EnemyModel::update(float dt) {
         _node->setColor(Color4::RED);
     } else {
         _node->setColor(Color4::WHITE);
+    }
+    if(_shouldStopSoon && Timestamp().ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
+        _shouldStopSoon = false;
+        _body->SetLinearVelocity(b2Vec2(0,0));
     }
 }

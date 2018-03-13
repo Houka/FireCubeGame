@@ -9,6 +9,10 @@
 
 using namespace cugl;
 
+/** Max speed of object A for object B to stop on collision - happens to be
+ * the same as speed for sling input
+ */
+#define SPECIAL_COLLISION_SPEED_CUTOFF 2.0
 
 #pragma mark -
 #pragma mark Constructors
@@ -34,7 +38,30 @@ void CollisionController::beginContact(b2Contact* contact) {
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
     SimpleObstacle* soA = (SimpleObstacle*)(bodyA->GetUserData());
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
-
+    
+    if(soA->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)){
+        if(soB->getName() == "player"){
+            PlayerModel* player = (PlayerModel*) soB;
+            if(!player->alreadyStopping())
+                player->setShouldStop();
+        } else if(soB->getName() == "enemy") {
+            EnemyModel* enemy = (EnemyModel*) soB;
+            if(!enemy->alreadyStopping())
+                enemy->setShouldStop();
+        }
+    }
+    if(soB->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)){
+        if(soA->getName() == "player"){
+            PlayerModel* player = (PlayerModel*) soA;
+            if(!player->alreadyStopping())
+                player->setShouldStop();
+        } else if(soA->getName() == "enemy") {
+            EnemyModel* enemy = (EnemyModel*) soA;
+            if(!enemy->alreadyStopping())
+                enemy->setShouldStop();
+        }
+    }
+    
 	if ((soA->getName() == "player" || soA->getName() == "enemy") && soB->getName() == "tile") {
 		b2FrictionJointDef* jointDef;
 		
