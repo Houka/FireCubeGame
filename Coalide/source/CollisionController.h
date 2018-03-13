@@ -5,6 +5,8 @@
 #ifndef __COLLISION_CONTROLLER_H__
 #define __COLLISION_CONTROLLER_H__
 #include <cugl/cugl.h>
+#include "PlayerModel.h"
+#include "EnemyModel.h"
 
 using namespace cugl;
 

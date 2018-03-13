@@ -17,6 +17,10 @@ class EnemyModel : public CapsuleObstacle {
 private:
     /** random reduction for the timer between slings */
     int _rndTimerReduction;
+    /** to keep track of how long to wait before stopping */
+    Timestamp _collisionTimeout;
+    /** a collision happened and we want to stop soon */
+    bool _shouldStopSoon;
 protected:
 	/** The scene graph node for the enemy */
 	std::shared_ptr<Node> _node;
@@ -143,6 +147,13 @@ public:
 	* @param scale The ratio of the enemy sprite to the physics body.
 	*/
 	void setDrawScale(float scale) { _drawscale = scale; }
+    
+    /**
+     * Is this enemy already stopping soon
+     */
+    bool alreadyStopping() {
+        return _shouldStopSoon;
+    }
 
 #pragma mark -
 #pragma mark Logic
@@ -162,6 +173,14 @@ public:
      * Applies the force to the body of this enemy
      */
     void applyLinearImpulse(Vec2& impulse);
+    
+    /**
+     * Stop this enemy after timeout milliseconds
+     */
+    void setShouldStop(){
+        _collisionTimeout.mark();
+        _shouldStopSoon = true;
+    }
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method

@@ -3,7 +3,7 @@
 //  Coalide
 //
 #ifndef __PLAYER_MODEL_H__
-#define __PLAYER_H__
+#define __PLAYER_MODEL_H__
 #include <cugl/cugl.h>
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
 
@@ -14,7 +14,12 @@ using namespace cugl;
 */
 class PlayerModel : public CapsuleObstacle {
 private:
+    /** default tint */
     Color4 _color;
+    /** to keep track of how long to wait before stopping */
+    Timestamp _collisionTimeout;
+    /** a collision happened and we want to stop soon */
+    bool _shouldStopSoon;
 protected:
 	std::shared_ptr<Node> _node;
 	std::string _texture;
@@ -145,6 +150,13 @@ public:
     void setColor(Color4 c){
         _color = c;
     }
+    
+    /**
+     * Is this player already stopping soon
+     */
+    bool alreadyStopping() {
+        return _shouldStopSoon;
+    }
 
 
 #pragma mark -
@@ -153,6 +165,14 @@ public:
 	* Applies the force to the body of this player
 	*/
     void applyLinearImpulse(Vec2& impulse);
+    
+    /**
+     * Stop this player after timeout milliseconds
+     */
+    void setShouldStop(){
+        _collisionTimeout.mark();
+        _shouldStopSoon = true;
+    }
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method 

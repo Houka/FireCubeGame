@@ -7,6 +7,7 @@
 #include "Constants.h"
 
 #define IMPULSE_SCALE .05
+#define COLLISION_TIMEOUT 0
 #define MAX_SPEED_FOR_SLING 2
 
 
@@ -72,4 +73,8 @@ void PlayerModel::update(float dt) {
             _node->setColor(_color);
         }
 	}
+    if(_shouldStopSoon && Timestamp().ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
+        _shouldStopSoon = false;
+        _body->SetLinearVelocity(b2Vec2(0,0));
+    }
 }

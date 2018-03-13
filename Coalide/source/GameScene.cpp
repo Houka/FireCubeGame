@@ -7,9 +7,6 @@
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 #include <Box2D/Collision/b2Collision.h>
 #include "Constants.h"
-#include "LevelController.h"
-#include "PlayerModel.h"
-#include "EnemyModel.h"
 
 #include <string>
 
