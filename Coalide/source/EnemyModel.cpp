@@ -22,6 +22,7 @@ void EnemyModel::dispose() { }
 * @return  true if the obstacle is initialized properly, false otherwise.
 */
 bool EnemyModel::init(const Vec2 & pos, const Size & size) {
+    std::srand (time(NULL));
 	if (CapsuleObstacle::init(pos, size)) {
 		_node = nullptr;
 
@@ -34,6 +35,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		return true;
 	}
     _previousTime = Timestamp();
+    _rndTimerReduction = std::rand() % 1000;
 	return false;
 }
 
@@ -42,6 +44,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
  */
 void EnemyModel::applyLinearImpulse(Vec2& impulse) {
     _previousTime.mark();
+    _rndTimerReduction = std::rand() % 1000;
     _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * b2Vec2(impulse.x,impulse.y), true);
 }
 
@@ -56,7 +59,8 @@ bool EnemyModel::canSling(){
  * Returns true if the enough time has elapsed since the last sling
  */
 bool EnemyModel::timeoutElapsed(){
-    return Timestamp().ellapsedMillis(_previousTime) >= SLING_TIMEOUT;
+    //wait between 4 and 5 seconds
+    return Timestamp().ellapsedMillis(_previousTime) >= (SLING_TIMEOUT - _rndTimerReduction);
 }
 
 /**
