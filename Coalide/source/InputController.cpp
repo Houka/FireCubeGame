@@ -125,7 +125,12 @@ bool InputController::didSling(bool shouldReset){
 * @param t     The touch information
 * @param event The associated event
 */
-void InputController::touchBeganCB(const TouchEvent& event, bool focus) { }
+void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
+    _initTouch = event.position;
+    _currentTouch = event.position;
+    _previousTouch = event.position;
+    _mousepan = true;
+}
 
 /**
 * Callback for the end of a touch event
@@ -133,7 +138,15 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) { }
 * @param t     The touch information
 * @param event The associated event
 */
-void InputController::touchEndedCB(const TouchEvent& event, bool focus) { }
+void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
+    _latestSling = Vec2(_initTouch.x - event.position.x, event.position.y - _initTouch.y);
+    if(_latestSling.length() >= MIN_SLING_DISTANCE){
+        _didSling = true;
+    }
+    _currentTouch = event.position;
+    _previousTouch = event.position;
+    _mousepan = false;
+}
 
 /**
  * Called when a mouse button is initially pressed

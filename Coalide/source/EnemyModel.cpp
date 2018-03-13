@@ -7,9 +7,8 @@
 #include "Constants.h"
 #include <cugl/util/CUTimestamp.h>
 
-
 #define MAX_SPEED_FOR_SLING 2
-#define IMPULSE_SCALE .05
+#define IMPULSE_SCALE 8
 #define SLING_TIMEOUT 5000
 
 using namespace cugl;
@@ -24,6 +23,7 @@ using namespace cugl;
 * @return  true if the obstacle is initialized properly, false otherwise.
 */
 bool EnemyModel::init(const Vec2 & pos, const Size & size) {
+    std::srand (time(NULL));
 	if (CapsuleObstacle::init(pos, size)) {
 		setName(ENEMY_NAME);
 		setTextureKey(ENEMY_TEXTURE);
@@ -35,9 +35,12 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		setRestitution(0.4f);
 		setFixedRotation(true);
 
+		_previousTime = Timestamp();
+		_rndTimerReduction = std::rand() % 1000;
+
 		return true;
 	}
-    _previousTime = Timestamp();
+    
 	return false;
 }
 
@@ -51,7 +54,8 @@ void EnemyModel::dispose() {
  */
 void EnemyModel::applyLinearImpulse(Vec2& impulse) {
     _previousTime.mark();
-    _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * 20 * b2Vec2(impulse.x,impulse.y), true);
+    _rndTimerReduction = std::rand() % 1000;
+    _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * b2Vec2(impulse.x,impulse.y), true);
 }
 
 /**
@@ -65,7 +69,9 @@ bool EnemyModel::canSling(){
  * Returns true if the enough time has elapsed since the last sling
  */
 bool EnemyModel::timeoutElapsed(){
-    return Timestamp().ellapsedMillis(_previousTime) >= SLING_TIMEOUT;
+    //wait between 4 and 5 seconds
+    return Timestamp().ellapsedMillis(_previousTime) >= (SLING_TIMEOUT - _rndTimerReduction);
+	//return Timestamp().ellapsedMillis(_previousTime) >= (SLING_TIMEOUT);
 }
 
 /**

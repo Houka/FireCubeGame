@@ -14,6 +14,9 @@ using namespace cugl;
 * This class is the enemy avatar.
 */
 class EnemyModel : public CapsuleObstacle {
+private:
+    /** random reduction for the timer between slings */
+    int _rndTimerReduction;
 protected:
 	/** The scene graph node for the enemy */
 	std::shared_ptr<Node> _node;

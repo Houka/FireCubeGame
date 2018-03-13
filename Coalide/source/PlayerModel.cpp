@@ -25,6 +25,7 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		setBodyType(b2_dynamicBody);
 
 		_node = nullptr;
+        _color = Color4::WHITE;
 
 		setDensity(1.0f);
 		setRestitution(0.4f);
@@ -66,9 +67,9 @@ void PlayerModel::update(float dt) {
 		_node->setPosition(getPosition()*_drawscale);
 		_node->setAngle(getAngle());
         if(!canSling()){
-           _node->setColor(Color4::RED);
+            _node->setColor(Color4::RED);
         } else {
-            _node->setColor(Color4::WHITE);
+            _node->setColor(_color);
         }
 	}
 }

@@ -13,6 +13,8 @@ using namespace cugl;
 * This class is the player avatar (Nicoal) for Coalide.
 */
 class PlayerModel : public CapsuleObstacle {
+private:
+    Color4 _color;
 protected:
 	std::shared_ptr<Node> _node;
 	std::string _texture;
@@ -136,6 +138,13 @@ public:
 	* @param scale The ratio of the player sprite to the physics body.
 	*/
 	void setDrawScale(float scale) { _drawscale = scale; }
+    
+    /**
+     * Set the default tint of the player model
+     */
+    void setColor(Color4 c){
+        _color = c;
+    }
 
 
 #pragma mark -

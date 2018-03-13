@@ -18,6 +18,52 @@
 		0833979320573ABF005EA329 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978720573ABF005EA329 /* GameState.cpp */; };
 		0833979420573ABF005EA329 /* LoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978920573ABF005EA329 /* LoadingScene.cpp */; };
 		0833979520573ABF005EA329 /* PlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978A20573ABF005EA329 /* PlayerModel.cpp */; };
+		085EBAED2057874300F6FAD2 /* AIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977620573ABE005EA329 /* AIController.cpp */; };
+		085EBAEE2057874300F6FAD2 /* AIController.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977F20573ABE005EA329 /* AIController.h */; };
+		085EBAEF2057874300F6FAD2 /* CoalideApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977C20573ABE005EA329 /* CoalideApp.cpp */; };
+		085EBAF02057874300F6FAD2 /* CoalideApp.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977D20573ABE005EA329 /* CoalideApp.h */; };
+		085EBAF12057874300F6FAD2 /* CollisionController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978220573ABE005EA329 /* CollisionController.cpp */; };
+		085EBAF22057874300F6FAD2 /* CollisionController.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977920573ABE005EA329 /* CollisionController.h */; };
+		085EBAF32057874300F6FAD2 /* Constants.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833978820573ABF005EA329 /* Constants.h */; };
+		085EBAF42057874300F6FAD2 /* EnemyModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978320573ABF005EA329 /* EnemyModel.cpp */; };
+		085EBAF52057874300F6FAD2 /* EnemyModel.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833978120573ABE005EA329 /* EnemyModel.h */; };
+		085EBAF62057874300F6FAD2 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978020573ABE005EA329 /* GameScene.cpp */; };
+		085EBAF72057874300F6FAD2 /* GameScene.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977520573ABE005EA329 /* GameScene.h */; };
+		085EBAF82057874300F6FAD2 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978720573ABF005EA329 /* GameState.cpp */; };
+		085EBAF92057874300F6FAD2 /* GameState.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977720573ABE005EA329 /* GameState.h */; };
+		085EBAFA2057874300F6FAD2 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977B20573ABE005EA329 /* InputController.cpp */; };
+		085EBAFB2057874300F6FAD2 /* InputController.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977120573ABD005EA329 /* InputController.h */; };
+		085EBAFC2057874300F6FAD2 /* LevelController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977E20573ABE005EA329 /* LevelController.cpp */; };
+		085EBAFD2057874300F6FAD2 /* LevelController.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977820573ABE005EA329 /* LevelController.h */; };
+		085EBAFE2057874300F6FAD2 /* LoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978920573ABF005EA329 /* LoadingScene.cpp */; };
+		085EBAFF2057874300F6FAD2 /* LoadingScene.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833978520573ABF005EA329 /* LoadingScene.h */; };
+		085EBB002057874300F6FAD2 /* PlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978A20573ABF005EA329 /* PlayerModel.cpp */; };
+		085EBB012057874300F6FAD2 /* PlayerModel.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977A20573ABE005EA329 /* PlayerModel.h */; };
+		085EBB022057874300F6FAD2 /* TileModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978620573ABF005EA329 /* TileModel.cpp */; };
+		085EBB032057874300F6FAD2 /* TileModel.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833978420573ABF005EA329 /* TileModel.h */; };
+		085EBB042057884200F6FAD2 /* AIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977620573ABE005EA329 /* AIController.cpp */; };
+		085EBB052057884200F6FAD2 /* AIController.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977F20573ABE005EA329 /* AIController.h */; };
+		085EBB062057884200F6FAD2 /* CoalideApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977C20573ABE005EA329 /* CoalideApp.cpp */; };
+		085EBB072057884200F6FAD2 /* CoalideApp.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977D20573ABE005EA329 /* CoalideApp.h */; };
+		085EBB082057884200F6FAD2 /* CollisionController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978220573ABE005EA329 /* CollisionController.cpp */; };
+		085EBB092057884200F6FAD2 /* CollisionController.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977920573ABE005EA329 /* CollisionController.h */; };
+		085EBB0A2057884200F6FAD2 /* Constants.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833978820573ABF005EA329 /* Constants.h */; };
+		085EBB0B2057884200F6FAD2 /* EnemyModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978320573ABF005EA329 /* EnemyModel.cpp */; };
+		085EBB0C2057884200F6FAD2 /* EnemyModel.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833978120573ABE005EA329 /* EnemyModel.h */; };
+		085EBB0D2057884200F6FAD2 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978020573ABE005EA329 /* GameScene.cpp */; };
+		085EBB0E2057884200F6FAD2 /* GameScene.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977520573ABE005EA329 /* GameScene.h */; };
+		085EBB0F2057884200F6FAD2 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978720573ABF005EA329 /* GameState.cpp */; };
+		085EBB102057884200F6FAD2 /* GameState.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977720573ABE005EA329 /* GameState.h */; };
+		085EBB112057884200F6FAD2 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977B20573ABE005EA329 /* InputController.cpp */; };
+		085EBB122057884200F6FAD2 /* InputController.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977120573ABD005EA329 /* InputController.h */; };
+		085EBB132057884200F6FAD2 /* LevelController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977E20573ABE005EA329 /* LevelController.cpp */; };
+		085EBB142057884200F6FAD2 /* LevelController.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977820573ABE005EA329 /* LevelController.h */; };
+		085EBB152057884200F6FAD2 /* LoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978920573ABF005EA329 /* LoadingScene.cpp */; };
+		085EBB162057884200F6FAD2 /* LoadingScene.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833978520573ABF005EA329 /* LoadingScene.h */; };
+		085EBB172057884200F6FAD2 /* PlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978A20573ABF005EA329 /* PlayerModel.cpp */; };
+		085EBB182057884200F6FAD2 /* PlayerModel.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977A20573ABE005EA329 /* PlayerModel.h */; };
+		085EBB192057884200F6FAD2 /* TileModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978620573ABF005EA329 /* TileModel.cpp */; };
+		085EBB1A2057884200F6FAD2 /* TileModel.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833978420573ABF005EA329 /* TileModel.h */; };
 		EB0FF5092016E4A700517030 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5082016E4A700517030 /* CoreFoundation.framework */; };
 		EB0FF53F2016E83700517030 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5352016E83500517030 /* CoreGraphics.framework */; };
 		EB0FF5412016E83700517030 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5392016E83500517030 /* CoreMotion.framework */; };
@@ -450,12 +496,12 @@
 				TargetAttributes = {
 					EB0FF5FB2016EF4F00517030 = {
 						CreatedOnToolsVersion = 9.2;
-						DevelopmentTeam = G6P7H83FK6;
+						DevelopmentTeam = 4ZMUDM94F7;
 						ProvisioningStyle = Automatic;
 					};
 					EB74548B1D74D75C002FBAE6 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = G6P7H83FK6;
+						DevelopmentTeam = 4ZMUDM94F7;
 					};
 					EBBF18901D74904A008E2001 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -557,6 +603,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				085EBB042057884200F6FAD2 /* AIController.cpp in Sources */,
+				085EBB052057884200F6FAD2 /* AIController.h in Sources */,
+				085EBB062057884200F6FAD2 /* CoalideApp.cpp in Sources */,
+				085EBB072057884200F6FAD2 /* CoalideApp.h in Sources */,
+				085EBB082057884200F6FAD2 /* CollisionController.cpp in Sources */,
+				085EBB092057884200F6FAD2 /* CollisionController.h in Sources */,
+				085EBB0A2057884200F6FAD2 /* Constants.h in Sources */,
+				085EBB0B2057884200F6FAD2 /* EnemyModel.cpp in Sources */,
+				085EBB0C2057884200F6FAD2 /* EnemyModel.h in Sources */,
+				085EBB0D2057884200F6FAD2 /* GameScene.cpp in Sources */,
+				085EBB0E2057884200F6FAD2 /* GameScene.h in Sources */,
+				085EBB0F2057884200F6FAD2 /* GameState.cpp in Sources */,
+				085EBB102057884200F6FAD2 /* GameState.h in Sources */,
+				085EBB112057884200F6FAD2 /* InputController.cpp in Sources */,
+				085EBB122057884200F6FAD2 /* InputController.h in Sources */,
+				085EBB132057884200F6FAD2 /* LevelController.cpp in Sources */,
+				085EBB142057884200F6FAD2 /* LevelController.h in Sources */,
+				085EBB152057884200F6FAD2 /* LoadingScene.cpp in Sources */,
+				085EBB162057884200F6FAD2 /* LoadingScene.h in Sources */,
+				085EBB172057884200F6FAD2 /* PlayerModel.cpp in Sources */,
+				085EBB182057884200F6FAD2 /* PlayerModel.h in Sources */,
+				085EBB192057884200F6FAD2 /* TileModel.cpp in Sources */,
+				085EBB1A2057884200F6FAD2 /* TileModel.h in Sources */,
 				EB0FF61D2016F06000517030 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -565,6 +634,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				085EBAED2057874300F6FAD2 /* AIController.cpp in Sources */,
+				085EBAEE2057874300F6FAD2 /* AIController.h in Sources */,
+				085EBAEF2057874300F6FAD2 /* CoalideApp.cpp in Sources */,
+				085EBAF02057874300F6FAD2 /* CoalideApp.h in Sources */,
+				085EBAF12057874300F6FAD2 /* CollisionController.cpp in Sources */,
+				085EBAF22057874300F6FAD2 /* CollisionController.h in Sources */,
+				085EBAF32057874300F6FAD2 /* Constants.h in Sources */,
+				085EBAF42057874300F6FAD2 /* EnemyModel.cpp in Sources */,
+				085EBAF52057874300F6FAD2 /* EnemyModel.h in Sources */,
+				085EBAF62057874300F6FAD2 /* GameScene.cpp in Sources */,
+				085EBAF72057874300F6FAD2 /* GameScene.h in Sources */,
+				085EBAF82057874300F6FAD2 /* GameState.cpp in Sources */,
+				085EBAF92057874300F6FAD2 /* GameState.h in Sources */,
+				085EBAFA2057874300F6FAD2 /* InputController.cpp in Sources */,
+				085EBAFB2057874300F6FAD2 /* InputController.h in Sources */,
+				085EBAFC2057874300F6FAD2 /* LevelController.cpp in Sources */,
+				085EBAFD2057874300F6FAD2 /* LevelController.h in Sources */,
+				085EBAFE2057874300F6FAD2 /* LoadingScene.cpp in Sources */,
+				085EBAFF2057874300F6FAD2 /* LoadingScene.h in Sources */,
+				085EBB002057874300F6FAD2 /* PlayerModel.cpp in Sources */,
+				085EBB012057874300F6FAD2 /* PlayerModel.h in Sources */,
+				085EBB022057874300F6FAD2 /* TileModel.cpp in Sources */,
+				085EBB032057874300F6FAD2 /* TileModel.h in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -610,7 +702,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = G6P7H83FK6;
+				DEVELOPMENT_TEAM = 4ZMUDM94F7;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
@@ -644,7 +736,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = G6P7H83FK6;
+				DEVELOPMENT_TEAM = 4ZMUDM94F7;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
@@ -666,12 +758,13 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: kyler.ruvane@gmail.com (39NSK29Z6T)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 4ZMUDM94F7;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
@@ -688,12 +781,13 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: kyler.ruvane@gmail.com (39NSK29Z6T)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 4ZMUDM94F7;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
