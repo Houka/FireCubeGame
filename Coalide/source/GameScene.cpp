@@ -199,7 +199,6 @@ void GameScene::update(float dt) {
 
 	// Update the physics world
 	_gamestate->getWorld()->update(dt);
-	_collisions.addDestroyFrictionJoints(_gamestate->getWorld());
 }
 
 /**

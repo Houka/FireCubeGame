@@ -15,6 +15,17 @@
 #define GAME_WIDTH 1024
 
 #pragma mark -
+#pragma mark Model Constants
+
+#define PLAYER_NAME		"player"
+#define PLAYER_TEXTURE	"protosheet_player"
+
+#define ENEMY_NAME		"enemy"
+#define ENEMY_TEXTURE	"protosheet_enemy"
+
+#define TILE_NAME		"tile"
+
+#pragma mark -
 #pragma mark Physics Constants
 /** Game world dimensions in Box2d units */
 #define DEFAULT_WIDTH   32.0f
@@ -53,15 +64,12 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define PROTO_LEVEL_FILE   "json/map.json"
+#define PROTO_LEVEL_FILE   "json/map2.json"
 /** The key for our loaded level */
-#define PROTO_LEVEL_KEY    "protolevel"
+#define PROTO_LEVEL_KEY    "protosheet_"
 
 #pragma mark -
 #pragma mark Tile Types
-/**
-* Enumeration to identify the rocket afterburner
-*/
 enum class TILE_TYPE : int {
 	WATER,
 	ISLAND,
@@ -76,8 +84,28 @@ enum class TILE_TYPE : int {
 	SW_LAND,
 	W_LAND,
 	L_LAND_BASE,
-	LAND_BASE,
-	R_LAND_BASE
+	C_LAND_BASE,
+	R_LAND_BASE,
+	SAND,
+	ICE
 };
+
+#define WATER_TEXTURE "water"
+#define ISLAND_TEXTURE "island"
+#define ISLAND_BASE_TEXTURE "islandBase"
+#define LAND_TEXTURE "land"
+#define NW_LAND_TEXTURE "nwLand"
+#define N_LAND_TEXTURE "nLand"
+#define NE_LAND_TEXTURE "neLand"
+#define E_LAND_TEXTURE "eLand"
+#define SE_LAND_TEXTURE "seLand"
+#define S_LAND_TEXTURE "sLand"
+#define SW_LAND_TEXTURE "swLand"
+#define W_LAND_TEXTURE "wLand"
+#define L_LAND_BASE_TEXTURE "lLandBase"
+#define C_LAND_BASE_TEXTURE "cLandBase"
+#define R_LAND_BASE_TEXTURE "rLandBase"
+#define SAND_TEXTURE "sand"
+#define ICE_TEXTURE "ice"
 
 #endif /* defined(__LEVEL_CONSTANTS_H__) */

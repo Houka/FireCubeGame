@@ -4,6 +4,7 @@
 //
 
 #include "PlayerModel.h"
+#include "Constants.h"
 
 void PlayerModel::dispose() { }
 
@@ -17,9 +18,8 @@ void PlayerModel::dispose() { }
 */
 bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 	if (CapsuleObstacle::init(pos, size)) {
-		std::string name("player");
-		setName(name);
-		setTextureKey("protosheet_player");
+		setName(PLAYER_NAME);
+		setTextureKey(PLAYER_TEXTURE);
 		setBodyType(b2_dynamicBody);
 
 		_node = nullptr;

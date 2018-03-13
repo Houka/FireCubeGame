@@ -25,6 +25,7 @@ protected:
 	std::shared_ptr<Node> _node;
 	std::string _tileTexture;
 	TILE_TYPE _tileType;
+	float _friction;
 	
 	float _drawscale;
 
@@ -118,6 +119,16 @@ public:
 	* Sets the tile type.
 	*/
 	void setType(TILE_TYPE tileType) { _tileType = tileType; }
+
+	/**
+	* Returns the friction.
+	*/
+	float getFriction() { return _friction; }
+
+	/**
+	* Sets the friction.
+	*/
+	void setFriction(float friction) { _friction = friction; }
 
 	/**
 	* Returns the scene graph node representing this floor tile.

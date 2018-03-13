@@ -30,6 +30,7 @@ protected:
 	std::shared_ptr<PlayerModel> _player;
 	std::vector<std::shared_ptr<EnemyModel>> _enemies;
 	std::vector<std::shared_ptr<TileModel>> _tiles;
+	std::shared_ptr<BoxObstacle> _terrain;
 
 	TILE_TYPE** _board;
 
@@ -95,6 +96,9 @@ public:
 
 	/** Loads the player, enemies, and inanimate objects */
 	bool loadUnits(const std::shared_ptr<JsonValue>& json);
+
+	/** Adds friction joints between units and the ground to simulate top-down friction. */
+	void addFrictionJoints();
 
 	/** Builds a game state from the loaded level */
 	void buildGameState();

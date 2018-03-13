@@ -18,9 +18,9 @@ using namespace cugl;
 */
 bool TileModel::init(const Vec2 & pos, const Size & size) {
 	if (BoxObstacle::init(pos, size)) {
-		std::string name("tile");
-		setName(name);
-		_tileTexture = "";
+		setName(TILE_NAME);
+		setBodyType(b2_staticBody);
+
 		return true;
 	}
 	return false;

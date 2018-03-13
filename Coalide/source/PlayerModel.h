@@ -8,7 +8,6 @@
 
 using namespace cugl;
 
-
 /**
 * This class is the player avatar (Nicoal) for Coalide.
 */
@@ -18,6 +17,7 @@ protected:
 	std::string _texture;
 
 	Vec2 _force;
+	std::shared_ptr<b2FrictionJoint> _frictionJoint;
 
 	float _drawscale;
 
@@ -78,6 +78,16 @@ public:
 	* @param value the force applied to the player.
 	*/
 	void setForce(const Vec2& value) { _force.set(value); }
+
+	/**
+	* Returns the friction joint with the ground.
+	*/
+	std::shared_ptr<b2FrictionJoint> getFrictionJoint() { return _frictionJoint; }
+
+	/**
+	* Sets the friction joint with the ground.
+	*/
+	void setFrictionJoint(std::shared_ptr<b2FrictionJoint> frictionJoint) { _frictionJoint = frictionJoint; }
 
 	/**
 	* Returns the scene graph node representing the player.

@@ -7,6 +7,8 @@
 #include "PlayerModel.h"
 #include "EnemyModel.h"
 #include "TileModel.h"
+#include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
+#include <Box2D/Dynamics/b2World.h>
 
 #include <string>
 
@@ -78,6 +80,9 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
 		return false;
 	}
 
+	// Add friction joints to simulate top-down friction
+	addFrictionJoints();
+
 	buildGameState();
 
 	return true;
@@ -85,12 +90,17 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
 
 bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 	bool success = false;
+
+	int worldW = _bounds.size.getIWidth();
+	int worldH = _bounds.size.getIHeight();
+
+	_terrain = BoxObstacle::alloc(Vec2(0,0), Size(worldW, worldH));
+	_terrain->setName("terrain");
+	_world->addObstacle(_terrain);
+
 	auto protoWorldLayer = json->get(LAYERS_FIELD)->get(0);
 	if (protoWorldLayer != nullptr) {
 		success = true;
-
-		int worldW = _bounds.size.getIWidth();
-		int worldH = _bounds.size.getIHeight();
 
 		auto worldData = protoWorldLayer->get(DATA_FIELD)->asFloatArray();
 		_board = new TILE_TYPE*[worldH];
@@ -137,7 +147,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 					tileType = TILE_TYPE::S_LAND;
 					break;
 				case 23:
-					tileType = TILE_TYPE::LAND_BASE;
+					tileType = TILE_TYPE::C_LAND_BASE;
 					break;
 				case 30:
 					tileType = TILE_TYPE::NE_LAND;
@@ -151,11 +161,17 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 				case 33:
 					tileType = TILE_TYPE::R_LAND_BASE;
 					break;
+				case 42:
+					tileType = TILE_TYPE::SAND;
+					break;
+				case 43:
+					tileType = TILE_TYPE::ICE;
+					break;
 				default:
 					CUAssertLog(false, "Invalid tile value.");
 				}
 				_board[i][j] = tileType;
-				loadTile(Vec2(j, i), tileType);
+				loadTile(Vec2(j+.5, i+.5), tileType);
 				count++;
 			}
 		}
@@ -166,66 +182,101 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 bool LevelController::loadTile(Vec2 tilePos, TILE_TYPE tileType) {
 	bool success = true;
 
-	// Get the object, which is automatically retained
 	std::shared_ptr<TileModel> tile = TileModel::alloc(tilePos, UNIT_DIM);
 
-	// Using the key makes too many sounds
-	// crate->setName(reader.getKey());
 	switch (tileType) {
 	case TILE_TYPE::WATER:
-		tile->setTextureKey("protosheet_water");
+		tile->setTextureKey(PROTO_LEVEL_KEY WATER_TEXTURE);
+		tile->setFriction(0);
+		tile->setType(TILE_TYPE::WATER);
 		break;
 	case TILE_TYPE::ISLAND_BASE:
-		tile->setTextureKey("protosheet_islandBase");
+		tile->setTextureKey(PROTO_LEVEL_KEY ISLAND_BASE_TEXTURE);
+		tile->setFriction(0);
+		tile->setType(TILE_TYPE::WATER);
 		break;
 	case TILE_TYPE::ISLAND:
-		tile->setTextureKey("protosheet_island");
+		tile->setTextureKey(PROTO_LEVEL_KEY ISLAND_TEXTURE);
+		tile->setFriction(10);
+		tile->setType(TILE_TYPE::LAND);
 		break;
 	case TILE_TYPE::NW_LAND:
-		tile->setTextureKey("protosheet_nwLand");
+		tile->setTextureKey(PROTO_LEVEL_KEY NW_LAND_TEXTURE);
+		tile->setFriction(10);
+		tile->setType(TILE_TYPE::LAND);
 		break;
 	case TILE_TYPE::W_LAND:
-		tile->setTextureKey("protosheet_wLand");
+		tile->setTextureKey(PROTO_LEVEL_KEY W_LAND_TEXTURE);
+		tile->setFriction(10);
+		tile->setType(TILE_TYPE::LAND);
 		break;
 	case TILE_TYPE::SW_LAND:
-		tile->setTextureKey("protosheet_swLand");
+		tile->setTextureKey(PROTO_LEVEL_KEY SW_LAND_TEXTURE);
+		tile->setType(TILE_TYPE::LAND);
+		tile->setFriction(10);
 		break;
 	case TILE_TYPE::N_LAND:
-		tile->setTextureKey("protosheet_nLand");
+		tile->setTextureKey(PROTO_LEVEL_KEY N_LAND_TEXTURE);
+		tile->setType(TILE_TYPE::LAND);
+		tile->setFriction(10);
 		break;
 	case TILE_TYPE::LAND:
-		tile->setTextureKey("protosheet_land");
+		tile->setTextureKey(PROTO_LEVEL_KEY LAND_TEXTURE);
+		tile->setFriction(10);
+		tile->setType(TILE_TYPE::LAND);
 		break;
 	case TILE_TYPE::S_LAND:
-		tile->setTextureKey("protosheet_sLand");
+		tile->setTextureKey(PROTO_LEVEL_KEY S_LAND_TEXTURE);
+		tile->setFriction(10);
+		tile->setType(TILE_TYPE::LAND);
 		break;
 	case TILE_TYPE::NE_LAND:
-		tile->setTextureKey("protosheet_neLand");
+		tile->setTextureKey(PROTO_LEVEL_KEY NE_LAND_TEXTURE);
+		tile->setFriction(10);
+		tile->setType(TILE_TYPE::LAND);
 		break;
 	case TILE_TYPE::E_LAND:
-		tile->setTextureKey("protosheet_eLand");
+		tile->setTextureKey(PROTO_LEVEL_KEY E_LAND_TEXTURE);
+		tile->setFriction(10);
+		tile->setType(TILE_TYPE::LAND);
 		break;
 	case TILE_TYPE::SE_LAND:
-		tile->setTextureKey("protosheet_seLand");
+		tile->setTextureKey(PROTO_LEVEL_KEY SE_LAND_TEXTURE);
+		tile->setFriction(10);
+		tile->setType(TILE_TYPE::LAND);
 		break;
 	case TILE_TYPE::L_LAND_BASE:
-		tile->setTextureKey("protosheet_lLandBase");
+		tile->setTextureKey(PROTO_LEVEL_KEY L_LAND_BASE_TEXTURE);
+		tile->setFriction(0);
+		tile->setType(TILE_TYPE::WATER);
 		break;
-	case TILE_TYPE::LAND_BASE:
-		tile->setTextureKey("protosheet_cLandBase");
+	case TILE_TYPE::C_LAND_BASE:
+		tile->setTextureKey(PROTO_LEVEL_KEY C_LAND_BASE_TEXTURE);
+		tile->setFriction(0);
+		tile->setType(TILE_TYPE::WATER);
 		break;
 	case TILE_TYPE::R_LAND_BASE:
-		tile->setTextureKey("protosheet_rLandBase");
+		tile->setTextureKey(PROTO_LEVEL_KEY R_LAND_BASE_TEXTURE);
+		tile->setFriction(0);
+		tile->setType(TILE_TYPE::WATER);
+		break;
+	case TILE_TYPE::SAND:
+		tile->setTextureKey(PROTO_LEVEL_KEY SAND_TEXTURE);
+		tile->setFriction(50);
+		tile->setType(TILE_TYPE::LAND);
+		break;
+	case TILE_TYPE::ICE:
+		tile->setTextureKey(PROTO_LEVEL_KEY ICE_TEXTURE);
+		tile->setFriction(2);
+		tile->setType(TILE_TYPE::LAND);
 		break;
 	default:
 		CUAssertLog(false, "Invalid tile type.");
 		break;
 	}
 
-	tile->setType(tileType);
-	tile->setBodyType(b2_staticBody);
 	tile->setDrawScale(_scale.x);
-	//_world->addObstacle(tile);
+	_world->addObstacle(tile);
 	
 	_tiles.push_back(tile);
 
@@ -234,38 +285,32 @@ bool LevelController::loadTile(Vec2 tilePos, TILE_TYPE tileType) {
 
 bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 	bool success = false;
-	auto protoObjectsLayer = json->get(LAYERS_FIELD)->get(1);
-	if (protoObjectsLayer != nullptr) {
+	auto objectsLayer = json->get(LAYERS_FIELD)->get(1);
+	if (objectsLayer != nullptr) {
 		success = true;
 
 		int worldW = _bounds.size.getIWidth();
 		int worldH = _bounds.size.getIHeight();
 
-		auto objectsData = protoObjectsLayer->get(DATA_FIELD)->asFloatArray();
+		auto objectsData = objectsLayer->get(DATA_FIELD)->asFloatArray();
 
-		int enemyN = 0;
 		int count = 0;
 		for (int i = worldH - 1; i >= 0; i--) {
 			for (int j = 0; j < worldW; j++) {
 				int objVal = objectsData[count] * 10;
 				if (objVal == 40) {
-					_player = PlayerModel::alloc(Vec2(j,i), UNIT_DIM);
+					_player = PlayerModel::alloc(Vec2(j+.5,i+.5), UNIT_DIM);
 					_player->setDrawScale(_scale.x);
-
+					
 					_world->addObstacle(_player);
 				}
 				else if (objVal == 41) {
-					std::shared_ptr<EnemyModel> enemy = EnemyModel::alloc(Vec2(j,i), UNIT_DIM);
+					std::shared_ptr<EnemyModel> enemy = EnemyModel::alloc(Vec2(j+.5,i+.5), UNIT_DIM);
+					enemy->setTextureKey(PROTO_LEVEL_KEY ENEMY_NAME);
 					enemy->setDrawScale(_scale.x);
-					enemy->setName("enemy" + enemyN);
-					enemy->setTextureKey("protosheet_enemy");
-					enemy->setBodyType(b2_dynamicBody);
 
 					_world->addObstacle(enemy);
-
 					_enemies.push_back(enemy);
-
-					enemyN++;
 				}
 				count++;
 			}
@@ -275,6 +320,26 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 		CUAssertLog(false, "Failed to load objects layer.");
 	}
 	return success;
+}
+
+void LevelController::addFrictionJoints() {
+	b2FrictionJointDef jointDef;
+	
+	jointDef.localAnchorA.SetZero();
+	jointDef.localAnchorB.SetZero();
+	
+	jointDef.bodyB = _terrain->getBody();
+	jointDef.maxForce = 0;
+	jointDef.maxTorque = 0;
+
+	jointDef.bodyA = _player->getBody();
+	_player->setFrictionJoint(std::shared_ptr<b2FrictionJoint>((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef))));
+
+	for (int i = 0; i < _enemies.size(); i++) {
+		jointDef.bodyA = _enemies[i]->getBody();
+		_enemies[i]->setFrictionJoint(std::shared_ptr<b2FrictionJoint>((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef))));
+	}
+
 }
 
 void LevelController::buildGameState() {

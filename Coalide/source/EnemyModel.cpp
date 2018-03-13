@@ -4,6 +4,7 @@
 //
 
 #include "EnemyModel.h"
+#include "Constants.h"
 
 void EnemyModel::dispose() { }
 
@@ -17,6 +18,10 @@ void EnemyModel::dispose() { }
 */
 bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 	if (CapsuleObstacle::init(pos, size)) {
+		setName(ENEMY_NAME);
+		setTextureKey(ENEMY_TEXTURE);
+		setBodyType(b2_dynamicBody);
+		
 		_node = nullptr;
 
 		setDensity(0.1f);
