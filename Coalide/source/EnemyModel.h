@@ -20,7 +20,7 @@ protected:
 	/** The texture key for the enemy */
 	std::string _texture;
 
-	std::shared_ptr<b2FrictionJoint> _frictionJoint;
+	b2FrictionJoint* _frictionJoint;
 
 	/** The force to apply to this enemy */
 	Vec2 _force;
@@ -97,7 +97,7 @@ public:
 	/**
 	* Sets the friction joint with the ground.
 	*/
-	void setFrictionJoint(std::shared_ptr<b2FrictionJoint> frictionJoint) { _frictionJoint = frictionJoint; }
+	void setFrictionJoint(b2FrictionJoint* frictionJoint) { _frictionJoint = frictionJoint; }
 
 	/**
 	* Returns the scene graph node representing this enemy.

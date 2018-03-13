@@ -57,6 +57,8 @@ protected:
 	bool _debug;
 	/** Whether or not we have lost */
 	bool _gameover;
+	/** WHether or not the level is reloading after a loss or reset */
+	bool _reloading;
 
 	/**
 	* Activates world collision callbacks on the given physics world and sets the onBeginContact and beforeSolve callbacks
@@ -75,7 +77,7 @@ public:
 	* This constructor does not allocate any objects or start the controller.
 	* This allows us to use a controller without a heap pointer.
 	*/
-	GameScene() : Scene(), _complete(false), _debug(false), _gameover(false) { };
+	GameScene() : Scene(), _complete(false), _debug(false), _gameover(false), _reloading(false) { };
 
 	/**
 	* Disposes of all (non-static) resources allocated to this mode.
@@ -185,6 +187,8 @@ public:
 	* @param timestep  The amount of time (in seconds) since the last frame
 	*/
 	void update(float dt);
+
+	void removeEnemy(EnemyModel* enemy);
 
 	/**
 	* Resets the status of the game so that we can play again.

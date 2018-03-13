@@ -15,12 +15,28 @@ using namespace cugl;
 /**
 * Clears the root scene graph node for this level
 */
-void GameState::clearRootNode() { }
+void GameState::clearRootNode() {
+	if (_rootnode == nullptr) {
+		return;
+	}
+	_worldnode->removeFromParent();
+	_worldnode->removeAllChildren();
+	_worldnode = nullptr;
+
+	_debugnode->removeFromParent();
+	_debugnode->removeAllChildren();
+	_debugnode = nullptr;
+
+	_rootnode = nullptr;
+}
 
 /**
 * Destroys this level, releasing all resources.
 */
-void GameState::dispose() { }
+void GameState::dispose() {
+	_world = nullptr;
+	clearRootNode();
+}
 
 /**
 * Sets the scene graph node for drawing purposes.

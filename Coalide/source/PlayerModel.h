@@ -18,7 +18,7 @@ protected:
 	std::string _texture;
 
 	Vec2 _force;
-	std::shared_ptr<b2FrictionJoint> _frictionJoint;
+	b2FrictionJoint* _frictionJoint;
 
 	float _drawscale;
 
@@ -93,7 +93,7 @@ public:
 	/**
 	* Sets the friction joint with the ground.
 	*/
-	void setFrictionJoint(std::shared_ptr<b2FrictionJoint> frictionJoint) { _frictionJoint = frictionJoint; }
+	void setFrictionJoint(b2FrictionJoint* frictionJoint) { _frictionJoint = frictionJoint; }
 
 	/**
 	* Returns the scene graph node representing the player.

@@ -9,7 +9,6 @@
 #define IMPULSE_SCALE .05
 #define MAX_SPEED_FOR_SLING 2
 
-void PlayerModel::dispose() { }
 
 /**
 * Initializes a new player with the given position and size.
@@ -34,6 +33,11 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		return true;
 	}
 	return false;
+}
+
+void PlayerModel::dispose() {
+	_node = nullptr;
+	_frictionJoint = nullptr;
 }
 
 /**

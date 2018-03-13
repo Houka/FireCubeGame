@@ -14,7 +14,6 @@
 
 using namespace cugl;
 
-void EnemyModel::dispose() { }
 
 /**
 * Initializes a new enemy with the given position and size.
@@ -40,6 +39,11 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 	}
     _previousTime = Timestamp();
 	return false;
+}
+
+void EnemyModel::dispose() {
+	_node = nullptr;
+	_frictionJoint = nullptr;
 }
 
 /**

@@ -356,14 +356,15 @@ void LevelController::addFrictionJoints() {
 	jointDef.maxTorque = 10;
 
 	jointDef.bodyA = _player->getBody();
-	_player->setFrictionJoint(std::shared_ptr<b2FrictionJoint>((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef))));
+	_player->setFrictionJoint((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef)));
+
 
 	for (int i = 0; i < _enemies.size(); i++) {
 		jointDef.maxForce = 0;
 		jointDef.maxTorque = 0;
 
 		jointDef.bodyA = _enemies[i]->getBody();
-		_enemies[i]->setFrictionJoint(std::shared_ptr<b2FrictionJoint>((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef))));
+		_enemies[i]->setFrictionJoint((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef)));
 	}
 }
 
@@ -383,4 +384,32 @@ void LevelController::buildGameState() {
 /**
 * Unloads this game level, releasing all sources
 */
-void LevelController::unload() { }
+void LevelController::unload() {
+	if (_player != nullptr) {
+		if (_world != nullptr) {
+			_gamestate->getWorld()->removeObstacle(_player.get());
+		}
+		_player = nullptr;
+	}
+
+	for (auto it = _enemies.begin(); it != _enemies.end(); ++it) {
+		if (_world != nullptr) {
+			_gamestate->getWorld()->removeObstacle((*it).get());
+		}
+		(*it) = nullptr;
+	}
+	_enemies.clear();
+
+	//for (auto it = _tiles.begin(); it != _tiles.end(); ++it) {
+	//	if (_world != nullptr) {
+	//		_gamestate->getWorld()->removeObstacle((*it).get());
+	//	}
+	//	(*it) = nullptr;
+	//}
+	_tiles.clear();
+
+	if (_world != nullptr) {
+		_world->clear();
+		_world = nullptr;
+	}
+}

@@ -114,7 +114,7 @@ void GameScene::createSceneGraph(Size dimen) {
 	_losenode->setForeground(FONT_COLOR);
 	_losenode->setVisible(false);
 
-	_loadnode = Label::alloc("RESET", _assets->get<Font>(PRIMARY_FONT));
+	_loadnode = Label::alloc("", _assets->get<Font>(PRIMARY_FONT));
 	_loadnode->setPosition(dimen / 2.0f);
 	_loadnode->setForeground(FONT_COLOR);
 	_loadnode->setVisible(false);
@@ -167,19 +167,24 @@ void GameScene::update(float dt) {
 	}
 
 	// Check to see if new level loaded yet
-	if (_loadnode->isVisible()) {
+	if (_reloading) {
 		if (_assets->complete()) {
 			_gamestate = nullptr;
 
 			// Access and initialize level
-			_gamestate = _assets->get<GameState>(PROTO_LEVEL_KEY);
-			_gamestate->setAssets(_assets);
-			_gamestate->setRootNode(_rootnode, _assets); // Obtains ownership of root.
-			_gamestate->showDebug(_debug);
+			_gamestate = _assets->get<LevelController>(PROTO_LEVEL_KEY)->getGameState();
+			activateWorldCollisions();
+
+			Size dimen = Application::get()->getDisplaySize();
+			dimen *= GAME_WIDTH / dimen.width;
+
+			createSceneGraph(dimen);
 
 			activateWorldCollisions();
 
-			_loadnode->setVisible(false);
+			_reloading = false;
+
+			//_loadnode->setVisible(false);
 		}
 		else {
 			// Level is not loaded yet; refuse input
@@ -190,6 +195,7 @@ void GameScene::update(float dt) {
 
 	if (_gameover || _input.didReset()) {
 		reset();
+		return;
 	}
 
 	if (_input.didDebug()) {
@@ -219,6 +225,10 @@ void GameScene::update(float dt) {
 	if (player_pos.x > 0 && player_pos.y > 0 && player_pos.x < _gamestate->getBounds().size.getIWidth() && player_pos.y < _gamestate->getBounds().size.getIHeight()) {
 		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
 		player->setFriction(friction);
+
+		if (friction == 0) {
+			_gameover = true;
+		}
 	}
 	else {
 		player->setFriction(0);
@@ -230,6 +240,10 @@ void GameScene::update(float dt) {
 		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
 			enemy->setFriction(friction);
+
+			if (friction == 0) {
+				removeEnemy(enemy);
+			}
 		}
 		else {
 			enemy->setFriction(0);
@@ -238,6 +252,16 @@ void GameScene::update(float dt) {
 
 	// Update the physics world
 	_gamestate->getWorld()->update(dt);
+}
+
+void GameScene::removeEnemy(EnemyModel* enemy) {
+	// do not attempt to remove a bullet that has already been removed
+	if (enemy->isRemoved()) {
+		return;
+	}
+	_gamestate->getRootNode()->getChild(0)->removeChild(enemy->getNode());
+	enemy->setDebugScene(nullptr);
+	enemy->markRemoved(true);
 }
 
 /**
@@ -249,8 +273,11 @@ void GameScene::reset() {
 	_assets->unload<LevelController>(PROTO_LEVEL_KEY);
 
 	// Load a new level and quit update
-	_loadnode->setVisible(true);
+	//_loadnode->setVisible(true);
+	_reloading = true;
 	_assets->load<LevelController>(PROTO_LEVEL_KEY, PROTO_LEVEL_FILE);
 	setComplete(false);
+	_gameover = false;
+	
 	return;
 }
