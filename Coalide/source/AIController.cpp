@@ -33,6 +33,7 @@ std::vector<std::tuple<EnemyModel*, Vec2>> AIController::getEnemyMoves(std::shar
         if(enemy->canSling() && enemy->timeoutElapsed()){
             Vec2 enemy_pos = enemy->getPosition();
             Vec2 aim = player_pos - enemy_pos;
+            aim = aim.normalize();
             moves.push_back(std::make_tuple(enemy, aim));
         }
     }

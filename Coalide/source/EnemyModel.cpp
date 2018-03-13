@@ -4,11 +4,9 @@
 //
 
 #include "EnemyModel.h"
-#include <cugl/util/CUTimestamp.h>
-
 
 #define MAX_SPEED_FOR_SLING 2
-#define IMPULSE_SCALE .05
+#define IMPULSE_SCALE 8
 #define SLING_TIMEOUT 5000
 
 using namespace cugl;
@@ -27,9 +25,11 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 	if (CapsuleObstacle::init(pos, size)) {
 		_node = nullptr;
 
-		setDensity(0.1f);
+		setDensity(1.0f);
 		setFriction(0.1f);
 		setRestitution(0.4f);
+        setLinearDamping(1.0f);
+        setFixedRotation(true);
 
 		return true;
 	}
