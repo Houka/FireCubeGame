@@ -171,6 +171,13 @@ public:
     bool didSling(bool shouldReset = false);
     
     /**
+     * A polling method to ask if the user started the sling command
+     */
+    bool didStartSling(){
+        return _mousepan;
+    }
+    
+    /**
      * A polling method return the latest sling vector
      */
     cugl::Vec2 getLatestSlingVector() const {

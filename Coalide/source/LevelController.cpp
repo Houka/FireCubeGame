@@ -12,6 +12,7 @@
 
 using namespace cugl;
 
+#define NORMAL_MOTION .015
 
 #pragma mark -
 #pragma mark Constructors
@@ -65,6 +66,11 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
 	_scale.set(canvasW/worldW, canvasH/worldH);
 
 	_world = ObstacleWorld::alloc(_bounds, cugl::Vec2(0, DEFAULT_GRAVITY));
+    
+    //for time slow down
+    _world->setLockStep(true);
+    _world->setStepsize(NORMAL_MOTION);
+    
 	
 	// Create the arena
 	if (!loadTerrain(json)) {

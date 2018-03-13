@@ -15,6 +15,8 @@
 
 using namespace cugl;
 
+#define SLOW_MOTION .00001
+#define NORMAL_MOTION .015
 
 #pragma mark -
 #pragma mark Constructors
@@ -201,7 +203,17 @@ void GameScene::update(float dt) {
 		Application::get()->quit();
 	}
     
+    ObstacleWorld* world = _gamestate->getWorld().get();
     PlayerModel* player = _gamestate->getPlayer().get();
+
+    if(_input.didStartSling() && player->canSling() &&
+       std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
+        world->setStepsize(SLOW_MOTION);
+        player->setColor(Color4::YELLOW);
+    } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
+        world->setStepsize(NORMAL_MOTION);
+        player->setColor(Color4::WHITE);
+    }
     if(_input.didSling(true) && player->canSling()){
         cugl::Vec2 sling = _input.getLatestSlingVector();
         player->applyLinearImpulse(sling);

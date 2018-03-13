@@ -129,6 +129,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
     _initTouch = event.position;
     _currentTouch = event.position;
     _previousTouch = event.position;
+    _mousepan = true;
 }
 
 /**
@@ -144,6 +145,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
     }
     _currentTouch = event.position;
     _previousTouch = event.position;
+    _mousepan = false;
 }
 
 /**
