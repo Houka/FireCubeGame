@@ -120,6 +120,14 @@ public:
 	* @param dt Timing values from parent loop
 	*/
 	virtual void update(float dt) override;
+    
+#pragma mark -
+#pragma mark Logic
+    /**
+     * Returns true if the player is moving slow enough to sling
+     */
+    bool canSling();
+    
 };
 
 #endif /* __PLAYER_MODEL_H__ */

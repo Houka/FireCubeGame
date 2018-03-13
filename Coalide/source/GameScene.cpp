@@ -200,9 +200,9 @@ void GameScene::update(float dt) {
 		Application::get()->quit();
 	}
     
-    if(_input.didSling(true)){
+    PlayerModel* player = _gamestate->getPlayer().get();
+    if(_input.didSling(true) && player->canSling()){
         cugl::Vec2 sling = _input.getLatestSlingVector();
-        PlayerModel* player = _gamestate->getPlayer().get();
         player->applyLinearImpulse(sling);
     }
 

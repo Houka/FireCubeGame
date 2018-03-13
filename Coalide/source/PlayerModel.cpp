@@ -6,6 +6,7 @@
 #include "PlayerModel.h"
 
 #define IMPULSE_SCALE .05
+#define MAX_SPEED_FOR_SLING 2
 
 void PlayerModel::dispose() { }
 
@@ -43,6 +44,13 @@ void PlayerModel::applyLinearImpulse(Vec2& impulse) {
 }
 
 /**
+ * Returns true if the player is moving slow enough to sling
+ */
+bool PlayerModel::canSling(){
+    return _body->GetLinearVelocity().Length() <= MAX_SPEED_FOR_SLING;
+}
+
+/**
 * Updates the object's physics state (NOT GAME LOGIC). This is the method
 * that updates the scene graph and is called after collision resolution.
 *
@@ -53,5 +61,10 @@ void PlayerModel::update(float dt) {
 	if (_node != nullptr) {
 		_node->setPosition(getPosition()*_drawscale);
 		_node->setAngle(getAngle());
+        if(!canSling()){
+           _node->setColor(Color4::RED);
+        } else {
+            _node->setColor(Color4::WHITE);
+        }
 	}
 }
