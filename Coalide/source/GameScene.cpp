@@ -9,6 +9,7 @@
 #include "Constants.h"
 #include "LevelController.h"
 #include "PlayerModel.h"
+#include "EnemyModel.h"
 
 #include <string>
 
@@ -205,6 +206,14 @@ void GameScene::update(float dt) {
         cugl::Vec2 sling = _input.getLatestSlingVector();
         player->applyLinearImpulse(sling);
     }
+    
+    std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
+    for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove){
+        EnemyModel* enemy = std::get<0>(pair);
+        Vec2 sling = std::get<1>(pair);
+        enemy->applyLinearImpulse(sling);
+    }
+    
 
 	// Update the physics world
 	_gamestate->getWorld()->update(dt);

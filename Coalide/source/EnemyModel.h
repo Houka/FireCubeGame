@@ -3,11 +3,11 @@
 //	Coalide
 //
 #ifndef __ENEMY_MODEL_H__
-#define __ENEMY_H__
+#define __ENEMY_MODEL_H__
 #include <cugl/cugl.h>
+#include <cugl/util/CUTimestamp.h>
 
 using namespace cugl;
-
 
 /**
 * This class is the enemy avatar.
@@ -24,6 +24,9 @@ protected:
 
 	/** The ratio of the enemy sprite to the physics body */
 	float _drawscale;
+    
+    /** timeout timer for enemy slinging */
+    Timestamp _previousTime;
 
 public:
 #pragma mark Constructors
@@ -125,13 +128,24 @@ public:
 	*/
 	void setDrawScale(float scale) { _drawscale = scale; }
 
+#pragma mark -
+#pragma mark Logic
+    /**
+     * Returns true if the enemy is moving slow enough to sling
+     */
+    bool canSling();
+    
+    /**
+     * Returns true if the enough time has elapsed since the last sling
+     */
+    bool timeoutElapsed();
 
 #pragma mark -
 #pragma mark Physics
-	/**
-	* Applies the force to the body of this enemy.
-	*/
-	void applyForce();
+    /**
+     * Applies the force to the body of this enemy
+     */
+    void applyLinearImpulse(Vec2& impulse);
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method

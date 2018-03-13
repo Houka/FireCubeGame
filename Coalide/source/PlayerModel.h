@@ -63,7 +63,7 @@ public:
 
 #pragma mark -
 #pragma mark Accessors
-	/**
+    /**
 	* Returns the scene graph node representing the player.
 	*
 	* @return the scene graph node representing the player.
