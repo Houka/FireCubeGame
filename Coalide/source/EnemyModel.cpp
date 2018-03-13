@@ -32,8 +32,9 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		
 		_node = nullptr;
 
-		setDensity(0.1f);
+		setDensity(1.0f);
 		setRestitution(0.4f);
+		setFixedRotation(true);
 
 		return true;
 	}
@@ -46,7 +47,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
  */
 void EnemyModel::applyLinearImpulse(Vec2& impulse) {
     _previousTime.mark();
-    _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * b2Vec2(impulse.x,impulse.y), true);
+    _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * 20 * b2Vec2(impulse.x,impulse.y), true);
 }
 
 /**

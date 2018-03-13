@@ -218,7 +218,7 @@ void GameScene::update(float dt) {
 	Vec2 player_pos = player->getPosition();
 	if (player_pos.x > 0 && player_pos.y > 0 && player_pos.x < _gamestate->getBounds().size.getIWidth() && player_pos.y < _gamestate->getBounds().size.getIHeight()) {
 		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
-		player->setFriction(0);
+		player->setFriction(friction);
 	}
 	else {
 		player->setFriction(0);
@@ -229,7 +229,7 @@ void GameScene::update(float dt) {
 		Vec2 enemy_pos = enemy->getPosition();
 		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
-			enemy->setFriction(0);
+			enemy->setFriction(friction);
 		}
 		else {
 			enemy->setFriction(0);
