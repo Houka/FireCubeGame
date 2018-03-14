@@ -63,7 +63,7 @@ bool PlayerModel::canSling(){
 */
 void PlayerModel::updateArrow(cugl::Vec2 aim, bool visible) {
 
-	aim *= -1;
+	aim *= -.3;
 	cugl::Vec2 playerImageOffset = cugl::Vec2(_node->getWidth() / 2.0, _node->getHeight() / 2.0);
 
 	float scaleFactor = aim.length();

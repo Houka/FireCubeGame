@@ -233,6 +233,10 @@ void GameScene::update(float dt) {
         player->applyLinearImpulse(sling);
 		player->updateArrow(false);
     }
+
+	if (!player->canSling()) {
+		player->updateArrow(false);
+	}
     
     std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
     for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove){
