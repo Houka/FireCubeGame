@@ -9,7 +9,7 @@
 
 #define MAX_SPEED_FOR_SLING 2
 #define IMPULSE_SCALE 8
-#define SLING_TIMEOUT 5000
+#define SLING_TIMEOUT 4000
 #define COLLISION_TIMEOUT 0
 
 using namespace cugl;

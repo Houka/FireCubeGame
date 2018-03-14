@@ -135,7 +135,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 					break;
 				case 1:
 					tileType = TILE_TYPE::ISLAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 2:
 					tileType = TILE_TYPE::ISLAND_BASE;
@@ -143,15 +143,15 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 					break;
 				case 10:
 					tileType = TILE_TYPE::NW_LAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 11:
 					tileType = TILE_TYPE::W_LAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 12:
 					tileType = TILE_TYPE::SW_LAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 13:
 					tileType = TILE_TYPE::L_LAND_BASE;
@@ -159,15 +159,15 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 					break;
 				case 20:
 					tileType = TILE_TYPE::N_LAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 21:
 					tileType = TILE_TYPE::LAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 22:
 					tileType = TILE_TYPE::S_LAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 23:
 					tileType = TILE_TYPE::C_LAND_BASE;
@@ -175,15 +175,15 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 					break;
 				case 30:
 					tileType = TILE_TYPE::NE_LAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 31:
 					tileType = TILE_TYPE::E_LAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 32:
 					tileType = TILE_TYPE::SE_LAND;
-					_board[i][j] = 5;
+					_board[i][j] = 10;
 					break;
 				case 33:
 					tileType = TILE_TYPE::R_LAND_BASE;
@@ -191,7 +191,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 					break;
 				case 42:
 					tileType = TILE_TYPE::SAND;
-					_board[i][j] = 10;
+					_board[i][j] = 20;
 					break;
 				case 43:
 					tileType = TILE_TYPE::ICE;
