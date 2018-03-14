@@ -41,6 +41,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	if (assets == nullptr) {
 		return false;
 	}
+
 	else if (!Scene::init(dimen)) {
 		return false;
 	}
@@ -71,6 +72,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// Set up the scene graph
 	createSceneGraph(dimen);
 
+	// initialize the camera
+	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 32. / 2.;
+	cugl::Vec2 cameraPos = getCamera()->getPosition();
+	getCamera()->translate(gameCenter - cameraPos);
 	return true;
 }
 
@@ -280,6 +285,43 @@ void GameScene::update(float dt) {
 
 	// Update the physics world
 	_gamestate->getWorld()->update(dt);
+
+	// update the camera
+	player->getNode()->getScene()->setOffset(cugl::Vec2(0,0));
+	cugl::Vec2 cameraPos = player->getNode()->getScene()->getCamera()->getPosition();
+	cugl::Vec2 playerPos = player->getNode()->getPosition();
+	float cameraTransX;
+	float cameraTransY;
+	
+	cugl::Vec2 gameBound = _gamestate->getBounds().size*32;
+	float xMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
+	float yMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
+	
+	cugl::Vec2 boundBottom = Scene::screenToWorldCoords(cugl::Vec2());
+	cugl::Vec2 boundTop = Scene::screenToWorldCoords(cugl::Vec2(xMax,yMax));
+
+	cameraTransX = playerPos.x - cameraPos.x;
+	cameraTransY = playerPos.y - cameraPos.y;
+
+	// smooth pan
+	if (std::abs(cameraTransX) > 5) {
+		cameraTransX *= .01;
+	}
+
+	if (std::abs(cameraTransY) > 5) {
+		cameraTransY *= .01;
+	}
+
+	if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
+		cameraTransX = 0;
+	}
+	
+	if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
+		cameraTransY = 0;
+	}
+
+
+	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
 }
 
 void GameScene::removeEnemy(EnemyModel* enemy) {

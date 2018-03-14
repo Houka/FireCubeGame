@@ -90,6 +90,10 @@ void PlayerModel::update(float dt) {
 	Obstacle::update(dt);
 	if (_node != nullptr) {
 		_node->setPosition(getPosition()*_drawscale);
+		//_node->getScene()->setOffset(cugl::Vec2(0,0));
+		//cugl::Vec2 cameraPos = _node->getScene()->getCamera()->getPosition();
+		//cugl::Vec2 cameraTrans;
+		//_node->getScene()->getCamera()->translate(_node->getPosition() - cameraPos);
 		_node->setAngle(getAngle());
         if(!canSling()){
             _node->setColor(Color4::RED);

@@ -91,7 +91,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 		const std::vector<cugl::Vec2> arrowLine = { cugl::Vec2(0,0), cugl::Vec2(0, 2) };
 		std::shared_ptr<cugl::PathNode> _arrow = PathNode::allocWithVertices(arrowLine, 1, cugl::PathJoint::NONE, cugl::PathCap::NONE, false);
 		_arrow->setAnchor(cugl::Vec2(0.0, 0.0));
-		_arrow->setVisible(true);
+		_arrow->setVisible(false);
 		_player->setArrow(_arrow);
 
 		// Create the polygon node (empty, as the model will initialize)
