@@ -220,7 +220,7 @@ void GameScene::update(float dt) {
     if(_input.didStartSling() && player->canSling() &&
        std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
         world->setStepsize(SLOW_MOTION);
-        player->setColor(Color4::YELLOW);
+        player->setColor(Color4::ORANGE);
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
         world->setStepsize(NORMAL_MOTION);
         player->setColor(Color4::WHITE);

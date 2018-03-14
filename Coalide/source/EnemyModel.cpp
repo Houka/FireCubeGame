@@ -37,7 +37,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		setFixedRotation(true);
 
 		_previousTime = Timestamp();
-		_rndTimerReduction = std::rand() % 1000;
+		_rndTimerReduction = std::rand() % 3000;
 
 		return true;
 	}
@@ -55,7 +55,7 @@ void EnemyModel::dispose() {
  */
 void EnemyModel::applyLinearImpulse(Vec2& impulse) {
     _previousTime.mark();
-    _rndTimerReduction = std::rand() % 1000;
+    _rndTimerReduction = std::rand() % 3000;
     _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * b2Vec2(impulse.x,impulse.y), true);
 }
 
