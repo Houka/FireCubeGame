@@ -45,12 +45,13 @@ bool LoadingScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
 	layer->doLayout(); // This rearranges the children to fit the screen
 	
 	_bar = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("load_bar"));
-	_button = std::dynamic_pointer_cast<Button>(assets->get<Node>("load_claw_play"));
+	_button = std::dynamic_pointer_cast<Button>(assets->get<Node>("load_logo_play"));
 	_button->setListener([=](const std::string& name, bool down) {
 		this->_active = down;
 	});
 
-	Application::get()->setClearColor(Color4(192, 192, 192, 255));
+	Application::get()->setClearColor(Color4(255, 255, 255, 255));
+
 	addChild(layer);
 	return true;
 }

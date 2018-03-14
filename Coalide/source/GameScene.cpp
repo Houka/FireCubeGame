@@ -63,6 +63,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 		return false;
 	}
 
+	_enemyCount = _gamestate->getEnemies().size();
+
 	// Activate the collision callbacks for the physics world
 	activateWorldCollisions();
 
@@ -179,7 +181,7 @@ void GameScene::update(float dt) {
 
 			createSceneGraph(dimen);
 
-			activateWorldCollisions();
+			_enemyCount = _gamestate->getEnemies().size();
 
 			_reloading = false;
 
@@ -194,6 +196,12 @@ void GameScene::update(float dt) {
 
 	if (_gameover || _input.didReset()) {
 		reset();
+		return;
+	}
+
+	if (_complete) {
+		reset();
+		//_winnode->setVisible(true);
 		return;
 	}
 
@@ -259,6 +267,10 @@ void GameScene::update(float dt) {
 		}
 	}
 
+	if (_enemyCount == 0) {
+		_complete = true;
+	}
+
 	// Update the physics world
 	_gamestate->getWorld()->update(dt);
 }
@@ -271,6 +283,7 @@ void GameScene::removeEnemy(EnemyModel* enemy) {
 	_gamestate->getRootNode()->getChild(0)->removeChild(enemy->getNode());
 	enemy->setDebugScene(nullptr);
 	enemy->markRemoved(true);
+	_enemyCount--;
 }
 
 /**

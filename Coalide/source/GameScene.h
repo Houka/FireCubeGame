@@ -63,6 +63,9 @@ protected:
 	/** WHether or not the level is reloading after a loss or reset */
 	bool _reloading;
 
+	/** Number of enemies remaining. */
+	int _enemyCount;
+
 	/**
 	* Activates world collision callbacks on the given physics world and sets the onBeginContact and beforeSolve callbacks
 	*
