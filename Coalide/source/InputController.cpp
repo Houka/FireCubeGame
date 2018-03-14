@@ -117,6 +117,14 @@ bool InputController::didSling(bool shouldReset){
     return tmp;
 }
 
+/**
+* A polling method to ask where the user is aiming
+*/
+cugl::Vec2 InputController::getCurrentAim() {
+	_currentAim = _currentTouch - _initTouch;
+	return _currentAim;
+}
+
 #pragma mark -
 #pragma mark Touch Callbacks
 /**

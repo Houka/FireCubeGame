@@ -2066,16 +2066,12 @@
 				TargetAttributes = {
 					EB0FF5642016EC7E00517030 = {
 						CreatedOnToolsVersion = 9.2;
-						DevelopmentTeam = 4ZMUDM94F7;
 					};
 					EB7453D61D74B0C5002FBAE6 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 4ZMUDM94F7;
-						ProvisioningStyle = Automatic;
 					};
 					EBBF18061D7485D1008E2001 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 4ZMUDM94F7;
 					};
 				};
 			};
@@ -2494,10 +2490,7 @@
 		EB7453DE1D74B0C5002FBAE6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: kyler.ruvane@gmail.com (39NSK29Z6T)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4ZMUDM94F7;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2509,10 +2502,7 @@
 		EB7453DF1D74B0C5002FBAE6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer: kyler.ruvane@gmail.com (39NSK29Z6T)";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4ZMUDM94F7;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2566,10 +2556,9 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: kyler.ruvane@gmail.com (39NSK29Z6T)";
+				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 4ZMUDM94F7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
@@ -2618,10 +2607,9 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: kyler.ruvane@gmail.com (39NSK29Z6T)";
+				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 4ZMUDM94F7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";

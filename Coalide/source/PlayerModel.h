@@ -22,6 +22,7 @@ private:
     bool _shouldStopSoon;
 protected:
 	std::shared_ptr<Node> _node;
+	std::shared_ptr<PathNode> _arrow;
 	std::string _texture;
 
 	Vec2 _force;
@@ -117,6 +118,20 @@ public:
 	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
 
 	/**
+	* Returns the scene graph node representing the player.
+	*
+	* @return the scene graph node representing the player.
+	*/
+	const std::shared_ptr<PathNode>& getArrow() const { return _arrow; }
+
+	/**
+	* Sets the scene graph node representing the player.
+	*
+	* @param node  The scene graph node representing the player.
+	*/
+	void setArrow(const std::shared_ptr<PathNode>& arrow) { _arrow = arrow; }
+
+	/**
 	* Returns the texture (key) for the player.
 	*
 	* @return the texture (key) for the player.
@@ -158,6 +173,13 @@ public:
         return _shouldStopSoon;
     }
 
+	/**
+	* Updates the aim arrow.
+	*
+	* @param node  updates the aim arrow.
+	*/
+	void updateArrow(cugl::Vec2 aim, bool visible);
+	void updateArrow(bool visible);
 
 #pragma mark -
 #pragma mark Physics

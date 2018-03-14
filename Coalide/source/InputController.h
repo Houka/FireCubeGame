@@ -21,6 +21,8 @@ private:
     cugl::Vec2 _initTouch;
     /** The latest vector that represents a sling movement */
     cugl::Vec2 _latestSling;
+	/** The current vector that represents the aim arrow */
+	cugl::Vec2 _currentAim;
     /** The timestamp for the beginning of the current gesture */
     cugl::Timestamp _timestamp;
     /** The last touch location for the current gesture */
@@ -184,6 +186,10 @@ public:
         return _latestSling;
     }
 
+	/**
+	* A polling method to ask where the user is aiming
+	*/
+	cugl::Vec2 InputController::getCurrentAim();
 };
 
 #endif /* __INPUT_CONTROLLER_H__ */

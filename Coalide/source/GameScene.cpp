@@ -221,6 +221,8 @@ void GameScene::update(float dt) {
        std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
         world->setStepsize(SLOW_MOTION);
         player->setColor(Color4::ORANGE);
+		// update the aim arrow
+		player->updateArrow(_input.getCurrentAim(), true);
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
         world->setStepsize(NORMAL_MOTION);
         player->setColor(Color4::WHITE);
@@ -229,6 +231,7 @@ void GameScene::update(float dt) {
     if(_input.didSling(true) && player->canSling()){
         cugl::Vec2 sling = _input.getLatestSlingVector();
         player->applyLinearImpulse(sling);
+		player->updateArrow(false);
     }
     
     std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);

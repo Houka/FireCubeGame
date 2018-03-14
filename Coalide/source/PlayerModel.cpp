@@ -57,6 +57,30 @@ bool PlayerModel::canSling(){
 }
 
 /**
+* Updates the aim arrow.
+*
+* @param node  updates the aim arrow.
+*/
+void PlayerModel::updateArrow(cugl::Vec2 aim, bool visible) {
+
+	aim *= -1;
+	cugl::Vec2 playerImageOffset = cugl::Vec2(_node->getWidth() / 2.0, _node->getHeight() / 2.0);
+
+	float scaleFactor = aim.length();
+	float angle = -1 * aim.getAngle();
+
+	_arrow->setScale(cugl::Vec2(scaleFactor, 1));
+	_arrow->setAngle(angle);
+	_arrow->setPosition(cugl::Vec2(playerImageOffset.x + aim.x, playerImageOffset.y - aim.y));
+	_arrow->setVisible(visible);
+}
+
+void PlayerModel::updateArrow(bool visible) {
+	_arrow->setVisible(visible);
+}
+
+
+/**
 * Updates the object's physics state (NOT GAME LOGIC). This is the method
 * that updates the scene graph and is called after collision resolution.
 *
