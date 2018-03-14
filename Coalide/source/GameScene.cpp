@@ -256,7 +256,7 @@ void GameScene::update(float dt) {
 		player->setFriction(friction);
 
 		if (friction == 0) {
-			_gameover = true;
+			_gameover = true;	
 		}
 	}
 	else {

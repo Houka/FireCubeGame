@@ -73,6 +73,7 @@ void PlayerModel::updateArrow(cugl::Vec2 aim, bool visible) {
 	_arrow->setAngle(angle);
 	_arrow->setPosition(cugl::Vec2(playerImageOffset.x + aim.x, playerImageOffset.y - aim.y));
 	_arrow->setVisible(visible);
+	_arrow->setColor(cugl::Color4::RED);
 }
 
 void PlayerModel::updateArrow(bool visible) {
@@ -90,10 +91,6 @@ void PlayerModel::update(float dt) {
 	Obstacle::update(dt);
 	if (_node != nullptr) {
 		_node->setPosition(getPosition()*_drawscale);
-		//_node->getScene()->setOffset(cugl::Vec2(0,0));
-		//cugl::Vec2 cameraPos = _node->getScene()->getCamera()->getPosition();
-		//cugl::Vec2 cameraTrans;
-		//_node->getScene()->getCamera()->translate(_node->getPosition() - cameraPos);
 		_node->setAngle(getAngle());
         if(!canSling()){
             _node->setColor(Color4::RED);
