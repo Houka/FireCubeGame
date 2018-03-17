@@ -189,7 +189,7 @@ public:
 	/**
 	* A polling method to ask where the user is aiming
 	*/
-	cugl::Vec2 InputController::getCurrentAim();
+	cugl::Vec2 getCurrentAim();
 };
 
 #endif /* __INPUT_CONTROLLER_H__ */
