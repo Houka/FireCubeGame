@@ -1,0 +1,34 @@
+{
+  "textures": {
+    "protosheet": {
+      "file": "textures/tileset.png",
+      "atlas": {
+        "player": [ 128, 0, 160, 32 ],
+        "enemy": [ 128, 32, 160, 64 ],
+        "water": [ 0, 0, 32, 32 ],
+        "island": [ 0, 32, 32, 64 ],
+        "islandBase": [ 0, 64, 32, 96 ],
+        "land": [ 64, 32, 96, 64 ],
+        "nwLand": [ 32, 0, 64, 32 ],
+        "nLand": [ 64, 0, 96, 32 ],
+        "neLand": [ 96, 0, 128, 32 ],
+        "eLand": [ 96, 32, 128, 64 ],
+        "seLand": [ 96, 64, 128, 96 ],
+        "sLand": [ 64, 64, 96, 96 ],
+        "swLand": [ 32, 64, 64, 96 ],
+        "wLand": [ 32, 32, 64, 64 ],
+        "lLandBase": [ 32, 96, 64, 128 ],
+        "cLandBase": [ 64, 96, 96, 128 ],
+        "rLandBase": [ 96, 96, 128, 128 ],
+        "sand": [ 128, 64, 160, 96 ],
+        "ice": [ 128, 96, 160, 128 ]
+      }
+    }
+  },
+	"fonts": {
+		"charlemagne": {
+			"file":     "fonts/Charlemagne.ttf",
+			"size":     64
+		}
+	}
+}
