@@ -24,7 +24,6 @@ using namespace cugl;
 * @return  true if the obstacle is initialized properly, false otherwise.
 */
 bool EnemyModel::init(const Vec2 & pos, const Size & size) {
-    std::srand (time(NULL));
 	if (CapsuleObstacle::init(pos, size)) {
 		setName(ENEMY_NAME);
 		setTextureKey(ENEMY_TEXTURE);
@@ -37,6 +36,8 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		setFixedRotation(true);
 
 		_previousTime = Timestamp();
+        unsigned int rnd_seed = (unsigned int) (100 * pos.x + pos.y);
+        std::srand(rnd_seed);
 		_rndTimerReduction = std::rand() % 3000;
 
 		return true;
