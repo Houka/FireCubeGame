@@ -17,6 +17,7 @@ using namespace cugl;
 class PlayerModel;
 class EnemyModel;
 class TileModel;
+class ObjectModel;
 
 #pragma mark -
 #pragma mark Game State
@@ -43,6 +44,7 @@ protected:
 	std::shared_ptr<ObstacleWorld> _world;
 	std::shared_ptr<PlayerModel> _player;
 	std::vector<std::shared_ptr<EnemyModel>> _enemies;
+	std::vector<std::shared_ptr<ObjectModel>> _objects;
 	std::vector<std::shared_ptr<TileModel>> _tiles;
 
 	float** _board;
@@ -115,6 +117,18 @@ public:
 	* Sets the active enemies in this game level.
 	*/
 	void setEnemies(std::vector<std::shared_ptr<EnemyModel>> enemies) { _enemies = enemies; }
+
+	/**
+	* Returns the active enemies in this game level.
+	*
+	* @return the active enemies in this game level.
+	*/
+	std::vector<std::shared_ptr<ObjectModel>>& getObjects() { return _objects; }
+
+	/**
+	* Sets the active enemies in this game level.
+	*/
+	void setObjects(std::vector<std::shared_ptr<ObjectModel>> objects) { _objects = objects; }
 
 	/**
 	* Returns the floor tiles in this game level.

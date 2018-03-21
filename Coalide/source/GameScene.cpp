@@ -253,12 +253,11 @@ void GameScene::update(float dt) {
 	Vec2 player_pos = player->getPosition();
 	if (player_pos.x > 0 && player_pos.y > 0 && player_pos.x < _gamestate->getBounds().size.getIWidth() && player_pos.y < _gamestate->getBounds().size.getIHeight()) {
 		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
-		if (friction != player->getFriction()) {
-			player->setFriction(friction);
-		}
-
 		if (friction == 0) {
-			_gameover = true;	
+			_gameover = true;
+		}
+		else if (friction != player->getFriction()) {
+			player->setFriction(friction);
 		}
 	}
 	else {
@@ -270,12 +269,11 @@ void GameScene::update(float dt) {
 		Vec2 enemy_pos = enemy->getPosition();
 		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
-			if (friction != enemy->getFriction()) {
-				enemy->setFriction(friction);
-			}
-
 			if (friction == 0) {
 				removeEnemy(enemy);
+			}
+			else if (friction != enemy->getFriction()) {
+				enemy->setFriction(friction);
 			}
 		}
 		else {

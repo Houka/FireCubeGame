@@ -6,6 +6,7 @@
 #include "PlayerModel.h"
 #include "EnemyModel.h"
 #include "TileModel.h"
+#include "ObjectModel.h"
 
 #include <string>
 
@@ -108,6 +109,18 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 			enemy->setDebugScene(_debugnode);
 
 			_worldnode->addChild(enemyNode, UNIT_PRIORITY);
+		}
+	}
+
+	if (_objects.size() > 0) {
+		for (auto it = _objects.begin(); it != _objects.end(); ++it) {
+			std::shared_ptr<ObjectModel> object = *it;
+			auto objectNode = PolygonNode::allocWithTexture(assets->get<Texture>(object->getTextureKey()));
+			object->setNode(objectNode);
+			object->setDrawScale(_scale.x);
+			object->setDebugScene(_debugnode);
+
+			_worldnode->addChild(objectNode, UNIT_PRIORITY);
 		}
 	}
 }

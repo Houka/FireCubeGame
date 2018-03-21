@@ -112,8 +112,8 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 
 	_world->addObstacle(_terrain);
 
-	auto protoWaterLayer = json->get(LAYERS_FIELD)->get(0);
-	auto protoWorldLayer = json->get(LAYERS_FIELD)->get(1);
+	auto protoWaterLayer = json->get(LAYERS_FIELD)->get(2);
+	auto protoWorldLayer = json->get(LAYERS_FIELD)->get(0);
 	
 	if (protoWorldLayer != nullptr) {
 		success = true;
@@ -325,7 +325,7 @@ bool LevelController::loadTile(Vec2 tilePos, TILE_TYPE tileType) {
 
 bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 	bool success = false;
-	auto objectsLayer = json->get(LAYERS_FIELD)->get(2);
+	auto objectsLayer = json->get(LAYERS_FIELD)->get(1);
 	if (objectsLayer != nullptr) {
 		success = true;
 
@@ -403,13 +403,20 @@ void LevelController::addFrictionJoints() {
 	jointDef.bodyA = _player->getBody();
 	_player->setFrictionJoint((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef)));
 
-
 	for (int i = 0; i < _enemies.size(); i++) {
 		jointDef.maxForce = 0;
 		jointDef.maxTorque = 0;
 
 		jointDef.bodyA = _enemies[i]->getBody();
 		_enemies[i]->setFrictionJoint((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef)));
+	}
+
+	for (int i = 0; i < _objects.size(); i++) {
+		jointDef.maxForce = 0;
+		jointDef.maxTorque = 0;
+
+		jointDef.bodyA = _objects[i]->getBody();
+		_objects[i]->setFrictionJoint((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef)));
 	}
 }
 
@@ -418,6 +425,7 @@ void LevelController::buildGameState() {
 
 	_gamestate->setPlayer(_player);
 	_gamestate->setEnemies(_enemies);
+	_gamestate->setObjects(_objects);
 	_gamestate->setTiles(_tiles);
 	_gamestate->setWorld(_world);
 	_gamestate->setBoard(_board);
@@ -444,6 +452,14 @@ void LevelController::unload() {
 		(*it) = nullptr;
 	}
 	_enemies.clear();
+
+	for (auto it = _objects.begin(); it != _objects.end(); ++it) {
+		if (_world != nullptr) {
+			_gamestate->getWorld()->removeObstacle((*it).get());
+		}
+		(*it) = nullptr;
+	}
+	_objects.clear();
 
 	//for (auto it = _tiles.begin(); it != _tiles.end(); ++it) {
 	//	if (_world != nullptr) {
