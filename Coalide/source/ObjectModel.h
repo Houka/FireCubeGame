@@ -1,63 +1,64 @@
 //
-//	EnemyModel.h
+//	ObjectModel.h
 //	Coalide
 //
-#ifndef __ENEMY_MODEL_H__
-#define __ENEMY_MODEL_H__
+#ifndef __OBJECT_MODEL_H__
+#define __OBJECT_MODEL_H__
 #include <cugl/cugl.h>
 #include <cugl/util/CUTimestamp.h>
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
+#include "Constants.h"
 
 using namespace cugl;
 
 /**
-* This class is the enemy avatar.
+* This class is the inanimate object.
 */
-class EnemyModel : public CapsuleObstacle {
-private:
-    /** random reduction for the timer between slings */
-    int _rndTimerReduction;
-    /** to keep track of how long to wait before stopping */
-    Timestamp _collisionTimeout;
-    /** a collision happened and we want to stop soon */
-    bool _shouldStopSoon;
+class ObjectModel : public CapsuleObstacle {
 protected:
-	/** The scene graph node for the enemy */
+	/** The scene graph node */
 	std::shared_ptr<Node> _node;
-	/** The texture key for the enemy */
+	/** The texture key */
 	std::string _texture;
+
+	/** to keep track of how long to wait before stopping */
+	Timestamp _collisionTimeout;
+	/** a collision happened and we want to stop soon */
+	bool _shouldStopSoon;
 
 	b2FrictionJoint* _frictionJoint;
 	float _friction;
 
-	/** The force to apply to this enemy */
+	/** The force to apply */
 	Vec2 _force;
 
-	/** The ratio of the enemy sprite to the physics body */
+	bool _isBroken;
+
+	/** The ratio of the sprite to the physics body */
 	float _drawscale;
-    
-    /** timeout timer for enemy slinging */
-    Timestamp _previousTime;
+
+	/** The type of object */
+	OBJECT_TYPE _type;
 
 public:
 #pragma mark Constructors
 	/**
 	* Creates a new enemy at the origin.
 	*/
-	EnemyModel(void) : CapsuleObstacle() { }
+	ObjectModel(void) : CapsuleObstacle() { }
 
 	/**
 	* Destroys this enemy, releasing all resources.
 	*/
-	virtual ~EnemyModel(void) { dispose(); }
+	virtual ~ObjectModel(void) { dispose(); }
 
 	/**
-	* Disposes all resources and assets of this enemy.
+	* Disposes all resources and assets.
 	*/
 	void dispose();
 
 	/**
-	* Initializes a new enemy with the given position and size.
+	* Initializes a new object with the given position and size.
 	*
 	* @param  pos		Initial position in world coordinates
 	* @param  size   	The dimensions of the sprite.
@@ -69,20 +70,40 @@ public:
 
 #pragma mark Static Constructors
 	/**
-	* Returns a newly allocated enemy with the given position and size
+	* Returns a newly allocated object with the given position and size
 	*
 	* @param pos   Initial position in world coordinates
 	* @param size  The dimensions of the sprite.
 	*
 	* @return a newly allocated enemy with the given position
 	*/
-	static std::shared_ptr<EnemyModel> alloc(const Vec2& pos, const Size& size) {
-		std::shared_ptr<EnemyModel> result = std::make_shared<EnemyModel>();
+	static std::shared_ptr<ObjectModel> alloc(const Vec2& pos, const Size& size) {
+		std::shared_ptr<ObjectModel> result = std::make_shared<ObjectModel>();
 		return (result->init(pos, size) ? result : nullptr);
 	}
 
 #pragma mark -
 #pragma mark Accessors
+	/**
+	* Sets the object type.
+	*/
+	void setType(OBJECT_TYPE type) { _type = type; }
+
+	/** Returns true if the object breaks after one hit */
+	bool isBreakable() { return _type == OBJECT_TYPE::BREAKABLE; }
+
+	/** Returns true if the object move on being hit */
+	bool isMovable() { return _type == OBJECT_TYPE::MOVABLE; }
+
+	/** Returns true if the object cannot be moved */
+	bool isImmobile() { return _type == OBJECT_TYPE::IMMOBILE; }
+
+	/** Returns true if an object has been hit already and been broken */
+	bool isBroken() { return _isBroken; }
+
+	/** Sets the brokenness state of the object */
+	void setBroken(bool broken) { _isBroken = broken; }
+
 	/**
 	* Returns the force applied to this enemy.
 	*
@@ -105,7 +126,7 @@ public:
 	/**
 	* Sets the friction of the friction joint with the ground.
 	*/
-	void setFriction(float friction) { _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
+	void setFriction(float friction) { _friction = friction; _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
 
 	/**
 	* Sets the friction joint with the ground.
@@ -153,40 +174,23 @@ public:
 	* @param scale The ratio of the enemy sprite to the physics body.
 	*/
 	void setDrawScale(float scale) { _drawscale = scale; }
-    
-    /**
-     * Is this enemy already stopping soon
-     */
-    bool alreadyStopping() {
-        return _shouldStopSoon;
-    }
 
-#pragma mark -
-#pragma mark Logic
-    /**
-     * Returns true if the enemy is moving slow enough to sling
-     */
-    bool canSling();
-    
-    /**
-     * Returns true if the enough time has elapsed since the last sling
-     */
-    bool timeoutElapsed();
+	/**
+	* Is this enemy already stopping soon
+	*/
+	bool alreadyStopping() {
+		return _shouldStopSoon;
+	}
 
 #pragma mark -
 #pragma mark Physics
-    /**
-     * Applies the force to the body of this enemy
-     */
-    void applyLinearImpulse(Vec2& impulse);
-    
-    /**
-     * Stop this enemy after timeout milliseconds
-     */
-    void setShouldStop(){
-        _collisionTimeout.mark();
-        _shouldStopSoon = true;
-    }
+	/**
+	* Stop this enemy after timeout milliseconds
+	*/
+	void setShouldStop() {
+		_collisionTimeout.mark();
+		_shouldStopSoon = true;
+	}
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method
@@ -197,4 +201,4 @@ public:
 	virtual void update(float dt) override;
 };
 
-#endif /* __PLAYER_MODEL_H__ */
+#endif /* __OBJECT_MODEL_H__ */

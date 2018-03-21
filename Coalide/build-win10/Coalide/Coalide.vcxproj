@@ -198,6 +198,7 @@
     <ClInclude Include="..\..\source\LoadingScene.h" />
     <ClInclude Include="..\..\source\PlayerModel.h" />
     <ClInclude Include="..\..\source\TileModel.h" />
+    <ClInclude Include="ObjectModel.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +214,7 @@
     <ClCompile Include="..\..\source\main.cpp" />
     <ClCompile Include="..\..\source\PlayerModel.cpp" />
     <ClCompile Include="..\..\source\TileModel.cpp" />
+    <ClCompile Include="ObjectModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Coalide.rc" />

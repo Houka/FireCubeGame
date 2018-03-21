@@ -15,6 +15,7 @@ class GameState;
 class PlayerModel;
 class EnemyModel;
 class TileModel;
+class ObjectModel;
 
 class LevelController : public Asset {
 protected:
@@ -29,6 +30,7 @@ protected:
 	
 	std::shared_ptr<PlayerModel> _player;
 	std::vector<std::shared_ptr<EnemyModel>> _enemies;
+	std::vector<std::shared_ptr<ObjectModel>> _objects;
 	std::vector<std::shared_ptr<TileModel>> _tiles;
 	std::shared_ptr<BoxObstacle> _terrain;
 

@@ -27,6 +27,11 @@
 
 #define TILE_NAME		"tile"
 
+#define INANIMATE_NAME	"inanimate"
+#define BREAKABLE_NAME	"breakable"
+#define MOVABLE_NAME	"movable"
+#define IMMOBILE_NAME	"immobile"
+
 #pragma mark -
 #pragma mark Physics Constants
 /** Game world dimensions in Box2d units */
@@ -66,9 +71,17 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define PROTO_LEVEL_FILE   "json/map2.json"
+#define PROTO_LEVEL_FILE   "json/map3.json"
 /** The key for our loaded level */
 #define PROTO_LEVEL_KEY    "protosheet_"
+
+#pragma mark -
+#pragma mark Object Types
+enum class OBJECT_TYPE : int {
+	BREAKABLE,
+	MOVABLE,
+	IMMOBILE
+};
 
 #pragma mark -
 #pragma mark Tile Types
