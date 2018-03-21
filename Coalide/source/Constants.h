@@ -71,7 +71,7 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define PROTO_LEVEL_FILE   "json/map2.json"
+#define PROTO_LEVEL_FILE   "json/map3.json"
 /** The key for our loaded level */
 #define PROTO_LEVEL_KEY    "protosheet_"
 
