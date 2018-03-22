@@ -39,6 +39,9 @@ protected:
     /** timeout timer for enemy slinging */
     Timestamp _previousTime;
 
+	bool _stunned;
+	bool _onFire;
+
 public:
 #pragma mark Constructors
 	/**
@@ -80,6 +83,16 @@ public:
 		std::shared_ptr<EnemyModel> result = std::make_shared<EnemyModel>();
 		return (result->init(pos, size) ? result : nullptr);
 	}
+
+#pragma mark -
+#pragma mark Status
+	bool isStunned() { return _stunned; }
+
+	void setStunned(bool stunned) { _stunned = stunned; }
+
+	bool isFire() { return _onFire; }
+
+	void setFire(bool fire) { _onFire = fire; }
 
 #pragma mark -
 #pragma mark Accessors

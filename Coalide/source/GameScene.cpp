@@ -233,7 +233,7 @@ void GameScene::update(float dt) {
         player->setColor(Color4::WHITE);
     }
 
-    if(_input.didSling(true) && player->canSling()){
+    if(_input.didSling(true) && player->canSling()) {
         cugl::Vec2 sling = _input.getLatestSlingVector();
         player->applyLinearImpulse(sling);
 		player->updateArrow(false);
@@ -244,42 +244,13 @@ void GameScene::update(float dt) {
 	}
     
     std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
-    for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove){
+    for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove) {
         EnemyModel* enemy = std::get<0>(pair);
         Vec2 sling = std::get<1>(pair);
         enemy->applyLinearImpulse(sling);
     }
 
-	Vec2 player_pos = player->getPosition();
-	if (player_pos.x > 0 && player_pos.y > 0 && player_pos.x < _gamestate->getBounds().size.getIWidth() && player_pos.y < _gamestate->getBounds().size.getIHeight()) {
-		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
-		if (friction == 0) {
-			_gameover = true;
-		}
-		else if (friction != player->getFriction()) {
-			player->setFriction(friction);
-		}
-	}
-	else {
-		player->setFriction(0);
-	}
-
-	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
-		EnemyModel* enemy = _gamestate->getEnemies()[i].get();
-		Vec2 enemy_pos = enemy->getPosition();
-		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
-			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
-			if (friction == 0) {
-				removeEnemy(enemy);
-			}
-			else if (friction != enemy->getFriction()) {
-				enemy->setFriction(friction);
-			}
-		}
-		else {
-			enemy->setFriction(0);
-		}
-	}
+	updateFriction();
 
 	if (_enemyCount == 0) {
 		_complete = true;
@@ -326,6 +297,58 @@ void GameScene::update(float dt) {
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
 }
 
+void GameScene::updateFriction() {
+	PlayerModel* player = _gamestate->getPlayer().get();
+	Vec2 player_pos = player->getPosition();
+
+	if (player_pos.x > 0 && player_pos.y > 0 && player_pos.x < _gamestate->getBounds().size.getIWidth() && player_pos.y < _gamestate->getBounds().size.getIHeight()) {
+		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
+		if (friction == 0) {
+			_gameover = true;
+		}
+		else if (friction != player->getFriction()) {
+			player->setFriction(friction);
+		}
+	}
+	else {
+		player->setFriction(0);
+	}
+
+	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
+		EnemyModel* enemy = _gamestate->getEnemies()[i].get();
+		Vec2 enemy_pos = enemy->getPosition();
+		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
+			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
+			if (friction == 0) {
+				removeEnemy(enemy);
+			}
+			else if (friction != enemy->getFriction()) {
+				enemy->setFriction(friction);
+			}
+		}
+		else {
+			enemy->setFriction(0);
+		}
+	}
+
+	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
+		ObjectModel* object = _gamestate->getObjects()[i].get();
+		Vec2 object_pos = object->getPosition();
+		if (object_pos.x > 0 && object_pos.y > 0 && object_pos.x < _gamestate->getBounds().size.getIWidth() && object_pos.y < _gamestate->getBounds().size.getIHeight()) {
+			float friction = _gamestate->getBoard()[(int)floor(object_pos.y)][(int)floor(object_pos.x)];
+			if (friction == 0) {
+				removeObject(object);
+			}
+			else if (friction != object->getFriction()) {
+				object->setFriction(friction);
+			}
+		}
+		else {
+			object->setFriction(0);
+		}
+	}
+}
+
 void GameScene::removeEnemy(EnemyModel* enemy) {
 	// do not attempt to remove a bullet that has already been removed
 	if (enemy->isRemoved()) {
@@ -335,6 +358,16 @@ void GameScene::removeEnemy(EnemyModel* enemy) {
 	enemy->setDebugScene(nullptr);
 	enemy->markRemoved(true);
 	_enemyCount--;
+}
+
+void GameScene::removeObject(ObjectModel* object) {
+	// do not attempt to remove a bullet that has already been removed
+	if (object->isRemoved()) {
+		return;
+	}
+	_gamestate->getRootNode()->getChild(0)->removeChild(object->getNode());
+	object->setDebugScene(nullptr);
+	object->markRemoved(true);
 }
 
 /**

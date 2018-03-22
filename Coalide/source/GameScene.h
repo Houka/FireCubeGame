@@ -14,6 +14,7 @@
 #include "LevelController.h"
 #include "PlayerModel.h"
 #include "EnemyModel.h"
+#include "ObjectModel.h"
 
 using namespace cugl;
 
@@ -194,7 +195,11 @@ public:
 	*/
 	void update(float dt);
 
+	void updateFriction();
+
 	void removeEnemy(EnemyModel* enemy);
+	
+	void removeObject(ObjectModel* object);
 
 	/**
 	* Resets the status of the game so that we can play again.

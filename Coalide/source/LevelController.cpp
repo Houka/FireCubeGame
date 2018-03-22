@@ -358,6 +358,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 					object->setName(IMMOBILE_NAME);
 					object->setTextureKey(PROTO_LEVEL_KEY IMMOBILE_NAME);
 					object->setDrawScale(_scale.x);
+					object->setBodyType(b2_staticBody);
 
 					_world->addObstacle(object);
 					_objects.push_back(object);
@@ -367,6 +368,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 					object->setName(MOVABLE_NAME);
 					object->setTextureKey(PROTO_LEVEL_KEY MOVABLE_NAME);
 					object->setDrawScale(_scale.x);
+					object->setBodyType(b2_dynamicBody);
 
 					_world->addObstacle(object);
 					_objects.push_back(object);
@@ -376,6 +378,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 					object->setName(BREAKABLE_NAME); 
 					object->setTextureKey(PROTO_LEVEL_KEY BREAKABLE_NAME);
 					object->setDrawScale(_scale.x);
+					object->setBodyType(b2_staticBody);
 
 					_world->addObstacle(object);
 					_objects.push_back(object);

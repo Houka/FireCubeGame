@@ -102,7 +102,7 @@ public:
 	bool isBroken() { return _isBroken; }
 
 	/** Sets the brokenness state of the object */
-	void setBroken(bool broken) { _isBroken = broken; }
+	void setBroken() { _isBroken = true; }
 
 	/**
 	* Returns the force applied to this enemy.
