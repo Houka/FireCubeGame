@@ -14,6 +14,7 @@ using namespace cugl;
 
 #define SLOW_MOTION .00001
 #define NORMAL_MOTION .015
+#define MAX_PLAYER_SPEED 20
 
 #pragma mark -
 #pragma mark Constructors
@@ -235,8 +236,15 @@ void GameScene::update(float dt) {
 
     if(_input.didSling(true) && player->canSling()){
         cugl::Vec2 sling = _input.getLatestSlingVector();
+        CULog("Applying linear impulse, Vector: %s", sling.toString().c_str());
         player->applyLinearImpulse(sling);
 		player->updateArrow(false);
+    }
+    
+    if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
+        Vec2 speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
+        player->setLinearVelocity(speed);
+        //CULog("LINEARVELOCITY: %f", player->getLinearVelocity().length());
     }
 
 	if (!player->canSling()) {
@@ -256,7 +264,7 @@ void GameScene::update(float dt) {
 		player->setFriction(friction);
 
 		if (friction == 0) {
-			_gameover = true;	
+			_gameover = true;
 		}
 	}
 	else {
@@ -280,7 +288,7 @@ void GameScene::update(float dt) {
 	}
 
 	if (_enemyCount == 0) {
-		_complete = true;
+		//_complete = true;
 	}
 
 	// Update the physics world

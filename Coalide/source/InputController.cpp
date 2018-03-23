@@ -10,6 +10,8 @@ using namespace cugl;
 #define MIN_SLING_DISTANCE 1.0
 /** The key for the event handlers */
 #define LISTENER_KEY 1
+/** Scale factor for display arrow */
+#define SLING_VECTOR_SCALE 0.5
 
 #pragma mark -
 #pragma mark Constructors
@@ -122,6 +124,7 @@ bool InputController::didSling(bool shouldReset){
 */
 cugl::Vec2 InputController::getCurrentAim() {
 	_currentAim = _currentTouch - _initTouch;
+    _currentAim.scale(SLING_VECTOR_SCALE);
 	return _currentAim;
 }
 
