@@ -251,11 +251,13 @@ void GameScene::update(float dt) {
 		player->updateArrow(false);
 	}
     
-    std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
-    for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove){
-        EnemyModel* enemy = std::get<0>(pair);
-        Vec2 sling = std::get<1>(pair);
-        enemy->applyLinearImpulse(sling);
+    if(_enemyCount != 0) {
+        std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
+        for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove){
+            EnemyModel* enemy = std::get<0>(pair);
+            Vec2 sling = std::get<1>(pair);
+            enemy->applyLinearImpulse(sling);
+        }
     }
 
 	Vec2 player_pos = player->getPosition();
