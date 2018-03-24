@@ -270,20 +270,21 @@ void GameScene::update(float dt) {
     CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()));
     
     // LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
-    if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth())) {
+    if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
 		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
         if(!player->getCharging()){
             player->setFriction(friction);
         } else {
             player->setFriction(0.0001f);
         }
-		if ((friction == 0 && !player->getCharging()) || !player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth())) {
+		if (friction == 0 && !player->getCharging()) {
 			_gameover = true;
 		}
 	}
 	else {
 		player->setFriction(0);
         player->setCharging(false);
+        _gameover = true;
 	}
 
     // Loops through enemies and sets friction and also checks for in bounds/death conditions
