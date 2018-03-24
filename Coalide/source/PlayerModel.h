@@ -20,6 +20,8 @@ private:
     Timestamp _collisionTimeout;
     /** a collision happened and we want to stop soon */
     bool _shouldStopSoon;
+    /** charging or floored */
+    bool _charging;
 protected:
 	std::shared_ptr<Node> _node;
 	std::shared_ptr<PathNode> _arrow;
@@ -102,6 +104,20 @@ public:
 	* Sets the friction joint with the ground.
 	*/
 	void setFrictionJoint(b2FrictionJoint* frictionJoint) { _frictionJoint = frictionJoint; }
+    
+    /**
+     * Sets whether player is charging or floored.
+     *
+     * @param bool for if charging .
+     */
+    void setCharging(bool charge) { _charging = charge; }
+    
+    /**
+    * Sets whether player is charging or floored.
+    *
+    * @param bool for if charging .
+    */
+    bool getCharging() { return _charging; }
 
 	/**
 	* Returns the scene graph node representing the player.

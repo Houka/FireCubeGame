@@ -222,11 +222,15 @@ void GameScene::update(float dt) {
 
     ObstacleWorld* world = _gamestate->getWorld().get();
     PlayerModel* player = _gamestate->getPlayer().get();
+    player->getBody()->SetLinearDamping(GLOBAL_AIR_DRAG);
+    
+    //CULog("Charging: %d", player->getCharging());
 
     if(_input.didStartSling() && player->canSling() &&
        std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
         world->setStepsize(SLOW_MOTION);
         player->setColor(Color4::ORANGE);
+//        CULog("Charging: %d", player->getCharging());
 		// update the aim arrow
 		player->updateArrow(_input.getCurrentAim(), true);
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
@@ -236,15 +240,22 @@ void GameScene::update(float dt) {
 
     if(_input.didSling(true) && player->canSling()){
         cugl::Vec2 sling = _input.getLatestSlingVector();
-        CULog("Applying linear impulse, Vector: %s", sling.toString().c_str());
         player->applyLinearImpulse(sling);
+        player->setCharging(true);
+        //CULog("Charging: %d", player->getCharging());
 		player->updateArrow(false);
     }
     
+    //CULog("Player friction: %f", player->getFriction());
+
     if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
         Vec2 speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
         player->setLinearVelocity(speed);
-        //CULog("LINEARVELOCITY: %f", player->getLinearVelocity().length());
+    }
+    
+    if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
+        //CULog("already stopping");
+        player->setCharging(false);
     }
 
 	if (!player->canSling()) {
@@ -263,9 +274,14 @@ void GameScene::update(float dt) {
 	Vec2 player_pos = player->getPosition();
 	if (player_pos.x > 0 && player_pos.y > 0 && player_pos.x < _gamestate->getBounds().size.getIWidth() && player_pos.y < _gamestate->getBounds().size.getIHeight()) {
 		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
-		player->setFriction(friction);
+        CULog("Friction: %f", friction);
+        if(!player->getCharging()){
+            player->setFriction(friction);
+        } else {
+            player->setFriction(0.001f);
+        }
 
-		if (friction == 0) {
+		if (friction == 0 && !player->getCharging()) {
 			_gameover = true;
 		}
 	}
