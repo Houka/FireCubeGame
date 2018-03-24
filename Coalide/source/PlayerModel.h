@@ -227,6 +227,11 @@ public:
      */
     bool canSling();
     
+    /**
+     * Returns true if player is in bounds
+     */
+    bool inBounds(int width, int height);
+    
 };
 
 #endif /* __PLAYER_MODEL_H__ */

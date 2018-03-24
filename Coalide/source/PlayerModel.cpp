@@ -24,6 +24,7 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		setName(PLAYER_NAME);
 		setTextureKey(PLAYER_TEXTURE);
 		setBodyType(b2_dynamicBody);
+        setLinearDamping(GLOBAL_AIR_DRAG);
 
 		_node = nullptr;
         _color = Color4::WHITE;
@@ -55,6 +56,14 @@ void PlayerModel::applyLinearImpulse(Vec2& impulse) {
  */
 bool PlayerModel::canSling(){
     return _body->GetLinearVelocity().Length() <= MAX_SPEED_FOR_SLING;
+}
+
+/**
+* Returns true if player is in bounds
+**/
+bool PlayerModel::inBounds(int width, int height){
+    b2Vec2 position = _body->GetPosition();
+    return (position.x > 0 && position.y > 0 && position.x < width && position.y < height);
 }
 
 /**

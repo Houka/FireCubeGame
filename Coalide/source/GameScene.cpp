@@ -222,15 +222,12 @@ void GameScene::update(float dt) {
 
     ObstacleWorld* world = _gamestate->getWorld().get();
     PlayerModel* player = _gamestate->getPlayer().get();
-    player->getBody()->SetLinearDamping(GLOBAL_AIR_DRAG);
-    
-    //CULog("Charging: %d", player->getCharging());
 
+    // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && player->canSling() &&
        std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
         world->setStepsize(SLOW_MOTION);
         player->setColor(Color4::ORANGE);
-//        CULog("Charging: %d", player->getCharging());
 		// update the aim arrow
 		player->updateArrow(_input.getCurrentAim(), true);
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
@@ -238,30 +235,26 @@ void GameScene::update(float dt) {
         player->setColor(Color4::WHITE);
     }
 
+    // Applies vector from touch input to player and set to charging state
     if(_input.didSling(true) && player->canSling()){
         cugl::Vec2 sling = _input.getLatestSlingVector();
         player->applyLinearImpulse(sling);
         player->setCharging(true);
-        //CULog("Charging: %d", player->getCharging());
 		player->updateArrow(false);
     }
     
-    //CULog("Player friction: %f", player->getFriction());
-
+    // Caps player speed to MAX_PLAYER SPEED
     if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
-        Vec2 speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
-        player->setLinearVelocity(speed);
+        Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
+        player->setLinearVelocity(capped_speed);
     }
     
+    // Changes player state from charging if below speed threshold
     if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
-        //CULog("already stopping");
         player->setCharging(false);
     }
-
-	if (!player->canSling()) {
-		player->updateArrow(false);
-	}
     
+    // Applies movement vector to all enemies curently alive in the game and sets them to charging state
     if(_enemyCount != 0) {
         std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
         for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove){
@@ -272,23 +265,28 @@ void GameScene::update(float dt) {
     }
 
 	Vec2 player_pos = player->getPosition();
-	if (player_pos.x > 0 && player_pos.y > 0 && player_pos.x < _gamestate->getBounds().size.getIWidth() && player_pos.y < _gamestate->getBounds().size.getIHeight()) {
+    Size gameBounds = _gamestate->getBounds().size;
+    
+    CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()));
+    
+    // LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
+    if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth())) {
 		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
-        CULog("Friction: %f", friction);
         if(!player->getCharging()){
             player->setFriction(friction);
         } else {
-            player->setFriction(0.001f);
+            player->setFriction(0.0001f);
         }
-
-		if (friction == 0 && !player->getCharging()) {
+		if ((friction == 0 && !player->getCharging()) || !player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth())) {
 			_gameover = true;
 		}
 	}
 	else {
 		player->setFriction(0);
+        player->setCharging(false);
 	}
 
+    // Loops through enemies and sets friction and also checks for in bounds/death conditions
 	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
 		EnemyModel* enemy = _gamestate->getEnemies()[i].get();
 		Vec2 enemy_pos = enemy->getPosition();
@@ -305,6 +303,7 @@ void GameScene::update(float dt) {
 		}
 	}
 
+    // LEVEL COMPLETE: If all enemies are dead then level completed
 	if (_enemyCount == 0) {
 		//_complete = true;
 	}
