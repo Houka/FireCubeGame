@@ -146,7 +146,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 				}
 
 				int tileColumn = std::floor(tileVal);
-				TILE_TYPE tileType;
+				//TILE_TYPE tileType;
 
 				switch (tileColumn) {
 				case -1:
