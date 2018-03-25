@@ -24,9 +24,11 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		setName(PLAYER_NAME);
 		setTextureKey(PLAYER_TEXTURE);
 		setBodyType(b2_dynamicBody);
+        setLinearDamping(GLOBAL_AIR_DRAG);
 
 		_node = nullptr;
         _color = Color4::WHITE;
+        _charging = false;
 
 		setDensity(1.0f);
 		setRestitution(0.4f);
@@ -70,6 +72,14 @@ void PlayerModel::stillStunned() {
 }
 
 /**
+* Returns true if player is in bounds
+**/
+bool PlayerModel::inBounds(int width, int height){
+    b2Vec2 position = _body->GetPosition();
+    return (position.x > 0 && position.y > 0 && position.x < width && position.y < height);
+}
+
+/**
 * Updates the aim arrow.
 *
 * @param node  updates the aim arrow.
@@ -108,11 +118,13 @@ void PlayerModel::update(float dt) {
         if(!canSling()){
             _node->setColor(Color4::RED);
         } else {
+//            _charging = true;
             _node->setColor(_color);
         }
 	}
     if(_shouldStopSoon && Timestamp().ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
         _shouldStopSoon = false;
         _body->SetLinearVelocity(b2Vec2(0,0));
+//        _charging = false;
     }
 }

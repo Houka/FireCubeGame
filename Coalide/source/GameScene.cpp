@@ -14,6 +14,7 @@ using namespace cugl;
 
 #define SLOW_MOTION .00001
 #define NORMAL_MOTION .015
+#define MAX_PLAYER_SPEED 20
 
 #pragma mark -
 #pragma mark Constructors
@@ -226,6 +227,7 @@ void GameScene::update(float dt) {
 		player->stillStunned();
 	}
 	else {
+		// Touch input for sling is in pogress and sets the time slowing mechanic
 		if (_input.didStartSling() && player->canSling() &&
 			std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION) {
 			world->setStepsize(SLOW_MOTION);
@@ -238,28 +240,41 @@ void GameScene::update(float dt) {
 			player->setColor(Color4::WHITE);
 		}
 
+		// Applies vector from touch input to player and set to charging state
 		if (_input.didSling(true) && player->canSling()) {
 			cugl::Vec2 sling = _input.getLatestSlingVector();
 			player->applyLinearImpulse(sling);
+			player->setCharging(true);
 			player->updateArrow(false);
 		}
 
-		if (!player->canSling()) {
-			player->updateArrow(false);
+		// Caps player speed to MAX_PLAYER SPEED
+		if (player->getLinearVelocity().length() >= MAX_PLAYER_SPEED) {
+			Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
+			player->setLinearVelocity(capped_speed);
+		}
+
+		// Changes player state from charging if below speed threshold
+		if (player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING) {
+			player->setCharging(false);
 		}
 	}
-    
-    std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
-    for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove) {
-        EnemyModel* enemy = std::get<0>(pair);
-        Vec2 sling = std::get<1>(pair);
-        enemy->applyLinearImpulse(sling);
-    }
+
+	// Applies movement vector to all enemies curently alive in the game and sets them to charging state
+	if (_enemyCount != 0) {
+		std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
+		for (std::tuple<EnemyModel*, Vec2> pair : enemiesToMove) {
+			EnemyModel* enemy = std::get<0>(pair);
+			Vec2 sling = std::get<1>(pair);
+			enemy->applyLinearImpulse(sling);
+		}
+	}
 
 	updateFriction();
 
+    // LEVEL COMPLETE: If all enemies are dead then level completed
 	if (_enemyCount == 0) {
-		_complete = true;
+		//_complete = true;
 	}
 
 	// Update the physics world
@@ -315,20 +330,30 @@ void GameScene::update(float dt) {
 void GameScene::updateFriction() {
 	PlayerModel* player = _gamestate->getPlayer().get();
 	Vec2 player_pos = player->getPosition();
+	Size gameBounds = _gamestate->getBounds().size;
 
-	if (player_pos.x > 0 && player_pos.y > 0 && player_pos.x < _gamestate->getBounds().size.getIWidth() && player_pos.y < _gamestate->getBounds().size.getIHeight()) {
+	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
+	if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
 		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
-		if (friction == 0) {
-			_gameover = true;
+		if (!player->getCharging()) {
+			if (friction == 0) {
+				_gameover = true;
+			}
+			else if (friction != player->getFriction()) {
+				player->setFriction(friction);
+			}
 		}
-		else if (friction != player->getFriction()) {
-			player->setFriction(friction);
+		else {
+			player->setFriction(0.0001f);
 		}
 	}
 	else {
 		player->setFriction(0);
+		player->setCharging(false);
+		_gameover = true;
 	}
 
+	// Loops through enemies and sets friction and also checks for in bounds/death conditions
 	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
 		EnemyModel* enemy = _gamestate->getEnemies()[i].get();
 		Vec2 enemy_pos = enemy->getPosition();
@@ -346,6 +371,7 @@ void GameScene::updateFriction() {
 		}
 	}
 
+	// Loops through objects and sets friction and also checks for in bounds/death conditions
 	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
 		ObjectModel* object = _gamestate->getObjects()[i].get();
 		Vec2 object_pos = object->getPosition();

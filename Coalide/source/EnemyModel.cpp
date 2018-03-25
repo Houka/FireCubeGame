@@ -28,6 +28,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		setName(ENEMY_NAME);
 		setTextureKey(ENEMY_TEXTURE);
 		setBodyType(b2_dynamicBody);
+        setLinearDamping(GLOBAL_AIR_DRAG);
 		
 		_node = nullptr;
 
