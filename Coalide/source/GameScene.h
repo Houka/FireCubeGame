@@ -67,6 +67,9 @@ protected:
 	/** Number of enemies remaining. */
 	int _enemyCount;
 
+	/** Level key for loading correct tileset. */
+	std::string _levelKey;
+
 	/**
 	* Activates world collision callbacks on the given physics world and sets the onBeginContact and beforeSolve callbacks
 	*
@@ -113,7 +116,7 @@ public:
 	*
 	* @return true if the controller is initialized properly, false otherwise.
 	*/
-	bool init(const std::shared_ptr<AssetManager>& assets, InputController input);
+	bool init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey);
 
 
 #pragma mark -

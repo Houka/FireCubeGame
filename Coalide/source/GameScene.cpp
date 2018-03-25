@@ -35,7 +35,7 @@ using namespace cugl;
 *
 * @return  true if the controller is initialized properly, false otherwise.
 */
-bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input) {
+bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey) {
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= GAME_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -50,6 +50,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// assets and input come from the CoalideApp level
 	_assets = assets;
 	_input = input;
+
+	_levelKey = levelKey;
 	
 	// Initialize the controllers used in the game mode
 	_collisions.init();
@@ -58,7 +60,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 
 
 	// Get the loaded level
-	_gamestate = assets->get<LevelController>(PROTO_LEVEL_KEY)->getGameState();
+	_gamestate = assets->get<LevelController>(levelKey)->getGameState();
 	
 	if (_gamestate == nullptr) {
 		CULog("Fail!");
@@ -179,7 +181,7 @@ void GameScene::update(float dt) {
 			_gamestate = nullptr;
 
 			// Access and initialize level
-			_gamestate = _assets->get<LevelController>(PROTO_LEVEL_KEY)->getGameState();
+			_gamestate = _assets->get<LevelController>(_levelKey)->getGameState();
 			activateWorldCollisions();
 
 			Size dimen = Application::get()->getDisplaySize();
@@ -315,14 +317,13 @@ void GameScene::update(float dt) {
 		cameraTransY *= .01;
 	}
 
-	if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
-		cameraTransX = 0;
-	}
-	
-	if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
-		cameraTransY = 0;
-	}
-
+	//if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
+	//	cameraTransX = 0;
+	//}
+	//
+	//if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
+	//	cameraTransY = 0;
+	//}
 
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
 }
@@ -344,7 +345,7 @@ void GameScene::updateFriction() {
 			}
 		}
 		else {
-			player->setFriction(0.0001f);
+			player->setFriction(1);
 		}
 	}
 	else {
@@ -417,12 +418,12 @@ void GameScene::removeObject(ObjectModel* object) {
 */
 void GameScene::reset() {
 	// Unload the level but keep in memory temporarily
-	_assets->unload<LevelController>(PROTO_LEVEL_KEY);
+	_assets->unload<LevelController>(_levelKey);
 
 	// Load a new level and quit update
 	//_loadnode->setVisible(true);
 	_reloading = true;
-	_assets->load<LevelController>(PROTO_LEVEL_KEY, PROTO_LEVEL_FILE);
+	_assets->load<LevelController>(_levelKey, LEVEL_FILE);
 	setComplete(false);
 	_gameover = false;
 	

@@ -48,7 +48,7 @@ void CoalideApp::onStartup() {
     _assets->loadDirectory("json/assets.json");
 
 	// Load the level
-	_assets->loadAsync<LevelController>(PROTO_LEVEL_KEY, PROTO_LEVEL_FILE, nullptr);
+	_assets->loadAsync<LevelController>(LEVEL_KEY, LEVEL_FILE, nullptr);
 
 	// Create a "loading" screen
 	_loaded = false;
@@ -101,7 +101,7 @@ void CoalideApp::update(float timestep) {
 	}
 	else if (!_loaded) {
 		_loadingScene.dispose(); // Disables the input listeners in this mode
-		_gameScene.init(_assets, _input);
+		_gameScene.init(_assets, _input, LEVEL_KEY);
 		_loaded = true;
 	}
 	else {

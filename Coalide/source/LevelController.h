@@ -24,6 +24,8 @@ protected:
 
 	Rect _bounds;
 	Size _tileDim;
+	Size _worldTilesetDim;
+	Size _waterTilesetDim;
 	Vec2 _scale;
 
 	std::shared_ptr<ObstacleWorld> _world;
@@ -94,7 +96,8 @@ public:
 	bool loadTerrain(const std::shared_ptr<JsonValue>& json);
 
 	/** Loads a single floor tile */
-	bool loadTile(Vec2 tilePos, TILE_TYPE tileType);
+	bool loadLandTile(Vec2 tilePos, float tileVal, TILE_TYPE tileType, std::shared_ptr<JsonValue>& layer);
+	bool loadWaterTile(Vec2 tilePos, float tileVal, TILE_TYPE tileType, std::shared_ptr<JsonValue>& layer);
 
 	/** Loads the player, enemies, and inanimate objects */
 	bool loadUnits(const std::shared_ptr<JsonValue>& json);

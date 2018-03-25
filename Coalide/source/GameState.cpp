@@ -71,7 +71,8 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 	if (_tiles.size() > 0) {
 		for (auto it = _tiles.begin(); it != _tiles.end(); ++it) {
 			std::shared_ptr<TileModel> tile = *it;
-			auto tileNode = PolygonNode::allocWithTexture(assets->get<Texture>(tile->getTextureKey()));
+			double* tileSubtexture = tile->getSubTexture();
+			auto tileNode = PolygonNode::allocWithTexture(assets->get<Texture>(tile->getTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
 			tile->setNode(tileNode);
 			tile->setDrawScale(_scale.x);
 			tile->setDebugScene(_debugnode);

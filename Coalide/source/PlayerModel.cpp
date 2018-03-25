@@ -22,7 +22,7 @@
 bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 	if (CapsuleObstacle::init(pos, size)) {
 		setName(PLAYER_NAME);
-		setTextureKey(PLAYER_TEXTURE);
+		setTextureKey("nicoal_nicoal");
 		setBodyType(b2_dynamicBody);
         setLinearDamping(GLOBAL_AIR_DRAG);
 

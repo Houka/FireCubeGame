@@ -29,6 +29,7 @@ protected:
 	
 	float _drawscale;
 
+	double _subtexture[4];
 
 public:
 #pragma mark -
@@ -157,6 +158,21 @@ public:
 	* @param  strip    the texture (key) for this floor tile
 	*/
 	void setTextureKey(std::string strip) { _tileTexture = strip; }
+
+	/**
+	* Returns the points to get the subtexture for the tile in the tileset.
+	*/
+	double* getSubTexture() { return _subtexture; }
+
+	/**
+	* Sets the points to get the subtexture for the tile in the tileset.
+	*/
+	void setSubTexture(double x0, double y0, double x1, double y1) {
+		_subtexture[0] = x0;
+		_subtexture[1] = y0;
+		_subtexture[2] = x1;
+		_subtexture[3] = y1;
+	}
 
 	/**
 	* Returns the ratio of the sprite to the physics body.
