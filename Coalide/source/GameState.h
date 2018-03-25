@@ -47,7 +47,7 @@ protected:
 	std::vector<std::shared_ptr<ObjectModel>> _objects;
 	std::vector<std::shared_ptr<TileModel>> _tiles;
 
-	float** _board;
+	int** _board;
 
 	std::shared_ptr<cugl::AssetManager> _assets;
 
@@ -159,12 +159,12 @@ public:
 	*
 	* @return the physics world of this game level.
 	*/
-	float** getBoard() { return _board; }
+	int** getBoard() { return _board; }
 
 	/**
 	* Sets the physics world of this game level.
 	*/
-	void setBoard(float** board) { _board = board; }
+	void setBoard(int** board) { _board = board; }
 
 
 #pragma mark Physics Attributes

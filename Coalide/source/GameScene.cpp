@@ -309,13 +309,13 @@ void GameScene::update(float dt) {
 	cameraTransY = playerPos.y - cameraPos.y;
 
 	// smooth pan
-	if (std::abs(cameraTransX) > 5) {
+	/*if (std::abs(cameraTransX) > 5) {
 		cameraTransX *= .01;
 	}
 
 	if (std::abs(cameraTransY) > 5) {
 		cameraTransY *= .01;
-	}
+	}*/
 
 	//if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
 	//	cameraTransX = 0;
@@ -335,8 +335,8 @@ void GameScene::updateFriction() {
 
 	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
 	if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
-		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
 		if (!player->getCharging()) {
+			float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
 			if (friction == 0) {
 				_gameover = true;
 			}
@@ -345,7 +345,10 @@ void GameScene::updateFriction() {
 			}
 		}
 		else {
-			player->setFriction(1);
+			if (player->getFriction() > .1f) {
+				player->setFriction(.0001f);
+			}
+
 		}
 	}
 	else {

@@ -128,10 +128,10 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 
 		auto waterData = waterLayer->get(DATA_FIELD)->asFloatArray();
 		auto worldData = worldLayer->get(DATA_FIELD)->asFloatArray();
-		_board = new float*[worldH];
+		_board = new int*[worldH];
 		
 		for (int i = 0; i < worldH; i++) {
-			_board[i] = new float[worldW];
+			_board[i] = new int[worldW];
 		}
 
 		int count = 0;
