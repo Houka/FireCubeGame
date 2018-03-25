@@ -314,7 +314,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 					_enemies.push_back(enemy);
 					break;
 				default:
-					CUAssert(false, "Invalid object data.");
+					CUAssertLog(false, "Invalid object data.");
 					break;
 				}
 				
