@@ -314,21 +314,21 @@ void GameScene::update(float dt) {
 	cameraTransY = playerPos.y - cameraPos.y;
 
 	// smooth pan
-	if (std::abs(cameraTransX) > 5) {
-		cameraTransX *= .01;
-	}
-
-	if (std::abs(cameraTransY) > 5) {
-		cameraTransY *= .01;
-	}
-
-    if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
-        cameraTransX = 0;
-    }
-    
-    if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
-        cameraTransY = 0;
-    }
+//    if (std::abs(cameraTransX) > 5) {
+//        cameraTransX *= .01;
+//    }
+//
+//    if (std::abs(cameraTransY) > 5) {
+//        cameraTransY *= .01;
+//    }
+//
+//    if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
+//        cameraTransX = 0;
+//    }
+//    
+//    if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
+//        cameraTransY = 0;
+//    }
     
     CULog("\nGame Bounds: %s\nCamera Position: %s\nCamera Trans X: %f\nCamera Trans Y: %f", gameBound.toString().c_str(), cameraPos.toString().c_str(), cameraTransX, cameraTransY);
     
