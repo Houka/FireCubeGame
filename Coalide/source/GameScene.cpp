@@ -227,7 +227,7 @@ void GameScene::update(float dt) {
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
     
-//    CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()));
+    CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d \nPlayer Speed: %f", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()), player->getLinearVelocity().length());
 
 
     if (player->isStunned()) {
