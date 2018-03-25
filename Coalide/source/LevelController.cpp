@@ -120,18 +120,18 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 
 	_world->addObstacle(_terrain);
 
-	auto waterLayer = json->get(LAYERS_FIELD)->get(1);
-	auto worldLayer = json->get(LAYERS_FIELD)->get(0);
+	auto waterLayer = json->get(LAYERS_FIELD)->get(0);
+	auto worldLayer = json->get(LAYERS_FIELD)->get(1);
 
 	if (worldLayer != nullptr) {
 		success = true;
 
 		auto waterData = waterLayer->get(DATA_FIELD)->asFloatArray();
 		auto worldData = worldLayer->get(DATA_FIELD)->asFloatArray();
-		_board = new float*[worldH];
+		_board = new int*[worldH];
 		
 		for (int i = 0; i < worldH; i++) {
-			_board[i] = new float[worldW];
+			_board[i] = new int[worldW];
 		}
 
 		int count = 0;

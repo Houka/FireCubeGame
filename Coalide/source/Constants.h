@@ -46,7 +46,7 @@
 #define GRAVITY	9.8f
 
 #define MIN_SPEED_FOR_CHARGING 5.0f
-#define GLOBAL_AIR_DRAG 1.0f
+#define GLOBAL_AIR_DRAG 1.5f
 
 #define UNIT_DIM Vec2(1,1)
 
@@ -78,7 +78,7 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define LEVEL_FILE   "json/map4.json"
+#define LEVEL_FILE   "json/map5.json"
 /** The key for our loaded level */
 #define LEVEL_KEY    "level"
 

@@ -29,7 +29,7 @@ protected:
 
 	Vec2 _force;
 	b2FrictionJoint* _frictionJoint;
-	float _friction;
+	int _friction;
 
 	float _drawscale;
 
@@ -111,7 +111,7 @@ public:
 	/**
 	* Returns the current friction.
 	*/
-	float getFriction() { return _friction; }
+	int getFriction() { return _friction; }
 
 	/**
 	* Sets the friction of the friction joint with the ground.
