@@ -224,6 +224,11 @@ void GameScene::update(float dt) {
 
     ObstacleWorld* world = _gamestate->getWorld().get();
     PlayerModel* player = _gamestate->getPlayer().get();
+    Size gameBounds = _gamestate->getBounds().size;
+    Vec2 player_pos = player->getPosition();
+    
+//    CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()));
+
 
     if (player->isStunned()) {
         player->stillStunned();
@@ -360,16 +365,30 @@ void GameScene::updateFriction() {
 		Vec2 enemy_pos = enemy->getPosition();
 		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
-			if (friction == 0) {
-				removeEnemy(enemy);
-			}
-			else if (friction != enemy->getFriction()) {
-				enemy->setFriction(friction);
-			}
-		}
-		else {
-			enemy->setFriction(0);
-		}
+            if(!enemy->getCharging()) {
+                if(friction == 0) {
+                    removeEnemy(enemy);
+                }
+                else if(friction != enemy->getFriction()) {
+                    enemy->setFriction(friction);
+                }
+            }
+            else {
+                enemy->setFriction(0);
+                enemy->setCharging(false);
+            }
+        }
+        
+        // Caps enemy speed to MAX_PLAYER SPEED
+        if(enemy->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
+            Vec2 capped_speed = enemy->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
+            enemy->setLinearVelocity(capped_speed);
+        }
+        
+        // Changes enemy state from charging if below speed threshold
+        if(enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
+            enemy->setCharging(false);
+        }
 	}
 
 	// Loops through objects and sets friction and also checks for in bounds/death conditions

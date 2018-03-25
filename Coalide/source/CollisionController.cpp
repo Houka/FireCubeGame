@@ -44,7 +44,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 	
     if(soA->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)){
         if(soB->getName() == "player"){
-            CULog("should be stopping");
+//            CULog("should be stopping");
             PlayerModel* player = (PlayerModel*) soB;
             if(!player->alreadyStopping())
                 player->setShouldStop();
