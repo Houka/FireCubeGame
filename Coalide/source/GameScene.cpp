@@ -227,7 +227,7 @@ void GameScene::update(float dt) {
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
     
-    CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d \nPlayer Speed: %f", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()), player->getLinearVelocity().length());
+    //CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d \nPlayer Speed: %f", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()), player->getLinearVelocity().length());
 
 
     if (player->isStunned()) {
@@ -303,7 +303,7 @@ void GameScene::update(float dt) {
 	float cameraTransX;
 	float cameraTransY;
 	
-	cugl::Vec2 gameBound = _gamestate->getBounds().size*32;
+	cugl::Vec2 gameBound = _gamestate->getBounds().size;
 	float xMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
 	float yMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
 	
@@ -322,14 +322,16 @@ void GameScene::update(float dt) {
 		cameraTransY *= .01;
 	}
 
-	//if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
-	//	cameraTransX = 0;
-	//}
-	//
-	//if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
-	//	cameraTransY = 0;
-	//}
-
+    if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
+        cameraTransX = 0;
+    }
+    
+    if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
+        cameraTransY = 0;
+    }
+    
+    CULog("\nGame Bounds: %s\nCamera Position: %s\nCamera Trans X: %f\nCamera Trans Y: %f", gameBound.toString().c_str(), cameraPos.toString().c_str(), cameraTransX, cameraTransY);
+    
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
 }
 
