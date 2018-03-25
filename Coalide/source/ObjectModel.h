@@ -32,7 +32,7 @@ protected:
 	/** The force to apply */
 	Vec2 _force;
 
-	bool _isBroken;
+	bool _broken;
 
 	/** The ratio of the sprite to the physics body */
 	float _drawscale;
@@ -99,10 +99,10 @@ public:
 	bool isImmobile() { return _type == OBJECT_TYPE::IMMOBILE; }
 
 	/** Returns true if an object has been hit already and been broken */
-	bool isBroken() { return _isBroken; }
+	bool isBroken() { return _broken; }
 
 	/** Sets the brokenness state of the object */
-	void setBroken() { _isBroken = true; }
+	void setBroken() { _broken = true; }
 
 	/**
 	* Returns the force applied to this enemy.

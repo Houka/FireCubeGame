@@ -34,6 +34,8 @@ bool ObjectModel::init(const Vec2 & pos, const Size & size) {
 		setRestitution(0.4f);
 		setFixedRotation(true);
 
+		_broken = false;
+
 		return true;
 	}
 	return false;

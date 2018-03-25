@@ -34,6 +34,8 @@ protected:
 	bool _stunned;
 	bool _onFire;
 
+	int _stunTimer;
+
 public:
 #pragma mark Constructors
 	/**
@@ -80,7 +82,9 @@ public:
 #pragma mark Status
 	bool isStunned() { return _stunned; }
 
-	void setStunned(bool stunned) { _stunned = stunned; }
+	void setStunned() { _stunned = true; _stunTimer = 0; }
+
+	void stillStunned();
 
 	bool isFire() { return _onFire; }
 

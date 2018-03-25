@@ -66,7 +66,7 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
 	int worldH = canvasH / tileH;
 	_bounds.size.set(worldW, worldH);
 
-	_scale.set(canvasW/worldW, canvasH/worldH);
+	_scale.set(canvasW/worldW-.5, canvasH/worldH-.5);
 
 	_world = ObstacleWorld::alloc(_bounds, cugl::Vec2(0, DEFAULT_GRAVITY));
     
@@ -315,7 +315,6 @@ bool LevelController::loadTile(Vec2 tilePos, TILE_TYPE tileType) {
 		break;
 	}
 
-	tile->setDrawScale(_scale.x);
 	//_world->addObstacle(tile);
 	
 	_tiles.push_back(tile);
@@ -341,14 +340,11 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 
 				if (objVal == 40) {
 					_player = PlayerModel::alloc(Vec2(j+.5,i+.5), UNIT_DIM);
-					_player->setDrawScale(_scale.x);
-					
 					_world->addObstacle(_player);
 				}
 				else if (objVal == 41) {
 					std::shared_ptr<EnemyModel> enemy = EnemyModel::alloc(Vec2(j+.5,i+.5), UNIT_DIM);
 					enemy->setTextureKey(PROTO_LEVEL_KEY ENEMY_NAME);
-					enemy->setDrawScale(_scale.x);
 
 					_world->addObstacle(enemy);
 					_enemies.push_back(enemy);
@@ -357,7 +353,6 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 					std::shared_ptr<ObjectModel> object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					object->setName(IMMOBILE_NAME);
 					object->setTextureKey(PROTO_LEVEL_KEY IMMOBILE_NAME);
-					object->setDrawScale(_scale.x);
 					object->setBodyType(b2_staticBody);
 
 					_world->addObstacle(object);
@@ -367,7 +362,6 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 					std::shared_ptr<ObjectModel> object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					object->setName(MOVABLE_NAME);
 					object->setTextureKey(PROTO_LEVEL_KEY MOVABLE_NAME);
-					object->setDrawScale(_scale.x);
 					object->setBodyType(b2_dynamicBody);
 
 					_world->addObstacle(object);
@@ -377,7 +371,6 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 					std::shared_ptr<ObjectModel> object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					object->setName(BREAKABLE_NAME); 
 					object->setTextureKey(PROTO_LEVEL_KEY BREAKABLE_NAME);
-					object->setDrawScale(_scale.x);
 					object->setBodyType(b2_staticBody);
 
 					_world->addObstacle(object);
@@ -450,7 +443,9 @@ void LevelController::unload() {
 
 	for (auto it = _enemies.begin(); it != _enemies.end(); ++it) {
 		if (_world != nullptr) {
-			_gamestate->getWorld()->removeObstacle((*it).get());
+			if (!(*it).get()->isRemoved()) {
+				_gamestate->getWorld()->removeObstacle((*it).get());
+			}
 		}
 		(*it) = nullptr;
 	}
@@ -458,7 +453,9 @@ void LevelController::unload() {
 
 	for (auto it = _objects.begin(); it != _objects.end(); ++it) {
 		if (_world != nullptr) {
-			_gamestate->getWorld()->removeObstacle((*it).get());
+			if (!(*it).get()->isRemoved()) {
+				_gamestate->getWorld()->removeObstacle((*it).get());
+			}	
 		}
 		(*it) = nullptr;
 	}

@@ -35,6 +35,9 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		setRestitution(0.4f);
 		setFixedRotation(true);
 
+		_stunned = false;
+		_onFire = false;
+
 		_previousTime = Timestamp();
         unsigned int rnd_seed = (unsigned int) (100 * pos.x + pos.y);
         std::srand(rnd_seed);

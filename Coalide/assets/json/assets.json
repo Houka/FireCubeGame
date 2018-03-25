@@ -2,6 +2,10 @@
   "textures": {
     "protosheet": {
       "file": "textures/tileset.png",
+      "wrapS":     "clamp",
+      "wrapT":     "clamp",
+      "minfilter": "linear",
+      "magfilter": "linear",
       "atlas": {
         "player": [ 128, 0, 160, 32 ],
         "enemy": [ 128, 32, 160, 64 ],

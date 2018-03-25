@@ -222,25 +222,31 @@ void GameScene::update(float dt) {
     ObstacleWorld* world = _gamestate->getWorld().get();
     PlayerModel* player = _gamestate->getPlayer().get();
 
-    if(_input.didStartSling() && player->canSling() &&
-       std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
-        world->setStepsize(SLOW_MOTION);
-        player->setColor(Color4::ORANGE);
-		// update the aim arrow
-		player->updateArrow(_input.getCurrentAim(), true);
-    } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
-        world->setStepsize(NORMAL_MOTION);
-        player->setColor(Color4::WHITE);
-    }
+	if (player->isStunned()) {
+		player->stillStunned();
+	}
+	else {
+		if (_input.didStartSling() && player->canSling() &&
+			std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION) {
+			world->setStepsize(SLOW_MOTION);
+			player->setColor(Color4::ORANGE);
+			// update the aim arrow
+			player->updateArrow(_input.getCurrentAim(), true);
+		}
+		else if (std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION) {
+			world->setStepsize(NORMAL_MOTION);
+			player->setColor(Color4::WHITE);
+		}
 
-    if(_input.didSling(true) && player->canSling()) {
-        cugl::Vec2 sling = _input.getLatestSlingVector();
-        player->applyLinearImpulse(sling);
-		player->updateArrow(false);
-    }
+		if (_input.didSling(true) && player->canSling()) {
+			cugl::Vec2 sling = _input.getLatestSlingVector();
+			player->applyLinearImpulse(sling);
+			player->updateArrow(false);
+		}
 
-	if (!player->canSling()) {
-		player->updateArrow(false);
+		if (!player->canSling()) {
+			player->updateArrow(false);
+		}
 	}
     
     std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
@@ -258,6 +264,15 @@ void GameScene::update(float dt) {
 
 	// Update the physics world
 	_gamestate->getWorld()->update(dt);
+
+	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
+		ObjectModel* object = _gamestate->getObjects()[i].get();
+		if (object->isBroken()) {
+			removeObject(object);
+		}
+	}
+
+	_gamestate->getWorld()->garbageCollect();
 
 	// update the camera
 	player->getNode()->getScene()->setOffset(cugl::Vec2(0,0));

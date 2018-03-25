@@ -32,6 +32,11 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		setRestitution(0.4f);
 		setFixedRotation(true);
 
+		_stunned = false;
+		_onFire = false;
+
+		_stunTimer = 0;
+
 		return true;
 	}
 	return false;
@@ -53,7 +58,15 @@ void PlayerModel::applyLinearImpulse(Vec2& impulse) {
  * Returns true if the player is moving slow enough to sling
  */
 bool PlayerModel::canSling(){
-    return _body->GetLinearVelocity().Length() <= MAX_SPEED_FOR_SLING;
+    return !_stunned && _body->GetLinearVelocity().Length() <= MAX_SPEED_FOR_SLING;
+}
+
+/**
+ * Increments the stun timer and returns true if the character has finished being stunned.
+ */
+void PlayerModel::stillStunned() {
+	_stunTimer++;
+	_stunned = _stunTimer != STUN_TIME;
 }
 
 /**

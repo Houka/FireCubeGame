@@ -16,6 +16,8 @@
 
 #define CATEGORY_TERRAIN 0x0001
 
+#define STUN_TIME 15
+
 #pragma mark -
 #pragma mark Model Constants
 
