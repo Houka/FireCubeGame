@@ -89,7 +89,7 @@ public:
 	* @param value the force applied to the player.
 	*/
 	void setForce(const Vec2& value) { _force.set(value); }
-
+    
 	/**
 	* Sets the friction of the friction joint with the ground.
 	*/
