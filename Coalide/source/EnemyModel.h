@@ -21,6 +21,8 @@ private:
     Timestamp _collisionTimeout;
     /** a collision happened and we want to stop soon */
     bool _shouldStopSoon;
+    /** charging or floored */
+    bool _charging;
 protected:
 	/** The scene graph node for the enemy */
 	std::shared_ptr<Node> _node;
@@ -124,6 +126,20 @@ public:
 	* Sets the friction joint with the ground.
 	*/
 	void setFrictionJoint(b2FrictionJoint* frictionJoint) { _frictionJoint = frictionJoint; }
+    
+    /**
+     * Sets whether enemy is charging or floored.
+     *
+     * @param bool for if charging .
+     */
+    void setCharging(bool charge) { _charging = charge; }
+    
+    /**
+     * Sets whether enemy is charging or floored.
+     *
+     * @param bool for if charging .
+     */
+    bool getCharging() { return _charging; }
 
 	/**
 	* Returns the scene graph node representing this enemy.
@@ -200,6 +216,11 @@ public:
         _collisionTimeout.mark();
         _shouldStopSoon = true;
     }
+    
+    /**
+     * Returns true if enemy is in bounds
+     */
+    bool inBounds(int width, int height);
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method

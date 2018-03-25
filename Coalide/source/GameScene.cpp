@@ -224,72 +224,77 @@ void GameScene::update(float dt) {
 
     ObstacleWorld* world = _gamestate->getWorld().get();
     PlayerModel* player = _gamestate->getPlayer().get();
+    Size gameBounds = _gamestate->getBounds().size;
+    Vec2 player_pos = player->getPosition();
+    
+    //CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d \nPlayer Speed: %f", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()), player->getLinearVelocity().length());
 
-	if (player->isStunned()) {
-		player->stillStunned();
-	}
-	else {
-		// Touch input for sling is in pogress and sets the time slowing mechanic
-		if (_input.didStartSling() && player->canSling() &&
-			std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION) {
-			world->setStepsize(SLOW_MOTION);
-			player->setColor(Color4::ORANGE);
-			// update the aim arrow
-			player->updateArrow(_input.getCurrentAim(), true);
-		}
-		else if (std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION) {
-			world->setStepsize(NORMAL_MOTION);
-			player->setColor(Color4::WHITE);
-		}
 
-		// Applies vector from touch input to player and set to charging state
-		if (_input.didSling(true) && player->canSling()) {
-			cugl::Vec2 sling = _input.getLatestSlingVector();
-			player->applyLinearImpulse(sling);
-			player->setCharging(true);
-			player->updateArrow(false);
-		}
+    if (player->isStunned()) {
+        player->stillStunned();
+    }
+    else {
+        // Touch input for sling is in pogress and sets the time slowing mechanic
+        if(_input.didStartSling() && player->canSling() &&
+           std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
+            world->setStepsize(SLOW_MOTION);
+            player->setColor(Color4::ORANGE);
+            // update the aim arrow
+            player->updateArrow(_input.getCurrentAim(), true);
+        } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
+            world->setStepsize(NORMAL_MOTION);
+            player->setColor(Color4::WHITE);
+        }
 
-		// Caps player speed to MAX_PLAYER SPEED
-		if (player->getLinearVelocity().length() >= MAX_PLAYER_SPEED) {
-			Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
-			player->setLinearVelocity(capped_speed);
-		}
-
-		// Changes player state from charging if below speed threshold
-		if (player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING) {
-			player->setCharging(false);
-		}
-	}
-
-	// Applies movement vector to all enemies curently alive in the game and sets them to charging state
-	if (_enemyCount != 0) {
-		std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
-		for (std::tuple<EnemyModel*, Vec2> pair : enemiesToMove) {
-			EnemyModel* enemy = std::get<0>(pair);
-			Vec2 sling = std::get<1>(pair);
-			enemy->applyLinearImpulse(sling);
-		}
-	}
-
-	updateFriction();
-
+        // Applies vector from touch input to player and set to charging state
+        if(_input.didSling(true) && player->canSling()){
+            cugl::Vec2 sling = _input.getLatestSlingVector();
+            player->applyLinearImpulse(sling);
+            player->setCharging(true);
+            player->updateArrow(false);
+        }
+    
+        // Caps player speed to MAX_PLAYER SPEED
+        if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
+            Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
+            player->setLinearVelocity(capped_speed);
+        }
+    
+        // Changes player state from charging if below speed threshold
+        if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
+            player->setCharging(false);
+        }
+    }
+    
+    // Applies movement vector to all enemies curently alive in the game and sets them to charging state
+    if(_enemyCount != 0) {
+        std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
+        for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove){
+            EnemyModel* enemy = std::get<0>(pair);
+            Vec2 sling = std::get<1>(pair);
+            enemy->applyLinearImpulse(sling);
+            enemy->setCharging(true);
+        }
+    }
+    
+    updateFriction();
+    
     // LEVEL COMPLETE: If all enemies are dead then level completed
-	if (_enemyCount == 0) {
-		//_complete = true;
-	}
-
-	// Update the physics world
-	_gamestate->getWorld()->update(dt);
-
-	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
-		ObjectModel* object = _gamestate->getObjects()[i].get();
-		if (object->isBroken()) {
-			removeObject(object);
-		}
-	}
-
-	_gamestate->getWorld()->garbageCollect();
+    if (_enemyCount == 0) {
+        //_complete = true;
+    }
+    
+    // Update the physics world
+    _gamestate->getWorld()->update(dt);
+    
+    for (int i = 0; i < _gamestate->getObjects().size(); i++) {
+        ObjectModel* object = _gamestate->getObjects()[i].get();
+        if (object->isBroken()) {
+            removeObject(object);
+        }
+    }
+    
+    _gamestate->getWorld()->garbageCollect();
 
 	// update the camera
 	player->getNode()->getScene()->setOffset(cugl::Vec2(0,0));
@@ -298,7 +303,7 @@ void GameScene::update(float dt) {
 	float cameraTransX;
 	float cameraTransY;
 	
-	cugl::Vec2 gameBound = _gamestate->getBounds().size*32;
+	cugl::Vec2 gameBound = _gamestate->getBounds().size;
 	float xMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
 	float yMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
 	
@@ -309,22 +314,25 @@ void GameScene::update(float dt) {
 	cameraTransY = playerPos.y - cameraPos.y;
 
 	// smooth pan
-	/*if (std::abs(cameraTransX) > 5) {
-		cameraTransX *= .01;
-	}
 
-	if (std::abs(cameraTransY) > 5) {
-		cameraTransY *= .01;
-	}*/
-
-	//if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
-	//	cameraTransX = 0;
-	//}
-	//
-	//if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
-	//	cameraTransY = 0;
-	//}
-
+//    if (std::abs(cameraTransX) > 5) {
+//        cameraTransX *= .01;
+//    }
+//
+//    if (std::abs(cameraTransY) > 5) {
+//        cameraTransY *= .01;
+//    }
+//
+//    if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
+//        cameraTransX = 0;
+//    }
+//    
+//    if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
+//        cameraTransY = 0;
+//    }
+    
+    CULog("\nGame Bounds: %s\nCamera Position: %s\nCamera Trans X: %f\nCamera Trans Y: %f", gameBound.toString().c_str(), cameraPos.toString().c_str(), cameraTransX, cameraTransY);
+    
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
 }
 
@@ -363,16 +371,30 @@ void GameScene::updateFriction() {
 		Vec2 enemy_pos = enemy->getPosition();
 		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
-			if (friction == 0) {
-				removeEnemy(enemy);
-			}
-			else if (friction != enemy->getFriction()) {
-				enemy->setFriction(friction);
-			}
-		}
-		else {
-			enemy->setFriction(0);
-		}
+            if(!enemy->getCharging()) {
+                if(friction == 0) {
+                    removeEnemy(enemy);
+                }
+                else if(friction != enemy->getFriction()) {
+                    enemy->setFriction(friction);
+                }
+            }
+            else {
+                enemy->setFriction(0);
+                enemy->setCharging(false);
+            }
+        }
+        
+        // Caps enemy speed to MAX_PLAYER SPEED
+        if(enemy->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
+            Vec2 capped_speed = enemy->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
+            enemy->setLinearVelocity(capped_speed);
+        }
+        
+        // Changes enemy state from charging if below speed threshold
+        if(enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
+            enemy->setCharging(false);
+        }
 	}
 
 	// Loops through objects and sets friction and also checks for in bounds/death conditions

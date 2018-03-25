@@ -71,6 +71,14 @@ bool EnemyModel::canSling(){
 }
 
 /**
+ * Returns true if enemy is in bounds
+ **/
+bool EnemyModel::inBounds(int width, int height){
+    b2Vec2 position = _body->GetPosition();
+    return (position.x > 0 && position.y > 0 && position.x < width && position.y < height);
+}
+
+/**
  * Returns true if the enough time has elapsed since the last sling
  */
 bool EnemyModel::timeoutElapsed(){

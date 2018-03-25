@@ -118,13 +118,11 @@ void PlayerModel::update(float dt) {
         if(!canSling()){
             _node->setColor(Color4::RED);
         } else {
-//            _charging = true;
             _node->setColor(_color);
         }
 	}
     if(_shouldStopSoon && Timestamp().ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
         _shouldStopSoon = false;
         _body->SetLinearVelocity(b2Vec2(0,0));
-//        _charging = false;
     }
 }
