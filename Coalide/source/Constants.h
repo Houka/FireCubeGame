@@ -16,16 +16,25 @@
 
 #define CATEGORY_TERRAIN 0x0001
 
+#define STUN_TIME 15
+
 #pragma mark -
 #pragma mark Model Constants
 
 #define PLAYER_NAME		"player"
-#define PLAYER_TEXTURE	"protosheet_player"
+#define PLAYER_TEXTURE	"nicoal"
 
 #define ENEMY_NAME		"enemy"
-#define ENEMY_TEXTURE	"protosheet_enemy"
+#define ACORN			"acorn"
+#define MUSHROOM		"mushroom"
+#define ONION			"onion"
 
 #define TILE_NAME		"tile"
+
+#define INANIMATE_NAME	"inanimate"
+#define BREAKABLE_NAME	"breakable"
+#define MOVABLE_NAME	"movable"
+#define IMMOBILE_NAME	"immobile"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -69,28 +78,23 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define PROTO_LEVEL_FILE   "json/testMap4.json"
+#define LEVEL_FILE   "json/map4.json"
 /** The key for our loaded level */
-#define PROTO_LEVEL_KEY    "protosheet_"
+#define LEVEL_KEY    "level"
+
+#pragma mark -
+#pragma mark Object Types
+enum class OBJECT_TYPE : int {
+	BREAKABLE,
+	MOVABLE,
+	IMMOBILE
+};
 
 #pragma mark -
 #pragma mark Tile Types
 enum class TILE_TYPE : int {
 	WATER,
-	ISLAND,
-	ISLAND_BASE,
-	LAND,
-	NW_LAND,
-	N_LAND,
-	NE_LAND,
-	E_LAND,
-	SE_LAND,
-	S_LAND,
-	SW_LAND,
-	W_LAND,
-	L_LAND_BASE,
-	C_LAND_BASE,
-	R_LAND_BASE,
+	GRASS,
 	SAND,
 	ICE
 };

@@ -26,7 +26,6 @@ using namespace cugl;
 bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 	if (CapsuleObstacle::init(pos, size)) {
 		setName(ENEMY_NAME);
-		setTextureKey(ENEMY_TEXTURE);
 		setBodyType(b2_dynamicBody);
         setLinearDamping(GLOBAL_AIR_DRAG);
 		
@@ -35,6 +34,9 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		setDensity(1.0f);
 		setRestitution(0.4f);
 		setFixedRotation(true);
+
+		_stunned = false;
+		_onFire = false;
 
 		_previousTime = Timestamp();
         unsigned int rnd_seed = (unsigned int) (100 * pos.x + pos.y);

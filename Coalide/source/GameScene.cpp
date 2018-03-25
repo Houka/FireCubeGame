@@ -35,7 +35,7 @@ using namespace cugl;
 *
 * @return  true if the controller is initialized properly, false otherwise.
 */
-bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input) {
+bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey) {
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= GAME_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -50,6 +50,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// assets and input come from the CoalideApp level
 	_assets = assets;
 	_input = input;
+
+	_levelKey = levelKey;
 	
 	// Initialize the controllers used in the game mode
 	_collisions.init();
@@ -58,7 +60,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 
 
 	// Get the loaded level
-	_gamestate = assets->get<LevelController>(PROTO_LEVEL_KEY)->getGameState();
+	_gamestate = assets->get<LevelController>(levelKey)->getGameState();
 	
 	if (_gamestate == nullptr) {
 		CULog("Fail!");
@@ -179,7 +181,7 @@ void GameScene::update(float dt) {
 			_gamestate = nullptr;
 
 			// Access and initialize level
-			_gamestate = _assets->get<LevelController>(PROTO_LEVEL_KEY)->getGameState();
+			_gamestate = _assets->get<LevelController>(_levelKey)->getGameState();
 			activateWorldCollisions();
 
 			Size dimen = Application::get()->getDisplaySize();
@@ -223,35 +225,40 @@ void GameScene::update(float dt) {
     ObstacleWorld* world = _gamestate->getWorld().get();
     PlayerModel* player = _gamestate->getPlayer().get();
 
-    // Touch input for sling is in pogress and sets the time slowing mechanic
-    if(_input.didStartSling() && player->canSling() &&
-       std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
-        world->setStepsize(SLOW_MOTION);
-        player->setColor(Color4::ORANGE);
-		// update the aim arrow
-		player->updateArrow(_input.getCurrentAim(), true);
-    } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
-        world->setStepsize(NORMAL_MOTION);
-        player->setColor(Color4::WHITE);
+    if (player->isStunned()) {
+        player->stillStunned();
     }
+    else {
+        // Touch input for sling is in pogress and sets the time slowing mechanic
+        if(_input.didStartSling() && player->canSling() &&
+           std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
+            world->setStepsize(SLOW_MOTION);
+            player->setColor(Color4::ORANGE);
+            // update the aim arrow
+            player->updateArrow(_input.getCurrentAim(), true);
+        } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
+            world->setStepsize(NORMAL_MOTION);
+            player->setColor(Color4::WHITE);
+        }
 
-    // Applies vector from touch input to player and set to charging state
-    if(_input.didSling(true) && player->canSling()){
-        cugl::Vec2 sling = _input.getLatestSlingVector();
-        player->applyLinearImpulse(sling);
-        player->setCharging(true);
-		player->updateArrow(false);
-    }
+        // Applies vector from touch input to player and set to charging state
+        if(_input.didSling(true) && player->canSling()){
+            cugl::Vec2 sling = _input.getLatestSlingVector();
+            player->applyLinearImpulse(sling);
+            player->setCharging(true);
+            player->updateArrow(false);
+        }
     
-    // Caps player speed to MAX_PLAYER SPEED
-    if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
-        Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
-        player->setLinearVelocity(capped_speed);
-    }
+        // Caps player speed to MAX_PLAYER SPEED
+        if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
+            Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
+            player->setLinearVelocity(capped_speed);
+        }
     
-    // Changes player state from charging if below speed threshold
-    if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
-        player->setCharging(false);
+        // Changes player state from charging if below speed threshold
+        if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
+            player->setCharging(false);
+        }
     }
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state
@@ -264,71 +271,25 @@ void GameScene::update(float dt) {
             enemy->setCharging(true);
         }
     }
-
-	Vec2 player_pos = player->getPosition();
-    Size gameBounds = _gamestate->getBounds().size;
     
-    CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()));
+    updateFriction();
     
-    // Sets friction for player and checks if in bounds/death conditions for the game
-    if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
-		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
-        if(!player->getCharging()){
-            player->setFriction(friction);
-        } else {
-            player->setFriction(0.0001f);
-        }
-        // LEVEL DEATH
-		if (friction == 0 && !player->getCharging()) {
-			_gameover = true;
-		}
-	}
-	else {
-		player->setFriction(0);
-        player->setCharging(false);
-        _gameover = true;
-	}
-
-    // Loops through enemies and sets friction and also checks for in bounds/death conditions
-	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
-		EnemyModel* enemy = _gamestate->getEnemies()[i].get();
-		Vec2 enemy_pos = enemy->getPosition();
-		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
-			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
-            if(!enemy->getCharging()){
-                enemy->setFriction(friction);
-            } else {
-                enemy->setFriction(0.0001f);
-            }
-
-			if (friction == 0 && !enemy->getCharging()) {
-				removeEnemy(enemy);
-			}
-		}
-		else {
-			enemy->setFriction(0);
-            enemy->setCharging(false);
-		}
-        
-        // Caps enemy speed to MAX_PLAYER SPEED
-        if(enemy->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
-            Vec2 capped_speed = enemy->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
-            enemy->setLinearVelocity(capped_speed);
-        }
-        
-        // Changes enemy state from charging if below speed threshold
-        if(enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
-            enemy->setCharging(false);
-        }
-	}
-
     // LEVEL COMPLETE: If all enemies are dead then level completed
-	if (_enemyCount == 0) {
-		//_complete = true;
-	}
-
-	// Update the physics world
-	_gamestate->getWorld()->update(dt);
+    if (_enemyCount == 0) {
+        //_complete = true;
+    }
+    
+    // Update the physics world
+    _gamestate->getWorld()->update(dt);
+    
+    for (int i = 0; i < _gamestate->getObjects().size(); i++) {
+        ObjectModel* object = _gamestate->getObjects()[i].get();
+        if (object->isBroken()) {
+            removeObject(object);
+        }
+    }
+    
+    _gamestate->getWorld()->garbageCollect();
 
 	// update the camera
 	player->getNode()->getScene()->setOffset(cugl::Vec2(0,0));
@@ -356,16 +317,78 @@ void GameScene::update(float dt) {
 		cameraTransY *= .01;
 	}
 
-	if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
-		cameraTransX = 0;
-	}
-	
-	if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
-		cameraTransY = 0;
-	}
-
+	//if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
+	//	cameraTransX = 0;
+	//}
+	//
+	//if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
+	//	cameraTransY = 0;
+	//}
 
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
+}
+
+void GameScene::updateFriction() {
+	PlayerModel* player = _gamestate->getPlayer().get();
+	Vec2 player_pos = player->getPosition();
+	Size gameBounds = _gamestate->getBounds().size;
+
+	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
+	if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
+		float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
+		if (!player->getCharging()) {
+			if (friction == 0) {
+				_gameover = true;
+			}
+			else if (friction != player->getFriction()) {
+				player->setFriction(friction);
+			}
+		}
+		else {
+			player->setFriction(1);
+		}
+	}
+	else {
+		player->setFriction(0);
+		player->setCharging(false);
+		_gameover = true;
+	}
+
+	// Loops through enemies and sets friction and also checks for in bounds/death conditions
+	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
+		EnemyModel* enemy = _gamestate->getEnemies()[i].get();
+		Vec2 enemy_pos = enemy->getPosition();
+		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
+			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
+			if (friction == 0) {
+				removeEnemy(enemy);
+			}
+			else if (friction != enemy->getFriction()) {
+				enemy->setFriction(friction);
+			}
+		}
+		else {
+			enemy->setFriction(0);
+		}
+	}
+
+	// Loops through objects and sets friction and also checks for in bounds/death conditions
+	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
+		ObjectModel* object = _gamestate->getObjects()[i].get();
+		Vec2 object_pos = object->getPosition();
+		if (object_pos.x > 0 && object_pos.y > 0 && object_pos.x < _gamestate->getBounds().size.getIWidth() && object_pos.y < _gamestate->getBounds().size.getIHeight()) {
+			float friction = _gamestate->getBoard()[(int)floor(object_pos.y)][(int)floor(object_pos.x)];
+			if (friction == 0) {
+				removeObject(object);
+			}
+			else if (friction != object->getFriction()) {
+				object->setFriction(friction);
+			}
+		}
+		else {
+			object->setFriction(0);
+		}
+	}
 }
 
 void GameScene::removeEnemy(EnemyModel* enemy) {
@@ -379,18 +402,28 @@ void GameScene::removeEnemy(EnemyModel* enemy) {
 	_enemyCount--;
 }
 
+void GameScene::removeObject(ObjectModel* object) {
+	// do not attempt to remove a bullet that has already been removed
+	if (object->isRemoved()) {
+		return;
+	}
+	_gamestate->getRootNode()->getChild(0)->removeChild(object->getNode());
+	object->setDebugScene(nullptr);
+	object->markRemoved(true);
+}
+
 /**
 * Resets the status of the game so that we can play again.
 *
 */
 void GameScene::reset() {
 	// Unload the level but keep in memory temporarily
-	_assets->unload<LevelController>(PROTO_LEVEL_KEY);
+	_assets->unload<LevelController>(_levelKey);
 
 	// Load a new level and quit update
 	//_loadnode->setVisible(true);
 	_reloading = true;
-	_assets->load<LevelController>(PROTO_LEVEL_KEY, PROTO_LEVEL_FILE);
+	_assets->load<LevelController>(_levelKey, LEVEL_FILE);
 	setComplete(false);
 	_gameover = false;
 	

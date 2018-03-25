@@ -3,6 +3,7 @@
 // Coalide
 //
 #include "InputController.h"
+#include "Constants.h"
 
 using namespace cugl;
 
@@ -12,6 +13,7 @@ using namespace cugl;
 #define LISTENER_KEY 1
 /** Scale factor for display arrow */
 #define SLING_VECTOR_SCALE 0.5
+
 
 #pragma mark -
 #pragma mark Constructors
@@ -26,7 +28,13 @@ bool InputController::init() {
 	_resetPressed = false;
 	_exitPressed = false;
     bool success = true;
-    
+
+	Size dimen = Application::get()->getDisplaySize();
+
+	_maxSling = std::min(dimen.width, dimen.height);
+	_maxSling *= GAME_WIDTH / dimen.width;
+	_maxSling /= 1.5;
+
     // Only process keyboard on desktop
 #ifndef CU_TOUCH_SCREEN
     success = Input::activate<Keyboard>();
@@ -124,7 +132,12 @@ bool InputController::didSling(bool shouldReset){
 */
 cugl::Vec2 InputController::getCurrentAim() {
 	_currentAim = _currentTouch - _initTouch;
-    _currentAim.scale(SLING_VECTOR_SCALE);
+
+	if (_currentAim.length() > _maxSling) {
+		_currentAim.scale(1.0 / _currentAim.length() * _maxSling);
+	}
+
+	// _currentAim.scale(SLING_VECTOR_SCALE);
 	return _currentAim;
 }
 
@@ -154,6 +167,11 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
     if(_latestSling.length() >= MIN_SLING_DISTANCE){
         _didSling = true;
     }
+
+	if (_latestSling.length() > _maxSling) {
+		_latestSling.scale(1.0 / _latestSling.length() * _maxSling);
+	}
+
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = false;
@@ -185,7 +203,12 @@ void InputController::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, boo
     if(_latestSling.length() >= MIN_SLING_DISTANCE){
         _didSling = true;
     }
-    _currentTouch = event.position;
+
+	if (_latestSling.length() > _maxSling) {
+		_latestSling.scale(1.0 / _latestSling.length() * _maxSling);
+	}
+    
+	_currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = false;
 }

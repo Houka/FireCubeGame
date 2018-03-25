@@ -6,6 +6,7 @@
 #include "PlayerModel.h"
 #include "EnemyModel.h"
 #include "TileModel.h"
+#include "ObjectModel.h"
 
 #include <string>
 
@@ -70,7 +71,8 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 	if (_tiles.size() > 0) {
 		for (auto it = _tiles.begin(); it != _tiles.end(); ++it) {
 			std::shared_ptr<TileModel> tile = *it;
-			auto tileNode = PolygonNode::allocWithTexture(assets->get<Texture>(tile->getTextureKey()));
+			double* tileSubtexture = tile->getSubTexture();
+			auto tileNode = PolygonNode::allocWithTexture(assets->get<Texture>(tile->getTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
 			tile->setNode(tileNode);
 			tile->setDrawScale(_scale.x);
 			tile->setDebugScene(_debugnode);
@@ -108,6 +110,18 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 			enemy->setDebugScene(_debugnode);
 
 			_worldnode->addChild(enemyNode, UNIT_PRIORITY);
+		}
+	}
+
+	if (_objects.size() > 0) {
+		for (auto it = _objects.begin(); it != _objects.end(); ++it) {
+			std::shared_ptr<ObjectModel> object = *it;
+			auto objectNode = PolygonNode::allocWithTexture(assets->get<Texture>(object->getTextureKey()));
+			object->setNode(objectNode);
+			object->setDrawScale(_scale.x);
+			object->setDebugScene(_debugnode);
+
+			_worldnode->addChild(objectNode, UNIT_PRIORITY);
 		}
 	}
 }

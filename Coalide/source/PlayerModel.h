@@ -29,8 +29,14 @@ protected:
 
 	Vec2 _force;
 	b2FrictionJoint* _frictionJoint;
+	float _friction;
 
 	float _drawscale;
+
+	bool _stunned;
+	bool _onFire;
+
+	int _stunTimer;
 
 public:
 #pragma mark Constructors
@@ -75,6 +81,18 @@ public:
 	}
 
 #pragma mark -
+#pragma mark Status
+	bool isStunned() { return _stunned; }
+
+	void setStunned() { _stunned = true; _stunTimer = 0; }
+
+	void stillStunned();
+
+	bool isFire() { return _onFire; }
+
+	void setFire(bool fire) { _onFire = fire; }
+
+#pragma mark -
 #pragma mark Accessors
 	/**
 	* Returns the force applied to thes player.
@@ -91,14 +109,14 @@ public:
 	void setForce(const Vec2& value) { _force.set(value); }
     
 	/**
-	* Sets the friction of the friction joint with the ground.
+	* Returns the current friction.
 	*/
-	void setFriction(float friction) { _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
+	float getFriction() { return _friction; }
 
 	/**
-	* Sets the friction joint with the ground.
+	* Sets the friction of the friction joint with the ground.
 	*/
-	float getFriction() { return _frictionJoint->GetMaxForce(); }
+	void setFriction(float friction) { _friction = friction; _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
 
 	/**
 	* Sets the friction joint with the ground.

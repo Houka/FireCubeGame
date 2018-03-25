@@ -7,6 +7,7 @@
 #include "PlayerModel.h"
 #include "EnemyModel.h"
 #include "TileModel.h"
+#include "ObjectModel.h"
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
 #include <Box2D/Dynamics/b2World.h>
 
@@ -56,16 +57,24 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
 	int canvasH = canvas->get(HEIGHT_FIELD)->asInt();
 
 	auto tilesets = json->get(TILESETS_FIELD);
-	auto protoTileset = tilesets.get()->get(0);
-	int tileW = protoTileset->get(TILE_WIDTH_FIELD)->asInt();
-	int tileH = protoTileset->get(TILE_HEIGHT_FIELD)->asInt();
+
+	int tileW = tilesets->get(0)->get(TILE_WIDTH_FIELD)->asInt();
+	int tileH = tilesets->get(0)->get(TILE_HEIGHT_FIELD)->asInt();
 	_tileDim.set(tileW, tileH);
+
+	int worldTilesetW = tilesets->get(0)->get(IMAGE_WIDTH_FIELD)->asInt();
+	int worldTilesetH = tilesets->get(0)->get(IMAGE_HEIGHT_FIELD)->asInt();
+	_worldTilesetDim.set(worldTilesetW, worldTilesetH);
+
+	int waterTilesetW = tilesets->get(1)->get(IMAGE_WIDTH_FIELD)->asInt();
+	int waterTilesetH = tilesets->get(1)->get(IMAGE_HEIGHT_FIELD)->asInt();
+	_waterTilesetDim.set(waterTilesetW, waterTilesetH);
 
 	int worldW = canvasW / tileW;
 	int worldH = canvasH / tileH;
 	_bounds.size.set(worldW, worldH);
 
-	_scale.set(canvasW/worldW, canvasH/worldH);
+	_scale.set(canvasW/worldW-1, canvasH/worldH-1);
 
 	_world = ObstacleWorld::alloc(_bounds, cugl::Vec2(0, DEFAULT_GRAVITY));
     
@@ -111,11 +120,14 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 
 	_world->addObstacle(_terrain);
 
-	auto protoWorldLayer = json->get(LAYERS_FIELD)->get(0);
-	if (protoWorldLayer != nullptr) {
+	auto waterLayer = json->get(LAYERS_FIELD)->get(1);
+	auto worldLayer = json->get(LAYERS_FIELD)->get(0);
+
+	if (worldLayer != nullptr) {
 		success = true;
 
-		auto worldData = protoWorldLayer->get(DATA_FIELD)->asFloatArray();
+		auto waterData = waterLayer->get(DATA_FIELD)->asFloatArray();
+		auto worldData = worldLayer->get(DATA_FIELD)->asFloatArray();
 		_board = new float*[worldH];
 		
 		for (int i = 0; i < worldH; i++) {
@@ -125,82 +137,55 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 		int count = 0;
 		for (int i = worldH - 1; i >= 0; i--) {
 			for (int j = 0; j < worldW; j++) {
-				int tileVal = worldData[count] * 10;
+				loadWaterTile(Vec2(j + .5, i + .5), waterData[count], TILE_TYPE::WATER, waterLayer);
 
+				float tileVal = worldData[count];
+
+				if (std::ceil(tileVal) - tileVal < .01) {
+					tileVal = std::ceil(tileVal);
+				}
+
+				int tileColumn = std::floor(tileVal);
 				TILE_TYPE tileType;
-				switch (tileVal) {
+
+				switch (tileColumn) {
+				case -1:
+					_board[i][j] = 0;
+					break;
 				case 0:
-					tileType = TILE_TYPE::WATER;
-					_board[i][j] = 0;
-					break;
 				case 1:
-					tileType = TILE_TYPE::ISLAND;
-					_board[i][j] = 10;
-					break;
 				case 2:
-					tileType = TILE_TYPE::ISLAND_BASE;
-					_board[i][j] = 0;
+				case 3:
+				case 4:
+				case 5:
+				case 6:
+					_board[i][j] = 10;
+					loadLandTile(Vec2(j + .5, i + .5), tileVal, TILE_TYPE::GRASS, worldLayer);
 					break;
+				case 7:
+				case 8:
+				case 9:
 				case 10:
-					tileType = TILE_TYPE::NW_LAND;
-					_board[i][j] = 10;
-					break;
 				case 11:
-					tileType = TILE_TYPE::W_LAND;
-					_board[i][j] = 10;
-					break;
 				case 12:
-					tileType = TILE_TYPE::SW_LAND;
-					_board[i][j] = 10;
-					break;
 				case 13:
-					tileType = TILE_TYPE::L_LAND_BASE;
-					_board[i][j] = 0;
-					break;
-				case 20:
-					tileType = TILE_TYPE::N_LAND;
-					_board[i][j] = 10;
-					break;
-				case 21:
-					tileType = TILE_TYPE::LAND;
-					_board[i][j] = 10;
-					break;
-				case 22:
-					tileType = TILE_TYPE::S_LAND;
-					_board[i][j] = 10;
-					break;
-				case 23:
-					tileType = TILE_TYPE::C_LAND_BASE;
-					_board[i][j] = 0;
-					break;
-				case 30:
-					tileType = TILE_TYPE::NE_LAND;
-					_board[i][j] = 10;
-					break;
-				case 31:
-					tileType = TILE_TYPE::E_LAND;
-					_board[i][j] = 10;
-					break;
-				case 32:
-					tileType = TILE_TYPE::SE_LAND;
-					_board[i][j] = 10;
-					break;
-				case 33:
-					tileType = TILE_TYPE::R_LAND_BASE;
-					_board[i][j] = 0;
-					break;
-				case 42:
-					tileType = TILE_TYPE::SAND;
-					_board[i][j] = 20;
-					break;
-				case 43:
-					tileType = TILE_TYPE::ICE;
 					_board[i][j] = 2;
+					loadLandTile(Vec2(j + .5, i + .5), tileVal, TILE_TYPE::ICE, worldLayer);
+					break;
+				case 14:
+				case 15:
+				case 16:
+				case 17:
+				case 18:
+				case 19:
+				case 20:
+					_board[i][j] = 20;
+					loadLandTile(Vec2(j + .5, i + .5), tileVal, TILE_TYPE::SAND, worldLayer);
 					break;
 				default:
-					CUAssertLog(false, "Invalid tile value.");
+					CUAssertLog(false, "Invalid tile data.");
+					break;
 				}
-				loadTile(Vec2(j+.5, i+.5), tileType);
 				count++;
 			}
 		}
@@ -208,104 +193,74 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 	return success;
 }
 
-bool LevelController::loadTile(Vec2 tilePos, TILE_TYPE tileType) {
+bool LevelController::loadLandTile(Vec2 tilePos, float tileVal, TILE_TYPE tileType, std::shared_ptr<JsonValue>& layer) {
 	bool success = true;
 
 	std::shared_ptr<TileModel> tile = TileModel::alloc(tilePos, UNIT_DIM);
 
-	switch (tileType) {
-	case TILE_TYPE::WATER:
-		tile->setTextureKey(PROTO_LEVEL_KEY WATER_TEXTURE);
-		tile->setFriction(0);
-		tile->setType(TILE_TYPE::WATER);
-		break;
-	case TILE_TYPE::ISLAND_BASE:
-		tile->setTextureKey(PROTO_LEVEL_KEY ISLAND_BASE_TEXTURE);
-		tile->setFriction(0);
-		tile->setType(TILE_TYPE::WATER);
-		break;
-	case TILE_TYPE::ISLAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY ISLAND_TEXTURE);
-		tile->setFriction(10);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	case TILE_TYPE::NW_LAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY NW_LAND_TEXTURE);
-		tile->setFriction(10);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	case TILE_TYPE::W_LAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY W_LAND_TEXTURE);
-		tile->setFriction(10);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	case TILE_TYPE::SW_LAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY SW_LAND_TEXTURE);
-		tile->setType(TILE_TYPE::LAND);
-		tile->setFriction(10);
-		break;
-	case TILE_TYPE::N_LAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY N_LAND_TEXTURE);
-		tile->setType(TILE_TYPE::LAND);
-		tile->setFriction(10);
-		break;
-	case TILE_TYPE::LAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY LAND_TEXTURE);
-		tile->setFriction(10);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	case TILE_TYPE::S_LAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY S_LAND_TEXTURE);
-		tile->setFriction(10);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	case TILE_TYPE::NE_LAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY NE_LAND_TEXTURE);
-		tile->setFriction(10);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	case TILE_TYPE::E_LAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY E_LAND_TEXTURE);
-		tile->setFriction(10);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	case TILE_TYPE::SE_LAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY SE_LAND_TEXTURE);
-		tile->setFriction(10);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	case TILE_TYPE::L_LAND_BASE:
-		tile->setTextureKey(PROTO_LEVEL_KEY L_LAND_BASE_TEXTURE);
-		tile->setFriction(0);
-		tile->setType(TILE_TYPE::WATER);
-		break;
-	case TILE_TYPE::C_LAND_BASE:
-		tile->setTextureKey(PROTO_LEVEL_KEY C_LAND_BASE_TEXTURE);
-		tile->setFriction(0);
-		tile->setType(TILE_TYPE::WATER);
-		break;
-	case TILE_TYPE::R_LAND_BASE:
-		tile->setTextureKey(PROTO_LEVEL_KEY R_LAND_BASE_TEXTURE);
-		tile->setFriction(0);
-		tile->setType(TILE_TYPE::WATER);
-		break;
-	case TILE_TYPE::SAND:
-		tile->setTextureKey(PROTO_LEVEL_KEY SAND_TEXTURE);
-		tile->setFriction(20);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	case TILE_TYPE::ICE:
-		tile->setTextureKey(PROTO_LEVEL_KEY ICE_TEXTURE);
-		tile->setFriction(2);
-		tile->setType(TILE_TYPE::LAND);
-		break;
-	default:
-		CUAssertLog(false, "Invalid tile type.");
-		break;
+	tile->setType(tileType);
+	int col = std::floor(tileVal);
+	float rowFloat = tileVal - col;
+	int row;
+	if (std::ceil(rowFloat*10) - rowFloat*10 < .05) {
+		row = std::ceil(rowFloat*10);
+	}
+	else if (rowFloat*10 - std::floor(rowFloat*10) < .05) {
+		row = rowFloat * 10;
+	}
+	else {
+		if (std::ceil(rowFloat * 100) - rowFloat * 100 < .05) {
+			row = std::ceil(rowFloat * 100);
+		}
+		else {
+			row = rowFloat * 100;
+		}
 	}
 
-	tile->setDrawScale(_scale.x);
-	//_world->addObstacle(tile);
+	double x0 = col*_tileDim.width / _worldTilesetDim.width;
+	double x1 = (col + 1)*_tileDim.width / _worldTilesetDim.width;
+	double y0 = row*_tileDim.height / _worldTilesetDim.height;
+	double y1 = (row + 1)*_tileDim.height / _worldTilesetDim.height;
+
+	tile->setTextureKey(layer->get(TILESET_FIELD)->asString());
+	tile->setSubTexture(x0, x1, y0, y1);
+
+	_tiles.push_back(tile);
+
+	return success;
+}
+
+bool LevelController::loadWaterTile(Vec2 tilePos, float tileVal, TILE_TYPE tileType, std::shared_ptr<JsonValue>& layer) {
+	bool success = true;
+
+	std::shared_ptr<TileModel> tile = TileModel::alloc(tilePos, UNIT_DIM);
+
+	tile->setType(tileType);
+	int col = std::floor(tileVal);
+	float rowFloat = tileVal - col;
+	int row;
+	if (std::ceil(rowFloat * 10) - rowFloat * 10 < .05) {
+		row = std::ceil(rowFloat * 10);
+	}
+	else if (rowFloat * 10 - std::floor(rowFloat * 10) < .05) {
+		row = rowFloat * 10;
+	}
+	else {
+		if (std::ceil(rowFloat * 100) - rowFloat * 100 < .05) {
+			row = std::ceil(rowFloat * 100);
+		}
+		else {
+			row = rowFloat * 100;
+		}
+	}
+
+	double x0 = col*_tileDim.width / _waterTilesetDim.width;
+	double x1 = (col + 1)*_tileDim.width / _waterTilesetDim.width;
+	double y0 = row*_tileDim.height / _waterTilesetDim.height;
+	double y1 = (row + 1)*_tileDim.height / _waterTilesetDim.height;
+	
+	tile->setTextureKey(layer->get(TILESET_FIELD)->asString());
+	tile->setSubTexture(x0, x1, y0, y1);
 	
 	_tiles.push_back(tile);
 
@@ -314,7 +269,7 @@ bool LevelController::loadTile(Vec2 tilePos, TILE_TYPE tileType) {
 
 bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 	bool success = false;
-	auto objectsLayer = json->get(LAYERS_FIELD)->get(1);
+	auto objectsLayer = json->get(LAYERS_FIELD)->get(2);
 	if (objectsLayer != nullptr) {
 		success = true;
 
@@ -326,21 +281,70 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 		int count = 0;
 		for (int i = worldH - 1; i >= 0; i--) {
 			for (int j = 0; j < worldW; j++) {
-				int objVal = objectsData[count] * 10;
-				if (objVal == 40) {
-					_player = PlayerModel::alloc(Vec2(j+.5,i+.5), UNIT_DIM);
-					_player->setDrawScale(_scale.x);
-					
+				int objVal = objectsData[count];
+				
+				std::shared_ptr<EnemyModel> enemy;
+
+				switch (objVal) {
+				case -1:
+					break;
+				case 0:
+					_player = PlayerModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					_world->addObstacle(_player);
-				}
-				else if (objVal == 41) {
-					std::shared_ptr<EnemyModel> enemy = EnemyModel::alloc(Vec2(j+.5,i+.5), UNIT_DIM);
-					enemy->setTextureKey(PROTO_LEVEL_KEY ENEMY_NAME);
-					enemy->setDrawScale(_scale.x);
+					break;
+				case 1:
+					enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					enemy->setTextureKey(ACORN);
 
 					_world->addObstacle(enemy);
 					_enemies.push_back(enemy);
+					break;
+				case 2:
+					enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					enemy->setTextureKey(MUSHROOM);
+
+					_world->addObstacle(enemy);
+					_enemies.push_back(enemy);
+					break;
+				case 3:
+					enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					enemy->setTextureKey(ONION);
+
+					_world->addObstacle(enemy);
+					_enemies.push_back(enemy);
+					break;
+				default:
+					CUAssert(false, "Invalid object data.");
+					break;
 				}
+				
+				/*else if (objVal == 50) {
+					std::shared_ptr<ObjectModel> object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					object->setName(IMMOBILE_NAME);
+					object->setTextureKey(IMMOBILE_NAME);
+					object->setBodyType(b2_staticBody);
+
+					_world->addObstacle(object);
+					_objects.push_back(object);
+				}
+				else if (objVal == 51) {
+					std::shared_ptr<ObjectModel> object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					object->setName(MOVABLE_NAME);
+					object->setTextureKey(MOVABLE_NAME);
+					object->setBodyType(b2_dynamicBody);
+
+					_world->addObstacle(object);
+					_objects.push_back(object);
+				}
+				else if (objVal == 52) {
+					std::shared_ptr<ObjectModel> object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					object->setName(BREAKABLE_NAME); 
+					object->setTextureKey(BREAKABLE_NAME);
+					object->setBodyType(b2_staticBody);
+
+					_world->addObstacle(object);
+					_objects.push_back(object);
+				}*/
 				count++;
 			}
 		}
@@ -364,13 +368,20 @@ void LevelController::addFrictionJoints() {
 	jointDef.bodyA = _player->getBody();
 	_player->setFrictionJoint((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef)));
 
-
 	for (int i = 0; i < _enemies.size(); i++) {
 		jointDef.maxForce = 0;
 		jointDef.maxTorque = 0;
 
 		jointDef.bodyA = _enemies[i]->getBody();
 		_enemies[i]->setFrictionJoint((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef)));
+	}
+
+	for (int i = 0; i < _objects.size(); i++) {
+		jointDef.maxForce = 0;
+		jointDef.maxTorque = 0;
+
+		jointDef.bodyA = _objects[i]->getBody();
+		_objects[i]->setFrictionJoint((b2FrictionJoint*)(_world->getWorld()->CreateJoint(&jointDef)));
 	}
 }
 
@@ -379,6 +390,7 @@ void LevelController::buildGameState() {
 
 	_gamestate->setPlayer(_player);
 	_gamestate->setEnemies(_enemies);
+	_gamestate->setObjects(_objects);
 	_gamestate->setTiles(_tiles);
 	_gamestate->setWorld(_world);
 	_gamestate->setBoard(_board);
@@ -400,11 +412,23 @@ void LevelController::unload() {
 
 	for (auto it = _enemies.begin(); it != _enemies.end(); ++it) {
 		if (_world != nullptr) {
-			_gamestate->getWorld()->removeObstacle((*it).get());
+			if (!(*it).get()->isRemoved()) {
+				_gamestate->getWorld()->removeObstacle((*it).get());
+			}
 		}
 		(*it) = nullptr;
 	}
 	_enemies.clear();
+
+	for (auto it = _objects.begin(); it != _objects.end(); ++it) {
+		if (_world != nullptr) {
+			if (!(*it).get()->isRemoved()) {
+				_gamestate->getWorld()->removeObstacle((*it).get());
+			}	
+		}
+		(*it) = nullptr;
+	}
+	_objects.clear();
 
 	//for (auto it = _tiles.begin(); it != _tiles.end(); ++it) {
 	//	if (_world != nullptr) {

@@ -196,6 +196,7 @@
     <ClInclude Include="..\..\source\InputController.h" />
     <ClInclude Include="..\..\source\LevelController.h" />
     <ClInclude Include="..\..\source\LoadingScene.h" />
+    <ClInclude Include="..\..\source\ObjectModel.h" />
     <ClInclude Include="..\..\source\PlayerModel.h" />
     <ClInclude Include="..\..\source\TileModel.h" />
     <ClInclude Include="resource.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="..\..\source\LevelController.cpp" />
     <ClCompile Include="..\..\source\LoadingScene.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
+    <ClCompile Include="..\..\source\ObjectModel.cpp" />
     <ClCompile Include="..\..\source\PlayerModel.cpp" />
     <ClCompile Include="..\..\source\TileModel.cpp" />
   </ItemGroup>

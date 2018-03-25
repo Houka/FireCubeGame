@@ -14,6 +14,7 @@
 #include "LevelController.h"
 #include "PlayerModel.h"
 #include "EnemyModel.h"
+#include "ObjectModel.h"
 
 using namespace cugl;
 
@@ -66,6 +67,9 @@ protected:
 	/** Number of enemies remaining. */
 	int _enemyCount;
 
+	/** Level key for loading correct tileset. */
+	std::string _levelKey;
+
 	/**
 	* Activates world collision callbacks on the given physics world and sets the onBeginContact and beforeSolve callbacks
 	*
@@ -112,7 +116,7 @@ public:
 	*
 	* @return true if the controller is initialized properly, false otherwise.
 	*/
-	bool init(const std::shared_ptr<AssetManager>& assets, InputController input);
+	bool init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey);
 
 
 #pragma mark -
@@ -194,7 +198,11 @@ public:
 	*/
 	void update(float dt);
 
+	void updateFriction();
+
 	void removeEnemy(EnemyModel* enemy);
+	
+	void removeObject(ObjectModel* object);
 
 	/**
 	* Resets the status of the game so that we can play again.

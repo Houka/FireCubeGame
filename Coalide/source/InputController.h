@@ -12,7 +12,8 @@ private:
 	bool _resetPressed;
 	bool _exitPressed;
     bool _didSling;
-    /** Is this inputController active */
+	float _maxSling;
+	/** Is this inputController active */
     bool _active = false;
     /** Whether or not are in an active mouse pan */
     bool _mousepan;

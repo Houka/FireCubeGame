@@ -6,6 +6,7 @@
 #include "TileModel.h"
 #include "PlayerModel.h"
 #include "EnemyModel.h"
+#include "ObjectModel.h"
 #include <Box2D/Dynamics/Contacts/b2Contact.h>
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
 
@@ -40,7 +41,7 @@ void CollisionController::beginContact(b2Contact* contact) {
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
     SimpleObstacle* soA = (SimpleObstacle*)(bodyA->GetUserData());
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
-    
+	
     if(soA->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)){
         if(soB->getName() == "player"){
             CULog("should be stopping");
@@ -64,6 +65,16 @@ void CollisionController::beginContact(b2Contact* contact) {
                 enemy->setShouldStop();
         }
     }
+
+	// Remove broken objects
+	if (soA->getName() == BREAKABLE_NAME) {
+		ObjectModel* object = (ObjectModel*)soA;
+		object->setBroken();
+	}
+	else if (soB->getName() == BREAKABLE_NAME) {
+		ObjectModel* object = (ObjectModel*)soB;
+		object->setBroken();
+	}
 }
 
 /**
