@@ -23,11 +23,11 @@ bool intersectsWater(Vec2 start, Vec2 end, GameState* _gamestate){
     float dy = (end.y - start.y) / 10;
     float locx = start.x;
     int ct = 0;
-    while(locx < w && locx > 0 && ((locx > end.x && dx < 0) || (locx < end.x && dx > 0))){
+    while(locx < w && locx > 0 && ((locx > (end.x + dx) && dx < 0) || (locx < (end.x - dx) && dx > 0))){
         ct++;
         locx += dx;
         float locy = start.y;
-        while(locy < h && locy > 0 && ((locy > end.y && dy < 0) || (locy < end.y && dy > 0))){
+        while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
             locy += dy;
             int friction = _gamestate->getBoard()[(int)floor(locy)][(int)floor(locx)];
             if(friction == 0){
@@ -56,14 +56,17 @@ std::vector<std::tuple<EnemyModel*, Vec2>> AIController::getEnemyMoves(std::shar
     Vec2 player_pos = ((PlayerModel*)(g->getPlayer().get()))->getPosition();
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
         EnemyModel* enemy = enemy_ptr.get();
-        if(!enemy->isRemoved() && !enemy->isStunned() && enemy->canSling() && enemy->timeoutElapsed()){
+        if(!enemy->isRemoved() && !enemy->isStunned() && enemy->canSling()){
             Vec2 enemy_pos = enemy->getPosition();
             Vec2 aim = player_pos - enemy_pos;
             aim = aim.normalize();
             if(intersectsWater(enemy_pos, player_pos, g)){
+                enemy->setWaterBetween(true);
                 continue;
             }
-            moves.push_back(std::make_tuple(enemy, aim));
+            enemy->setWaterBetween(false);
+            if(enemy->timeoutElapsed())
+                moves.push_back(std::make_tuple(enemy, aim));
         }
     }
     return moves;
