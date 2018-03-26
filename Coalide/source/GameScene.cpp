@@ -311,10 +311,6 @@ void GameScene::update(float dt) {
 	cameraTransY = playerPos.y - cameraPos.y;
 
 	// smooth pan
-	CULog("game bound: (%f, %f)", gameBound.x, gameBound.y);
-	CULog("boundTop: (%f, %f)", boundTop.x, boundTop.y);
-
-
     if (std::abs(cameraTransX) > 5) {
         cameraTransX *= .05;
     }
@@ -330,12 +326,8 @@ void GameScene::update(float dt) {
     if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
         cameraTransY = 0;
     }
-    
-    //CULog("\nGame Bounds: %s\nCamera Position: %s\nCamera Trans X: %f\nCamera Trans Y: %f", gameBound.toString().c_str(), cameraPos.toString().c_str(), cameraTransX, cameraTransY);
-    
+        
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
-
-	//player->getNode()->getScene()->getCamera()->
 }
 
 void GameScene::updateFriction() {

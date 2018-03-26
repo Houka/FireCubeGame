@@ -31,13 +31,13 @@ bool intersectsWater(Vec2 start, Vec2 end, GameState* _gamestate){
             locy += dy;
             int friction = _gamestate->getBoard()[(int)floor(locy)][(int)floor(locx)];
             if(friction == 0){
-                CULog("WATER");
+//                CULog("WATER");
                 return true;
             }
-            CULog("inner Loop");
+//            CULog("inner Loop");
 
         }
-        CULog("outer Loop %d", ct);
+//        CULog("outer Loop %d", ct);
     }
     return false;
 }
