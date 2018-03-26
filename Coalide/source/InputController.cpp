@@ -111,6 +111,7 @@ void InputController::dispose() {
 void InputController::update(float dt) { 
 	Keyboard* keys = Input::get<Keyboard> ();
 	_left = keys->keyPressed(KeyCode::ARROW_LEFT);
+	//CULog("%d", _left);
 	_right = keys->keyPressed(KeyCode::ARROW_RIGHT);
 }
 

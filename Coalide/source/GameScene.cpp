@@ -200,12 +200,12 @@ void GameScene::update(float dt) {
 	_input.update(dt);
 
 	if (_gameover || _input.didReset()) {
-		reset();
+		reset(LEVEL_FILE);
 		return;
 	}
 
 	if (_complete) {
-		reset();
+		reset(LEVEL_FILE);
 		//_winnode->setVisible(true);
 		return;
 	}
@@ -433,14 +433,14 @@ void GameScene::removeObject(ObjectModel* object) {
 * Resets the status of the game so that we can play again.
 *
 */
-void GameScene::reset() {
+void GameScene::reset(const std::string& file) {
 	// Unload the level but keep in memory temporarily
 	_assets->unload<LevelController>(_levelKey);
 
 	// Load a new level and quit update
 	//_loadnode->setVisible(true);
 	_reloading = true;
-	_assets->load<LevelController>(_levelKey, LEVEL_FILE);
+	_assets->load<LevelController>(_levelKey, file);
 	setComplete(false);
 	_gameover = false;
 	

@@ -106,10 +106,13 @@ void CoalideApp::update(float timestep) {
 	}
 	else {
 		_gameScene.update(timestep);
-	}
-
-	if (_input.leftKeyPressed()) {
-		//_gameScene.dispose();
+		if ((_input.leftKeyPressed())) {
+			CULog("Pressed left");
+			//_gameScene.reset("json/map4.json");
+		}
+	} {
+		
+		//_gameScene.reset("json/paulsmall.json");
 		//_gameScene.init(_assets, _input, "json/paulsmall.json");
 	}
 
