@@ -73,7 +73,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
-	// cugl::Vec2 gameCenter = cugl::Vec2(_gamestate->getBounds().size.getIWidth() / 2., _gamestate->getBounds().size.getIHeight() / 2.);
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	getCamera()->translate(gameCenter - cameraPos);
 	return true;
@@ -447,6 +446,11 @@ void GameScene::reset(const std::string& file) {
 	_assets->load<LevelController>(_levelKey, file);
 	setComplete(false);
 	_gameover = false;
+    
+    // initialize the camera
+    cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
+    cugl::Vec2 cameraPos = getCamera()->getPosition();
+    getCamera()->translate(gameCenter - cameraPos);
 	
 	return;
 }
