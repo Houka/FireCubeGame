@@ -36,7 +36,13 @@ std::vector<std::tuple<EnemyModel*, Vec2>> AIController::getEnemyMoves(std::shar
             Vec2 aim = player_pos - enemy_pos;
             aim = aim.normalize();
 			Vec2 projectedLanding1 = enemy_pos + aim;
-			Vec2 projectedLanding2 = enemy_pos + aim*2;
+			Vec2 projectedLanding2;
+			if (g->getTileBoard()[(int)enemy_pos.y][(int)enemy_pos.x]->getType() == TILE_TYPE::ICE) {
+				 projectedLanding2 = enemy_pos + aim * 3;
+			}
+			else {
+				projectedLanding2 = enemy_pos + aim * 2;
+			}
 			std::shared_ptr<TileModel> tile1 = g->getTileBoard()[(int)projectedLanding1.y][(int)projectedLanding1.x];
 			std::shared_ptr<TileModel> tile2 = g->getTileBoard()[(int)projectedLanding2.y][(int)projectedLanding2.x];
 			if (!(tile1->isWater() || tile2->isWater())) {

@@ -117,6 +117,11 @@ public:
 #pragma mark -
 #pragma mark Accessors
 	/**
+	* Returns the tile type.
+	*/
+	TILE_TYPE getType() { return _tileType; }
+
+	/**
 	* Sets the tile type.
 	*/
 	void setType(TILE_TYPE tileType) { _tileType = tileType; }
