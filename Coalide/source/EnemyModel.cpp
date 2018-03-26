@@ -99,7 +99,14 @@ void EnemyModel::update(float dt) {
 		_node->setPosition(getPosition()*_drawscale);
 		_node->setAngle(getAngle());
 	}
-    if(!canSling()){
+    
+    if(_stunned){
+        _node->setColor(Color4::GREEN);
+        if(Timestamp().ellapsedMillis(_stunTimeout) >= _stunDuration) {
+            setStunned(false);
+        }
+    }
+    else if(!canSling()){
         _node->setColor(Color4::RED);
     } else {
         _node->setColor(Color4::WHITE);

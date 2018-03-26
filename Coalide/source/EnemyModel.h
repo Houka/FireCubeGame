@@ -19,10 +19,14 @@ private:
     int _rndTimerReduction;
     /** to keep track of how long to wait before stopping */
     Timestamp _collisionTimeout;
+    /** to keep track of how long to wait before becoming unstunned */
+    Timestamp _stunTimeout;
     /** a collision happened and we want to stop soon */
     bool _shouldStopSoon;
     /** charging or floored */
     bool _charging;
+    /** milliseconds of stun */
+    int _stunDuration;
 protected:
 	/** The scene graph node for the enemy */
 	std::shared_ptr<Node> _node;
@@ -91,6 +95,12 @@ public:
 	bool isStunned() { return _stunned; }
 
 	void setStunned(bool stunned) { _stunned = stunned; }
+    
+    void stunEnemy(int millis){
+        _stunDuration = millis;
+        _stunned = true;
+        _stunTimeout.mark();
+    }
 
 	bool isFire() { return _onFire; }
 

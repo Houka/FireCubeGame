@@ -30,7 +30,7 @@ std::vector<std::tuple<EnemyModel*, Vec2>> AIController::getEnemyMoves(std::shar
     Vec2 player_pos = ((PlayerModel*)(g->getPlayer().get()))->getPosition();
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
         EnemyModel* enemy = enemy_ptr.get();
-        if(!enemy->isRemoved() && enemy->canSling() && enemy->timeoutElapsed()){
+        if(!enemy->isRemoved() && !enemy->isStunned() && enemy->canSling() && enemy->timeoutElapsed()){
             Vec2 enemy_pos = enemy->getPosition();
             Vec2 aim = player_pos - enemy_pos;
             aim = aim.normalize();
