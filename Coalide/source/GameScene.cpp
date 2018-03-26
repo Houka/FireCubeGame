@@ -336,7 +336,7 @@ void GameScene::updateFriction() {
 	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
 	if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
 		if (!player->getCharging()) {
-			float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
+			float friction = _gamestate->getBoard()[(int)floor(player_pos.y - 0.35)][(int)floor(player_pos.x)];
 			if (friction == 0) {
 				_gameover = true;
 			}
