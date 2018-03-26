@@ -107,6 +107,9 @@ public:
 	*/
 	bool didExit() const { return _exitPressed; }
 
+	bool leftKeyPressed() { return _left; }
+	bool rightKeyPressed() { return _right; }
+
 
 #pragma mark -
 #pragma mark Mouse Callbacks

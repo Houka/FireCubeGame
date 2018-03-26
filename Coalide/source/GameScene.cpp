@@ -229,7 +229,7 @@ void GameScene::update(float dt) {
 
 
     // Touch input for sling is in pogress and sets the time slowing mechanic
-    if(_input.didStartSling() && player->canSling() && !player->isStunned()){
+    if(_input.didStartSling() && !player->isStunned()){
 		CULog("CURRENT STEP SIZE: %f", std::abs(world->getStepsize() - NORMAL_MOTION));
 		CULog("SLOW DOWN");
         world->setStepsize(SLOW_MOTION);
