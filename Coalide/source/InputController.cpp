@@ -61,6 +61,9 @@ bool InputController::init() {
     touch->addEndListener(LISTENER_KEY,[=](const cugl::TouchEvent& event, bool focus) {
         this->touchEndedCB(event,focus);
     });
+	touch->addMotionListener(LISTENER_KEY, [=](const cugl::TouchEvent& event, bool focus) {
+		this->touchMotionCB(event, focus);
+	});
 #endif
     _active = success;
     return success;
@@ -103,7 +106,7 @@ void InputController::dispose() {
 * the OS, we may see multiple updates of the same touch in a single animation
 * frame, so we need to accumulate all of the data together.
 */
-void InputController::update(float dt) { }
+void InputController::update(float dt) {}
 
 /**
 * Clears any buffered inputs so that we may start fresh.
@@ -155,6 +158,20 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
     _previousTouch = event.position;
     _mousepan = true;
 }
+
+/**
+* Callback for a continuing touch event
+*
+* @param t     The touch information
+* @param event The associated event
+*/
+void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
+	_initTouch = event.position;
+	_currentTouch = event.position;
+	_previousTouch = event.position;
+	_mousepan = true;
+}
+
 
 /**
 * Callback for the end of a touch event

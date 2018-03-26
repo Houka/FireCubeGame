@@ -29,6 +29,7 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		_node = nullptr;
         _color = Color4::WHITE;
         _charging = false;
+        _sizePlayer = size;
 
 		setDensity(1.0f);
 		setRestitution(0.4f);
@@ -76,7 +77,8 @@ void PlayerModel::stillStunned() {
 **/
 bool PlayerModel::inBounds(int width, int height){
     b2Vec2 position = _body->GetPosition();
-    return (position.x > 0 && position.y > 0 && position.x < width && position.y < height);
+    CULog("Player Size: %s", _sizePlayer.toString().c_str());
+    return ((position.x) > 0 && (position.y) > 0 && position.x < width && position.y < height);
 }
 
 /**

@@ -129,7 +129,7 @@ public:
 	/**
 	* Sets the friction.
 	*/
-	void setFriction(float friction) { _friction = friction; }
+	void setFriction(float friction) override { _friction = friction; }
 
 	/**
 	* Returns the scene graph node representing this floor tile.
@@ -205,6 +205,6 @@ public:
 	*
 	* @param dt Timing values from parent loop
 	*/
-	void update(float dt);
+	void update (float dt) override;
 };
 #endif /* __TILE_MODEL_H__ */

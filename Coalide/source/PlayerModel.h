@@ -22,6 +22,9 @@ private:
     bool _shouldStopSoon;
     /** charging or floored */
     bool _charging;
+    /** size of the player */
+    Vec2 _sizePlayer;
+    
 protected:
 	std::shared_ptr<Node> _node;
 	std::shared_ptr<PathNode> _arrow;
@@ -116,7 +119,7 @@ public:
 	/**
 	* Sets the friction of the friction joint with the ground.
 	*/
-	void setFriction(int friction) { _friction = friction; _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
+	void setFriction(float friction) override { _friction = friction; _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
 
 	/**
 	* Sets the friction joint with the ground.
