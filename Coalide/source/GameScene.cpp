@@ -231,40 +231,35 @@ void GameScene::update(float dt) {
     //CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d \nPlayer Speed: %f", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()), player->getLinearVelocity().length());
 
 
-    if (player->isStunned()) {
-        player->stillStunned();
-    }
-    else {
-        // Touch input for sling is in pogress and sets the time slowing mechanic
-        if(_input.didStartSling() && player->canSling() &&
-           std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
-            world->setStepsize(SLOW_MOTION);
-            player->setColor(Color4::ORANGE);
-            // update the aim arrow
-            player->updateArrow(_input.getCurrentAim(), true);
-        } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
-            world->setStepsize(NORMAL_MOTION);
-            player->setColor(Color4::WHITE);
-        }
 
-        // Applies vector from touch input to player and set to charging state
-        if(_input.didSling(true) && player->canSling()){
-            cugl::Vec2 sling = _input.getLatestSlingVector();
-            player->applyLinearImpulse(sling);
-            player->setCharging(true);
-            player->updateArrow(false);
-        }
-    
-        // Caps player speed to MAX_PLAYER SPEED
-        if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
-            Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
-            player->setLinearVelocity(capped_speed);
-        }
-    
-        // Changes player state from charging if below speed threshold
-        if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
-            player->setCharging(false);
-        }
+    // Touch input for sling is in pogress and sets the time slowing mechanic
+    if(_input.didStartSling() && player->canSling() && !player->isStunned() &&
+       std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
+        world->setStepsize(SLOW_MOTION);
+        player->setColor(Color4::ORANGE);
+        // update the aim arrow
+        player->updateArrow(_input.getCurrentAim(), true);
+    } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
+        world->setStepsize(NORMAL_MOTION);
+        player->setColor(Color4::WHITE);
+    }
+
+    // Applies vector from touch input to player and set to charging state
+    if(_input.didSling(true) && player->canSling() && !player->isStunned()){
+        cugl::Vec2 sling = _input.getLatestSlingVector();
+        player->applyLinearImpulse(sling);
+        player->setCharging(true);
+        player->updateArrow(false);
+    }
+
+    // Caps player speed to MAX_PLAYER SPEED
+    if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
+        Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
+        player->setLinearVelocity(capped_speed);
+    }
+    // Changes player state from charging if below speed threshold
+    if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
+        player->setCharging(false);
     }
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state

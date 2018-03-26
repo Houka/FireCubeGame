@@ -18,10 +18,19 @@ private:
     Color4 _color;
     /** to keep track of how long to wait before stopping */
     Timestamp _collisionTimeout;
+    /** to keep track of how long to wait before becoming unstunned */
+    Timestamp _stunTimeout;
     /** a collision happened and we want to stop soon */
     bool _shouldStopSoon;
     /** charging or floored */
     bool _charging;
+    /** milliseconds of stun */
+    int _stunDuration;
+    /** size of the player */
+    Vec2 _sizePlayer;
+    /** whether the player should be stunned when they stop */
+    bool _stunOnStop;
+
 protected:
 	std::shared_ptr<Node> _node;
 	std::shared_ptr<PathNode> _arrow;
@@ -35,8 +44,6 @@ protected:
 
 	bool _stunned;
 	bool _onFire;
-
-	int _stunTimer;
 
 public:
 #pragma mark Constructors
@@ -84,9 +91,24 @@ public:
 #pragma mark Status
 	bool isStunned() { return _stunned; }
 
-	void setStunned() { _stunned = true; _stunTimer = 0; }
+	void setStunned() {
+        if(!_stunned){
+            _stunned = true;
+            _stunTimeout.mark();
+            _stunDuration = 3000;
+            updateArrow(false);
+        }
 
-	void stillStunned();
+    }
+    
+    void stunOnStop(int millis){
+        if(!_stunned){
+            _stunTimeout.mark();
+            _stunDuration = millis;
+            _stunOnStop = true;
+            updateArrow(false);
+        }
+    }
 
 	bool isFire() { return _onFire; }
 
