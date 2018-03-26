@@ -227,7 +227,7 @@ void GameScene::update(float dt) {
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
     
-    CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d \nPlayer Speed: %f", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()), player->getLinearVelocity().length());
+    //CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d \nPlayer Speed: %f", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()), player->getLinearVelocity().length());
 
 
     if (player->isStunned()) {
@@ -331,9 +331,14 @@ void GameScene::update(float dt) {
 //        cameraTransY = 0;
 //    }
     
-    CULog("\nGame Bounds: %s\nCamera Position: %s\nCamera Trans X: %f\nCamera Trans Y: %f", gameBound.toString().c_str(), cameraPos.toString().c_str(), cameraTransX, cameraTransY);
+    Vec2 camera_pos = Scene::screenToWorldCoords(cameraPos);
+    
+    //CULog("\nGame Bounds: %s\nCamera Position: %s\nPlayer Position: %s\nCamera Trans X: %f\nCamera Trans Y: %f", gameBound.toString().c_str(), camera_pos.toString().c_str(), player->getPosition().toString().c_str(), cameraTransX, cameraTransY);
     
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
+    
+    CULog("\nPlayer Postion: %s\nIs Charging: %d\nPlayer Friction: %d", player->getPosition().toString().c_str(), player->getCharging(), player->getFriction());
+
 }
 
 void GameScene::updateFriction() {
@@ -342,9 +347,10 @@ void GameScene::updateFriction() {
 	Size gameBounds = _gamestate->getBounds().size;
 
 	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
+    //CULog("in bounds: %d", player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight()));
 	if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
 		if (!player->getCharging()) {
-			float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
+			float friction = _gamestate->getBoard()[(int)floor(player_pos.y- 0.25)][(int)floor(player_pos.x)];
 			if (friction == 0) {
 				_gameover = true;
 			}

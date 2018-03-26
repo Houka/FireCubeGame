@@ -22,6 +22,9 @@ private:
     bool _shouldStopSoon;
     /** charging or floored */
     bool _charging;
+    /** size of the player */
+    Vec2 _sizePlayer;
+    
 protected:
 	std::shared_ptr<Node> _node;
 	std::shared_ptr<PathNode> _arrow;
