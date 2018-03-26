@@ -37,6 +37,7 @@ protected:
 	std::shared_ptr<BoxObstacle> _terrain;
 
 	int** _board;
+	std::shared_ptr<TileModel>** _tileBoard;
 
 	bool _levelBuilt;
 

@@ -6,6 +6,7 @@
 #include "GameState.h"
 #include "PlayerModel.h"
 #include "EnemyModel.h"
+#include "TileModel.h"
 
 using namespace cugl;
 
@@ -34,7 +35,14 @@ std::vector<std::tuple<EnemyModel*, Vec2>> AIController::getEnemyMoves(std::shar
             Vec2 enemy_pos = enemy->getPosition();
             Vec2 aim = player_pos - enemy_pos;
             aim = aim.normalize();
-            moves.push_back(std::make_tuple(enemy, aim));
+			Vec2 projectedLanding = enemy_pos + aim;
+			std::shared_ptr<TileModel> tile = g->getTileBoard()[(int)projectedLanding.x][(int)projectedLanding.y];
+			if (!tile->isWater()) {
+				moves.push_back(std::make_tuple(enemy, aim));
+			}
+			else {
+				CULog("dsffs");
+			}
         }
     }
     return moves;

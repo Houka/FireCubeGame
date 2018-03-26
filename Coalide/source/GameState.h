@@ -48,6 +48,7 @@ protected:
 	std::vector<std::shared_ptr<TileModel>> _tiles;
 
 	int** _board;
+	std::shared_ptr<TileModel>** _tileBoard;
 
 	std::shared_ptr<cugl::AssetManager> _assets;
 
@@ -165,6 +166,13 @@ public:
 	* Sets the physics world of this game level.
 	*/
 	void setBoard(int** board) { _board = board; }
+
+	std::shared_ptr<TileModel>** getTileBoard() { return _tileBoard; }
+
+	/**
+	* Sets the physics world of this game level.
+	*/
+	void setTileBoard(std::shared_ptr<TileModel>** tileBoard) { _tileBoard = tileBoard; }
 
 
 #pragma mark Physics Attributes

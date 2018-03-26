@@ -352,11 +352,8 @@ void GameScene::updateFriction() {
 				player->setFriction(friction);
 			}
 		}
-		else {
-			if (player->getFriction() > .1f) {
-				player->setFriction(.0001f);
-			}
-
+		else if (player->getFriction() > .1f) {
+			player->setFriction(0);
 		}
 	}
 	else {
@@ -379,6 +376,9 @@ void GameScene::updateFriction() {
                     enemy->setFriction(friction);
                 }
             }
+			else if (player->getFriction() > .1f) {
+				player->setFriction(0);
+			}
             else {
                 enemy->setFriction(0);
                 enemy->setCharging(false);

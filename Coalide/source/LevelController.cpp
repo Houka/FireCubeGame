@@ -129,9 +129,11 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 		auto waterData = waterLayer->get(DATA_FIELD)->asFloatArray();
 		auto worldData = worldLayer->get(DATA_FIELD)->asFloatArray();
 		_board = new int*[worldH];
-		
+		_tileBoard = new std::shared_ptr<TileModel>*[worldH];
+
 		for (int i = 0; i < worldH; i++) {
 			_board[i] = new int[worldW];
+			_tileBoard[i] = new std::shared_ptr<TileModel>[worldW];
 		}
 
 		int count = 0;
@@ -151,6 +153,8 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 				switch (tileColumn) {
 				case -1:
 					_board[i][j] = 0;
+					_tileBoard[i][j] = TileModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					_tileBoard[i][j]->setType(TILE_TYPE::WATER);
 					break;
 				case 0:
 				case 1:
@@ -226,6 +230,7 @@ bool LevelController::loadLandTile(Vec2 tilePos, float tileVal, TILE_TYPE tileTy
 	tile->setSubTexture(x0, x1, y0, y1);
 
 	_tiles.push_back(tile);
+	_tileBoard[(int)tilePos.y][(int)tilePos.x] = tile;
 
 	return success;
 }
@@ -394,6 +399,7 @@ void LevelController::buildGameState() {
 	_gamestate->setTiles(_tiles);
 	_gamestate->setWorld(_world);
 	_gamestate->setBoard(_board);
+	_gamestate->setTileBoard(_tileBoard);
 	_gamestate->setDrawScale(_scale);
 
 	_levelBuilt = true;
