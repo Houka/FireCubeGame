@@ -153,8 +153,6 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 				switch (tileColumn) {
 				case -1:
 					_board[i][j] = 0;
-					_tileBoard[i][j] = TileModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-					_tileBoard[i][j]->setType(TILE_TYPE::WATER);
 					break;
 				case 0:
 				case 1:
@@ -268,6 +266,7 @@ bool LevelController::loadWaterTile(Vec2 tilePos, float tileVal, TILE_TYPE tileT
 	tile->setSubTexture(x0, x1, y0, y1);
 	
 	_tiles.push_back(tile);
+	_tileBoard[(int)tilePos.y][(int)tilePos.x] = tile;
 
 	return success;
 }
