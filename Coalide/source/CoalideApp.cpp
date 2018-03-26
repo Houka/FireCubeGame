@@ -108,7 +108,7 @@ void CoalideApp::update(float timestep) {
 	else {
 		_input.update(timestep);
 		if ((_input.leftKeyPressed())) {
-			CULog("Pressed left");
+			//CULog("Pressed left");
 			_gameScene.reset(levelNames[_levelCt]);
             _levelCt = (_levelCt+1)%5;
 		}

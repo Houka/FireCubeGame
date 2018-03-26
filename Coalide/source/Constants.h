@@ -78,7 +78,7 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define LEVEL_FILE   "json/demo/map.json"
+#define LEVEL_FILE   "json/demo/enemy_water.json"
 /** The key for our loaded level */
 #define LEVEL_KEY    "level"
 
