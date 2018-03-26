@@ -96,6 +96,7 @@ void CoalideApp::onShutdown() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void CoalideApp::update(float timestep) {
+    std::string levelNames[3] = {"json/map4.json", "json/map5.json", "json/map4.json"};
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
 	}
@@ -108,7 +109,8 @@ void CoalideApp::update(float timestep) {
 		_input.update(timestep);
 		if ((_input.leftKeyPressed())) {
 			CULog("Pressed left");
-			_gameScene.reset("json/map4.json");
+			_gameScene.reset(levelNames[_levelCt]);
+            _levelCt = (_levelCt+1)%3;
 		}
         _gameScene.update(timestep);
 	}
