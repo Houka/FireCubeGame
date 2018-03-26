@@ -12,6 +12,8 @@ private:
 	bool _resetPressed;
 	bool _exitPressed;
     bool _didSling;
+	bool _left;
+	bool _right;
 	float _maxSling;
 	/** Is this inputController active */
     bool _active = false;

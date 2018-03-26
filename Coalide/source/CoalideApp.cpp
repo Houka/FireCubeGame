@@ -30,7 +30,7 @@ void CoalideApp::onStartup() {
 #else
 	Input::activate<Mouse>();
 #endif
-
+	Input::activate<Keyboard>();
     // Create a sprite batch (and background color) to render the scene
     _batch = SpriteBatch::alloc();
     setClearColor(Color4(229,229,229,255));
@@ -106,6 +106,12 @@ void CoalideApp::update(float timestep) {
 	}
 	else {
 		_gameScene.update(timestep);
+	}
+
+
+	if (_input.didSling()) {
+		// CULog("SLANG");
+		//_gameScene.init(_assets, _input, "json/paulsmall.json");
 	}
 }
 

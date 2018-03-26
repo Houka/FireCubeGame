@@ -8,6 +8,7 @@
 #include "EnemyModel.h"
 #include "TileModel.h"
 #include "ObjectModel.h"
+#include "Constants.h"
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
 #include <Box2D/Dynamics/b2World.h>
 
@@ -15,7 +16,6 @@
 
 using namespace cugl;
 
-#define NORMAL_MOTION .015
 
 #pragma mark -
 #pragma mark Constructors
