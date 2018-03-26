@@ -230,14 +230,14 @@ void GameScene::update(float dt) {
 
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
-		CULog("CURRENT STEP SIZE: %f", std::abs(world->getStepsize() - NORMAL_MOTION));
-		CULog("SLOW DOWN");
+		//CULog("CURRENT STEP SIZE: %f", std::abs(world->getStepsize() - NORMAL_MOTION));
+		//CULog("SLOW DOWN");
         world->setStepsize(SLOW_MOTION);
         player->setColor(Color4::ORANGE);
         // update the aim arrow
         player->updateArrow(_input.getCurrentAim(), true);
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
-		CULog("SPEED UP");
+		//CULog("SPEED UP");
         world->setStepsize(NORMAL_MOTION);
         player->setColor(Color4::WHITE);
     }
@@ -258,6 +258,10 @@ void GameScene::update(float dt) {
     // Changes player state from charging if below speed threshold
     if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
         player->setCharging(false);
+    }
+    
+    if(!player->canSling()) {
+        player->updateArrow(false);
     }
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state
