@@ -156,7 +156,7 @@ public:
 	void touchBeganCB(const cugl::TouchEvent& event, bool focus);
 
 	/**
-	* Callback for a continuing touch event
+	* Callback for continuing a touch event
 	*
 	* @param t     The touch information
 	* @param event The associated event

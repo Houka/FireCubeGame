@@ -20,7 +20,7 @@
 * @return  true if the obstacle is initialized properly, false otherwise.
 */
 bool PlayerModel::init(const Vec2 & pos, const Size & size) {
-	if (CapsuleObstacle::init(pos, size)) {
+	if (CapsuleObstacle::init(pos, size, Orientation::VERTICAL)) {
 		setName(PLAYER_NAME);
 		setTextureKey("nicoal_nicoal");
 		setBodyType(b2_dynamicBody);

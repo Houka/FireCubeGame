@@ -27,6 +27,8 @@ private:
     
 protected:
 	std::shared_ptr<Node> _node;
+	std::shared_ptr<Node> _standingNode;
+	std::shared_ptr<Node> _chargingNode;
 	std::shared_ptr<PathNode> _arrow;
 	std::string _texture;
 
@@ -95,6 +97,8 @@ public:
 
 	void setFire(bool fire) { _onFire = fire; }
 
+	void switchStandingNode() { _standingNode->setVisible(true); _chargingNode->setVisible(false); _node = _standingNode; }
+	void switchChargingNode() { _standingNode->setVisible(false); _chargingNode->setVisible(true); _node = _chargingNode; }
 #pragma mark -
 #pragma mark Accessors
 	/**
@@ -153,6 +157,8 @@ public:
 	* @param node  The scene graph node representing the player.
 	*/
 	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
+	void setStandingNode(const std::shared_ptr<Node>& node) { _standingNode = node; }
+	void setChargingNode(const std::shared_ptr<Node>& node) { _chargingNode = node; }
 
 	/**
 	* Returns the scene graph node representing the player.

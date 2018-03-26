@@ -350,6 +350,7 @@ void GameScene::updateFriction() {
     //CULog("in bounds: %d", player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight()));
 	if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
 		if (!player->getCharging()) {
+			player->switchStandingNode();
 			float friction = _gamestate->getBoard()[(int)floor(player_pos.y- 0.25)][(int)floor(player_pos.x)];
 			if (friction == 0) {
 				_gameover = true;
@@ -359,6 +360,7 @@ void GameScene::updateFriction() {
 			}
 		}
 		else if (player->getFriction() > .1f) {
+			player->switchChargingNode();
 			player->setFriction(0);
 		}
 	}

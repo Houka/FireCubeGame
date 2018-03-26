@@ -166,7 +166,6 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
 * @param event The associated event
 */
 void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
-	_initTouch = event.position;
 	_currentTouch = event.position;
 	_previousTouch = event.position;
 	_mousepan = true;
