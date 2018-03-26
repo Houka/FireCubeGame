@@ -35,6 +35,7 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		setFixedRotation(true);
 
 		_stunned = false;
+        _stunOnStop = false;
 		_onFire = false;
 
 		return true;
