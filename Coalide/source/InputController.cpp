@@ -106,11 +106,7 @@ void InputController::dispose() {
 * the OS, we may see multiple updates of the same touch in a single animation
 * frame, so we need to accumulate all of the data together.
 */
-void InputController::update(float dt) { 
-	if (_touchDown) {
-		//_currentTouch = Touchscreen::touchPosition;
-	}
-}
+void InputController::update(float dt) {}
 
 /**
 * Clears any buffered inputs so that we may start fresh.
@@ -161,7 +157,6 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = true;
-	_touchDown = true;
 }
 
 /**
@@ -175,7 +170,6 @@ void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
 	_currentTouch = event.position;
 	_previousTouch = event.position;
 	_mousepan = true;
-	_touchDown = true;
 }
 
 
@@ -198,7 +192,6 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = false;
-	_touchDown = false;
 }
 
 /**
