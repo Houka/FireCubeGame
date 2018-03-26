@@ -73,7 +73,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
-	// cugl::Vec2 gameCenter = cugl::Vec2(_gamestate->getBounds().size.getIWidth() / 2., _gamestate->getBounds().size.getIHeight() / 2.);
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	getCamera()->translate(gameCenter - cameraPos);
 	return true;
@@ -200,12 +199,12 @@ void GameScene::update(float dt) {
 	_input.update(dt);
 
 	if (_gameover || _input.didReset()) {
-		reset();
+		reset(LEVEL_FILE);
 		return;
 	}
 
 	if (_complete) {
-		reset();
+		reset(LEVEL_FILE);
 		//_winnode->setVisible(true);
 		return;
 	}
@@ -230,14 +229,14 @@ void GameScene::update(float dt) {
 
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
-		CULog("CURRENT STEP SIZE: %f", std::abs(world->getStepsize() - NORMAL_MOTION));
-		CULog("SLOW DOWN");
+		//CULog("CURRENT STEP SIZE: %f", std::abs(world->getStepsize() - NORMAL_MOTION));
+		//CULog("SLOW DOWN");
         world->setStepsize(SLOW_MOTION);
         player->setColor(Color4::ORANGE);
         // update the aim arrow
         player->updateArrow(_input.getCurrentAim(), true);
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
-		CULog("SPEED UP");
+		//CULog("SPEED UP");
         world->setStepsize(NORMAL_MOTION);
         player->setColor(Color4::WHITE);
     }
@@ -258,6 +257,10 @@ void GameScene::update(float dt) {
     // Changes player state from charging if below speed threshold
     if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
         player->setCharging(false);
+    }
+    
+    if(!player->canSling()) {
+        player->updateArrow(false);
     }
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state
@@ -433,16 +436,21 @@ void GameScene::removeObject(ObjectModel* object) {
 * Resets the status of the game so that we can play again.
 *
 */
-void GameScene::reset() {
+void GameScene::reset(const std::string& file) {
 	// Unload the level but keep in memory temporarily
 	_assets->unload<LevelController>(_levelKey);
 
 	// Load a new level and quit update
 	//_loadnode->setVisible(true);
 	_reloading = true;
-	_assets->load<LevelController>(_levelKey, LEVEL_FILE);
+	_assets->load<LevelController>(_levelKey, file);
 	setComplete(false);
 	_gameover = false;
+    
+    // initialize the camera
+    cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
+    cugl::Vec2 cameraPos = getCamera()->getPosition();
+    getCamera()->translate(gameCenter - cameraPos);
 	
 	return;
 }

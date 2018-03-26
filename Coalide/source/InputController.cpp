@@ -108,10 +108,13 @@ void InputController::dispose() {
 * the OS, we may see multiple updates of the same touch in a single animation
 * frame, so we need to accumulate all of the data together.
 */
-void InputController::update(float dt) { 
-	Keyboard* keys = Input::get<Keyboard> ();
-	_left = keys->keyPressed(KeyCode::ARROW_LEFT);
-	_right = keys->keyPressed(KeyCode::ARROW_RIGHT);
+void InputController::update(float dt) {
+    
+    Keyboard* keys = Input::get<Keyboard>();
+    
+    // Map "keyboard" events to the current frame boundary
+    _left  = keys->keyPressed(KeyCode::ARROW_LEFT);
+    _right = keys->keyPressed(KeyCode::ARROW_RIGHT);
 }
 
 /**
