@@ -12,10 +12,6 @@
 
 using namespace cugl;
 
-#define SLOW_MOTION .00001
-#define NORMAL_MOTION .015
-#define MAX_PLAYER_SPEED 20
-
 #pragma mark -
 #pragma mark Constructors
 /**
@@ -233,13 +229,15 @@ void GameScene::update(float dt) {
 
 
     // Touch input for sling is in pogress and sets the time slowing mechanic
-    if(_input.didStartSling() && player->canSling() && !player->isStunned() &&
-       std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
+    if(_input.didStartSling() && player->canSling() && !player->isStunned()){
+		CULog("CURRENT STEP SIZE: %f", std::abs(world->getStepsize() - NORMAL_MOTION));
+		CULog("SLOW DOWN");
         world->setStepsize(SLOW_MOTION);
         player->setColor(Color4::ORANGE);
         // update the aim arrow
         player->updateArrow(_input.getCurrentAim(), true);
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
+		CULog("SPEED UP");
         world->setStepsize(NORMAL_MOTION);
         player->setColor(Color4::WHITE);
     }

@@ -53,6 +53,7 @@ bool InputController::init() {
     mouse->addMotionListener(LISTENER_KEY, [=](const cugl::MouseEvent& event, const cugl::Vec2& previous, bool focus) {
         this->mouseMovedCB(event, previous, focus);
     });
+	
 #else
     success = Input::activate<Accelerometer>();
     Touchscreen* touch = Input::get<Touchscreen>();
@@ -108,6 +109,9 @@ void InputController::dispose() {
 * frame, so we need to accumulate all of the data together.
 */
 void InputController::update(float dt) { 
+	Keyboard* keys = Input::get<Keyboard> ();
+	_left = keys->keyPressed(KeyCode::ARROW_LEFT);
+	_right = keys->keyPressed(KeyCode::ARROW_RIGHT);
 }
 
 /**
@@ -243,3 +247,4 @@ void InputController::mouseMovedCB(const cugl::MouseEvent& event, const Vec2& pr
         _currentTouch = event.position;
     }
 }
+
