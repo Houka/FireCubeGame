@@ -16,7 +16,29 @@ bool AIController::init() {
 
 void AIController::dispose() { }
 
-bool intersectsWater(Vec2 start, Vec2 direction){
+bool intersectsWater(Vec2 start, Vec2 end, GameState* _gamestate){
+    int h = _gamestate->getBounds().size.getIHeight();
+    int w = _gamestate->getBounds().size.getIWidth();
+    float dx = (end.x - start.x) / 10;
+    float dy = (end.y - start.y) / 10;
+    float locx = start.x;
+    int ct = 0;
+    while(locx < w && locx > 0 && ((locx > end.x && dx < 0) || (locx < end.x && dx > 0))){
+        ct++;
+        locx += dx;
+        float locy = start.y;
+        while(locy < h && locy > 0 && ((locy > end.y && dy < 0) || (locy < end.y && dy > 0))){
+            locy += dy;
+            int friction = _gamestate->getBoard()[(int)floor(locy)][(int)floor(locx)];
+            if(friction == 0){
+//                CULog("WATER");
+                return true;
+            }
+//            CULog("inner Loop");
+
+        }
+//        CULog("outer Loop %d", ct);
+    }
     return false;
 }
 
@@ -38,7 +60,7 @@ std::vector<std::tuple<EnemyModel*, Vec2>> AIController::getEnemyMoves(std::shar
             Vec2 enemy_pos = enemy->getPosition();
             Vec2 aim = player_pos - enemy_pos;
             aim = aim.normalize();
-            if(intersectsWater(enemy_pos, player_pos)){
+            if(intersectsWater(enemy_pos, player_pos, g)){
                 continue;
             }
             moves.push_back(std::make_tuple(enemy, aim));
