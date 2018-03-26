@@ -45,7 +45,7 @@ void CollisionController::beginContact(b2Contact* contact) {
     if(soA->getName() == "player" && soB->getName()=="enemy"){
         PlayerModel* player = (PlayerModel*) soA;
         EnemyModel* enemy = (EnemyModel*) soB;
-        if(enemy->getTextureKey() == ONION){
+        if(enemy->getTextureKey() == ONION && !enemy->isStunned()){
             player->stunOnStop(3000);
             if(!enemy->alreadyStopping() &&
                enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
@@ -55,7 +55,7 @@ void CollisionController::beginContact(b2Contact* contact) {
     if(soB->getName() == "player" && soA->getName()=="enemy"){
         PlayerModel* player = (PlayerModel*) soB;
         EnemyModel* enemy = (EnemyModel*) soA;
-        if(enemy->getTextureKey() == ONION){
+        if(enemy->getTextureKey() == ONION && !enemy->isStunned()){
             player->stunOnStop(3000);
             if(!enemy->alreadyStopping() &&
                enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
