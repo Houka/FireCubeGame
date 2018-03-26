@@ -16,6 +16,10 @@ bool AIController::init() {
 
 void AIController::dispose() { }
 
+bool intersectsWater(Vec2 start, Vec2 direction){
+    return false;
+}
+
 /**
  * Go through each enemy in the level and if that enemy can move, return a corresponding
  * vector of "input" for each enemy. This logic simply aims at the player.
@@ -34,6 +38,9 @@ std::vector<std::tuple<EnemyModel*, Vec2>> AIController::getEnemyMoves(std::shar
             Vec2 enemy_pos = enemy->getPosition();
             Vec2 aim = player_pos - enemy_pos;
             aim = aim.normalize();
+            if(intersectsWater(enemy_pos, player_pos)){
+                continue;
+            }
             moves.push_back(std::make_tuple(enemy, aim));
         }
     }
