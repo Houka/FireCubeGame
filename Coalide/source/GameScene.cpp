@@ -386,13 +386,9 @@ void GameScene::updateFriction() {
                     enemy->setFriction(friction);
                 }
             }
-			else if (player->getFriction() > .1f) {
-				player->setFriction(0);
+			else if (enemy->getFriction() > .1f) {
+				enemy->setFriction(0);
 			}
-            else {
-                enemy->setFriction(0);
-                enemy->setCharging(false);
-            }
         }
         
         // Caps enemy speed to MAX_PLAYER SPEED
@@ -404,7 +400,10 @@ void GameScene::updateFriction() {
         // Changes enemy state from charging if below speed threshold
         if(enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
             enemy->setCharging(false);
-        }
+		}
+		else {
+			enemy->setCharging(true);
+		}
 	}
 
 	// Loops through objects and sets friction and also checks for in bounds/death conditions

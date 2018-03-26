@@ -31,7 +31,7 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
         _charging = false;
         _sizePlayer = size;
 
-		setDensity(1.0f);
+		setDensity(2.0f);
 		setRestitution(0.4f);
 		setFixedRotation(true);
 

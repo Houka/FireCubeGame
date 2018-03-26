@@ -31,7 +31,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		
 		_node = nullptr;
 
-		setDensity(1.0f);
+		setDensity(2.0f);
 		setRestitution(0.4f);
 		setFixedRotation(true);
 

@@ -123,7 +123,7 @@ public:
 	/**
 	* Sets the friction of the friction joint with the ground.
 	*/
-	void setFriction(float friction) override { _friction = friction; _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
+	void setFriction(int friction) { _friction = friction; _frictionJoint->SetMaxForce(friction); _frictionJoint->SetMaxTorque(friction); }
 
 	/**
 	* Sets the friction joint with the ground.

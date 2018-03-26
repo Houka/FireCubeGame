@@ -12,7 +12,7 @@
 #define FONT_COLOR Color4::BLUE
 
 /** This is adjusted by screen aspect ratio to get the height */
-#define GAME_WIDTH 1024
+#define GAME_WIDTH 1280
 
 #define CATEGORY_TERRAIN 0x0001
 
@@ -48,7 +48,7 @@
 #define MIN_SPEED_FOR_CHARGING 5.0f
 #define GLOBAL_AIR_DRAG 1.5f
 
-#define UNIT_DIM Vec2(1,2)
+#define UNIT_DIM Vec2(1,1)
 
 #pragma	mark -
 #pragma mark Level Constants
@@ -78,7 +78,7 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define LEVEL_FILE   "json/enemytester.json"
+#define LEVEL_FILE   "json/map5.json"
 /** The key for our loaded level */
 #define LEVEL_KEY    "level"
 
