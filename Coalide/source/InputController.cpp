@@ -61,7 +61,7 @@ bool InputController::init() {
     touch->addEndListener(LISTENER_KEY,[=](const cugl::TouchEvent& event, bool focus) {
         this->touchEndedCB(event,focus);
     });
-	touch->addMotionListener(LISTENER_KEY, [=](const cugl::TouchEvent& event, bool focus) {
+	touch->addMotionListener(LISTENER_KEY, [=](const cugl::TouchEvent event, const Vec2& previous, bool focus) {
 		this->touchMotionCB(event, focus);
 	});
 #endif
