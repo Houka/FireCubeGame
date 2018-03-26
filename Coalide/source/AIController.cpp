@@ -19,8 +19,8 @@ void AIController::dispose() { }
 bool intersectsWater(Vec2 start, Vec2 end, GameState* _gamestate){
     int h = _gamestate->getBounds().size.getIHeight();
     int w = _gamestate->getBounds().size.getIWidth();
-    float dx = (end.x - start.x) / 10;
-    float dy = (end.y - start.y) / 10;
+    float dx = (end.x - start.x) / 20;
+    float dy = (end.y - start.y) / 20;
     float locx = start.x;
     int ct = 0;
     while(locx < w && locx > 0 && ((locx > (end.x + dx) && dx < 0) || (locx < (end.x - dx) && dx > 0))){
