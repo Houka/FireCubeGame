@@ -28,6 +28,7 @@ bool InputController::init() {
 	_resetPressed = false;
 	_exitPressed = false;
     bool success = true;
+	_mousepan = false;
 
 	Size dimen = Application::get()->getDisplaySize();
 
