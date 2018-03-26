@@ -75,9 +75,9 @@ void CollisionController::beginContact(b2Contact* contact) {
         }
     }
 	
-    if(soA->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)){
+	// player or enemy shoves something stationary
+    if(soA->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF) && canBeShoved(soA)){
         if(soB->getName() == "player"){
-            CULog("should be stopping");
             PlayerModel* player = (PlayerModel*) soB;
             if(!player->alreadyStopping())
                 player->setShouldStop();
@@ -87,7 +87,9 @@ void CollisionController::beginContact(b2Contact* contact) {
                 enemy->setShouldStop();
         }
     }
-    if(soB->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)){
+
+
+    if(soB->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF) && canBeShoved(soB)){
         if(soA->getName() == "player"){
             PlayerModel* player = (PlayerModel*) soA;
             if(!player->alreadyStopping()){
@@ -109,6 +111,12 @@ void CollisionController::beginContact(b2Contact* contact) {
 		ObjectModel* object = (ObjectModel*)soB;
 		object->setBroken();
 	}
+}
+
+// determines if a simple obstacle can be shoved by a player or enemy
+bool CollisionController::canBeShoved(SimpleObstacle* so) {
+	return (so->getName() == "player" || so->getName() == "enemy" 
+		|| so->getName() == "moveable" || so->getName() == "breakable");
 }
 
 /**

@@ -284,6 +284,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 				int objVal = objectsData[count];
 				
 				std::shared_ptr<EnemyModel> enemy;
+				std::shared_ptr<ObjectModel> object;
 
 				switch (objVal) {
 				case -1:
@@ -312,6 +313,27 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 
 					_world->addObstacle(enemy);
 					_enemies.push_back(enemy);
+					break;
+				case 4:
+					object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					object->setTextureKey(IMMOBILE_NAME);
+
+					object->setName(IMMOBILE_NAME);
+					object->setBodyType(b2_staticBody);
+
+					_world->addObstacle(object);
+					_objects.push_back(object);
+
+					break;
+				case 5:
+					object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					object->setTextureKey(MOVABLE_NAME);
+
+					object->setName(MOVABLE_NAME);
+					object->setBodyType(b2_dynamicBody);
+
+					_world->addObstacle(object);
+					_objects.push_back(object);
 					break;
 				default:
 					CUAssertLog(false, "Invalid object data.");
