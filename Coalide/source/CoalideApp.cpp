@@ -108,6 +108,10 @@ void CoalideApp::update(float timestep) {
 		_gameScene.update(timestep);
 	}
 
+	if (_input.leftKeyPressed()) {
+		//_gameScene.dispose();
+		//_gameScene.init(_assets, _input, "json/paulsmall.json");
+	}
 
 	if (_input.didSling()) {
 		// CULog("SLANG");
