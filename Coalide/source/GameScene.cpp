@@ -76,7 +76,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	createSceneGraph(dimen);
 
 	// initialize the camera
-	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 32. / 2.;
+	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
+	// cugl::Vec2 gameCenter = cugl::Vec2(_gamestate->getBounds().size.getIWidth() / 2., _gamestate->getBounds().size.getIHeight() / 2.);
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	getCamera()->translate(gameCenter - cameraPos);
 	return true;
@@ -303,7 +304,8 @@ void GameScene::update(float dt) {
 	float cameraTransX;
 	float cameraTransY;
 	
-	cugl::Vec2 gameBound = _gamestate->getBounds().size;
+	//cugl::Vec2 gameBound = cugl::Vec2(_gamestate->getBounds().size.getIWidth(), _gamestate->getBounds().size.getIHeight());
+	cugl::Vec2 gameBound = _gamestate->getBounds().size * 64;
 	float xMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
 	float yMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
 	
@@ -314,26 +316,31 @@ void GameScene::update(float dt) {
 	cameraTransY = playerPos.y - cameraPos.y;
 
 	// smooth pan
+	CULog("game bound: (%f, %f)", gameBound.x, gameBound.y);
+	CULog("boundTop: (%f, %f)", boundTop.x, boundTop.y);
 
-//    if (std::abs(cameraTransX) > 5) {
-//        cameraTransX *= .01;
-//    }
-//
-//    if (std::abs(cameraTransY) > 5) {
-//        cameraTransY *= .01;
-//    }
-//
-//    if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
-//        cameraTransX = 0;
-//    }
-//    
-//    if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
-//        cameraTransY = 0;
-//    }
+
+    if (std::abs(cameraTransX) > 5) {
+        cameraTransX *= .05;
+    }
+
+    if (std::abs(cameraTransY) > 5) {
+        cameraTransY *= .05;
+    }
+
+    if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
+        cameraTransX = 0;
+    }
     
-    CULog("\nGame Bounds: %s\nCamera Position: %s\nCamera Trans X: %f\nCamera Trans Y: %f", gameBound.toString().c_str(), cameraPos.toString().c_str(), cameraTransX, cameraTransY);
+    if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
+        cameraTransY = 0;
+    }
+    
+    //CULog("\nGame Bounds: %s\nCamera Position: %s\nCamera Trans X: %f\nCamera Trans Y: %f", gameBound.toString().c_str(), cameraPos.toString().c_str(), cameraTransX, cameraTransY);
     
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
+
+	//player->getNode()->getScene()->getCamera()->
 }
 
 void GameScene::updateFriction() {
