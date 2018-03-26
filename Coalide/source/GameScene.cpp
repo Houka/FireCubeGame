@@ -379,10 +379,10 @@ void GameScene::updateFriction() {
                     enemy->setFriction(friction);
                 }
             }
-            else {
-                enemy->setFriction(0);
-                enemy->setCharging(false);
-            }
+        }
+        else {
+            enemy->setFriction(0);
+            enemy->setCharging(false);
         }
         
         // Caps enemy speed to MAX_PLAYER SPEED
