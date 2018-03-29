@@ -36,9 +36,8 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		setFixedRotation(true);
 
 		_stunned = false;
+        _stunOnStop = false;
 		_onFire = false;
-
-		_stunTimer = 0;
 
 		return true;
 	}
@@ -65,20 +64,11 @@ bool PlayerModel::canSling(){
 }
 
 /**
- * Increments the stun timer and returns true if the character has finished being stunned.
- */
-void PlayerModel::stillStunned() {
-	_stunTimer++;
-	_stunned = _stunTimer != STUN_TIME;
-}
-
-/**
 * Returns true if player is in bounds
 **/
 bool PlayerModel::inBounds(int width, int height){
     b2Vec2 position = _body->GetPosition();
-    CULog("Player Size: %s", _sizePlayer.toString().c_str());
-    return ((position.x) > 0 && (position.y) > 0 && position.x < width && position.y < height);
+    return (position.x > 0 && (position.y-0.35) > 0 && position.x < width && (position.y-0.35) < height);
 }
 
 /**
@@ -117,7 +107,10 @@ void PlayerModel::update(float dt) {
 	if (_node != nullptr) {
 		_node->setPosition(getPosition()*_drawscale);
 		_node->setAngle(getAngle());
-        if(!canSling()){
+        if(_stunned){
+            _node->setColor(Color4::GREEN);
+        }
+        else if(!canSling()){
             _node->setColor(Color4::RED);
         } else {
             _node->setColor(_color);
@@ -126,5 +119,13 @@ void PlayerModel::update(float dt) {
     if(_shouldStopSoon && Timestamp().ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
         _shouldStopSoon = false;
         _body->SetLinearVelocity(b2Vec2(0,0));
+    }
+    if(_stunOnStop && getLinearVelocity().length() <= MAX_SPEED_FOR_SLING){
+        _stunOnStop = false;
+        _stunned = true;
+        _stunTimeout.mark();
+    }
+    if(_stunned && Timestamp().ellapsedMillis(_stunTimeout) >= _stunDuration){
+        _stunned = false;
     }
 }

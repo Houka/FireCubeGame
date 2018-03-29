@@ -33,6 +33,9 @@ protected:
 
 	/** Whether or not we have finished loading all assets */
 	bool _loaded;
+    
+    int _levelCt = 0;
+    int _numLevels = 3;
 
     /** 
      * Activates the correct scene.

@@ -50,5 +50,8 @@ public:
 	void beforeSolve(b2Contact* contact, const b2Manifold* oldManifold);
 
 	void endContact(b2Contact* contact);
+
+	// determines if simple obstacle can be shoved by a player or enemy
+	bool canBeShoved(SimpleObstacle* so);
 };
 #endif /* __COLLISION_CONTROLLER_H__ */

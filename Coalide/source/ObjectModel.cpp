@@ -25,6 +25,7 @@ using namespace cugl;
 */
 bool ObjectModel::init(const Vec2 & pos, const Size & size) {
 	if (CapsuleObstacle::init(pos, size)) {
+		// defaults
 		setName(INANIMATE_NAME);
 		setBodyType(b2_staticBody);
 

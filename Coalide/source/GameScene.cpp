@@ -12,10 +12,6 @@
 
 using namespace cugl;
 
-#define SLOW_MOTION .00001
-#define NORMAL_MOTION .015
-#define MAX_PLAYER_SPEED 20
-
 #pragma mark -
 #pragma mark Constructors
 /**
@@ -77,7 +73,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
-	// cugl::Vec2 gameCenter = cugl::Vec2(_gamestate->getBounds().size.getIWidth() / 2., _gamestate->getBounds().size.getIHeight() / 2.);
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	getCamera()->translate(gameCenter - cameraPos);
 	return true;
@@ -204,12 +199,12 @@ void GameScene::update(float dt) {
 	_input.update(dt);
 
 	if (_gameover || _input.didReset()) {
-		reset();
+		reset(LEVEL_FILE);
 		return;
 	}
 
 	if (_complete) {
-		reset();
+		reset(LEVEL_FILE);
 		//_winnode->setVisible(true);
 		return;
 	}
@@ -231,40 +226,41 @@ void GameScene::update(float dt) {
     //CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d \nPlayer Speed: %f", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()), player->getLinearVelocity().length());
 
 
-    if (player->isStunned()) {
-        player->stillStunned();
-    }
-    else {
-        // Touch input for sling is in pogress and sets the time slowing mechanic
-        if(_input.didStartSling() && player->canSling() &&
-           std::abs(world->getStepsize() - NORMAL_MOTION) < SLOW_MOTION){
-            world->setStepsize(SLOW_MOTION);
-            player->setColor(Color4::ORANGE);
-            // update the aim arrow
-            player->updateArrow(_input.getCurrentAim(), true);
-        } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
-            world->setStepsize(NORMAL_MOTION);
-            player->setColor(Color4::WHITE);
-        }
 
-        // Applies vector from touch input to player and set to charging state
-        if(_input.didSling(true) && player->canSling()){
-            cugl::Vec2 sling = _input.getLatestSlingVector();
-            player->applyLinearImpulse(sling);
-            player->setCharging(true);
-            player->updateArrow(false);
-        }
+    // Touch input for sling is in pogress and sets the time slowing mechanic
+    if(_input.didStartSling() && !player->isStunned()){
+		//CULog("CURRENT STEP SIZE: %f", std::abs(world->getStepsize() - NORMAL_MOTION));
+		//CULog("SLOW DOWN");
+        world->setStepsize(SLOW_MOTION);
+        player->setColor(Color4::ORANGE);
+        // update the aim arrow
+        player->updateArrow(_input.getCurrentAim(), true);
+    } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
+		//CULog("SPEED UP");
+        world->setStepsize(NORMAL_MOTION);
+        player->setColor(Color4::WHITE);
+    }
+
+    // Applies vector from touch input to player and set to charging state
+    if(_input.didSling(true) && player->canSling() && !player->isStunned()){
+        cugl::Vec2 sling = _input.getLatestSlingVector();
+        player->applyLinearImpulse(sling);
+        player->setCharging(true);
+        player->updateArrow(false);
+    }
+
+    // Caps player speed to MAX_PLAYER SPEED
+    if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
+        Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
+        player->setLinearVelocity(capped_speed);
+    }
+    // Changes player state from charging if below speed threshold
+    if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
+        player->setCharging(false);
+    }
     
-        // Caps player speed to MAX_PLAYER SPEED
-        if(player->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
-            Vec2 capped_speed = player->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
-            player->setLinearVelocity(capped_speed);
-        }
-    
-        // Changes player state from charging if below speed threshold
-        if(player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
-            player->setCharging(false);
-        }
+    if(!player->canSling()) {
+        player->updateArrow(false);
     }
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state
@@ -316,10 +312,6 @@ void GameScene::update(float dt) {
 	cameraTransY = playerPos.y - cameraPos.y;
 
 	// smooth pan
-	CULog("game bound: (%f, %f)", gameBound.x, gameBound.y);
-	CULog("boundTop: (%f, %f)", boundTop.x, boundTop.y);
-
-
     if (std::abs(cameraTransX) > 5) {
         cameraTransX *= .05;
     }
@@ -335,12 +327,8 @@ void GameScene::update(float dt) {
     if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
         cameraTransY = 0;
     }
-    
-    //CULog("\nGame Bounds: %s\nCamera Position: %s\nCamera Trans X: %f\nCamera Trans Y: %f", gameBound.toString().c_str(), cameraPos.toString().c_str(), cameraTransX, cameraTransY);
-    
+        
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
-
-	//player->getNode()->getScene()->getCamera()->
 }
 
 void GameScene::updateFriction() {
@@ -353,7 +341,7 @@ void GameScene::updateFriction() {
 	if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
 		if (!player->getCharging()) {
 			player->switchStandingNode();
-			float friction = _gamestate->getBoard()[(int)floor(player_pos.y- 0.25)][(int)floor(player_pos.x)];
+			float friction = _gamestate->getBoard()[(int)floor(player_pos.y - 0.35)][(int)floor(player_pos.x)];
 			if (friction == 0) {
 				_gameover = true;
 			}
@@ -389,6 +377,10 @@ void GameScene::updateFriction() {
 			else if (enemy->getFriction() > .1f) {
 				enemy->setFriction(0);
 			}
+        }
+        else {
+            enemy->setFriction(0);
+            enemy->setCharging(false);
         }
         
         // Caps enemy speed to MAX_PLAYER SPEED
@@ -450,16 +442,21 @@ void GameScene::removeObject(ObjectModel* object) {
 * Resets the status of the game so that we can play again.
 *
 */
-void GameScene::reset() {
+void GameScene::reset(const std::string& file) {
 	// Unload the level but keep in memory temporarily
 	_assets->unload<LevelController>(_levelKey);
 
 	// Load a new level and quit update
 	//_loadnode->setVisible(true);
 	_reloading = true;
-	_assets->load<LevelController>(_levelKey, LEVEL_FILE);
+	_assets->load<LevelController>(_levelKey, file);
 	setComplete(false);
 	_gameover = false;
+    
+    // initialize the camera
+    cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
+    cugl::Vec2 cameraPos = getCamera()->getPosition();
+    getCamera()->translate(gameCenter - cameraPos);
 	
 	return;
 }

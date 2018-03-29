@@ -21,6 +21,12 @@
     },
     "tileset_water.png": {
       "file": "textures/tileset_water.png"
+    },
+    "immobile": {
+      "file": "textures/spritesheet_stone.png"
+    },
+    "movable": {
+      "file": "textures/spritesheet_crate.png"
     }
   },
 	"fonts": {

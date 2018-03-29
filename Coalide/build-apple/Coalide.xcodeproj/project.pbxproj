@@ -18,6 +18,7 @@
 		0833979320573ABF005EA329 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978720573ABF005EA329 /* GameState.cpp */; };
 		0833979420573ABF005EA329 /* LoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978920573ABF005EA329 /* LoadingScene.cpp */; };
 		0833979520573ABF005EA329 /* PlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833978A20573ABF005EA329 /* PlayerModel.cpp */; };
+		0858822F2068BC9800F2E4B9 /* ObjectModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0858822E2068BC9800F2E4B9 /* ObjectModel.cpp */; };
 		085EBAED2057874300F6FAD2 /* AIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977620573ABE005EA329 /* AIController.cpp */; };
 		085EBAEE2057874300F6FAD2 /* AIController.h in Sources */ = {isa = PBXBuildFile; fileRef = 0833977F20573ABE005EA329 /* AIController.h */; };
 		085EBAEF2057874300F6FAD2 /* CoalideApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0833977C20573ABE005EA329 /* CoalideApp.cpp */; };
@@ -178,6 +179,8 @@
 		0833978820573ABF005EA329 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		0833978920573ABF005EA329 /* LoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LoadingScene.cpp; sourceTree = "<group>"; };
 		0833978A20573ABF005EA329 /* PlayerModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerModel.cpp; sourceTree = "<group>"; };
+		0858822A2068BC9800F2E4B9 /* ObjectModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectModel.h; sourceTree = "<group>"; };
+		0858822E2068BC9800F2E4B9 /* ObjectModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectModel.cpp; sourceTree = "<group>"; };
 		EB0FF5082016E4A700517030 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		EB0FF5352016E83500517030 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		EB0FF5392016E83500517030 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
@@ -402,6 +405,8 @@
 		EBBF18B11D749176008E2001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				0858822E2068BC9800F2E4B9 /* ObjectModel.cpp */,
+				0858822A2068BC9800F2E4B9 /* ObjectModel.h */,
 				0833977620573ABE005EA329 /* AIController.cpp */,
 				0833977F20573ABE005EA329 /* AIController.h */,
 				0833977C20573ABE005EA329 /* CoalideApp.cpp */,
@@ -673,6 +678,7 @@
 				0833978E20573ABF005EA329 /* LevelController.cpp in Sources */,
 				0833978C20573ABF005EA329 /* InputController.cpp in Sources */,
 				0833978B20573ABF005EA329 /* AIController.cpp in Sources */,
+				0858822F2068BC9800F2E4B9 /* ObjectModel.cpp in Sources */,
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
 				0833978F20573ABF005EA329 /* GameScene.cpp in Sources */,
 				0833979420573ABF005EA329 /* LoadingScene.cpp in Sources */,

@@ -17,6 +17,32 @@ bool AIController::init() {
 
 void AIController::dispose() { }
 
+bool intersectsWater(Vec2 start, Vec2 end, GameState* _gamestate){
+    int h = _gamestate->getBounds().size.getIHeight();
+    int w = _gamestate->getBounds().size.getIWidth();
+    float dx = (end.x - start.x) / 20;
+    float dy = (end.y - start.y) / 20;
+    float locx = start.x;
+    int ct = 0;
+    while(locx < w && locx > 0 && ((locx > (end.x + dx) && dx < 0) || (locx < (end.x - dx) && dx > 0))){
+        ct++;
+        locx += dx;
+        float locy = start.y;
+        while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
+            locy += dy;
+            int friction = _gamestate->getBoard()[(int)floor(locy)][(int)floor(locx)];
+            if(friction == 0){
+//                CULog("WATER");
+                return true;
+            }
+//            CULog("inner Loop");
+
+        }
+//        CULog("outer Loop %d", ct);
+    }
+    return false;
+}
+
 /**
  * Go through each enemy in the level and if that enemy can move, return a corresponding
  * vector of "input" for each enemy. This logic simply aims at the player.
@@ -31,10 +57,11 @@ std::vector<std::tuple<EnemyModel*, Vec2>> AIController::getEnemyMoves(std::shar
     Vec2 player_pos = ((PlayerModel*)(g->getPlayer().get()))->getPosition();
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
         EnemyModel* enemy = enemy_ptr.get();
-        if(!enemy->isRemoved() && enemy->canSling() && enemy->timeoutElapsed()){
+        if(!enemy->isRemoved() && !enemy->isStunned() && enemy->canSling()){
             Vec2 enemy_pos = enemy->getPosition();
             Vec2 aim = player_pos - enemy_pos;
-            aim = aim.normalize()*1.25;
+            
+			/*aim = aim.normalize()*1.25;
 			Vec2 projectedLanding1 = enemy_pos + aim*.8;
 			Vec2 projectedLanding2;
 			Vec2 projectedLanding3;
@@ -51,7 +78,16 @@ std::vector<std::tuple<EnemyModel*, Vec2>> AIController::getEnemyMoves(std::shar
 			std::shared_ptr<TileModel> tile3 = g->getTileBoard()[(int)projectedLanding3.y][(int)projectedLanding3.x];
 			if (!(tile1->isWater() || tile2->isWater() || tile3->isWater())) {
 				moves.push_back(std::make_tuple(enemy, aim));
-			}
+			}*/
+
+            aim = aim.normalize();
+            if(intersectsWater(enemy_pos, player_pos, g)){
+                enemy->setWaterBetween(true);
+                continue;
+            }
+            enemy->setWaterBetween(false);
+            if(enemy->timeoutElapsed())
+                moves.push_back(std::make_tuple(enemy, aim));
         }
     }
     return moves;

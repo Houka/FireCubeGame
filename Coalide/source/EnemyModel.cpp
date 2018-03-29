@@ -82,9 +82,8 @@ bool EnemyModel::inBounds(int width, int height){
  * Returns true if the enough time has elapsed since the last sling
  */
 bool EnemyModel::timeoutElapsed(){
-    //wait between 4 and 5 seconds
+    //wait between 2 and 5 seconds
     return Timestamp().ellapsedMillis(_previousTime) >= (SLING_TIMEOUT - _rndTimerReduction);
-	//return Timestamp().ellapsedMillis(_previousTime) >= (SLING_TIMEOUT);
 }
 
 /**
@@ -99,13 +98,23 @@ void EnemyModel::update(float dt) {
 		_node->setPosition(getPosition()*_drawscale);
 		_node->setAngle(getAngle());
 	}
-    if(!canSling()){
+    auto ts = Timestamp();
+    if(_stunned){
+        _node->setColor(Color4::GREEN);
+        if(ts.ellapsedMillis(_stunTimeout) >= _stunDuration) {
+            setStunned(false);
+        }
+    }
+    else if(!canSling()){
         _node->setColor(Color4::RED);
     } else {
         _node->setColor(Color4::WHITE);
     }
-    if(_shouldStopSoon && Timestamp().ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
+    if(_shouldStopSoon && ts.ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
         _shouldStopSoon = false;
         _body->SetLinearVelocity(b2Vec2(0,0));
+    }
+    if(_waterInbetween && ts.ellapsedMillis(_noLineOfSiteTimeout) >= 2000){
+        _previousTime.mark();
     }
 }

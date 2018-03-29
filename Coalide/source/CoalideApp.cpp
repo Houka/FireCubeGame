@@ -30,7 +30,7 @@ void CoalideApp::onStartup() {
 #else
 	Input::activate<Mouse>();
 #endif
-
+	Input::activate<Keyboard>();
     // Create a sprite batch (and background color) to render the scene
     _batch = SpriteBatch::alloc();
     setClearColor(Color4(229,229,229,255));
@@ -96,6 +96,7 @@ void CoalideApp::onShutdown() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void CoalideApp::update(float timestep) {
+    std::string levelNames[5] = {"json/demo/enemy_no_water.json", "json/demo/map.json", "json/demo/island_all_enemies.json", "json/demo/3.json", "json/demo/enemy_water.json"};
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
 	}
@@ -105,8 +106,24 @@ void CoalideApp::update(float timestep) {
 		_loaded = true;
 	}
 	else {
-		_gameScene.update(timestep);
+		_input.update(timestep);
+		if ((_input.leftKeyPressed())) {
+			//CULog("Pressed left");
+			_gameScene.reset(levelNames[_levelCt]);
+            _levelCt = (_levelCt+1)%5;
+		}
+        _gameScene.update(timestep);
 	}
+//    {
+//
+//        //_gameScene.reset("json/paulsmall.json");
+//        //_gameScene.init(_assets, _input, "json/paulsmall.json");
+//    }
+
+//    if (_input.didSling()) {
+//        // CULog("SLANG");
+//        //_gameScene.init(_assets, _input, "json/paulsmall.json");
+//    }
 }
 
 /**

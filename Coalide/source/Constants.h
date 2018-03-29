@@ -78,9 +78,15 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define LEVEL_FILE   "json/map5.json"
+#define LEVEL_FILE   "json/demo/enemy_water.json"
 /** The key for our loaded level */
 #define LEVEL_KEY    "level"
+
+/** Time slowdown rates */
+#define NORMAL_MOTION .015
+#define SLOW_MOTION .002
+
+#define MAX_PLAYER_SPEED 20
 
 #pragma mark -
 #pragma mark Object Types

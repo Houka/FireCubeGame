@@ -28,6 +28,7 @@ bool InputController::init() {
 	_resetPressed = false;
 	_exitPressed = false;
     bool success = true;
+	_mousepan = false;
 
 	Size dimen = Application::get()->getDisplaySize();
 
@@ -52,6 +53,7 @@ bool InputController::init() {
     mouse->addMotionListener(LISTENER_KEY, [=](const cugl::MouseEvent& event, const cugl::Vec2& previous, bool focus) {
         this->mouseMovedCB(event, previous, focus);
     });
+	
 #else
     success = Input::activate<Accelerometer>();
     Touchscreen* touch = Input::get<Touchscreen>();
@@ -61,7 +63,7 @@ bool InputController::init() {
     touch->addEndListener(LISTENER_KEY,[=](const cugl::TouchEvent& event, bool focus) {
         this->touchEndedCB(event,focus);
     });
-	touch->addMotionListener(LISTENER_KEY, [=](const cugl::TouchEvent& event, bool focus) {
+	touch->addMotionListener(LISTENER_KEY, [=](const cugl::TouchEvent event, const Vec2& previous, bool focus) {
 		this->touchMotionCB(event, focus);
 	});
 #endif
@@ -106,7 +108,14 @@ void InputController::dispose() {
 * the OS, we may see multiple updates of the same touch in a single animation
 * frame, so we need to accumulate all of the data together.
 */
-void InputController::update(float dt) {}
+void InputController::update(float dt) {
+    
+    Keyboard* keys = Input::get<Keyboard>();
+    
+    // Map "keyboard" events to the current frame boundary
+    _left  = keys->keyPressed(KeyCode::ARROW_LEFT);
+    _right = keys->keyPressed(KeyCode::ARROW_RIGHT);
+}
 
 /**
 * Clears any buffered inputs so that we may start fresh.
@@ -241,3 +250,4 @@ void InputController::mouseMovedCB(const cugl::MouseEvent& event, const Vec2& pr
         _currentTouch = event.position;
     }
 }
+

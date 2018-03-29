@@ -41,10 +41,43 @@ void CollisionController::beginContact(b2Contact* contact) {
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
     SimpleObstacle* soA = (SimpleObstacle*)(bodyA->GetUserData());
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
+    
+    if(soA->getName() == "player" && soB->getName()=="enemy"){
+        PlayerModel* player = (PlayerModel*) soA;
+        EnemyModel* enemy = (EnemyModel*) soB;
+        if(enemy->getTextureKey() == ONION && !enemy->isStunned()){
+            player->stunOnStop(3000);
+            if(!enemy->alreadyStopping() &&
+               enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
+                enemy->setShouldStop();
+        }
+    }
+    if(soB->getName() == "player" && soA->getName()=="enemy"){
+        PlayerModel* player = (PlayerModel*) soB;
+        EnemyModel* enemy = (EnemyModel*) soA;
+        if(enemy->getTextureKey() == ONION && !enemy->isStunned()){
+            player->stunOnStop(3000);
+            if(!enemy->alreadyStopping() &&
+               enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
+                enemy->setShouldStop();
+        }
+    }
+    if(soA->getName()=="enemy" && soB->getName() != "player"){
+        EnemyModel* enemy = (EnemyModel*) soA;
+        if(enemy->getTextureKey()==ONION){
+            enemy->stunEnemy(3000);
+        }
+    }
+    if(soB->getName()=="enemy" && soA->getName() != "player"){
+        EnemyModel* enemy = (EnemyModel*) soB;
+        if(enemy->getTextureKey()==ONION){
+            enemy->stunEnemy(3000);
+        }
+    }
 	
-    if(soA->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)){
+	// player or enemy shoves something stationary
+    if(soA->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF) && canBeShoved(soA)){
         if(soB->getName() == "player"){
-            CULog("should be stopping");
             PlayerModel* player = (PlayerModel*) soB;
             if(!player->alreadyStopping())
                 player->setShouldStop();
@@ -54,11 +87,14 @@ void CollisionController::beginContact(b2Contact* contact) {
                 enemy->setShouldStop();
         }
     }
-    if(soB->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)){
+
+
+    if(soB->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF) && canBeShoved(soB)){
         if(soA->getName() == "player"){
             PlayerModel* player = (PlayerModel*) soA;
-            if(!player->alreadyStopping())
+            if(!player->alreadyStopping()){
                 player->setShouldStop();
+            }
         } else if(soA->getName() == "enemy") {
             EnemyModel* enemy = (EnemyModel*) soA;
             if(!enemy->alreadyStopping())
@@ -75,6 +111,12 @@ void CollisionController::beginContact(b2Contact* contact) {
 		ObjectModel* object = (ObjectModel*)soB;
 		object->setBroken();
 	}
+}
+
+// determines if a simple obstacle can be shoved by a player or enemy
+bool CollisionController::canBeShoved(SimpleObstacle* so) {
+	return (so->getName() == "player" || so->getName() == "enemy" 
+		|| so->getName() == "moveable" || so->getName() == "breakable");
 }
 
 /**
