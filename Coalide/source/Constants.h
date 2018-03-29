@@ -12,7 +12,7 @@
 #define FONT_COLOR Color4::BLUE
 
 /** This is adjusted by screen aspect ratio to get the height */
-#define GAME_WIDTH 1280
+#define GAME_WIDTH 1024
 
 #define CATEGORY_TERRAIN 0x0001
 
