@@ -46,6 +46,7 @@ Black boxes with white numbers inside can be edited.
     - hit enter
 
 Press p to make the json (file output is output.json)
+Press l to load a json (file must be called input.json)
 
 Right click to delete things on the grid
 

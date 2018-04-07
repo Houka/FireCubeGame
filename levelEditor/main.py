@@ -152,15 +152,132 @@ for i in range(100):
 # temp string to hold input player types
 typedinput = ""
 
+def classifyFloor(textureID):
+    if textureID == 0:
+        return "empty"
+    if textureID == 132:
+        return "dirt"
+    if textureID == 139:
+        return "ice"
+    if textureID == 145:
+        return "sand"
+
+def loadFromJson():
+    global terrain
+    global background
+    global objects
+    global numR
+    global numC
+    data = json.load(open('input.json'))
+    numR = data['levelInfo']['rows']
+    numC = data['levelInfo']['cols']
+    terrain = {}
+    background = {}
+    objects = {}
+    for i in range(100):
+        terrain[i] = {}
+        background[i] = {}
+        objects[i] = {}
+        for j in range(100):
+            terrain[i][j] = Terrain("empty")
+            background[i][j] = Terrain("water")
+            objects[i][j] = Object("empty")
+    
+    for r in range(numR):
+        for c in range(numC):
+            background[r][c].setTexture(data['background']['textures'][r][c])
+            floorType = classifyFloor(data['terrain']['textures'][r][c])
+            tmp = Terrain(floorType)
+            tmp.texture = data['terrain']['textures'][r][c]
+            tmp.zone = set(data['terrain']['zones'][r][c])
+            terrain[r][c] = tmp
+
+    #player
+    p = data['objects']['player']
+    if p != {}:
+        tmp = Object('player')
+        tmp.mass = p['mass']
+        tmp.impulse = p['impulse']
+        objects[p['row']][p['col']] = tmp
+
+    for r in data['objects']['rocks']:
+        tmp = Object('rock')
+        objects[r['row']][r['col']] = tmp
+
+    for c in data['objects']['crates']:
+        tmp = Object('crate')
+        tmp.mass = c['mass']
+        objects[c['row']][c['col']] = tmp
+
+    for a in data['objects']['acorns']:
+        tmp = Object('acorn')
+        tmp.mass = a['mass']
+        tmp.aggroZone = a['aggroZone']
+        tmp.aggroRadius = a['aggroRadius']
+        tmp.patrolZone = a['patrolZone']
+        tmp.cooldown = a['dashCooldown']
+        tmp.impulse = a['impulse']
+        objects[a['row']][a['col']] = tmp
+    
+    for o in data['objects']['onions']:
+        tmp = Object('onion')
+        tmp.mass = o['mass']
+        tmp.aggroZone = o['aggroZone']
+        tmp.aggroRadius = o['aggroRadius']
+        tmp.patrolZone = o['patrolZone']
+        tmp.cooldown = o['dashCooldown']
+        tmp.impulse = o['impulse']
+        tmp.selfStunDur = o['selfStunDur']
+        tmp.playerStunDur = o['playerStunDur']
+        objects[o['row']][o['col']] = tmp
+
+    for r in data['objects']['rams']:
+        tmp = Object('ram')
+        tmp.mass = r['mass']
+        tmp.aggroZone = r['aggroZone']
+        tmp.aggroRadius = r['aggroRadius']
+        tmp.patrolZone = r['patrolZone']
+        tmp.cooldown = r['dashCooldown']
+        tmp.impulse = r['impulse']
+        tmp.playerStunDur = r['playerStunDur']
+        objects[r['row']][r['col']] = tmp
+
+    for m in data['objects']['mushrooms']:
+        tmp = Object('mushroom')
+        tmp.mass = m['mass']
+        tmp.aggroZone = m['aggroZone']
+        tmp.aggroRadius = m['aggroRadius']
+        tmp.spawnMass = m['spawnMass']
+        tmp.cooldown = m['spawnDashCooldown']
+        tmp.impulse = m['spawnImpulse']
+        objects[m['row']][m['col']] = tmp
+
+    placingElement = ""
+    setRow = False
+    setCol = False
+    setZone = False
+    setAggroZone = False
+    setPatrolZone = False
+    setAggroRadius = False
+    setMass = False
+    setCooldown = False
+    setImpulse = False
+    setSpawnRate = False
+    setPlayerStunDur = False
+    setSelfStunDur = False
+    setSpawnMass = False
+    typedinput = ""
+    terrainDetails = (-1, -1)
+
 def makeJson():
     global terrain
     global background
     global objects
     global numR
     global numC
-    backgroundTextures = [[0 for x in range(numR)] for y in range(numC)] 
-    terrainTextures = [[0 for x in range(numR)] for y in range(numC)] 
-    terrainZones = [[set() for x in range(numR)] for y in range(numC)] 
+    backgroundTextures = [[0 for x in range(numC)] for y in range(numR)] 
+    terrainTextures = [[0 for x in range(numC)] for y in range(numR)] 
+    terrainZones = [[set() for x in range(numC)] for y in range(numR)] 
     crates = []
     rocks = []
     acorns = []
@@ -239,7 +356,7 @@ def makeJson():
                 playerInfo["mass"] = obj.mass
                 playerInfo["impulse"] = obj.impulse
     levelJson = {
-        "level info": {
+        "levelInfo": {
             "rows": numR,
             "cols": numC
         },
@@ -637,6 +754,8 @@ while True:
                 inputFinished()
             if event.key == pg.K_p:
                 makeJson()
+            if event.key == pg.K_l:
+                loadFromJson()
 
             # Update.
     boxwidth = min((width - (leftOffset + rightOffset)) / numC,
