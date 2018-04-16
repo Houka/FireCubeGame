@@ -132,7 +132,8 @@ void GameScene::createSceneGraph(Size dimen) {
 	_rootnode->setContentSize(dimen);
 
 	// This root node becomes the physics world root node, all physics objects are added to this node
-	_gamestate->setRootNode(_rootnode, _assets);
+	_gamestate->setAssets(_assets);
+	_gamestate->setRootNode(_rootnode);
 }
 
 
@@ -265,9 +266,9 @@ void GameScene::update(float dt) {
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state
     if(_enemyCount != 0) {
-        std::vector<std::tuple<EnemyModel*, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
-        for(std::tuple<EnemyModel*, Vec2> pair : enemiesToMove){
-            EnemyModel* enemy = std::get<0>(pair);
+        std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
+        for(std::tuple<std::shared_ptr<EnemyModel>, Vec2> pair : enemiesToMove){
+			std::shared_ptr<EnemyModel> enemy = std::get<0>(pair);
             Vec2 sling = std::get<1>(pair);
             enemy->applyLinearImpulse(sling);
             enemy->setCharging(true);
@@ -364,7 +365,7 @@ void GameScene::updateFriction() {
 	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
 		EnemyModel* enemy = _gamestate->getEnemies()[i].get();
 		Vec2 enemy_pos = enemy->getPosition();
-		if (enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
+		if (!enemy->isSpore() && enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
             if(!enemy->getCharging()) {
                 if(friction == 0) {
@@ -378,9 +379,8 @@ void GameScene::updateFriction() {
 				enemy->setFriction(0);
 			}
         }
-        else {
-            enemy->setFriction(0);
-            enemy->setCharging(false);
+        else if (!enemy->isSpore()) {
+			removeEnemy(enemy);
         }
         
         // Caps enemy speed to MAX_PLAYER SPEED

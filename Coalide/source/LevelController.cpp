@@ -307,6 +307,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 				case 2:
 					enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					enemy->setTextureKey(MUSHROOM);
+					enemy->setMushroom();
 
 					_world->addObstacle(enemy);
 					_enemies.push_back(enemy);
@@ -422,6 +423,7 @@ void LevelController::buildGameState() {
 	_gamestate->setBoard(_board);
 	_gamestate->setTileBoard(_tileBoard);
 	_gamestate->setDrawScale(_scale);
+	_gamestate->setAssets(_assets);
 
 	_levelBuilt = true;
 }

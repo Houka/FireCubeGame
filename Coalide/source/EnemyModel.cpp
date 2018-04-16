@@ -9,7 +9,7 @@
 
 #define MAX_SPEED_FOR_SLING 2
 #define IMPULSE_SCALE 8
-#define SLING_TIMEOUT 4000
+#define SLING_TIMEOUT 2000
 #define COLLISION_TIMEOUT 0
 
 using namespace cugl;
@@ -38,10 +38,16 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_stunned = false;
 		_onFire = false;
 
+		_wandering = true;
+		_targeting = false;
+
+		_mushroom = false;
+		_spore = false;
+
 		_previousTime = Timestamp();
         unsigned int rnd_seed = (unsigned int) (100 * pos.x + pos.y);
         std::srand(rnd_seed);
-		_rndTimerReduction = std::rand() % 3000;
+		_rndTimerReduction = std::rand() % 1000;
 
 		return true;
 	}
@@ -59,7 +65,7 @@ void EnemyModel::dispose() {
  */
 void EnemyModel::applyLinearImpulse(Vec2& impulse) {
     _previousTime.mark();
-    _rndTimerReduction = std::rand() % 3000;
+    _rndTimerReduction = std::rand() % 1000;
     _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * b2Vec2(impulse.x,impulse.y), true);
 }
 

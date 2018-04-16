@@ -51,6 +51,12 @@ protected:
 	bool _stunned;
 	bool _onFire;
 
+	bool _wandering;
+	bool _targeting;
+	
+	bool _mushroom;
+	bool _spore;
+
 public:
 #pragma mark Constructors
 	/**
@@ -164,6 +170,22 @@ public:
      * @param bool for if charging .
      */
     bool getCharging() { return _charging; }
+
+	bool isTargeting() { return _targeting; }
+
+	void setTargeting() { _targeting = true; _wandering = false; }
+
+	bool isWandering() { return _wandering; }
+
+	void setWandering() { _wandering = true; _targeting = false; }
+
+	bool isMushroom() { return _mushroom; }
+
+	void setMushroom() { _mushroom = true; }
+
+	bool isSpore() { return _spore; }
+
+	void setSpore() { _spore = true; }
 
 	/**
 	* Returns the scene graph node representing this enemy.

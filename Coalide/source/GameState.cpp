@@ -47,7 +47,7 @@ void GameState::dispose() {
 * @retain  a reference to this scene graph node
 * @release the previous scene graph node used by this object
 */
-void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<AssetManager> assets) {
+void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	if (_rootnode != nullptr) {
 		clearRootNode();
 	}
@@ -72,7 +72,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 		for (auto it = _tiles.begin(); it != _tiles.end(); ++it) {
 			std::shared_ptr<TileModel> tile = *it;
 			double* tileSubtexture = tile->getSubTexture();
-			auto tileNode = PolygonNode::allocWithTexture(assets->get<Texture>(tile->getTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+			auto tileNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
 			tile->setNode(tileNode);
 			tile->setDrawScale(_scale.x);
 			tile->setDebugScene(_debugnode);
@@ -84,8 +84,8 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 	}
 
 	if (_player != nullptr) {
-		auto playerNode = PolygonNode::allocWithTexture(assets->get<Texture>(_player->getTextureKey()));
-		auto chargingPlayerNode = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging"));
+		auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()));
+		auto chargingPlayerNode = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging"));
 		_player->setNode(playerNode);
 		chargingPlayerNode->setVisible(false);
 		_player->setStandingNode(playerNode);
@@ -109,7 +109,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 	if (_enemies.size() > 0) {
 		for (auto it = _enemies.begin(); it != _enemies.end(); ++it) {
 			std::shared_ptr<EnemyModel> enemy = *it;
-			auto enemyNode = PolygonNode::allocWithTexture(assets->get<Texture>(enemy->getTextureKey()));
+			auto enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()));
 			enemy->setNode(enemyNode);
 			enemy->setDrawScale(_scale.x);
 			enemy->setDebugScene(_debugnode);
@@ -121,7 +121,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 	if (_objects.size() > 0) {
 		for (auto it = _objects.begin(); it != _objects.end(); ++it) {
 			std::shared_ptr<ObjectModel> object = *it;
-			auto objectNode = PolygonNode::allocWithTexture(assets->get<Texture>(object->getTextureKey()));
+			auto objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()));
 			object->setNode(objectNode);
 			object->setDrawScale(_scale.x);
 			object->setDebugScene(_debugnode);
@@ -129,6 +129,15 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 			_worldnode->addChild(objectNode, UNIT_PRIORITY);
 		}
 	}
+}
+
+void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {
+	auto sporeNode = PolygonNode::allocWithTexture(_assets->get<Texture>(spore->getTextureKey()));
+	spore->setNode(sporeNode);
+	spore->setDrawScale(_scale.x);
+	spore->setDebugScene(_debugnode);
+
+	_worldnode->addChild(sporeNode, UNIT_PRIORITY);
 }
 
 /**
