@@ -134,16 +134,42 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
     return false;
 }
 
-void shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameState> gamestate) {
-	std::shared_ptr<EnemyModel> spore = EnemyModel::alloc(pos+aim, UNIT_DIM/4);
+//std::vector<Vec2> AStar(Vec2 pos, Vec2 aim, Vec2 target, std::shared_ptr<GameState> gamestate) {
+//	float slingDist = aim.length();
+//	int step = 0;
+//
+//	for (int i = 0; i < slingDist; i++) {
+//		int x = pos.x + i;
+//		for (int j = 0; j < slingDist; j++) {
+//			int y = pos.y + j;
+//			if (pos.distance(Vec2(x, y)) < slingDist) {
+//				float h = pos.distance(Vec2(x, y));
+//				float g = step;
+//			}
+//		}
+//	}
+//}
+
+std::shared_ptr<EnemyModel> shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameState> gamestate) {
+	std::shared_ptr<EnemyModel> spore = EnemyModel::alloc(pos, UNIT_DIM);
 	spore->setTextureKey(MUSHROOM);
 	spore->setSpore();
+	spore->setLinearDamping(0);
 
-	spore->setLinearVelocity(aim);
+	b2Filter filter;
+	filter.categoryBits = CATEGORY_SPORE;
+	filter.maskBits = CATEGORY_PLAYER;
+	filter.groupIndex = NULL;
+	spore->setFilterData(filter);
 
 	gamestate->addSporeNode(spore);
 	gamestate->getWorld()->addObstacle(spore);
-	gamestate->getEnemies().push_back(spore);
+
+	std::vector<std::shared_ptr<EnemyModel>> spores = gamestate->getSpores();
+	spores.push_back(spore);
+	gamestate->setSpores(spores);
+
+	return spore;
 }
 
 /**
@@ -152,11 +178,17 @@ void shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameState> gamestate) {
  *
  * For convenience the return type is a tuple of enemy and corresponding move
  */
-std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnemyMoves(std::shared_ptr<GameState> gamestate) const{
+std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnemyMoves(std::shared_ptr<GameState> gamestate) {
     std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> moves;
     std::vector<std::shared_ptr<EnemyModel>> enemies = gamestate->getEnemies();
     
-    Vec2 player_pos = ((PlayerModel*)(gamestate->getPlayer().get()))->getPosition();
+    Vec2 player_pos = gamestate->getPlayer()->getPosition();
+
+	for (int i = 0; i < _nextMoves.size(); i++) {
+		moves.push_back(_nextMoves[i]);
+	}
+	_nextMoves.clear();
+
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
         if(!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom()){
@@ -193,7 +225,7 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				moves.push_back(std::make_tuple(enemy, aim));
 			}*/
 
-            aim = aim.normalize()*1.25;
+            aim = aim.normalize()*1.5;
 
             if(intersectsWater(enemy_pos, player_pos, gamestate)){
                 enemy->setWaterBetween(true);
@@ -203,9 +235,14 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 			if (enemy->timeoutElapsed())
 				moves.push_back(std::make_tuple(enemy, aim));
         }
-		else if(!enemy->isRemoved() && !enemy->isStunned() && enemy->canSling() && enemy->isMushroom()) {
+		else if(enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {
 			if (enemy->timeoutElapsed()) {
-				shootSpore(enemy->getPosition(), player_pos - enemy->getPosition(), gamestate);
+				moves.push_back(std::make_tuple(enemy, Vec2(0,0)));
+				Vec2 aim = player_pos - enemy->getPosition();
+				aim.normalize();
+				std::shared_ptr<EnemyModel> spore = shootSpore(enemy->getPosition(), aim, gamestate);
+				std::tuple<std::shared_ptr<EnemyModel>, Vec2> nextMove = std::make_tuple(spore, aim);
+				_nextMoves.push_back(nextMove);
 			}
 		}
     }

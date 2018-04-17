@@ -42,39 +42,51 @@ void CollisionController::beginContact(b2Contact* contact) {
     SimpleObstacle* soA = (SimpleObstacle*)(bodyA->GetUserData());
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
     
-    if(soA->getName() == "player" && soB->getName()=="enemy"){
-        PlayerModel* player = (PlayerModel*) soA;
-        EnemyModel* enemy = (EnemyModel*) soB;
-        if(enemy->getTextureKey() == ONION && !enemy->isStunned()){
-            player->stunOnStop(3000);
-            if(!enemy->alreadyStopping() &&
-               enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
-                enemy->setShouldStop();
-        }
-    }
-    if(soB->getName() == "player" && soA->getName()=="enemy"){
-        PlayerModel* player = (PlayerModel*) soB;
-        EnemyModel* enemy = (EnemyModel*) soA;
-        if(enemy->getTextureKey() == ONION && !enemy->isStunned()){
-            player->stunOnStop(3000);
-            if(!enemy->alreadyStopping() &&
-               enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
-                enemy->setShouldStop();
-        }
-    }
-    if(soA->getName()=="enemy" && soB->getName() != "player"){
-        EnemyModel* enemy = (EnemyModel*) soA;
-        if(enemy->getTextureKey()==ONION){
-            enemy->stunEnemy(3000);
-        }
-    }
-    if(soB->getName()=="enemy" && soA->getName() != "player"){
-        EnemyModel* enemy = (EnemyModel*) soB;
-        if(enemy->getTextureKey()==ONION){
-            enemy->stunEnemy(3000);
-        }
-    }
-	
+	if (soA->getName() == "enemy") {
+		EnemyModel* enemy = (EnemyModel*)soA;
+
+		if (enemy->isSpore()) {
+			enemy->setDestroyed();
+		}
+
+		if (soB->getName() == "player") {
+			PlayerModel* player = (PlayerModel*)soB;	
+
+			if (enemy->isOnion() && !enemy->isStunned()) {
+				player->stunOnStop(4500);
+				if (!enemy->alreadyStopping() && enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
+					enemy->setShouldStop();
+			}
+		}
+
+		if (enemy->isOnion() && enemy->getCharging()) {
+			enemy->stunEnemy(4500);
+		}
+	}
+
+	else if (soB->getName() == "enemy") {
+		EnemyModel* enemy = (EnemyModel*)soB;
+
+		if (enemy->isSpore()) {
+			enemy->setDestroyed();
+		}
+
+		if (soB->getName() == "player") {
+			PlayerModel* player = (PlayerModel*)soA;
+
+			if (enemy->isOnion() && !enemy->isStunned()) {
+				player->stunOnStop(4500);
+				if (!enemy->alreadyStopping() &&
+					enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
+					enemy->setShouldStop();
+			}
+		}
+
+		if (enemy->isOnion() && enemy->getCharging()) {
+			enemy->stunEnemy(4500);
+		}
+	}
+
 	// player or enemy shoves something stationary
     if(soA->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF) && canBeShoved(soA)){
         if(soB->getName() == "player"){

@@ -54,7 +54,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	_ai.init();
     _input.init();
 
-
 	// Get the loaded level
 	_gamestate = assets->get<LevelController>(levelKey)->getGameState();
 	
@@ -219,8 +218,8 @@ void GameScene::update(float dt) {
 		Application::get()->quit();
 	}
 
-    ObstacleWorld* world = _gamestate->getWorld().get();
-    PlayerModel* player = _gamestate->getPlayer().get();
+    std::shared_ptr<ObstacleWorld> world = _gamestate->getWorld();
+    std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
     
@@ -281,12 +280,26 @@ void GameScene::update(float dt) {
     if (_enemyCount == 0) {
         //_complete = true;
     }
-    
+
     // Update the physics world
     _gamestate->getWorld()->update(dt);
     
+	for (int i = 0; i < _gamestate->getSpores().size(); i++) {
+		std::shared_ptr<EnemyModel> spore = _gamestate->getSpores()[i];
+		Vec2 enemy_pos = spore->getPosition();
+
+		if (spore->isDestroyed()) {
+			removeEnemy(spore);
+		}
+
+		/** Need to remove spore from spore list? */
+		else if (!(enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight())) {
+			removeEnemy(spore);
+		}
+	}
+
     for (int i = 0; i < _gamestate->getObjects().size(); i++) {
-        ObjectModel* object = _gamestate->getObjects()[i].get();
+        std::shared_ptr<ObjectModel> object = _gamestate->getObjects()[i];
         if (object->isBroken()) {
             removeObject(object);
         }
@@ -363,13 +376,14 @@ void GameScene::updateFriction() {
 
 	// Loops through enemies and sets friction and also checks for in bounds/death conditions
 	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
-		EnemyModel* enemy = _gamestate->getEnemies()[i].get();
+		std::shared_ptr<EnemyModel> enemy = _gamestate->getEnemies()[i];
 		Vec2 enemy_pos = enemy->getPosition();
 		if (!enemy->isSpore() && enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
             if(!enemy->getCharging()) {
                 if(friction == 0) {
                     removeEnemy(enemy);
+					_enemyCount--;
                 }
                 else if(friction != enemy->getFriction()) {
                     enemy->setFriction(friction);
@@ -379,9 +393,10 @@ void GameScene::updateFriction() {
 				enemy->setFriction(0);
 			}
         }
-        else if (!enemy->isSpore()) {
+        else {
 			removeEnemy(enemy);
-        }
+			_enemyCount--;
+		}
         
         // Caps enemy speed to MAX_PLAYER SPEED
         if(enemy->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
@@ -400,7 +415,7 @@ void GameScene::updateFriction() {
 
 	// Loops through objects and sets friction and also checks for in bounds/death conditions
 	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
-		ObjectModel* object = _gamestate->getObjects()[i].get();
+		std::shared_ptr<ObjectModel> object = _gamestate->getObjects()[i];
 		Vec2 object_pos = object->getPosition();
 		if (object_pos.x > 0 && object_pos.y > 0 && object_pos.x < _gamestate->getBounds().size.getIWidth() && object_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(object_pos.y)][(int)floor(object_pos.x)];
@@ -417,7 +432,7 @@ void GameScene::updateFriction() {
 	}
 }
 
-void GameScene::removeEnemy(EnemyModel* enemy) {
+void GameScene::removeEnemy(std::shared_ptr<EnemyModel> enemy) {
 	// do not attempt to remove a bullet that has already been removed
 	if (enemy->isRemoved()) {
 		return;
@@ -425,10 +440,9 @@ void GameScene::removeEnemy(EnemyModel* enemy) {
 	_gamestate->getRootNode()->getChild(0)->removeChild(enemy->getNode());
 	enemy->setDebugScene(nullptr);
 	enemy->markRemoved(true);
-	_enemyCount--;
 }
 
-void GameScene::removeObject(ObjectModel* object) {
+void GameScene::removeObject(std::shared_ptr<ObjectModel> object) {
 	// do not attempt to remove a bullet that has already been removed
 	if (object->isRemoved()) {
 		return;

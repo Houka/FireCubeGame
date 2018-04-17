@@ -9,8 +9,10 @@
 
 using namespace cugl;
 
-
 class AIController {
+protected:
+	std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> _nextMoves;
+
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -30,6 +32,6 @@ public:
      *
      * For convenience the return type is a tuple of enemy and corresponding move
      */
-    std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> getEnemyMoves(std::shared_ptr<GameState> _gamestate) const;
+    std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> getEnemyMoves(std::shared_ptr<GameState> _gamestate);
 };
 #endif /* __AI_CONTROLLER_H__ */

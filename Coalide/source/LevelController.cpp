@@ -290,11 +290,19 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 				std::shared_ptr<EnemyModel> enemy;
 				std::shared_ptr<ObjectModel> object;
 
+				b2Filter filter;
+
 				switch (objVal) {
 				case -1:
 					break;
 				case 0:
 					_player = PlayerModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+
+					filter.categoryBits = CATEGORY_PLAYER;
+					filter.maskBits = -1;
+					filter.groupIndex = NULL;
+					_player->setFilterData(filter);
+
 					_world->addObstacle(_player);
 					break;
 				case 1:
@@ -315,6 +323,8 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 				case 3:
 					enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					enemy->setTextureKey(ONION);
+					enemy->setOnion();
+					enemy->setDensity(3);
 
 					_world->addObstacle(enemy);
 					_enemies.push_back(enemy);
@@ -441,7 +451,7 @@ void LevelController::unload() {
 
 	for (auto it = _enemies.begin(); it != _enemies.end(); ++it) {
 		if (_world != nullptr) {
-			if (!(*it).get()->isRemoved()) {
+			if (!(*it)->isRemoved()) {
 				_gamestate->getWorld()->removeObstacle((*it).get());
 			}
 		}
@@ -451,7 +461,7 @@ void LevelController::unload() {
 
 	for (auto it = _objects.begin(); it != _objects.end(); ++it) {
 		if (_world != nullptr) {
-			if (!(*it).get()->isRemoved()) {
+			if (!(*it)->isRemoved()) {
 				_gamestate->getWorld()->removeObstacle((*it).get());
 			}	
 		}

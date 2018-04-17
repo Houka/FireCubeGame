@@ -56,6 +56,9 @@ protected:
 	
 	bool _mushroom;
 	bool _spore;
+	bool _onion;
+
+	bool _destroyed;
 
 public:
 #pragma mark Constructors
@@ -186,6 +189,14 @@ public:
 	bool isSpore() { return _spore; }
 
 	void setSpore() { _spore = true; }
+
+	bool isOnion() { return _onion; }
+
+	void setOnion() { _onion = true; }
+
+	bool isDestroyed() { return _destroyed; }
+
+	void setDestroyed() { _destroyed = true; }
 
 	/**
 	* Returns the scene graph node representing this enemy.

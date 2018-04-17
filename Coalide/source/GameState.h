@@ -46,6 +46,7 @@ protected:
 	std::vector<std::shared_ptr<EnemyModel>> _enemies;
 	std::vector<std::shared_ptr<ObjectModel>> _objects;
 	std::vector<std::shared_ptr<TileModel>> _tiles;
+	std::vector<std::shared_ptr<EnemyModel>> _spores;
 
 	int** _board;
 	std::shared_ptr<TileModel>** _tileBoard;
@@ -118,6 +119,18 @@ public:
 	* Sets the active enemies in this game level.
 	*/
 	void setEnemies(std::vector<std::shared_ptr<EnemyModel>> enemies) { _enemies = enemies; }
+
+	/**
+	* Returns the active enemies in this game level.
+	*
+	* @return the active enemies in this game level.
+	*/
+	std::vector<std::shared_ptr<EnemyModel>>& getSpores() { return _spores; }
+
+	/**
+	* Sets the active enemies in this game level.
+	*/
+	void setSpores(std::vector<std::shared_ptr<EnemyModel>> spores) { _spores = spores; }
 
 	/**
 	* Returns the active enemies in this game level.
