@@ -4,7 +4,6 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['/Users/aditarya/Desktop/FireCubeGame/levelEditor'],
              binaries=[],
              datas=[('tileset_forest.png', '.'), ('tileset_water.png', '.')],
              hiddenimports=[],
