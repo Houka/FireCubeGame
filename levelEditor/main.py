@@ -1026,8 +1026,8 @@ while True:
                 showTextures = not showTextures
 
             # Update.
-    boxwidth = min((width - (leftOffset + rightOffset)) / numC,
-                   (height - (botOffset + topOffset)) / numR)
+    boxwidth = int(min((width - (leftOffset + rightOffset)) / numC,
+                   (height - (botOffset + topOffset)) / numR))
 
     # print(str(boxwidth) + "  " + str(boxheight))
     # Draw.
