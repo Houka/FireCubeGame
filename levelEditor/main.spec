@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['/mnt/c/Users/kyler/FireCubeGame/levelEditor'],
+             pathex=['/Users/kylerruvane/Documents/4152/FireCubeGame/levelEditor'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -23,7 +23,7 @@ exe = EXE(pyz,
           debug=False,
           strip=False,
           upx=True,
-          console=True )
+          console=False )
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -31,3 +31,7 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                name='main')
+app = BUNDLE(coll,
+             name='main.app',
+             icon=None,
+             bundle_identifier=None)
