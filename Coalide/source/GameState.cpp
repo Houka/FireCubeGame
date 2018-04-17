@@ -68,19 +68,17 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_rootnode->addChild(_debugnode, 1);
 
 	// Add the individual elements
-	if (_tiles.size() > 0) {
-		for (auto it = _tiles.begin(); it != _tiles.end(); ++it) {
-			std::shared_ptr<TileModel> tile = *it;
-			double* tileSubtexture = tile->getSubTexture();
-			auto tileNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
-			tile->setNode(tileNode);
-			tile->setDrawScale(_scale.x);
-			tile->setDebugScene(_debugnode);
+	for (int i = 0; i < _tiles.size(); i++) {
+		std::shared_ptr<TileModel> tile = _tiles[i];
+		double* tileSubtexture = tile->getSubTexture();
+		auto tileNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+		tile->setNode(tileNode);
+		tile->setDrawScale(_scale.x);
+		//tile->setDebugScene(_debugnode);
 
-			tileNode->setPosition(tile->getPosition()*_scale);
+		tileNode->setPosition(tile->getPosition()*_scale);
 
-			_worldnode->addChild(tileNode, TILE_PRIORITY);
-		}
+		_worldnode->addChild(tileNode, TILE_PRIORITY);
 	}
 
 	if (_player != nullptr) {
@@ -91,7 +89,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		_player->setStandingNode(playerNode);
 		_player->setChargingNode(chargingPlayerNode);
 		_player->setDrawScale(_scale.x);
-		_player->setDebugScene(_debugnode);
+		//_player->setDebugScene(_debugnode);
 
 		// create the aim arrow
 		const std::vector<cugl::Vec2> arrowLine = { cugl::Vec2(0,0), cugl::Vec2(0, 2) };
@@ -112,7 +110,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 			auto enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()));
 			enemy->setNode(enemyNode);
 			enemy->setDrawScale(_scale.x);
-			enemy->setDebugScene(_debugnode);
+			//enemy->setDebugScene(_debugnode);
 
 			_worldnode->addChild(enemyNode, UNIT_PRIORITY);
 		}
@@ -124,7 +122,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 			auto objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()));
 			object->setNode(objectNode);
 			object->setDrawScale(_scale.x);
-			object->setDebugScene(_debugnode);
+			//object->setDebugScene(_debugnode);
 
 			_worldnode->addChild(objectNode, UNIT_PRIORITY);
 		}
@@ -135,7 +133,7 @@ void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {
 	auto sporeNode = PolygonNode::allocWithTexture(_assets->get<Texture>(spore->getTextureKey()));
 	spore->setNode(sporeNode);
 	spore->setDrawScale(_scale.x);
-	spore->setDebugScene(_debugnode);
+	//spore->setDebugScene(_debugnode);
 
 	_worldnode->addChild(sporeNode, UNIT_PRIORITY);
 }

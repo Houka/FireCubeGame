@@ -138,11 +138,22 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
 //	float slingDist = aim.length();
 //	int step = 0;
 //
+//	int height = gamestate->getBounds().size.getIHeight();
+//	int width = gamestate->getBounds().size.getIWidth();
+//
+//	bool* open = new std::shared_ptr<TileModel>*[worldH];
+//
+//	for (int i = 0; i < worldH; i++) {
+//		_board[i] = new int[worldW];
+//		_tileBoard[i] = new std::shared_ptr<TileModel>[worldW];
+//	}
+//
 //	for (int i = 0; i < slingDist; i++) {
 //		int x = pos.x + i;
 //		for (int j = 0; j < slingDist; j++) {
 //			int y = pos.y + j;
-//			if (pos.distance(Vec2(x, y)) < slingDist) {
+//			float d = pos.distance(Vec2(x, y));
+//			if (d < slingDist && d > slingDist-sqrt(2)) {
 //				float h = pos.distance(Vec2(x, y));
 //				float g = step;
 //			}

@@ -449,25 +449,34 @@ void LevelController::unload() {
 		_player = nullptr;
 	}
 
-	for (auto it = _enemies.begin(); it != _enemies.end(); ++it) {
+	for (int i = 0; i < _enemies.size(); i++) {
 		if (_world != nullptr) {
-			if (!(*it)->isRemoved()) {
-				_gamestate->getWorld()->removeObstacle((*it).get());
+			if (!_enemies[i]->isRemoved()) {
+				_gamestate->getWorld()->removeObstacle(_enemies[i].get());
 			}
 		}
-		(*it) = nullptr;
+		_enemies[i] = nullptr;
 	}
 	_enemies.clear();
 
-	for (auto it = _objects.begin(); it != _objects.end(); ++it) {
+	for (int i = 0; i < _objects.size(); i++) {
 		if (_world != nullptr) {
-			if (!(*it)->isRemoved()) {
-				_gamestate->getWorld()->removeObstacle((*it).get());
+			if (!_objects[i]->isRemoved()) {
+				_gamestate->getWorld()->removeObstacle(_objects[i].get());
 			}	
 		}
-		(*it) = nullptr;
+		_objects[i] = nullptr;
 	}
 	_objects.clear();
+
+	for (int i = 0; i < _bounds.size.getIHeight(); i++) {
+		delete[] _board[i];
+		delete[] _tileBoard[i];
+	}
+
+	delete[] _board;
+	delete[] _tileBoard;
+	
 
 	//for (auto it = _tiles.begin(); it != _tiles.end(); ++it) {
 	//	if (_world != nullptr) {
