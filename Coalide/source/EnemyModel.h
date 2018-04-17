@@ -60,6 +60,8 @@ protected:
 
 	bool _destroyed;
 
+	std::vector<Vec2> _route;
+
 public:
 #pragma mark Constructors
 	/**
@@ -197,6 +199,10 @@ public:
 	bool isDestroyed() { return _destroyed; }
 
 	void setDestroyed() { _destroyed = true; }
+
+	std::vector<Vec2> getRoute() { return _route; }
+
+	void setRoute(std::vector<Vec2> route) { _route = route; }
 
 	/**
 	* Returns the scene graph node representing this enemy.

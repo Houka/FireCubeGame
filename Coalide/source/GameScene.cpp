@@ -48,11 +48,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	_input = input;
 
 	_levelKey = levelKey;
-	
-	// Initialize the controllers used in the game mode
-	_collisions.init();
-	_ai.init();
-    _input.init();
 
 	// Get the loaded level
 	_gamestate = assets->get<LevelController>(levelKey)->getGameState();
@@ -61,6 +56,11 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 		CULog("Fail!");
 		return false;
 	}
+
+	// Initialize the controllers used in the game mode
+	_collisions.init();
+	_ai.init(_gamestate);
+	_input.init();
 
 	_enemyCount = _gamestate->getEnemies().size();
 

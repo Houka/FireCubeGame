@@ -12,7 +12,22 @@
 using namespace cugl;
 
 
-bool AIController::init() {
+bool AIController::init(std::shared_ptr<GameState> gamestate) {
+	/*int worldH = gamestate->getBounds().size.getIHeight();
+	int worldW = gamestate->getBounds().size.getIWidth();
+
+	_openArray = new bool*[worldH];
+	_closedArray = new bool*[worldH];
+
+	for (int i = 0; i < worldH; i++) {
+		_openArray[i] = new bool[worldW];
+		_closedArray[i] = new bool[worldW];
+		for (int j = 0; j < worldW; j++) {
+			_openArray[i][j] = false;
+			_closedArray[i][j] = false;
+		}
+	}*/
+
 	return true;
 }
 
@@ -134,32 +149,72 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
     return false;
 }
 
-//std::vector<Vec2> AStar(Vec2 pos, Vec2 aim, Vec2 target, std::shared_ptr<GameState> gamestate) {
-//	float slingDist = aim.length();
-//	int step = 0;
+
+//bool sortByScore(std::tuple<Vec2, Vec2, float> a, std::tuple<Vec2, Vec2, float> b) {
+//	return std::get<2>(a) > std::get<2>(b);
+//}
 //
-//	int height = gamestate->getBounds().size.getIHeight();
-//	int width = gamestate->getBounds().size.getIWidth();
 //
-//	bool* open = new std::shared_ptr<TileModel>*[worldH];
-//
-//	for (int i = 0; i < worldH; i++) {
-//		_board[i] = new int[worldW];
-//		_tileBoard[i] = new std::shared_ptr<TileModel>[worldW];
-//	}
+//void AIController::AStar(Vec2 pos, float slingDist, int g) {
+//	_closedList.push_back(_openList[0]);
+//	_openList.pop_back();
 //
 //	for (int i = 0; i < slingDist; i++) {
 //		int x = pos.x + i;
 //		for (int j = 0; j < slingDist; j++) {
 //			int y = pos.y + j;
 //			float d = pos.distance(Vec2(x, y));
-//			if (d < slingDist && d > slingDist-sqrt(2)) {
+//			if (d < slingDist && d > slingDist - sqrt(2) && !_closedArray[i][j]) {
 //				float h = pos.distance(Vec2(x, y));
-//				float g = step;
+//				if (!_openArray[i][j]) {
+//					_openList.push_back(std::make_tuple(Vec2(i, j), pos, g + h));
+//				}
+//				else {
+//					for (int i = 0; i < _openList.size(); i++) {
+//						if (std::get<0>(_openList[i]).x == i && std::get<0>(_openList[i]).y == j) {
+//							if (std::get<2>(_openList[i]) < g + h) {
+//								_openList[i] = std::make_tuple(Vec2(i, j), pos, g + h);
+//							}
+//						}
+//					}
+//				}
 //			}
 //		}
 //	}
+//
+//	std::sort(_openList.begin(), _openList.end(), sortByScore);
 //}
+//
+//
+//std::vector<Vec2> AIController::calculateRoute(Vec2 pos, Vec2 aim, Vec2 target, std::shared_ptr<GameState> gamestate) {
+//	float slingDist = aim.length();
+//	int step = 0;
+//
+//	_openList.push_back(std::make_tuple(pos, pos, target.distance(pos)));
+//
+//	for (int i = 0; i < 5; i++) {
+//		AStar(pos, slingDist, i+1);
+//	}
+//
+//	std::vector<Vec2> route;
+//
+//	auto move = _closedList[_closedList.size() - 1];
+//	route.push_back(std::get<0>(move));
+//
+//	for (int i = 0; i < 4; i++) {
+//		route.push_back(std::get<1>(move));
+//		for (int j = 0; j < _openList.size(); j++) {
+//			if (std::get<0>(_openList[j]).x == std::get<1>(move).x && std::get<0>(_openList[j]).y == std::get<1>(move).y) {
+//				move = _openList[j];
+//			}
+//		}
+//	}
+//
+//	route.push_back(std::get<1>(move));
+//
+//	return route;
+//}
+
 
 std::shared_ptr<EnemyModel> shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameState> gamestate) {
 	std::shared_ptr<EnemyModel> spore = EnemyModel::alloc(pos, UNIT_DIM);
@@ -202,11 +257,22 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
+
+		Vec2 enemy_pos = enemy->getPosition();
+		Vec2 aim = player_pos - enemy_pos;
+
+		aim = aim.normalize();
+
+		/*if (enemy->getRoute().size() == 0) {
+			enemy->setRoute(calculateRoute(enemy_pos, aim, player_pos, gamestate));
+		}*/
+
         if(!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom()){
-            Vec2 enemy_pos = enemy->getPosition();
-            Vec2 aim = player_pos - enemy_pos;
-            
-			aim = aim.normalize();
+			/*std::vector<Vec2> route = enemy->getRoute();
+			aim = route[route.size()];
+			route.pop_back();
+			enemy->setRoute(route);*/
+
 			Vec2 projectedLanding = enemy_pos + aim*3;
 
 			Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);
