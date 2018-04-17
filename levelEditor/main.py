@@ -182,6 +182,7 @@ setSelfStunDur = False
 setPlayerLoc = False
 showTextures = False
 setTexture = False
+dragPlacing = False
 
 # show the details of the tile at location (r,c) or none if -1,-1
 terrainDetails = (-1, -1)
@@ -746,6 +747,32 @@ while True:
         if event.type == QUIT:
             pg.quit()
             sys.exit()
+        if event.type == MOUSEBUTTONDOWN and placingElement != "" and editingLayer == "terrain":
+            dragPlacing = True
+        if event.type == MOUSEBUTTONUP:
+            dragPlacing = False
+        if event.type == MOUSEMOTION:
+            pos = pg.mouse.get_pos()
+            x = pos[0]
+            y = pos[1]
+            print(event.buttons)
+            for r in range(numR):
+                for c in range(numC):
+                    if x >= leftOffset + boxwidth * c and x <= leftOffset + boxwidth * (c + 1) and y >= topOffset + boxwidth * r and y <= topOffset + boxwidth * (r + 1):
+                        if placingElement == "setWater":
+                            if event.buttons[2] == 1:
+                                background[r][c] = Terrain("empty")
+                            elif event.buttons[0] == 1:
+                                background[r][c] = Terrain("water")
+                        elif event.buttons[2] == 1:
+                            terrain[r][c] = Terrain("empty")
+                        elif event.buttons[0] == 1:
+                            if placingElement == "setDirt":
+                                terrain[r][c] = Terrain("dirt")
+                            elif placingElement == "setIce":
+                                terrain[r][c] = Terrain("ice")
+                            elif placingElement == "setSand":
+                                terrain[r][c] = Terrain("sand")
         if event.type == MOUSEBUTTONUP:
             buttonPressed = whichButtonPressed(pg.mouse.get_pos())
             # if buttonPressed == "setTexture" and not setTexture:
