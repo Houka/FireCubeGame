@@ -25,6 +25,12 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		setTextureKey("nicoal_nicoal");
 		setBodyType(b2_dynamicBody);
         setLinearDamping(GLOBAL_AIR_DRAG);
+        
+//        _anim = AnimationNode::alloc(texture, 7, 8);
+//        _anim->setAnchor(Vec2::ANCHOR_CENTER);
+//        _anim->setScale(2.0f);
+//        _anim->setPosition(size/2);
+//        _anim->setVisible(false);
 
 		_node = nullptr;
         _color = Color4::WHITE;

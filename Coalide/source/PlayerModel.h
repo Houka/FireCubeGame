@@ -33,11 +33,19 @@ private:
     bool _stunOnStop;
 
 protected:
+    std::shared_ptr<AssetManager> _assets;
 	std::shared_ptr<Node> _node;
 	std::shared_ptr<Node> _standingNode;
+    std::shared_ptr<Node> _buildupNode;
 	std::shared_ptr<Node> _chargingNode;
+    std::shared_ptr<AnimationNode> _animationNode;
 	std::shared_ptr<PathNode> _arrow;
+    /** The body animation */
+    //std::shared_ptr<cugl::AnimationNode> _anim;
 	std::string _texture;
+    
+    /** The animation actions */
+    std::shared_ptr<cugl::Animate> _forward;
 
 	Vec2 _force;
 	b2FrictionJoint* _frictionJoint;
@@ -73,7 +81,7 @@ public:
 	*
 	* @return  true if the obstacle is initialized properly, false otherwise.
 	*/
-	virtual bool init(const Vec2& pos, const Size& size) override;
+	virtual bool init(const Vec2& pos, const Size& size);
 
 
 #pragma mark Static Constructors
@@ -179,6 +187,7 @@ public:
 	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
 	void setStandingNode(const std::shared_ptr<Node>& node) { _standingNode = node; }
 	void setChargingNode(const std::shared_ptr<Node>& node) { _chargingNode = node; }
+    void setAnimationNode(const std::shared_ptr<AnimationNode>& node) { _animationNode = node; }
 
 	/**
 	* Returns the scene graph node representing the player.

@@ -42,7 +42,7 @@ protected:
 	std::shared_ptr<Node> _debugnode;
 
 	std::shared_ptr<ObstacleWorld> _world;
-	std::shared_ptr<PlayerModel> _player;
+    std::shared_ptr<PlayerModel> _player;
 	std::vector<std::shared_ptr<EnemyModel>> _enemies;
 	std::vector<std::shared_ptr<ObjectModel>> _objects;
 	std::vector<std::shared_ptr<TileModel>> _tiles;

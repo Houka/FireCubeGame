@@ -12,6 +12,12 @@
 
 using namespace cugl;
 
+/** Define the time settings for animation */
+#define DURATION 1.0f
+#define DISTANCE 200
+#define REPEATS  1
+#define ACT_KEY  "current"
+
 #pragma mark -
 #pragma mark Constructors
 /**
@@ -46,6 +52,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// assets and input come from the CoalideApp level
 	_assets = assets;
 	_input = input;
+    
+    // Animation stuff hopefully...
+    //_actions = ActionManager::alloc();
+    //_forward = Animate::alloc(0,11,DURATION,REPEATS);
 
 	_levelKey = levelKey;
 	

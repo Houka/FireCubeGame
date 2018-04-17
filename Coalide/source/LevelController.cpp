@@ -279,7 +279,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 
 		int worldW = _bounds.size.getIWidth();
 		int worldH = _bounds.size.getIHeight();
-
+        
 		auto objectsData = objectsLayer->get(DATA_FIELD)->asFloatArray();
 
 		int count = 0;
@@ -294,7 +294,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 				case -1:
 					break;
 				case 0:
-					_player = PlayerModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+                    _player = PlayerModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					_world->addObstacle(_player);
 					break;
 				case 1:

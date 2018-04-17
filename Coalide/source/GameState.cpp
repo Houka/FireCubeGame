@@ -86,10 +86,12 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
 	if (_player != nullptr) {
 		auto playerNode = PolygonNode::allocWithTexture(assets->get<Texture>(_player->getTextureKey()));
 		auto chargingPlayerNode = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging"));
+        auto animationNode = AnimationNode::alloc(assets->get<Texture>("nicoal"), 7, 8);
 		_player->setNode(playerNode);
 		chargingPlayerNode->setVisible(false);
 		_player->setStandingNode(playerNode);
 		_player->setChargingNode(chargingPlayerNode);
+        _player->setAnimationNode(animationNode);
 		_player->setDrawScale(_scale.x);
 		_player->setDebugScene(_debugnode);
 
