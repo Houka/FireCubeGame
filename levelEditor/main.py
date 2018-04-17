@@ -1,5 +1,6 @@
 import sys
 import json
+import os
 
 import pygame as pg
 from pygame.locals import *
@@ -42,9 +43,21 @@ class spritesheet(object):
                 for x in range(image_count)]
         return self.images_at(tups, colorkey)
 
-tileset = spritesheet('tileset_forest.png')
-waterset = spritesheet('tileset_water.png')
+# tileset = spritesheet('tileset_forest.png')
+# waterset = spritesheet('tileset_water.png')
 # represents an object
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+tileset = spritesheet(resource_path("tileset_forest.png"));
+waterset = spritesheet(resource_path("tileset_water.png"));
 
 
 class Object:
@@ -260,7 +273,7 @@ def loadFromJson():
             terrain[i][j] = Terrain("empty")
             background[i][j] = Terrain("water")
             objects[i][j] = Object("empty")
-    
+
     for r in range(numR):
         for c in range(numC):
             tmp = Terrain(data['terrain']['types'][r][c])
@@ -293,7 +306,7 @@ def loadFromJson():
         tmp.cooldown = a['dashCooldown']
         tmp.impulse = a['impulse']
         objects[a['row']][a['col']] = tmp
-    
+
     for o in data['objects']['onions']:
         tmp = Object('onion')
         tmp.mass = o['mass']
@@ -351,12 +364,12 @@ def makeJson():
     global numR
     global numC
     waterTextures = [[0 for x in range(numC)] for y in range(numR)]
-    dirtTextures = [[0 for x in range(numC)] for y in range(numR)] 
-    iceTextures = [[0 for x in range(numC)] for y in range(numR)] 
-    sandTextures = [[0 for x in range(numC)] for y in range(numR)] 
+    dirtTextures = [[0 for x in range(numC)] for y in range(numR)]
+    iceTextures = [[0 for x in range(numC)] for y in range(numR)]
+    sandTextures = [[0 for x in range(numC)] for y in range(numR)]
 
-    terrainTypes = [["" for x in range(numC)] for y in range(numR)] 
-    terrainZones = [[set() for x in range(numC)] for y in range(numR)] 
+    terrainTypes = [["" for x in range(numC)] for y in range(numR)]
+    terrainZones = [[set() for x in range(numC)] for y in range(numR)]
     crates = []
     rocks = []
     acorns = []
@@ -467,7 +480,7 @@ def makeJson():
     print(levelJson)
     with open('output.json', 'w') as outfile:
         json.dump(levelJson, outfile, indent=4)
-            
+
 
 
 
@@ -495,17 +508,17 @@ def autoTexture(terrain):
                 tmp = classifyFloor(tl)
                 h_tl = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
                 tmp = classifyFloor(l)
-                h_l = int(tmp == "dirt" or tmp == "ice" or tmp == "sand") 
+                h_l = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
                 tmp = classifyFloor(bl)
-                h_bl = int(tmp == "dirt" or tmp == "ice" or tmp == "sand") 
+                h_bl = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
                 tmp = classifyFloor(t)
-                h_t = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")  
+                h_t = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
                 tmp = classifyFloor(b)
-                h_b = int(tmp == "dirt" or tmp == "ice" or tmp == "sand") 
+                h_b = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
                 tmp = classifyFloor(tr)
-                h_tr = int(tmp == "dirt" or tmp == "ice" or tmp == "sand") 
+                h_tr = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
                 tmp = classifyFloor(rh)
-                h_r = int(tmp == "dirt" or tmp == "ice" or tmp == "sand") 
+                h_r = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
                 tmp = classifyFloor(br)
                 h_br = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
 
@@ -521,23 +534,23 @@ def autoTexture(terrain):
                 textureCoord = spriteSheetMap[str(combined)]
 
                 terrain[r][c].t_dirt = imageCoordToID((textureCoord[0], textureCoord[1]))
-            
+
             tmp = classifyFloor(cn)
             if tmp == "sand" or tmp == "ice":
                 tmp = classifyFloor(tl)
                 h_tl = int(tmp == "sand" or tmp == "ice")
                 tmp = classifyFloor(l)
-                h_l = int(tmp == "sand" or tmp == "ice") 
+                h_l = int(tmp == "sand" or tmp == "ice")
                 tmp = classifyFloor(bl)
-                h_bl = int(tmp == "sand" or tmp == "ice") 
+                h_bl = int(tmp == "sand" or tmp == "ice")
                 tmp = classifyFloor(t)
-                h_t = int(tmp == "sand" or tmp == "ice")  
+                h_t = int(tmp == "sand" or tmp == "ice")
                 tmp = classifyFloor(b)
-                h_b = int(tmp == "sand" or tmp == "ice") 
+                h_b = int(tmp == "sand" or tmp == "ice")
                 tmp = classifyFloor(tr)
-                h_tr = int(tmp == "sand" or tmp == "ice") 
+                h_tr = int(tmp == "sand" or tmp == "ice")
                 tmp = classifyFloor(rh)
-                h_r = int(tmp == "sand" or tmp == "ice") 
+                h_r = int(tmp == "sand" or tmp == "ice")
                 tmp = classifyFloor(br)
                 h_br = int(tmp == "sand" or tmp == "ice")
 
@@ -552,23 +565,23 @@ def autoTexture(terrain):
                     combined += (h_tl * 2 ** 7)
                 textureCoord = spriteSheetMap[str(combined)]
                 terrain[r][c].t_ice = imageCoordToID((textureCoord[0], textureCoord[1] + 7))
-            
+
             tmp = classifyFloor(cn)
             if tmp == "sand":
                 tmp = classifyFloor(tl)
                 h_tl = int(tmp == "sand")
                 tmp = classifyFloor(l)
-                h_l = int(tmp == "sand") 
+                h_l = int(tmp == "sand")
                 tmp = classifyFloor(bl)
-                h_bl = int(tmp == "sand") 
+                h_bl = int(tmp == "sand")
                 tmp = classifyFloor(t)
-                h_t = int(tmp == "sand")  
+                h_t = int(tmp == "sand")
                 tmp = classifyFloor(b)
-                h_b = int(tmp == "sand") 
+                h_b = int(tmp == "sand")
                 tmp = classifyFloor(tr)
-                h_tr = int(tmp == "sand") 
+                h_tr = int(tmp == "sand")
                 tmp = classifyFloor(rh)
-                h_r = int(tmp == "sand") 
+                h_r = int(tmp == "sand")
                 tmp = classifyFloor(br)
                 h_br = int(tmp == "sand")
 
@@ -585,10 +598,10 @@ def autoTexture(terrain):
                 terrain[r][c].t_sand = imageCoordToID((textureCoord[0], textureCoord[1] + 14))
 
 
-                        
-                
 
-            
+
+
+
 
 
     # go through each terrain element and set the texture ID based on the stuff surrounding it

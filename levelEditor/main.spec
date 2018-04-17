@@ -4,9 +4,9 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['/Users/kylerruvane/Documents/4152/FireCubeGame/levelEditor'],
+             pathex=['/Users/aditarya/Desktop/FireCubeGame/levelEditor'],
              binaries=[],
-             datas=[('tileset_water.png', '.'), ('tileset_forest.png', '.')],
+             datas=[('tileset_forest.png', '.'), ('tileset_water.png', '.')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
