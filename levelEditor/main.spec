@@ -4,6 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
+             pathex=['/Users/kylerruvane/Documents/4152/FireCubeGame/levelEditor'],
              binaries=[],
              datas=[('tileset_forest.png', '.'), ('tileset_water.png', '.')],
              hiddenimports=[],
@@ -25,4 +26,8 @@ exe = EXE(pyz,
           strip=False,
           upx=True,
           runtime_tmpdir=None,
-          console=True )
+          console=False )
+app = BUNDLE(exe,
+             name='main.app',
+             icon=None,
+             bundle_identifier=None)

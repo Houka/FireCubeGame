@@ -768,7 +768,6 @@ while True:
             pos = pg.mouse.get_pos()
             x = pos[0]
             y = pos[1]
-            print(event.buttons)
             for r in range(numR):
                 for c in range(numC):
                     if x >= leftOffset + boxwidth * c and x <= leftOffset + boxwidth * (c + 1) and y >= topOffset + boxwidth * r and y <= topOffset + boxwidth * (r + 1):
@@ -1037,35 +1036,35 @@ while True:
     # buttons
 
     # layers
-    pg.draw.rect(screen, gray, [width / 2 - 130, 10, 60, 30])
-    pg.draw.rect(screen, gray, [width / 2 - 30, 10, 60, 30])
-    pg.draw.rect(screen, gray, [width / 2 + 70, 10, 60, 30])
+    pg.draw.rect(screen, gray, [int(width / 2) - 130, 10, 60, 30])
+    pg.draw.rect(screen, gray, [int(width / 2) - 30, 10, 60, 30])
+    pg.draw.rect(screen, gray, [int(width / 2) + 70, 10, 60, 30])
 
     backgroundLayerLabel = myfont.render("Bck", False, (0, 0, 0))
-    screen.blit(backgroundLayerLabel, (width / 2 - 105, 10))
+    screen.blit(backgroundLayerLabel, (int(width / 2) - 105, 10))
     terrainLayerLabel = myfont.render("Ter", False, (0, 0, 0))
-    screen.blit(terrainLayerLabel, (width / 2 - 6, 10))
+    screen.blit(terrainLayerLabel, (int(width / 2) - 6, 10))
     objectLayerLabel = myfont.render("Obj", False, (0, 0, 0))
-    screen.blit(objectLayerLabel, (width / 2 + 95, 10))
+    screen.blit(objectLayerLabel, (int(width / 2) + 95, 10))
 
     if backgroundVisible:
-        pg.draw.rect(screen, white, [width / 2 - 130, 10, 20, 30])
+        pg.draw.rect(screen, white, [int(width / 2) - 130, 10, 20, 30])
     else:
-        pg.draw.rect(screen, black, [width / 2 - 130, 10, 20, 30])
+        pg.draw.rect(screen, black, [int(width / 2) - 130, 10, 20, 30])
     if terrainVisible:
-        pg.draw.rect(screen, white, [width / 2 - 30, 10, 20, 30])
+        pg.draw.rect(screen, white, [int(width / 2) - 30, 10, 20, 30])
     else:
-        pg.draw.rect(screen, black, [width / 2 - 30, 10, 20, 30])
+        pg.draw.rect(screen, black, [int(width / 2) - 30, 10, 20, 30])
     if objectsVisible:
-        pg.draw.rect(screen, white, [width / 2 + 70, 10, 20, 30])
+        pg.draw.rect(screen, white, [int(width / 2) + 70, 10, 20, 30])
     else:
-        pg.draw.rect(screen, black, [width / 2 + 70, 10, 20, 30])
+        pg.draw.rect(screen, black, [int(width / 2) + 70, 10, 20, 30])
     if editingLayer == "background":
-        pg.draw.rect(screen, orange, [width / 2 - 130, 10, 60, 30], 3)
+        pg.draw.rect(screen, orange, [int(width / 2) - 130, 10, 60, 30], 3)
     elif editingLayer == "terrain":
-        pg.draw.rect(screen, orange, [width / 2 - 30, 10, 60, 30], 3)
+        pg.draw.rect(screen, orange, [int(width / 2) - 30, 10, 60, 30], 3)
     elif editingLayer == "objects":
-        pg.draw.rect(screen, orange, [width / 2 + 70, 10, 60, 30], 3)
+        pg.draw.rect(screen, orange, [int(width / 2) + 70, 10, 60, 30], 3)
 
     # grid dimensions
     if setRow == False:
@@ -1286,7 +1285,7 @@ while True:
                             pg.draw.rect(screen, orange, [width - rightOffset +
                                                           120, height - botOffset - 300 + 100, 25, 25])
                             pg.draw.circle(screen, red, [int(leftOffset + boxwidth * tc + (
-                                boxwidth / 2)), int(topOffset + boxwidth * tr + (boxwidth / 2))], int(boxwidth * objects[tr][tc].aggroRadius / 10), 3)
+                                int(boxwidth / 2))), int(topOffset + boxwidth * tr + (int(boxwidth / 2)))], int(boxwidth * objects[tr][tc].aggroRadius / 10), 3)
                         else:
                             pg.draw.rect(screen, black, [width - rightOffset +
                                                          120, height - botOffset - 300 + 100, 25, 25])
