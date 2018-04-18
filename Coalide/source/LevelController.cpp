@@ -52,10 +52,12 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
 		return false;
 	}
 	// Initial geometry
-	auto canvas = json->get(CANVAS_FIELD);
-	int canvasW = canvas->get(WIDTH_FIELD)->asInt();
-	int canvasH = canvas->get(HEIGHT_FIELD)->asInt();
+	auto levelInfo = json->get("levelInfo");
+	int canvasW = 64 * levelInfo->get(WIDTH_FIELD)->asInt();
+	int canvasH = 64 * levelInfo->get(HEIGHT_FIELD)->asInt();
 
+    
+    
 	auto tilesets = json->get(TILESETS_FIELD);
 
 	int tileW = tilesets->get(0)->get(TILE_WIDTH_FIELD)->asInt();

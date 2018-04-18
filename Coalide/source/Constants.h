@@ -44,6 +44,8 @@
 #define DEFAULT_WIDTH   32.0f
 #define DEFAULT_HEIGHT  18.0f
 
+#define TILE_WIDTH = 64
+
 #define DEFAULT_GRAVITY 0.0f
 #define GRAVITY	9.8f
 
