@@ -124,7 +124,7 @@ void EnemyModel::update(float dt) {
             setStunned(false);
         }
     }
-    else if(!canSling()){
+    else if(!canSling() && !isSpore()){
         _node->setColor(Color4::RED);
     } else {
         _node->setColor(Color4::WHITE);

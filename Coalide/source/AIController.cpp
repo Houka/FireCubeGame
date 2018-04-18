@@ -144,7 +144,7 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
         float locy = start.y;
         while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
             locy += dy;
-            if(!gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]){
+            if(gamestate->getBoard()[(int)floor(locy)][(int)floor(locx)] == 0){
                 //CULog("WATER");
                 return true;
 			}
@@ -177,7 +177,7 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 		if (_closedList.empty()) {
 			AStar(pos, slingDist, target, pos, gamestate);
 		}
-		else if (std::get<0>(_closedList.back()).distance(target) < slingDist*1.5 && !intersectsWater(std::get<0>(_closedList.back()), target, gamestate)) {
+		else if (std::get<0>(_closedList.back()).distance(target) < slingDist*1.5) {
 			_closedList.push_back(std::make_tuple(target, std::get<0>(_closedList.back()), -1));
 			break;
 		}
@@ -226,7 +226,7 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 			float d = pos.distance(Vec2(x, y));
             // kyler - I changed this line to check if tile exists in tileboard[y][x] before accessing since I changed water to not be a tile
 			if (x > 0 && x < _bounds.size.getIWidth() && y > 0 && y < _bounds.size.getIHeight()
-				&& d < slingDist && !_closedArray[y][x] && !(i == 0 || j == 0) && gamestate->getTileBoard()[y][x] && !intersectsWater(pos, Vec2(x,y), gamestate)) {
+				&& d < slingDist && !_closedArray[y][x] && !(i == 0 || j == 0) && gamestate->getBoard()[y][x] > 0 && !intersectsWater(pos, Vec2(x,y), gamestate)) {
 				float h = target.distance(Vec2(x, y));
 				float g = origin.distance(Vec2(x, y));
 				if (!_openArray[y][x]) {
@@ -250,8 +250,8 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 
 
 std::shared_ptr<EnemyModel> shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameState> gamestate) {
-	std::shared_ptr<EnemyModel> spore = EnemyModel::alloc(pos, UNIT_DIM);
-	spore->setTextureKey(MUSHROOM);
+	std::shared_ptr<EnemyModel> spore = EnemyModel::alloc(pos, UNIT_DIM/2);
+	spore->setTextureKey(SPORE);
 	spore->setSpore();
 	spore->setLinearDamping(0);
 
@@ -366,7 +366,8 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 
 			aim = aim.normalize()*impulse;
 
-			if (!intersectsWater(enemy_pos, enemy_pos + aim*1.5, gamestate)) {
+			Vec2 landing = enemy_pos + aim;
+			if (gamestate->getBoard()[(int)landing.y][(int)landing.x] > 0 && !intersectsWater(enemy_pos, enemy_pos + aim*1.5, gamestate)) {
 				enemy->setWaterBetween(false);
 				moves.push_back(std::make_tuple(enemy, aim));
 			}
@@ -383,7 +384,7 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				Vec2 aim = player_pos - enemy->getPosition();
 				aim.normalize();
 				std::shared_ptr<EnemyModel> spore = shootSpore(enemy->getPosition(), aim, gamestate);
-				std::tuple<std::shared_ptr<EnemyModel>, Vec2> nextMove = std::make_tuple(spore, aim);
+				std::tuple<std::shared_ptr<EnemyModel>, Vec2> nextMove = std::make_tuple(spore, aim/2);
 				_nextMoves.push_back(nextMove);
 			}
 		}

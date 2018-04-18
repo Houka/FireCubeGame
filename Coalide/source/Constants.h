@@ -29,6 +29,7 @@
 #define ENEMY_NAME		"enemy"
 #define ACORN			"acorn"
 #define MUSHROOM		"mushroom"
+#define SPORE			"spore"
 #define ONION			"onion"
 
 #define TILE_NAME		"tile"

@@ -46,6 +46,9 @@
     "mushroom": {
       "file": "textures/mushroom.png"
     },
+    "spore": {
+      "file": "textures/spore.png"
+    },
     "onion": {
       "file": "textures/onion.png"
     },
