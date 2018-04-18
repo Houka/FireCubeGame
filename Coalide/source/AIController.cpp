@@ -296,30 +296,30 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 			Vec2 enemy_pos = enemy->getPosition();
 			Vec2 aim = player_pos - enemy_pos;
 
-			aim.normalize();
+			float impulse = MAX_IMPULSE;
 
-			int p = enemy->getDensity();
-			int A = enemy->getWidth()*enemy->getHeight();
-			int m = p*A;
+			if (player_pos.distance(enemy_pos) > 1.5) {
+				int p = enemy->getDensity();
+				int A = enemy->getWidth()*enemy->getHeight();
+				int m = p*A;
 
-			float vi = IMPULSE * 2 / m;
-			float vf = MIN_SPEED_FOR_CHARGING;
-			
-			float f1 = GLOBAL_AIR_DRAG / m;
-			float f2 = gamestate->getBoard()[(int)enemy_pos.y][(int)enemy_pos.x];
+				float vi = MAX_IMPULSE * 2 / m;
+				float vf = 2;
 
-			float d1 = (vi*vi - vf*vf) / (2 * f1 / m);
-			float d2;
-			if (f2 != 0) {
-				d2 = vf*vf / (2 * f2 / m);
-			}
-			else {
-				d2 = 0;
-			}
+				float f1 = GLOBAL_AIR_DRAG / m;
+				float f2 = gamestate->getBoard()[(int)enemy_pos.y][(int)enemy_pos.x];
 
-			float d = d1 + d2;
+				float d1 = (vi*vi - vf*vf) / (2 * f1 / m);
+				float d2;
+				if (f2 != 0) {
+					d2 = vf*vf / (2 * f2 / m);
+				}
+				else {
+					d2 = 0;
+				}
 
-			if (player_pos.distance(enemy_pos) > aim.length()*1.5) {
+				float d = d1 + d2;
+
 				if (enemy->getRoute().size() == 0) {
 					enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, gamestate));
 				}
@@ -328,6 +328,12 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				aim = route.back() - enemy_pos;
 				route.pop_back();
 				enemy->setRoute(route);
+
+				float targetDist = aim.length();
+				float a = GLOBAL_AIR_DRAG / m;
+				float v0 = sqrt(targetDist * 2 * a);
+				impulse = m * v0;
+				impulse = std::min(MAX_IMPULSE, impulse);
 
 				/*Vec2 projectedLanding = enemy_pos + aim * 3;
 				Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);
@@ -359,7 +365,7 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
                 continue;
             }*/
 
-			aim = aim.normalize()*IMPULSE;
+			aim = aim.normalize()*MAX_IMPULSE;
 
             enemy->setWaterBetween(false);
 			if (enemy->timeoutElapsed()) {

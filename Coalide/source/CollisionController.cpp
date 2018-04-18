@@ -64,14 +64,14 @@ void CollisionController::beginContact(b2Contact* contact) {
 		}
 	}
 
-	else if (soB->getName() == "enemy") {
+	if (soB->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soB;
 
 		if (enemy->isSpore()) {
 			enemy->setDestroyed();
 		}
 
-		if (soB->getName() == "player") {
+		if (soA->getName() == "player") {
 			PlayerModel* player = (PlayerModel*)soA;
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
