@@ -83,7 +83,7 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define LEVEL_FILE   "json/updatedJsons/icebridge.json"
+#define LEVEL_FILE   "json/updatedJsons/onionfight.json"
 /** The key for our loaded level */
 #define LEVEL_KEY    "level"
 
