@@ -72,7 +72,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 			enemy->setDestroyed();
 		}
 
-		if (soB->getName() == "player") {
+		if (soA->getName() == "player") {
 			PlayerModel* player = (PlayerModel*)soA;
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
