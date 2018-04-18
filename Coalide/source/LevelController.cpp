@@ -13,6 +13,8 @@
 #include <Box2D/Dynamics/b2World.h>
 #include <string>
 
+#define TILE_BORDER  .0007
+
 using namespace cugl;
 
 #pragma mark -
@@ -49,6 +51,7 @@ bool LevelController::preload(const std::string& file) {
 * @return true if successfully loaded the asset from the json
 */
 bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
+    
 	if (json == nullptr) {
 		CUAssertLog(false, "Failed to load level file");
 		return false;
@@ -159,15 +162,15 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
             std::string type = typesArray->get(c)->asString();
             
             if(type == "empty"){
-                _board[r][c] = 0;
+                _board[rows - 1 - r][c] = 0;
             }
             else {
-                std::shared_ptr<TileModel> tile = TileModel::alloc(Vec2(c + .5, r + .5), UNIT_DIM);
+                std::shared_ptr<TileModel> tile = TileModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
                 int sandTexture = innerSand->get(c)->asInt();
                 int iceTexture = innerIce->get(c)->asInt();
                 int dirtTexture = innerDirt->get(c)->asInt();
                 if(type == "sand"){
-                    _board[r][c] = 20;
+                    _board[rows - 1 - r][c] = 20;
                     tile->setType(TILE_TYPE::SAND);
                     tile->setSandTextureKey("tileset_forest.png");
                     tile->setIceTextureKey("tileset_forest.png");
@@ -176,13 +179,13 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                 
                 }
                 if(type == "ice"){
-                    _board[r][c] = 2;
+                    _board[rows - 1 - r][c] = 2;
                     tile->setType(TILE_TYPE::ICE);
                     tile->setIceTextureKey("tileset_forest.png");
                     tile->setDirtTextureKey("tileset_forest.png");
                 }
                 if(type == "dirt"){
-                    _board[r][c] = 10;
+                    _board[rows - 1 - r][c] = 10;
                     tile->setType(TILE_TYPE::GRASS);
                     tile->setDirtTextureKey("tileset_forest.png");
                 }
@@ -192,15 +195,15 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     double subTextureX = (sandTexture % 21);
                     double endY = subTextureY + 1;
                     double endX = subTextureX + 1;
-                    tile->setSandSubTexture(subTextureX / 21, endX / 21, subTextureY / 8, endY / 8);
+                    tile->setSandSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21), (subTextureY / 8) + TILE_BORDER, (endY / 8));
                 }
                 if(iceTexture != -1){
                     //gives box to specify texture into texture atlas
                     double subTextureY = ((int) (iceTexture / 21));
                     double subTextureX = (iceTexture % 21);
-                    double endY = subTextureY;
-                    double endX = subTextureX;
-                    tile->setIceSubTexture(subTextureX / 21, endX / 21, subTextureY / 8, endY / 8);
+                    double endY = subTextureY + 1;
+                    double endX = subTextureX + 1;
+                    tile->setIceSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21), (subTextureY / 8) + TILE_BORDER, (endY / 8));
                 }
                 if(dirtTexture != -1){
                     //gives box to specify texture into texture atlas
@@ -209,7 +212,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     double endY = subTextureY + 1;
                     double endX = subTextureX + 1;
 //                    CULog("%d, %d, %d, %d", subTextureX, subTextureY, endX, endY);
-                    tile->setDirtSubTexture(subTextureX / 21, endX / 21,subTextureY / 8, endY / 8);
+                    tile->setDirtSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21), (subTextureY / 8) + TILE_BORDER, (endY / 8));
                 }
                 _tiles.push_back(tile);
                 _tileBoard[r][c] = tile;
@@ -371,11 +374,15 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 	bool success = true;
 	
+    auto levelInfo = json->get("levelInfo");
+    int rows = levelInfo->get("rows")->asInt();
+    
     auto objects = json->get("objects");
+
     
     // player
     auto player = objects->get("player");
-    _player = PlayerModel::alloc(Vec2(player->get("row")->asInt() + .5, player->get("col")->asInt() + .5), UNIT_DIM);
+    _player = PlayerModel::alloc(Vec2(player->get("col")->asInt() + .5, rows - player->get("row")->asInt() - .5), UNIT_DIM);
     b2Filter filter;
     filter.categoryBits = CATEGORY_PLAYER;
     filter.maskBits = -1;
@@ -391,7 +398,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 
         int r = acorn->get("row")->asInt();
         int c = acorn->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, r + .5), UNIT_DIM);
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         enemy->setTextureKey(ACORN);
         
         _world->addObstacle(enemy);
@@ -405,7 +412,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         
         int r = onion->get("row")->asInt();
         int c = onion->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, r + .5), UNIT_DIM);
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         enemy->setTextureKey(ONION);
         
         _world->addObstacle(enemy);
@@ -419,7 +426,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         
         int r = mushroom->get("row")->asInt();
         int c = mushroom->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, r + .5), UNIT_DIM);
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         enemy->setTextureKey(MUSHROOM);
         
         _world->addObstacle(enemy);
@@ -433,7 +440,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         
         int r = crate->get("row")->asInt();
         int c = crate->get("col")->asInt();
-        object = ObjectModel::alloc(Vec2(c + .5, r + .5), UNIT_DIM);
+        object = ObjectModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         object->setTextureKey(MOVABLE_NAME);
         
         _world->addObstacle(object);
@@ -447,7 +454,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         
         int r = rock->get("row")->asInt();
         int c = rock->get("col")->asInt();
-        object = ObjectModel::alloc(Vec2(c + .5, r + .5), UNIT_DIM);
+        object = ObjectModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         object->setTextureKey(IMMOBILE_NAME);
         
         _world->addObstacle(object);

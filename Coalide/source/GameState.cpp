@@ -75,20 +75,20 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
         std::shared_ptr<PolygonNode> sandNode;
         if(tile->getType() == TILE_TYPE::GRASS || tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getDirtSubTexture();
-            CULog("%f, %f, %f, %f", tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]);
+            CULog("%f, %f, %f, %f", 21 * tileSubtexture[0], 21 * tileSubtexture[1], 8 * tileSubtexture[2], 8 * tileSubtexture[3]);
             CULog("%s", tile->getDirtTextureKey().c_str());
             dirtNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getDirtTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
         }
         if(tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getIceSubTexture();
             iceNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
-            iceNode->setPosition(0, 0);
+            iceNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
             dirtNode->addChild(iceNode);
         }
         if(tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getSandSubTexture();
             sandNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
-            sandNode->setPosition(0, 0);
+            sandNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
             iceNode->addChild(sandNode);
         }
         
