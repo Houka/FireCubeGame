@@ -32,6 +32,8 @@ using namespace cugl;
 * @return  true if the controller is initialized properly, false otherwise.
 */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey) {
+    //set application to right color
+    Application::get()->setClearColor(Color4(15,82,186,255));
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= GAME_WIDTH / dimen.width; // Lock the game to a reasonable resolution

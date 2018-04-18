@@ -41,7 +41,6 @@ void CollisionController::beginContact(b2Contact* contact) {
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
     SimpleObstacle* soA = (SimpleObstacle*)(bodyA->GetUserData());
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
-    
 	if (soA->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soA;
 

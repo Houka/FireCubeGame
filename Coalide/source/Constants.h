@@ -44,6 +44,8 @@
 #define DEFAULT_WIDTH   32.0f
 #define DEFAULT_HEIGHT  18.0f
 
+#define TILE_WIDTH = 64
+
 #define DEFAULT_GRAVITY 0.0f
 #define GRAVITY	9.8f
 
@@ -80,7 +82,7 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define LEVEL_FILE   "json/demo/enemy_water.json"
+#define LEVEL_FILE   "json/updatedJsons/onlyonion.json"
 /** The key for our loaded level */
 #define LEVEL_KEY    "level"
 

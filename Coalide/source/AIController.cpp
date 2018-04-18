@@ -221,6 +221,7 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 		for (int j = -ceil(slingDist); j < slingDist; j++) {
 			int y = pos.y + j;
 			float d = pos.distance(Vec2(x, y));
+            // kyler - I changed this line to check if tile exists in tileboard[y][x] before accessing since I changed water to not be a tile
 			if (x > 0 && x < _bounds.size.getIWidth() && y > 0 && y < _bounds.size.getIHeight()
 				&& d < slingDist && !_closedArray[y][x] && !(i == 0 || j == 0) && !gamestate->getTileBoard()[y][x]->isWater() && !intersectsWater(pos, Vec2(x,y), gamestate)) {
 				float h = target.distance(Vec2(x, y));
