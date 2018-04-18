@@ -55,6 +55,109 @@ void PlayerModel::dispose() {
 	_frictionJoint = nullptr;
 }
 
+void PlayerModel::switchNode(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> toNode) {
+    fromNode->setVisible(false);
+    toNode->setVisible(true);
+    _node = toNode;
+}
+
+std::shared_ptr<Node> PlayerModel::getTextNode(int state, int dir) {
+    switch(state) {
+        case 0:
+            switch(dir) {
+                case 0:
+                    return _standingNode_f;
+                    break;
+                case 1:
+                    return _standingNode_fls;
+                    break;
+                case 2:
+                    return _standingNode_l;
+                    break;
+                case 3:
+                    return _standingNode_bls;
+                    break;
+                case 4:
+                    return _standingNode_b;
+                    break;
+                case 5:
+                    return _standingNode_brs;
+                    break;
+                case 6:
+                    return _standingNode_r;
+                    break;
+                case 7:
+                    return _standingNode_frs;
+                    break;
+                default:
+                    CUAssertLog(false, "Invalid tile data.");
+                    break;
+            }
+            break;
+        default:
+            CUAssertLog(false, "Invalid tile data.");
+            break;
+    }
+}
+
+/**
+ * State:
+ * 0: standing
+ * 1: build up
+ * 2: charging
+ *
+ * Direction:
+ * 0->F / 1->FLS / 2->L / 3->BLS / 4->B
+ * 5->BRS / 6->R / 7->FRS
+ **/
+void PlayerModel::setTextNode(const std::shared_ptr<Node>& node, int state, int dir) {
+    node->setVisible(false);
+    switch(state) {
+        case 0:
+            switch(dir) {
+                case 0:
+                    _standingNode_f = node;
+                    _standingNode_f->setName("Standing Node f");
+                    break;
+                case 1:
+                    _standingNode_fls = node;
+                    _standingNode_fls->setName("Standing Node fls");
+                    break;
+                case 2:
+                    _standingNode_l = node;
+                    _standingNode_l->setName("Standing Node l");
+                    break;
+                case 3:
+                    _standingNode_bls = node;
+                    _standingNode_bls->setName("Standing Node bls");
+                    break;
+                case 4:
+                    _standingNode_b = node;
+                    _standingNode_b->setName("Standing Node b");
+                    break;
+                case 5:
+                    _standingNode_brs = node;
+                    _standingNode_brs->setName("Standing Node brs");
+                    break;
+                case 6:
+                    _standingNode_r = node;
+                    _standingNode_r->setName("Standing Node r");
+                    break;
+                case 7:
+                    _standingNode_frs = node;
+                    _standingNode_frs->setName("Standing Node frs");
+                    break;
+                default:
+                    CUAssertLog(false, "Invalid tile data.");
+                    break;
+            }
+            break;
+        default:
+            CUAssertLog(false, "Invalid tile data.");
+            break;
+    }
+}
+
 /**
 * Applies the impulse to the body of this player
 */

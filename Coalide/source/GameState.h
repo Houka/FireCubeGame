@@ -203,6 +203,10 @@ public:
 	* @return the scene graph node for drawing purposes.
 	*/
 	const std::shared_ptr<Node>& getRootNode() const { return _rootnode; }
+    
+    const std::shared_ptr<Node>& getWorldNode() const { return _worldnode; }
+    
+//    void setPlayerTexture() { _player->getNode()->setTexture(); }
 
 	/**
 	* Sets the scene graph node for drawing purposes.

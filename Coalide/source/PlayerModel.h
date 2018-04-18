@@ -35,7 +35,14 @@ private:
 protected:
     std::shared_ptr<AssetManager> _assets;
 	std::shared_ptr<Node> _node;
-	std::shared_ptr<Node> _standingNode;
+	std::shared_ptr<Node> _standingNode_f;
+    std::shared_ptr<Node> _standingNode_fls;
+    std::shared_ptr<Node> _standingNode_l;
+    std::shared_ptr<Node> _standingNode_bls;
+    std::shared_ptr<Node> _standingNode_b;
+    std::shared_ptr<Node> _standingNode_brs;
+    std::shared_ptr<Node> _standingNode_r;
+    std::shared_ptr<Node> _standingNode_frs;
     std::shared_ptr<Node> _buildupNode;
 	std::shared_ptr<Node> _chargingNode;
     std::shared_ptr<AnimationNode> _animationNode;
@@ -125,8 +132,12 @@ public:
 
 	void setFire(bool fire) { _onFire = fire; }
 
-	void switchStandingNode() { _standingNode->setVisible(true); _chargingNode->setVisible(false); _node = _standingNode; }
-	void switchChargingNode() { _standingNode->setVisible(false); _chargingNode->setVisible(true); _node = _chargingNode; }
+//    void switchStandingNode() { _standingNode->setVisible(true); _chargingNode->setVisible(false); _node = _standingNode; }
+//    void switchChargingNode() { _standingNode->setVisible(false); _chargingNode->setVisible(true); _node = _chargingNode; }
+    
+    void switchNode(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> toNode);
+    std::shared_ptr<Node> getTextNode(int state, int dir);
+    
 #pragma mark -
 #pragma mark Accessors
 	/**
@@ -185,9 +196,8 @@ public:
 	* @param node  The scene graph node representing the player.
 	*/
 	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
-	void setStandingNode(const std::shared_ptr<Node>& node) { _standingNode = node; }
-	void setChargingNode(const std::shared_ptr<Node>& node) { _chargingNode = node; }
-    void setAnimationNode(const std::shared_ptr<AnimationNode>& node) { _animationNode = node; }
+    
+    void setTextNode(const std::shared_ptr<Node>& node, int state, int dir);
 
 	/**
 	* Returns the scene graph node representing the player.

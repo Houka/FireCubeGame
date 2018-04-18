@@ -243,8 +243,53 @@ void GameScene::update(float dt) {
 		//CULog("SLOW DOWN");
         world->setStepsize(SLOW_MOTION);
         player->setColor(Color4::ORANGE);
+        Vec2 currentAim = _input.getCurrentAim();
+        float angle = currentAim.getAngle() * 180.0f / 3.14159f;
+        
+        if(angle > 0.0f && angle < 45.0f) {
+            std::shared_ptr<Node> currNode = player -> getNode();
+            std::shared_ptr<Node> desNode = player-> getTextNode(0, 2);
+            player->switchNode(currNode, desNode);
+        }
+        else if(angle > 45.0f && angle < 75.0f) {
+            std::shared_ptr<Node> currNode = player -> getNode();
+            std::shared_ptr<Node> desNode = player-> getTextNode(0, 3);
+            player->switchNode(currNode, desNode);
+        }
+        else if(angle > 75.0f && angle < 105.0f) {
+            std::shared_ptr<Node> currNode = player -> getNode();
+            std::shared_ptr<Node> desNode = player-> getTextNode(0, 4);
+            player->switchNode(currNode, desNode);
+        }
+        else if(angle > 105.0f && angle < 135.0f) {
+            std::shared_ptr<Node> currNode = player -> getNode();
+            std::shared_ptr<Node> desNode = player-> getTextNode(0, 5);
+            player->switchNode(currNode, desNode);
+        }
+        else if(angle > 135.0f && angle < 180.0f) {
+            std::shared_ptr<Node> currNode = player -> getNode();
+            std::shared_ptr<Node> desNode = player-> getTextNode(0, 6);
+            player->switchNode(currNode, desNode);
+        }
+        else if(angle < 0.0f && angle > -55.0f) {
+            std::shared_ptr<Node> currNode = player -> getNode();
+            std::shared_ptr<Node> desNode = player-> getTextNode(0, 1);
+            player->switchNode(currNode, desNode);
+        }
+        else if(angle < -55.0f && angle > -125.0f) {
+            std::shared_ptr<Node> currNode = player -> getNode();
+            std::shared_ptr<Node> desNode = player-> getTextNode(0, 0);
+            player->switchNode(currNode, desNode);
+        }
+        else if(angle < -125.0f && angle > -180.0f) {
+            std::shared_ptr<Node> currNode = player -> getNode();
+            std::shared_ptr<Node> desNode = player-> getTextNode(0, 7);
+            player->switchNode(currNode, desNode);
+        }
+        
         // update the aim arrow
         player->updateArrow(_input.getCurrentAim(), true);
+        CULog("Current Aim: %f", _input.getCurrentAim().getAngle() * 180.0f / 3.14159f);
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
 		//CULog("SPEED UP");
         world->setStepsize(NORMAL_MOTION);
@@ -351,6 +396,14 @@ void GameScene::updateFriction() {
 	if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
 		if (!player->getCharging()) {
 //            player->switchStandingNode();
+//            float angle = player->cugl::Obstacle::getAngle();
+//            CULog("Player Angle: %f", angle);
+//            auto standingPlayerNode = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_nicoal_f"));
+//            _gamestate->getWorldNode()->addChild(standingPlayerNode, UNIT_PRIORITY);
+//            standingPlayerNode->setVisible(true);
+//            player->getNode()->setVisible(false);
+//            player->setNode(standingPlayerNode);
+            
 			float friction = _gamestate->getBoard()[(int)floor(player_pos.y - 0.35)][(int)floor(player_pos.x)];
 			if (friction == 0) {
 				_gameover = true;
@@ -361,6 +414,13 @@ void GameScene::updateFriction() {
 		}
 		else if (player->getFriction() > .1f) {
 //            player->switchChargingNode();
+//            auto chargingPlayerNode = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging_f"));
+//            _gamestate->getWorldNode()->addChild(chargingPlayerNode, UNIT_PRIORITY);
+//            chargingPlayerNode->setVisible(true);
+//            player->getNode()->setVisible(false);
+//            player->setNode(chargingPlayerNode);
+//            player->setTextureKey("nicoal_charging_f");
+            
 			player->setFriction(0);
 		}
 	}
