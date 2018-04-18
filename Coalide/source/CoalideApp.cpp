@@ -98,7 +98,7 @@ void CoalideApp::onShutdown() {
  */
 void CoalideApp::update(float timestep) {
     //std::string levelNames[5] = {"json/demo/enemy_no_water.json", "json/demo/map.json", "json/demo/island_all_enemies.json", "json/demo/3.json", "json/demo/enemy_water.json"};
-    std::string levelNames[6] = {"json/updatedJsons/rings.json", "json/updatedJsons/ishape.json", "json/updatedJsons/large.json", "json/updatedJsons/onlyonion.json", "json/updatedJsons/onionfight.json", "json/updatedJsons/icebridge.json"};
+    std::string levelNames[6] = {"json/updatedJsons/nicoalonly.json", "json/updatedJsons/rings.json", "json/updatedJsons/ishape.json", "json/updatedJsons/large.json", "json/updatedJsons/onionfight.json", "json/updatedJsons/icebridge.json"};
 	
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);

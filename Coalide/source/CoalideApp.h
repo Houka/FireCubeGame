@@ -50,7 +50,7 @@ protected:
 	bool _loaded;
     
     int _levelCt = 0;
-    int _numLevels = 3;
+    int _numLevels = 6;
 
     /** 
      * Activates the correct scene.

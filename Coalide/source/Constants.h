@@ -84,7 +84,7 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define LEVEL_FILE   "json/updatedJsons/rings.json"
+#define LEVEL_FILE   "json/updatedJsons/nicoalonly.json"
 /** The key for our loaded level */
 #define LEVEL_KEY    "level"
 
