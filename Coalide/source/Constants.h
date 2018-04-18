@@ -14,9 +14,9 @@
 /** This is adjusted by screen aspect ratio to get the height */
 #define GAME_WIDTH 1024
 
-#define CATEGORY_TERRAIN 0x0001
-#define CATEGORY_SPORE   0x0002
-#define CATEGORY_PLAYER	 0x0004
+#define CATEGORY_TERRAIN	0x0001
+#define CATEGORY_SPORE		0x0002
+#define CATEGORY_MUSHROOM	0x0004
 
 #define STUN_TIME 15
 
@@ -82,7 +82,7 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define LEVEL_FILE   "json/onlyonion.json"
+#define LEVEL_FILE   "json/updatedJsons/onlyonion.json"
 /** The key for our loaded level */
 #define LEVEL_KEY    "level"
 
@@ -91,6 +91,8 @@
 #define SLOW_MOTION .002
 
 #define MAX_PLAYER_SPEED 20
+
+#define MAX_IMPULSE 1.5f
 
 #pragma mark -
 #pragma mark Object Types

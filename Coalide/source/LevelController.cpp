@@ -38,10 +38,6 @@ void LevelController::dispose() { }
 */
 bool LevelController::preload(const std::string& file) {
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
-//    std::string jsonString = reader->readJson()->get("WrappedString")->asString();
-//    rapidjson::Document document;
-//    document.Parse(jsonString.c_str());
-//    assert(document.IsObject());
     return preload(reader->readJson());
 }
 
@@ -83,7 +79,6 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
     //for time slow down
     _world->setLockStep(true);
     _world->setStepsize(NORMAL_MOTION);
-    
 	
 	// Create the arena
 	if (!loadTerrain(json)) {
@@ -149,8 +144,8 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
         auto innerIce = iceTextureArray->get(r);
         auto innerDirt = dirtTextureArray->get(r);
         for(int c = 0; c<cols; c++){
-            std::string type = typesArray->get(c)->asString();
             
+            std::string type = typesArray->get(c)->asString();
             if(type == "empty"){
                 _board[rows - 1 - r][c] = 0;
             }
@@ -165,7 +160,6 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     tile->setSandTextureKey("tileset_forest.png");
                     tile->setIceTextureKey("tileset_forest.png");
                     tile->setDirtTextureKey("tileset_forest.png");
-                    CULog("%d, %d, %d", sandTexture, iceTexture, dirtTexture);
                 
                 }
                 if(type == "ice"){
@@ -201,7 +195,6 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     double subTextureX = (dirtTexture % 21);
                     double endY = subTextureY + 1;
                     double endX = subTextureX + 1;
-//                    CULog("%d, %d, %d, %d", subTextureX, subTextureY, endX, endY);
                     tile->setDirtSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21), (subTextureY / 8) + TILE_BORDER, (endY / 8));
                 }
                 _tiles.push_back(tile);
@@ -209,157 +202,8 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
             }
         }
     }
-    
-//    auto waterLayer = json->get(LAYERS_FIELD)->get(0);
-//    auto worldLayer = json->get(LAYERS_FIELD)->get(1);
-
-//    if (worldLayer != nullptr) {
-//        success = true;
-//
-//        auto waterData = waterLayer->get(DATA_FIELD)->asFloatArray();
-//        auto worldData = worldLayer->get(DATA_FIELD)->asFloatArray();
-//        _board = new int*[worldH];
-//        _tileBoard = new std::shared_ptr<TileModel>*[worldH];
-//
-//        for (int i = 0; i < worldH; i++) {
-//            _board[i] = new int[worldW];
-//            _tileBoard[i] = new std::shared_ptr<TileModel>[worldW];
-//        }
-//
-//        int count = 0;
-//        for (int i = worldH - 1; i >= 0; i--) {
-//            for (int j = 0; j < worldW; j++) {
-//                loadWaterTile(Vec2(j + .5, i + .5), waterData[count], TILE_TYPE::WATER, waterLayer);
-//
-//                float tileVal = worldData[count];
-//
-//                if (std::ceil(tileVal) - tileVal < .01) {
-//                    tileVal = std::ceil(tileVal);
-//                }
-//
-//                int tileColumn = std::floor(tileVal);
-//                TILE_TYPE tileType;
-//
-//                switch (tileColumn) {
-//                case -1:
-//                    _board[i][j] = 0;
-//                    break;
-//                case 0:
-//                case 1:
-//                case 2:
-//                case 3:
-//                case 4:
-//                case 5:
-//                case 6:
-//                    _board[i][j] = 10;
-//                    loadLandTile(Vec2(j + .5, i + .5), tileVal, TILE_TYPE::GRASS, worldLayer);
-//                    break;
-//                case 7:
-//                case 8:
-//                case 9:
-//                case 10:
-//                case 11:
-//                case 12:
-//                case 13:
-//                    _board[i][j] = 2;
-//                    loadLandTile(Vec2(j + .5, i + .5), tileVal, TILE_TYPE::ICE, worldLayer);
-//                    break;
-//                case 14:
-//                case 15:
-//                case 16:
-//                case 17:
-//                case 18:
-//                case 19:
-//                case 20:
-//                    _board[i][j] = 20;
-//                    loadLandTile(Vec2(j + .5, i + .5), tileVal, TILE_TYPE::SAND, worldLayer);
-//                    break;
-//                default:
-//                    CUAssertLog(false, "Invalid tile data.");
-//                    break;
-//                }
-//                count++;
-//            }
-//        }
-//    }
 	return success;
 }
-
-//bool LevelController::loadLandTile(Vec2 tilePos, float tileVal, TILE_TYPE tileType, std::shared_ptr<JsonValue>& layer) {
-//    bool success = true;
-//
-//    std::shared_ptr<TileModel> tile = TileModel::alloc(tilePos, UNIT_DIM);
-//
-//    tile->setType(tileType);
-//    int col = std::floor(tileVal);
-//    float rowFloat = tileVal - col;
-//    int row;
-//    if (std::ceil(rowFloat*10) - rowFloat*10 < .05) {
-//        row = std::ceil(rowFloat*10);
-//    }
-//    else if (rowFloat*10 - std::floor(rowFloat*10) < .05) {
-//        row = rowFloat * 10;
-//    }
-//    else {
-//        if (std::ceil(rowFloat * 100) - rowFloat * 100 < .05) {
-//            row = std::ceil(rowFloat * 100);
-//        }
-//        else {
-//            row = rowFloat * 100;
-//        }
-//    }
-//
-//    double x0 = col*_tileDim.width / _worldTilesetDim.width;
-//    double x1 = (col + 1)*_tileDim.width / _worldTilesetDim.width;
-//    double y0 = row*_tileDim.height / _worldTilesetDim.height;
-//    double y1 = (row + 1)*_tileDim.height / _worldTilesetDim.height;
-//
-//    tile->setTextureKey(layer->get(TILESET_FIELD)->asString());
-//    tile->setSubTexture(x0, x1, y0, y1);
-//
-//    _tiles.push_back(tile);
-//    _tileBoard[(int)tilePos.y][(int)tilePos.x] = tile;
-//
-//    return success;
-//}
-//
-//bool LevelController::loadWaterTile(Vec2 tilePos, float tileVal, TILE_TYPE tileType, std::shared_ptr<JsonValue>& layer) {
-//    bool success = true;
-//
-//    std::shared_ptr<TileModel> tile = TileModel::alloc(tilePos, UNIT_DIM);
-//
-//    tile->setType(tileType);
-//    int col = std::floor(tileVal);
-//    float rowFloat = tileVal - col;
-//    int row;
-//    if (std::ceil(rowFloat * 10) - rowFloat * 10 < .05) {
-//        row = std::ceil(rowFloat * 10);
-//    }
-//    else if (rowFloat * 10 - std::floor(rowFloat * 10) < .05) {
-//        row = rowFloat * 10;
-//    }
-//    else {
-//        if (std::ceil(rowFloat * 100) - rowFloat * 100 < .05) {
-//            row = std::ceil(rowFloat * 100);
-//        }
-//        else {
-//            row = rowFloat * 100;
-//        }
-//    }
-//
-//    double x0 = col*_tileDim.width / _waterTilesetDim.width;
-//    double x1 = (col + 1)*_tileDim.width / _waterTilesetDim.width;
-//    double y0 = row*_tileDim.height / _waterTilesetDim.height;
-//    double y1 = (row + 1)*_tileDim.height / _waterTilesetDim.height;
-//
-//    tile->setTextureKey(layer->get(TILESET_FIELD)->asString());
-//    tile->setSubTexture(x0, x1, y0, y1);
-//
-//    _tiles.push_back(tile);
-//    _tileBoard[(int)tilePos.y][(int)tilePos.x] = tile;
-//
-//    return success;
-//}
 
 bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 	bool success = true;
@@ -368,16 +212,10 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
     int rows = levelInfo->get("rows")->asInt();
     
     auto objects = json->get("objects");
-
     
     // player
     auto player = objects->get("player");
     _player = PlayerModel::alloc(Vec2(player->get("col")->asInt() + .5, rows - player->get("row")->asInt() - .5), UNIT_DIM);
-    b2Filter filter;
-    filter.categoryBits = CATEGORY_PLAYER;
-    filter.maskBits = -1;
-    filter.groupIndex = NULL;
-    _player->setFilterData(filter);
     
     _world->addObstacle(_player);
     
@@ -422,6 +260,12 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         enemy->setTextureKey(MUSHROOM);
         enemy->setMushroom();
         
+        b2Filter filter;
+        filter.categoryBits = CATEGORY_MUSHROOM;
+        filter.maskBits = ~CATEGORY_SPORE;
+        filter.groupIndex = NULL;
+        enemy->setFilterData(filter);
+        
         _world->addObstacle(enemy);
         _enemies.push_back(enemy);
     }
@@ -457,123 +301,6 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         _world->addObstacle(object);
         _objects.push_back(object);
     }
-    
-//    auto objectsLayer = json->get(LAYERS_FIELD)->get(2);
-//    if (objectsLayer != nullptr) {
-//        success = true;
-//
-//        int worldW = _bounds.size.getIWidth();
-//        int worldH = _bounds.size.getIHeight();
-//
-//        auto objectsData = objectsLayer->get(DATA_FIELD)->asFloatArray();
-//
-//        int count = 0;
-//        for (int i = worldH - 1; i >= 0; i--) {
-//            for (int j = 0; j < worldW; j++) {
-//                int objVal = objectsData[count];
-//                
-//                std::shared_ptr<EnemyModel> enemy;
-//                std::shared_ptr<ObjectModel> object;
-//
-//                b2Filter filter;
-//
-//                switch (objVal) {
-//                case -1:
-//                    break;
-//                case 0:
-//                    _player = PlayerModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-//
-//                    filter.categoryBits = CATEGORY_PLAYER;
-//                    filter.maskBits = -1;
-//                    filter.groupIndex = NULL;
-//                    _player->setFilterData(filter);
-//
-//                    _world->addObstacle(_player);
-//                    break;
-//                case 1:
-//                    enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-//                    enemy->setTextureKey(ACORN);
-//
-//                    _world->addObstacle(enemy);
-//                    _enemies.push_back(enemy);
-//                    break;
-//                case 2:
-//                    enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-//                    enemy->setTextureKey(MUSHROOM);
-//                    enemy->setMushroom();
-//
-//                    _world->addObstacle(enemy);
-//                    _enemies.push_back(enemy);
-//                    break;
-//                case 3:
-//                    enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-//                    enemy->setTextureKey(ONION);
-//                    enemy->setOnion();
-//                    enemy->setDensity(3);
-//
-//                    _world->addObstacle(enemy);
-//                    _enemies.push_back(enemy);
-//                    break;
-//                case 4:
-//                    object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-//                    object->setTextureKey(IMMOBILE_NAME);
-//
-//                    object->setName(IMMOBILE_NAME);
-//                    object->setBodyType(b2_staticBody);
-//
-//                    _world->addObstacle(object);
-//                    _objects.push_back(object);
-//
-//                    break;
-//                case 5:
-//                    object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-//                    object->setTextureKey(MOVABLE_NAME);
-//
-//                    object->setName(MOVABLE_NAME);
-//                    object->setBodyType(b2_dynamicBody);
-//
-//                    _world->addObstacle(object);
-//                    _objects.push_back(object);
-//                    break;
-//                default:
-//                    CUAssertLog(false, "Invalid object data.");
-//                    break;
-//                }
-//                
-//                /*else if (objVal == 50) {
-//                    std::shared_ptr<ObjectModel> object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-//                    object->setName(IMMOBILE_NAME);
-//                    object->setTextureKey(IMMOBILE_NAME);
-//                    object->setBodyType(b2_staticBody);
-//
-//                    _world->addObstacle(object);
-//                    _objects.push_back(object);
-//                }
-//                else if (objVal == 51) {
-//                    std::shared_ptr<ObjectModel> object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-//                    object->setName(MOVABLE_NAME);
-//                    object->setTextureKey(MOVABLE_NAME);
-//                    object->setBodyType(b2_dynamicBody);
-//
-//                    _world->addObstacle(object);
-//                    _objects.push_back(object);
-//                }
-//                else if (objVal == 52) {
-//                    std::shared_ptr<ObjectModel> object = ObjectModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
-//                    object->setName(BREAKABLE_NAME); 
-//                    object->setTextureKey(BREAKABLE_NAME);
-//                    object->setBodyType(b2_staticBody);
-//
-//                    _world->addObstacle(object);
-//                    _objects.push_back(object);
-//                }*/
-//                count++;
-//            }
-//        }
-//    }
-//    else {
-//        CUAssertLog(false, "Failed to load objects layer.");
-//    }
 	return success;
 }
 

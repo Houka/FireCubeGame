@@ -466,8 +466,11 @@ void GameScene::reset(const std::string& file) {
 	//_loadnode->setVisible(true);
 	_reloading = true;
 	_assets->load<LevelController>(_levelKey, file);
+	_gamestate = _assets->get<LevelController>(_levelKey)->getGameState();
 	setComplete(false);
 	_gameover = false;
+
+	_ai.init(_gamestate);
     
     // initialize the camera
     cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;

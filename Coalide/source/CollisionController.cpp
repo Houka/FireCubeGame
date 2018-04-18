@@ -41,7 +41,6 @@ void CollisionController::beginContact(b2Contact* contact) {
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
     SimpleObstacle* soA = (SimpleObstacle*)(bodyA->GetUserData());
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
-    CULog("A name: %s, B name: %s", soA->getName().c_str(), soB->getName().c_str());
 	if (soA->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soA;
 
@@ -53,7 +52,6 @@ void CollisionController::beginContact(b2Contact* contact) {
 			PlayerModel* player = (PlayerModel*)soB;	
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
-                CULog("HERE HERE HERE");
 				player->stunOnStop(4500);
 				if (!enemy->alreadyStopping() && enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
 					enemy->setShouldStop();
@@ -65,7 +63,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 		}
 	}
 
-	else if (soB->getName() == "enemy") {
+	if (soB->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soB;
 
 		if (enemy->isSpore()) {
