@@ -81,7 +81,6 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
     //for time slow down
     _world->setLockStep(true);
     _world->setStepsize(NORMAL_MOTION);
-    
 	
 	// Create the arena
 	if (!loadTerrain(json)) {
@@ -298,11 +297,6 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 				case 0:
 					_player = PlayerModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 
-					filter.categoryBits = CATEGORY_PLAYER;
-					filter.maskBits = -1;
-					filter.groupIndex = NULL;
-					_player->setFilterData(filter);
-
 					_world->addObstacle(_player);
 					break;
 				case 1:
@@ -316,6 +310,11 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 					enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					enemy->setTextureKey(MUSHROOM);
 					enemy->setMushroom();
+
+					filter.categoryBits = CATEGORY_MUSHROOM;
+					filter.maskBits = ~CATEGORY_SPORE;
+					filter.groupIndex = NULL;
+					enemy->setFilterData(filter);
 
 					_world->addObstacle(enemy);
 					_enemies.push_back(enemy);

@@ -14,9 +14,9 @@
 /** This is adjusted by screen aspect ratio to get the height */
 #define GAME_WIDTH 1024
 
-#define CATEGORY_TERRAIN 0x0001
-#define CATEGORY_SPORE   0x0002
-#define CATEGORY_PLAYER	 0x0004
+#define CATEGORY_TERRAIN	0x0001
+#define CATEGORY_SPORE		0x0002
+#define CATEGORY_MUSHROOM	0x0004
 
 #define STUN_TIME 15
 
@@ -47,7 +47,7 @@
 #define DEFAULT_GRAVITY 0.0f
 #define GRAVITY	9.8f
 
-#define MIN_SPEED_FOR_CHARGING 5.0f
+#define MIN_SPEED_FOR_CHARGING 2.0f
 #define GLOBAL_AIR_DRAG 1.5f
 
 #define UNIT_DIM Vec2(1,1)
@@ -89,6 +89,8 @@
 #define SLOW_MOTION .002
 
 #define MAX_PLAYER_SPEED 20
+
+#define IMPULSE 1.5
 
 #pragma mark -
 #pragma mark Object Types

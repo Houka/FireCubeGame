@@ -11,10 +11,11 @@
 
 using namespace cugl;
 
-
 bool AIController::init(std::shared_ptr<GameState> gamestate) {
-	/*int worldH = gamestate->getBounds().size.getIHeight();
+	int worldH = gamestate->getBounds().size.getIHeight();
 	int worldW = gamestate->getBounds().size.getIWidth();
+
+	_bounds.size.set(worldW, worldH);
 
 	_openArray = new bool*[worldH];
 	_closedArray = new bool*[worldH];
@@ -26,12 +27,19 @@ bool AIController::init(std::shared_ptr<GameState> gamestate) {
 			_openArray[i][j] = false;
 			_closedArray[i][j] = false;
 		}
-	}*/
+	}
 
 	return true;
 }
 
-void AIController::dispose() { }
+void AIController::dispose() {
+	for (int i = 0; i < _bounds.size.getIHeight(); i++) {
+		delete[] _openArray[i];
+		delete[] _closedArray[i];
+	}
+	delete[] _openArray;
+	delete[] _closedArray;
+}
 
 Vec2 avoidCollisions(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate) {
 	Vec2 d = end - start;
@@ -119,7 +127,7 @@ Vec2 flock(std::shared_ptr<EnemyModel> enemy, std::shared_ptr<GameState> gamesta
 
 	Vec2 V = flockV + repelV;
 	V.normalize();
-	V *= .8;
+	V *= .5;
 	return V;
 }
 
@@ -150,70 +158,95 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
 }
 
 
-//bool sortByScore(std::tuple<Vec2, Vec2, float> a, std::tuple<Vec2, Vec2, float> b) {
-//	return std::get<2>(a) > std::get<2>(b);
-//}
-//
-//
-//void AIController::AStar(Vec2 pos, float slingDist, int g) {
-//	_closedList.push_back(_openList[0]);
-//	_openList.pop_back();
-//
-//	for (int i = 0; i < slingDist; i++) {
-//		int x = pos.x + i;
-//		for (int j = 0; j < slingDist; j++) {
-//			int y = pos.y + j;
-//			float d = pos.distance(Vec2(x, y));
-//			if (d < slingDist && d > slingDist - sqrt(2) && !_closedArray[i][j]) {
-//				float h = pos.distance(Vec2(x, y));
-//				if (!_openArray[i][j]) {
-//					_openList.push_back(std::make_tuple(Vec2(i, j), pos, g + h));
-//				}
-//				else {
-//					for (int i = 0; i < _openList.size(); i++) {
-//						if (std::get<0>(_openList[i]).x == i && std::get<0>(_openList[i]).y == j) {
-//							if (std::get<2>(_openList[i]) < g + h) {
-//								_openList[i] = std::make_tuple(Vec2(i, j), pos, g + h);
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
-//
-//	std::sort(_openList.begin(), _openList.end(), sortByScore);
-//}
-//
-//
-//std::vector<Vec2> AIController::calculateRoute(Vec2 pos, Vec2 aim, Vec2 target, std::shared_ptr<GameState> gamestate) {
-//	float slingDist = aim.length();
-//	int step = 0;
-//
-//	_openList.push_back(std::make_tuple(pos, pos, target.distance(pos)));
-//
-//	for (int i = 0; i < 5; i++) {
-//		AStar(pos, slingDist, i+1);
-//	}
-//
-//	std::vector<Vec2> route;
-//
-//	auto move = _closedList[_closedList.size() - 1];
-//	route.push_back(std::get<0>(move));
-//
-//	for (int i = 0; i < 4; i++) {
-//		route.push_back(std::get<1>(move));
-//		for (int j = 0; j < _openList.size(); j++) {
-//			if (std::get<0>(_openList[j]).x == std::get<1>(move).x && std::get<0>(_openList[j]).y == std::get<1>(move).y) {
-//				move = _openList[j];
-//			}
-//		}
-//	}
-//
-//	route.push_back(std::get<1>(move));
-//
-//	return route;
-//}
+bool sortByScore(std::tuple<Vec2, Vec2, float> a, std::tuple<Vec2, Vec2, float> b) {
+	return std::get<2>(a) > std::get<2>(b);
+}
+
+
+std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 target, std::shared_ptr<GameState> gamestate) {
+	int step = 0;
+
+	_openList.push_back(std::make_tuple(pos, pos, target.distance(pos)));
+
+	for (int i = 0; i < 8; i++) {
+		if (_openList.empty()) {
+			break;
+		}
+		if (_closedList.empty()) {
+			AStar(pos, slingDist, target, pos, gamestate);
+		}
+		else if (std::get<0>(_closedList.back()).distance(target) < slingDist*1.5) {
+			_closedList.push_back(std::make_tuple(target, std::get<0>(_closedList.back()), -1));
+			break;
+		}
+		else {
+			AStar(std::get<0>(_closedList.back()), slingDist, target, pos, gamestate);
+		}
+	}
+
+	std::vector<Vec2> route;
+
+	auto move = _closedList.back();
+	route.push_back(std::get<0>(move));
+
+	int nMoves = 0;
+
+	while (std::get<0>(move).x != std::get<1>(move).x && std::get<0>(move).y != std::get<1>(move).y && nMoves < 4) {
+		route.push_back(std::get<1>(move));
+		for (int j = 0; j < _closedList.size(); j++) {
+			if ((int)std::get<0>(_closedList[j]).x == (int)std::get<1>(move).x && (int)std::get<0>(_closedList[j]).y == (int)std::get<1>(move).y) {
+				move = _closedList[j];
+			}
+		}
+		nMoves += 1;
+	}
+
+	_openList.clear();
+	_closedList.clear();
+
+	for (int i = 0; i < _bounds.size.getIHeight(); i++) {
+		for (int j = 0; j < _bounds.size.getIWidth(); j++) {
+			_openArray[i][j] = false;
+			_closedArray[i][j] = false;
+		}
+	}
+
+	return route;
+}
+
+
+void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, std::shared_ptr<GameState> gamestate) {
+	_closedList.push_back(_openList.back());
+	_closedArray[(int)std::get<0>(_openList.back()).y][(int)std::get<0>(_openList.back()).x] = true;
+	_openList.pop_back();
+
+	for (int i = -slingDist; i < slingDist; i++) {
+		int x = pos.x + i;
+		for (int j = -slingDist; j < slingDist; j++) {
+			int y = pos.y + j;
+			float d = pos.distance(Vec2(x, y));
+			if (x > 0 && x < _bounds.size.getIWidth() && y > 0 && y < _bounds.size.getIHeight()
+				&& d < slingDist && !_closedArray[y][x] && !(i == 0 || j == 0) && !gamestate->getTileBoard()[y][x]->isWater()) {
+				float h = target.distance(Vec2(x, y));
+				float g = origin.distance(Vec2(x, y));
+				if (!_openArray[y][x]) {
+					_openList.push_back(std::make_tuple(Vec2(x, y), pos, g + h));
+				}
+				else {
+					for (int k = 0; k < _openList.size(); i++) {
+						if ((int)std::get<0>(_openList[k]).x == i && (int)std::get<0>(_openList[k]).y == j) {
+							if (std::get<2>(_openList[k]) > g + h) {
+								_openList[k] = std::make_tuple(Vec2(x, y), pos, g + h);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	std::sort(_openList.begin(), _openList.end(), sortByScore);
+}
 
 
 std::shared_ptr<EnemyModel> shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameState> gamestate) {
@@ -224,7 +257,7 @@ std::shared_ptr<EnemyModel> shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameS
 
 	b2Filter filter;
 	filter.categoryBits = CATEGORY_SPORE;
-	filter.maskBits = CATEGORY_PLAYER;
+	filter.maskBits = ~CATEGORY_MUSHROOM;
 	filter.groupIndex = NULL;
 	spore->setFilterData(filter);
 
@@ -246,6 +279,7 @@ std::shared_ptr<EnemyModel> shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameS
  */
 std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnemyMoves(std::shared_ptr<GameState> gamestate) {
     std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> moves;
+
     std::vector<std::shared_ptr<EnemyModel>> enemies = gamestate->getEnemies();
     
     Vec2 player_pos = gamestate->getPlayer()->getPosition();
@@ -258,29 +292,47 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
 
-		Vec2 enemy_pos = enemy->getPosition();
-		Vec2 aim = player_pos - enemy_pos;
-
-		aim = aim.normalize();
-
-		/*if (enemy->getRoute().size() == 0) {
-			enemy->setRoute(calculateRoute(enemy_pos, aim, player_pos, gamestate));
-		}*/
-
         if(!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom()){
-			/*std::vector<Vec2> route = enemy->getRoute();
-			aim = route[route.size()];
-			route.pop_back();
-			enemy->setRoute(route);*/
+			Vec2 enemy_pos = enemy->getPosition();
+			Vec2 aim = player_pos - enemy_pos;
 
-			Vec2 projectedLanding = enemy_pos + aim*3;
+			aim.normalize();
 
-			Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);
-			//aim += avoidCollisions(enemy_pos, projectedLanding, g);
-			aim += avoidance;
+			int p = enemy->getDensity();
+			int A = enemy->getWidth()*enemy->getHeight();
+			int m = p*A;
 
-			if (enemy->isTargeting()) {
-				aim += flock(enemy, gamestate);
+			float vi = IMPULSE * 2 / m;
+			float vf = MIN_SPEED_FOR_CHARGING;
+			
+			float f1 = GLOBAL_AIR_DRAG / m;
+			float f2 = gamestate->getBoard()[(int)enemy_pos.y][(int)enemy_pos.x];
+
+			float d1 = (vi*vi - vf*vf) / (2 * f1 / m);
+			float d2;
+			if (f2 != 0) {
+				d2 = vf*vf / (2 * f2 / m);
+			}
+			else {
+				d2 = 0;
+			}
+
+			float d = d1 + d2;
+
+			if (player_pos.distance(enemy_pos) > aim.length()*1.5) {
+				if (enemy->getRoute().size() == 0) {
+					enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, gamestate));
+				}
+
+				std::vector<Vec2> route = enemy->getRoute();
+				aim = route.back() - enemy_pos;
+				route.pop_back();
+				enemy->setRoute(route);
+
+				/*Vec2 projectedLanding = enemy_pos + aim * 3;
+				Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);
+				aim += avoidance;
+				aim += flock(enemy, gamestate);*/
 			}
 
 			/*aim = aim.normalize()*1.25;
@@ -302,15 +354,17 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				moves.push_back(std::make_tuple(enemy, aim));
 			}*/
 
-            aim = aim.normalize()*1.5;
-
-            if(intersectsWater(enemy_pos, player_pos, gamestate)){
+            /*if(intersectsWater(enemy_pos, player_pos, gamestate)){
                 enemy->setWaterBetween(true);
                 continue;
-            }
+            }*/
+
+			aim = aim.normalize()*IMPULSE;
+
             enemy->setWaterBetween(false);
-			if (enemy->timeoutElapsed())
+			if (enemy->timeoutElapsed()) {
 				moves.push_back(std::make_tuple(enemy, aim));
+			}
         }
 		else if(enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {
 			if (enemy->timeoutElapsed()) {
