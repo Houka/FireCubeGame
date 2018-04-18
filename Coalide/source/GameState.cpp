@@ -101,6 +101,15 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
         auto chargingPlayerNode_r = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_r"));
         auto chargingPlayerNode_frs = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_frs"));
         
+        auto slidingPlayerNode_f = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_sliding_f"));
+        auto slidingPlayerNode_fls = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_sliding_fls"));
+        auto slidingPlayerNode_l = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_sliding_l"));
+        auto slidingPlayerNode_bls = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_sliding_bls"));
+        auto slidingPlayerNode_b = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_sliding_b"));
+        auto slidingPlayerNode_brs = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_sliding_brs"));
+        auto slidingPlayerNode_r = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_sliding_r"));
+        auto slidingPlayerNode_frs = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_sliding_frs"));
+        
         _player->setNode(playerNode);
         _player->setTextNode(standingPlayerNode_f, 0, 0, true);
         _player->setTextNode(standingPlayerNode_fls, 0, 1, true);
@@ -119,6 +128,15 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
         _player->setTextNode(chargingPlayerNode_brs, 2, 5, true);
         _player->setTextNode(chargingPlayerNode_r, 2, 6,true);
         _player->setTextNode(chargingPlayerNode_frs, 2, 7, true);
+        
+        _player->setTextNode(slidingPlayerNode_f, 3, 0, true);
+        _player->setTextNode(slidingPlayerNode_fls, 3, 1, true);
+        _player->setTextNode(slidingPlayerNode_l, 3, 2, true);
+        _player->setTextNode(slidingPlayerNode_bls, 3, 3, true);
+        _player->setTextNode(slidingPlayerNode_b, 3, 4, true);
+        _player->setTextNode(slidingPlayerNode_brs, 3, 5, true);
+        _player->setTextNode(slidingPlayerNode_r, 3, 6,true);
+        _player->setTextNode(slidingPlayerNode_frs, 3, 7, true);
         
         //        chargingPlayerNode->setVisible(false);
         //        _player->setStandingNode(playerNode);
@@ -153,6 +171,14 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
         _worldnode->addChild(chargingPlayerNode_brs, UNIT_PRIORITY);
         _worldnode->addChild(chargingPlayerNode_r, UNIT_PRIORITY);
         _worldnode->addChild(chargingPlayerNode_frs, UNIT_PRIORITY);
+        _worldnode->addChild(slidingPlayerNode_f, UNIT_PRIORITY);
+        _worldnode->addChild(slidingPlayerNode_fls, UNIT_PRIORITY);
+        _worldnode->addChild(slidingPlayerNode_l, UNIT_PRIORITY);
+        _worldnode->addChild(slidingPlayerNode_bls, UNIT_PRIORITY);
+        _worldnode->addChild(slidingPlayerNode_b, UNIT_PRIORITY);
+        _worldnode->addChild(slidingPlayerNode_brs, UNIT_PRIORITY);
+        _worldnode->addChild(slidingPlayerNode_r, UNIT_PRIORITY);
+        _worldnode->addChild(slidingPlayerNode_frs, UNIT_PRIORITY);
         //        _worldnode->addChild(chargingPlayerNode, UNIT_PRIORITY);
     }
     

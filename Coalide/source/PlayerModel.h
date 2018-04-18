@@ -31,7 +31,7 @@ private:
     Vec2 _sizePlayer;
     /** whether the player should be stunned when they stop */
     bool _stunOnStop;
-
+    
 protected:
     std::shared_ptr<AssetManager> _assets;
 	std::shared_ptr<Node> _node;
@@ -51,6 +51,14 @@ protected:
     std::shared_ptr<Node> _chargingNode_brs;
     std::shared_ptr<Node> _chargingNode_r;
     std::shared_ptr<Node> _chargingNode_frs;
+    std::shared_ptr<Node> _slidingNode_f;
+    std::shared_ptr<Node> _slidingNode_fls;
+    std::shared_ptr<Node> _slidingNode_l;
+    std::shared_ptr<Node> _slidingNode_bls;
+    std::shared_ptr<Node> _slidingNode_b;
+    std::shared_ptr<Node> _slidingNode_brs;
+    std::shared_ptr<Node> _slidingNode_r;
+    std::shared_ptr<Node> _slidingNode_frs;
     std::shared_ptr<Node> _buildupNode;
 	std::shared_ptr<Node> _chargingNode;
     std::shared_ptr<AnimationNode> _animationNode;
@@ -71,7 +79,10 @@ protected:
 	bool _stunned;
 	bool _onFire;
 
+
 public:
+    float _oldAngle;
+    bool _isSliding;
 #pragma mark Constructors
 	/**
 	* Creates a new player at the origin.

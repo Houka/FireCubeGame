@@ -272,6 +272,86 @@ std::shared_ptr<Node> PlayerModel::setTextNode(const std::shared_ptr<Node>& node
                     CUAssertLog(false, "Invalid tile data.");
                     break;
             }
+            break;
+        case 3:
+            switch(dir) {
+                case 0:
+                    if(set) {
+                        node->setVisible(false);
+                        _slidingNode_f = node;
+                        _slidingNode_f->setName("sliding Node f");
+                        return NULL;
+                    } else {
+                        return _slidingNode_f;
+                    }
+                    break;
+                case 1:
+                    if(set) {
+                        node->setVisible(false);
+                        _slidingNode_fls = node;
+                        _slidingNode_fls->setName("sliding Node fls");
+                        return NULL;
+                        
+                    } else {
+                        return _slidingNode_fls;
+                    }
+                    break;
+                case 2:
+                    if(set) {
+                        node->setVisible(false);
+                        _slidingNode_l = node;
+                        _slidingNode_l->setName("sliding Node l");
+                        return NULL;
+                        
+                    } else { return _slidingNode_l;}
+                    break;
+                case 3:
+                    if(set){
+                        node->setVisible(false);
+                        _slidingNode_bls = node;
+                        _slidingNode_bls->setName("sliding Node bls");
+                        return NULL;
+                        
+                    }else{return _slidingNode_bls;}
+                    break;
+                case 4:
+                    if(set){
+                        node->setVisible(false);
+                        _slidingNode_b = node;
+                        _slidingNode_b->setName("sliding Node b");
+                        return NULL;
+                        
+                    }else{return _slidingNode_b;}
+                    break;
+                case 5:
+                    if(set){
+                        node->setVisible(false);
+                        _slidingNode_brs = node;
+                        _slidingNode_brs->setName("sliding Node brs");
+                        return NULL;
+                        
+                    }else{return _slidingNode_brs;}
+                    break;
+                case 6:
+                    if(set){
+                        node->setVisible(false);
+                        _slidingNode_r = node;
+                        _slidingNode_r->setName("sliding Node r");
+                        return NULL;
+                    }else{return _slidingNode_r;}
+                    break;
+                case 7:
+                    if(set){
+                        node->setVisible(false);
+                        _slidingNode_frs = node;
+                        _slidingNode_frs->setName("sliding Node frs");
+                        return NULL;
+                    }else{ return _slidingNode_frs;}
+                    break;
+                default:
+                    CUAssertLog(false, "Invalid tile data.");
+                    break;
+            }
         default:
             CUAssertLog(false, "Invalid tile data.");
             break;
