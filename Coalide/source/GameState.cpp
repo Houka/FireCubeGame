@@ -198,7 +198,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_uiNode->addChild(_menuButton, UNIT_PRIORITY);
 	_uiNode->addChild(_pauseButton, UNIT_PRIORITY);
 	_uiNode->addChild(_playButton, UNIT_PRIORITY);
-	_rootnode->addChild(_uiNode, 2);
+	_worldnode->addChild(_uiNode, 2);
 }
 
 void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {

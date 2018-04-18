@@ -156,6 +156,7 @@ void CoalideApp::update(float timestep) {
 				_gameScene.dispose();
 				_levelCt = (_levelCt + 1) % 5;
 				_gameScene.init(_assets, _input, LEVEL_KEY);
+				_gameScene.reset(levelNames[_levelCt]);
 			}
 		}	
 		if (_input.rightKeyPressed()) {
