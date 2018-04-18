@@ -41,6 +41,11 @@ protected:
 	// VIEW
 	/** Reference to the physics root of the scene graph */
 	std::shared_ptr<Node> _rootnode;
+
+	// BUTTONS
+	std::shared_ptr<cugl::Button> _backButton;
+
+	bool _didClickBack;
 	
 	/** Whether or not debug mode is active */
 	bool _debug;
@@ -72,6 +77,8 @@ public:
 	* Disposes of all (non-static) resources allocated to this mode.
 	*/
 	void dispose();
+
+	bool didClickBack() { return _didClickBack; }
 
 	/**
 	* Initializes the controller contents, and starts the game

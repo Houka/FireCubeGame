@@ -114,13 +114,37 @@ void CoalideApp::update(float timestep) {
 	}
 	else {
 		_input.update(timestep);
-		if (_input.leftKeyPressed()) {
-			
-			if (_currentScene == CURRENT_SCENE::MENU_SCENE) {
-				CULog("switching to game scene");
+		if (_currentScene == CURRENT_SCENE::MENU_SCENE) {
+			//CULog("currently menu scene");
+			if (_menuScene.didClickStart()) {
 				_menuScene.dispose();
 				_gameScene.init(_assets, _input, LEVEL_KEY);
 				_currentScene = CURRENT_SCENE::GAME_SCENE;
+			}
+			else if (_menuScene.didClickLevels()) {
+				_menuScene.dispose();
+				_levelSelectScene.init(_assets, _input);
+				_currentScene = CURRENT_SCENE::LEVEL_SELECT_SCENE;
+			}
+			else {
+				_menuScene.update(timestep);
+			}
+		}
+		if (_currentScene == CURRENT_SCENE::LEVEL_SELECT_SCENE) {
+			//CULog("currently level select scene");
+			if (_levelSelectScene.didClickBack()) {
+				_levelSelectScene.dispose();
+				_menuScene.init(_assets, _input);
+				_currentScene = CURRENT_SCENE::MENU_SCENE;
+			}
+			else {
+				_levelSelectScene.update(timestep);
+			}
+		}
+		if (_input.leftKeyPressed()) {
+			
+			if (_currentScene == CURRENT_SCENE::MENU_SCENE) {
+				
 			} else if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
 				_gameScene.dispose();
 				_menuScene.init(_assets, _input);
@@ -134,23 +158,15 @@ void CoalideApp::update(float timestep) {
 				_levelCt = (_levelCt+1)%5;
 			}
 			else if (_currentScene == CURRENT_SCENE::MENU_SCENE) {
-				_menuScene.dispose();
-				_levelSelectScene.init(_assets, _input);
-				_currentScene = CURRENT_SCENE::LEVEL_SELECT_SCENE;
+				
 			}
 		}
 		if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
-			CULog("currently game scene");
+			//CULog("currently game scene");
 			_gameScene.update(timestep);
 		}
-		if (_currentScene == CURRENT_SCENE::MENU_SCENE) {
-			CULog("currently menu scene");
-			_menuScene.update(timestep);
-		}
-		if (_currentScene == CURRENT_SCENE::LEVEL_SELECT_SCENE) {
-			CULog("currently level select scene");
-			_levelSelectScene.update(timestep);
-		}
+		
+		
         
 	}
 //    {

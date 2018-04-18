@@ -54,8 +54,10 @@ bool LevelSelectScene::init(const std::shared_ptr<AssetManager>& assets, InputCo
 	// Set up the scene graph
 	createSceneGraph(dimen);
 
+	_didClickBack = false;
+
 	// initialize the camera
-	cugl::Vec2 cameraPos = getCamera()->getPosition();
+	//cugl::Vec2 cameraPos = getCamera()->getPosition();
 	//getCamera()->translate(gameCenter - cameraPos);
 	return true;
 }
@@ -93,7 +95,26 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	_background->setPosition(scaledWidth / 2., yMax / 2.);
 	_background->setScale(yMax / textureHeight, yMax / textureHeight);
 
+	// create the buttons
+	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("levels_button"));
+
+	//_startNode->setPosition(50., 50);
+	_backButton = cugl::Button::alloc(_backNode);
+	_backButton->setPosition(0, textureHeight*0.9);
+
+	_backButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+		}
+		else {
+			_didClickBack = true;
+		}
+	});
+
+
+	_backButton->activate(4);
+
 	_rootnode->addChild(_background, UNIT_PRIORITY);
+	_background->addChild(_backButton, UNIT_PRIORITY);
 
 	addChild(_rootnode, 0);
 
@@ -115,23 +136,9 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 */
 void LevelSelectScene::update(float dt) {
 	// Check to see if new level loaded yet
-	if (_reloading) {
-		if (_assets->complete()) {
-
-			Size dimen = Application::get()->getDisplaySize();
-			dimen *= GAME_WIDTH / dimen.width;
-
-			createSceneGraph(dimen);
-			_reloading = false;
-
-			//_loadnode->setVisible(false);
-		}
-		else {
-			// Level is not loaded yet; refuse input
-			return;
-		}
-	}
 	_input.update(dt);
+
+	_didClickBack = false;
 
 	if (_input.didExit()) {
 		CULog("Shutting down");

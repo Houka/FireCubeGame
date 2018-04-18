@@ -18,6 +18,13 @@ public:
 	/** Reference to the physics root of the scene graph */
 	std::shared_ptr<Node> _rootnode;
 
+	// BUTTONS
+	std::shared_ptr<cugl::Button> _startButton;
+	std::shared_ptr<cugl::Button> _levelsButton;
+
+	bool _didClickStart;
+	bool _didClickLevels;
+
 #pragma mark -
 #pragma mark Constructors
 
@@ -41,6 +48,9 @@ public:
 	* Disposes of all (non-static) resources allocated to this mode.
 	*/
 	void dispose();
+
+	bool didClickStart() { return _didClickStart; }
+	bool didClickLevels() { return _didClickLevels; }
 
 	/**
 	* Initializes the controller contents, and shows the menu

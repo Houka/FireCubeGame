@@ -53,6 +53,9 @@ bool MenuScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// Set up the scene graph
 	createSceneGraph(dimen);
 
+	_didClickStart = false;
+	_didClickLevels = false;
+
 	return true;
 }
 
@@ -76,7 +79,36 @@ void MenuScene::createSceneGraph(Size dimen) {
 	float textureHeight = _background->getTexture()->getHeight();
 	_background->setScale(xMax/textureWidth, yMax/textureHeight);
 
+	// create the buttons
+	std::shared_ptr<cugl::Node> _startNode = PolygonNode::allocWithTexture(_assets->get<Texture>("start_button"));
+	std::shared_ptr<cugl::Node> _levelsNode = PolygonNode::allocWithTexture(_assets->get<Texture>("levels_button"));
+
+	//_startNode->setPosition(50., 50);
+	_startButton = cugl::Button::alloc(_startNode);
+	_startButton->setPosition(textureWidth / 4, textureHeight / 16.);
+
+	_levelsButton = cugl::Button::alloc(_levelsNode);
+	_levelsButton->setPosition(textureWidth / 1.8, textureHeight / 16.);
+
+	_startButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+		} else {
+			_didClickStart = true;
+		}
+	});
+
+	_levelsButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+			_didClickLevels = true;
+		}
+	});
+
+	_startButton->activate(2);
+	_levelsButton->activate(3);
+
 	_rootnode->addChild(_background, UNIT_PRIORITY);
+	_background->addChild(_startButton, UNIT_PRIORITY);
+	_background->addChild(_levelsButton, UNIT_PRIORITY);
 
 	addChild(_rootnode, 0);
 	
@@ -99,6 +131,9 @@ void MenuScene::createSceneGraph(Size dimen) {
 void MenuScene::update(float dt) {
 	// Check to see if new level loaded yet
 	_input.update(dt);
+
+	_didClickStart = false;
+	_didClickLevels = false;
 
 	if (_input.didExit()) {
 		CULog("Shutting down");
