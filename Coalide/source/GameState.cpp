@@ -35,8 +35,12 @@ void GameState::clearRootNode() {
  * Destroys this level, releasing all resources.
  */
 void GameState::dispose() {
-    _world = nullptr;
-    clearRootNode();
+	_world = nullptr;
+	_uiNode = nullptr;
+	_pauseButton = nullptr;
+	_playButton = nullptr;
+	_menuButton = nullptr;
+	clearRootNode();
 }
 
 /**
@@ -53,6 +57,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	}
 
 	_rootnode = node;
+	_isPaused = false;
 
 	// Create, but transfer ownership to root
 	_worldnode = Node::alloc();
@@ -218,6 +223,73 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 			_worldnode->addChild(objectNode, UNIT_PRIORITY);
 		}
 	}
+
+	// create the UI buttons
+	_uiNode = Node::alloc();
+	_uiNode->setPosition(300, 300);
+	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("menu_button"));
+	std::shared_ptr<cugl::Node> _pauseNode = PolygonNode::allocWithTexture(_assets->get<Texture>("pause_button"));
+	std::shared_ptr<cugl::Node> _playNode = PolygonNode::allocWithTexture(_assets->get<Texture>("play_button"));
+
+	float xMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
+	float yMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
+
+	//_startNode->setPosition(50., 50);
+	_menuButton = cugl::Button::alloc(_backNode);
+	_menuButton->setPosition(0, 10000);
+	_menuButton->setVisible(false);
+
+
+	_pauseButton = cugl::Button::alloc(_pauseNode);
+	_pauseButton->setPosition(-xMax/2.0, -yMax/2.0);
+	_pauseButton->setScale(.5, .5);
+
+
+	_playButton = cugl::Button::alloc(_playNode);
+	_playButton->setPosition(-200, 10000);
+	_playButton->setVisible(false);
+
+	_menuButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+		}
+		else {
+			_didClickMenu = true;
+		}
+	});
+
+	_pauseButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+		}
+		else {
+			_isPaused = true;
+			_playButton->setVisible(true);
+			_playButton->setPosition(-200, -100);
+			_menuButton->setVisible(true);
+			_menuButton->setPosition(0, -100);
+			_pauseButton->setVisible(false);
+		}
+	});
+
+	_playButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+		}
+		else {
+			_isPaused = false;
+			_playButton->setVisible(false);
+			_playButton->setPosition(-200, 10000);
+			_menuButton->setVisible(false);
+			_menuButton->setPosition(0, 10000);
+			_pauseButton->setVisible(true);
+		}
+	});
+
+	_menuButton->activate(5);
+	_pauseButton->activate(6);
+	_playButton->activate(7);
+	_uiNode->addChild(_menuButton, UNIT_PRIORITY);
+	_uiNode->addChild(_pauseButton, UNIT_PRIORITY);
+	_uiNode->addChild(_playButton, UNIT_PRIORITY);
+	_worldnode->addChild(_uiNode, 2);
 }
 
 void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {

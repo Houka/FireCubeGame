@@ -39,6 +39,8 @@
 #define MOVABLE_NAME	"movable"
 #define IMMOBILE_NAME	"immobile"
 
+#define MENU_NAME	"menu"
+
 #pragma mark -
 #pragma mark Physics Constants
 /** Game world dimensions in Box2d units */

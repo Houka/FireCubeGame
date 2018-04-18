@@ -129,6 +129,12 @@
 		EBC1471C1E27F0BB005494CE /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBC1471B1E27F0BB005494CE /* ImageIO.framework */; };
 		EBFE7C051E19B496001007C2 /* json in Resources */ = {isa = PBXBuildFile; fileRef = EBFE7C041E19B496001007C2 /* json */; };
 		EBFE7C091E19B4AC001007C2 /* json in Resources */ = {isa = PBXBuildFile; fileRef = EBFE7C041E19B496001007C2 /* json */; };
+		ED24AD2A2087622800326406 /* MenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD282087622700326406 /* MenuScene.cpp */; };
+		ED24AD2B2087622800326406 /* MenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD282087622700326406 /* MenuScene.cpp */; };
+		ED24AD2C2087622800326406 /* MenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD282087622700326406 /* MenuScene.cpp */; };
+		ED24AD2D2087622800326406 /* LevelSelectScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD292087622800326406 /* LevelSelectScene.cpp */; };
+		ED24AD2E2087622800326406 /* LevelSelectScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD292087622800326406 /* LevelSelectScene.cpp */; };
+		ED24AD2F2087622800326406 /* LevelSelectScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD292087622800326406 /* LevelSelectScene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -223,6 +229,10 @@
 		EBC147191E27F0A8005494CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		EBC1471B1E27F0BB005494CE /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		EBFE7C041E19B496001007C2 /* json */ = {isa = PBXFileReference; lastKnownFileType = folder; path = json; sourceTree = "<group>"; };
+		ED24AD232087622700326406 /* LevelSelectScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelSelectScene.h; sourceTree = "<group>"; };
+		ED24AD272087622700326406 /* MenuScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuScene.h; sourceTree = "<group>"; };
+		ED24AD282087622700326406 /* MenuScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuScene.cpp; sourceTree = "<group>"; };
+		ED24AD292087622800326406 /* LevelSelectScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LevelSelectScene.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -405,6 +415,10 @@
 		EBBF18B11D749176008E2001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				ED24AD292087622800326406 /* LevelSelectScene.cpp */,
+				ED24AD232087622700326406 /* LevelSelectScene.h */,
+				ED24AD282087622700326406 /* MenuScene.cpp */,
+				ED24AD272087622700326406 /* MenuScene.h */,
 				0858822E2068BC9800F2E4B9 /* ObjectModel.cpp */,
 				0858822A2068BC9800F2E4B9 /* ObjectModel.h */,
 				0833977620573ABE005EA329 /* AIController.cpp */,
@@ -627,9 +641,11 @@
 				085EBB142057884200F6FAD2 /* LevelController.h in Sources */,
 				085EBB152057884200F6FAD2 /* LoadingScene.cpp in Sources */,
 				085EBB162057884200F6FAD2 /* LoadingScene.h in Sources */,
+				ED24AD2F2087622800326406 /* LevelSelectScene.cpp in Sources */,
 				085EBB172057884200F6FAD2 /* PlayerModel.cpp in Sources */,
 				085EBB182057884200F6FAD2 /* PlayerModel.h in Sources */,
 				085EBB192057884200F6FAD2 /* TileModel.cpp in Sources */,
+				ED24AD2C2087622800326406 /* MenuScene.cpp in Sources */,
 				085EBB1A2057884200F6FAD2 /* TileModel.h in Sources */,
 				EB0FF61D2016F06000517030 /* main.cpp in Sources */,
 			);
@@ -658,9 +674,11 @@
 				085EBAFD2057874300F6FAD2 /* LevelController.h in Sources */,
 				085EBAFE2057874300F6FAD2 /* LoadingScene.cpp in Sources */,
 				085EBAFF2057874300F6FAD2 /* LoadingScene.h in Sources */,
+				ED24AD2E2087622800326406 /* LevelSelectScene.cpp in Sources */,
 				085EBB002057874300F6FAD2 /* PlayerModel.cpp in Sources */,
 				085EBB012057874300F6FAD2 /* PlayerModel.h in Sources */,
 				085EBB022057874300F6FAD2 /* TileModel.cpp in Sources */,
+				ED24AD2B2087622800326406 /* MenuScene.cpp in Sources */,
 				085EBB032057874300F6FAD2 /* TileModel.h in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
 			);
@@ -682,7 +700,9 @@
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
 				0833978F20573ABF005EA329 /* GameScene.cpp in Sources */,
 				0833979420573ABF005EA329 /* LoadingScene.cpp in Sources */,
+				ED24AD2D2087622800326406 /* LevelSelectScene.cpp in Sources */,
 				0833978D20573ABF005EA329 /* CoalideApp.cpp in Sources */,
+				ED24AD2A2087622800326406 /* MenuScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

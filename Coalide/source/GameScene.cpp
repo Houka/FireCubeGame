@@ -82,6 +82,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// Set up the scene graph
 	createSceneGraph(dimen);
 
+	_gamestate->resetDidClickMenu();
+
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
@@ -135,6 +137,7 @@ void GameScene::createSceneGraph(Size dimen) {
 	_loadnode->setForeground(FONT_COLOR);
 	_loadnode->setVisible(false);
 
+
 	addChild(_rootnode, 0);
 	addChild(_winnode, 1);
 	addChild(_losenode, 2);
@@ -183,6 +186,10 @@ void GameScene::update(float dt) {
 		return;
 	}
 
+	if (_gamestate->isPaused()) {
+		return;
+	}
+
 	// Check to see if new level loaded yet
 	if (_reloading) {
 		if (_assets->complete()) {
@@ -209,6 +216,8 @@ void GameScene::update(float dt) {
 		}
 	}
 	_input.update(dt);
+
+	_gamestate->resetDidClickMenu();
 
 	if (_gameover || _input.didReset()) {
 		reset(LEVEL_FILE);
@@ -535,7 +544,9 @@ void GameScene::update(float dt) {
         cameraTransY = 0;
     }
         
+	_gamestate->setUIPosition(player->getNode()->getScene()->getCamera()->getPosition());
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
+	
 }
 
 void GameScene::updateFriction() {

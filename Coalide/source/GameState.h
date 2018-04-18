@@ -51,6 +51,15 @@ protected:
 	int** _board;
 	std::shared_ptr<TileModel>** _tileBoard;
 
+	// BUTTONS
+	std::shared_ptr<cugl::Node> _uiNode;
+	std::shared_ptr<cugl::Button> _pauseButton;
+	std::shared_ptr<cugl::Button> _menuButton;
+	std::shared_ptr<cugl::Button> _playButton;
+
+	bool _didClickMenu;
+	bool _isPaused;
+
 	std::shared_ptr<cugl::AssetManager> _assets;
 
 	/**
@@ -76,6 +85,14 @@ public:
 	* Destroys this level, releasing all resources.
 	*/
 	void dispose();
+
+	bool didClickMenu() { return _didClickMenu; }
+	bool isPaused() { return _isPaused; }
+	void resetDidClickMenu() { _didClickMenu = false; }
+
+	void setUIPosition(Vec2 pos) { _uiNode->setPosition(pos); }
+
+	std::shared_ptr<Node> getUINode() { return _uiNode; }
 
 	/**
 	* Create a new game state. 

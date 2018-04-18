@@ -8,6 +8,8 @@
 #include "InputController.h"
 #include "LoadingScene.h"
 #include "GameScene.h"
+#include "MenuScene.h"
+#include "LevelSelectScene.h"
 
 /**
  * Class for a simple Hello World style application
@@ -28,8 +30,21 @@ protected:
 	GameScene _gameScene;
 	/** The controller for the loading screen */
 	LoadingScene _loadingScene;
+	/** The controller for the loading screen */
+	MenuScene _menuScene;
+	/** Controller for abstracting out input */
+	LevelSelectScene _levelSelectScene;
 	/** Controller for abstracting out input */
 	InputController _input;
+
+	enum class CURRENT_SCENE : int {
+		MENU_SCENE,
+		GAME_SCENE,
+		LEVEL_SELECT_SCENE
+	};
+
+
+	CURRENT_SCENE _currentScene;
 
 	/** Whether or not we have finished loading all assets */
 	bool _loaded;
