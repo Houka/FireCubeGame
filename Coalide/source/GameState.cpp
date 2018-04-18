@@ -75,7 +75,8 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
         std::shared_ptr<PolygonNode> sandNode;
         if(tile->getType() == TILE_TYPE::GRASS || tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getDirtSubTexture();
-            CULog("%d, %d, %d, %d", tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]);
+            CULog("%f, %f, %f, %f", tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]);
+            CULog("%s", tile->getDirtTextureKey().c_str());
             dirtNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getDirtTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
         }
         if(tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){

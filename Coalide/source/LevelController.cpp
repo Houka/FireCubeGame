@@ -187,28 +187,28 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                 }
                 if(sandTexture != -1){
                     //gives box to specify texture into texture atlas
-                    double subTextureY = 64.0 * ((int) (sandTexture / 21));
-                    double subTextureX = 64.0 * (sandTexture % 21);
-                    double endY = subTextureY + 64;
-                    double endX = subTextureX + 64;
-                    tile->setSandSubTexture(subTextureX, subTextureY, endX, endY);
+                    double subTextureY = ((int) (sandTexture / 21));
+                    double subTextureX = (sandTexture % 21);
+                    double endY = subTextureY + 1;
+                    double endX = subTextureX + 1;
+                    tile->setSandSubTexture(subTextureX / 21, endX / 21, subTextureY / 8, endY / 8);
                 }
                 if(iceTexture != -1){
                     //gives box to specify texture into texture atlas
-                    double subTextureY = 64.0 * ((int) (iceTexture / 21));
-                    double subTextureX = 64.0 * (iceTexture % 21);
-                    double endY = subTextureY + 64;
-                    double endX = subTextureX + 64;
-                    tile->setIceSubTexture(subTextureX, subTextureY, endX, endY);
+                    double subTextureY = ((int) (iceTexture / 21));
+                    double subTextureX = (iceTexture % 21);
+                    double endY = subTextureY;
+                    double endX = subTextureX;
+                    tile->setIceSubTexture(subTextureX / 21, endX / 21, subTextureY / 8, endY / 8);
                 }
                 if(dirtTexture != -1){
                     //gives box to specify texture into texture atlas
-                    double subTextureY = 64.0 * ((int) (dirtTexture / 21));
-                    double subTextureX = 64.0 * (dirtTexture % 21);
-                    double endY = subTextureY + 64;
-                    double endX = subTextureX + 64;
+                    double subTextureY = ((int) (dirtTexture / 21));
+                    double subTextureX = (dirtTexture % 21);
+                    double endY = subTextureY + 1;
+                    double endX = subTextureX + 1;
 //                    CULog("%d, %d, %d, %d", subTextureX, subTextureY, endX, endY);
-                    tile->setDirtSubTexture(subTextureX, subTextureY, endX, endY);
+                    tile->setDirtSubTexture(subTextureX / 21, endX / 21,subTextureY / 8, endY / 8);
                 }
                 _tiles.push_back(tile);
                 _tileBoard[r][c] = tile;
