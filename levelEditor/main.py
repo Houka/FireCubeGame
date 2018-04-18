@@ -381,9 +381,9 @@ def makeJson():
     for r in range(numR):
         for c in range(numC):
             waterTextures[r][c] = background[r][c].t_water
-            dirtTextures[r][c] = background[r][c].t_dirt
-            iceTextures[r][c] = background[r][c].t_ice
-            sandTextures[r][c] = background[r][c].t_sand
+            dirtTextures[r][c] = terrain[r][c].t_dirt
+            iceTextures[r][c] = terrain[r][c].t_ice
+            sandTextures[r][c] = terrain[r][c].t_sand
 
             terrainTypes[r][c] = terrain[r][c].ttype
             terrainZones[r][c] = list(terrain[r][c].zone)
