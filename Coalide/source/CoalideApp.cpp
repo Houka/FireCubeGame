@@ -137,6 +137,13 @@ void CoalideApp::update(float timestep) {
 				_menuScene.init(_assets, _input);
 				_currentScene = CURRENT_SCENE::MENU_SCENE;
 			}
+			else if (_levelSelectScene.didClickLevel()) {
+				_levelSelectScene.dispose();
+				_gameScene.init(_assets, _input, LEVEL_KEY);
+				_levelCt = _levelSelectScene.getCurrentLevel();
+				_gameScene.reset(levelNames[_levelCt]);
+				_currentScene = CURRENT_SCENE::GAME_SCENE;
+			}
 			else {
 				_levelSelectScene.update(timestep);
 			}
@@ -147,23 +154,21 @@ void CoalideApp::update(float timestep) {
 				_gameScene.dispose();
 				_menuScene.init(_assets, _input);
 				_currentScene = CURRENT_SCENE::MENU_SCENE;
+			} 
+			else if (_gameScene.isComplete()) {
+				_levelCt = (_levelCt + 1) % 5;
+				_gameScene.reset(levelNames[_levelCt]);
+			}
+			else if (_gameScene.isGameOver()) {
+				_gameScene.reset(levelNames[_levelCt]);
 			}
 			else {
 				_gameScene.update(timestep);
 			}
 
 			if (_input.rightKeyPressed()) {
-				_gameScene.dispose();
 				_levelCt = (_levelCt + 1) % 5;
-				_gameScene.init(_assets, _input, LEVEL_KEY);
 				_gameScene.reset(levelNames[_levelCt]);
-			}
-		}	
-		if (_input.rightKeyPressed()) {
-			if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
-
-				//_gameScene.reset(levelNames[_levelCt]);
-				//_levelCt = (_levelCt+1)%5;
 			}
 		}	
 	}

@@ -45,6 +45,15 @@ protected:
 	// BUTTONS
 	std::shared_ptr<cugl::Button> _backButton;
 
+	std::shared_ptr<cugl::Button> _lvl0;
+	std::shared_ptr<cugl::Button> _lvl1;
+	std::shared_ptr<cugl::Button> _lvl2;
+	std::shared_ptr<cugl::Button> _lvl3;
+	std::shared_ptr<cugl::Button> _lvl4;
+	std::shared_ptr<cugl::Button> _lvl5;
+
+	int _lvlSelected = 0;
+	bool _didClickLevel;
 	bool _didClickBack;
 	
 	/** Whether or not debug mode is active */
@@ -79,6 +88,8 @@ public:
 	void dispose();
 
 	bool didClickBack() { return _didClickBack; }
+	bool didClickLevel() { return _didClickLevel; }
+	int getCurrentLevel() { return _lvlSelected; }
 
 	/**
 	* Initializes the controller contents, and starts the game

@@ -208,12 +208,12 @@ void GameScene::update(float dt) {
 	_gamestate->resetDidClickMenu();
 
 	if (_gameover || _input.didReset()) {
-		reset(LEVEL_FILE);
+		//reset(LEVEL_FILE);
 		return;
 	}
 
 	if (_complete) {
-		reset(LEVEL_FILE);
+		//reset(LEVEL_FILE);
 		//_winnode->setVisible(true);
 		return;
 	}
@@ -287,7 +287,7 @@ void GameScene::update(float dt) {
     
     // LEVEL COMPLETE: If all enemies are dead then level completed
     if (_enemyCount == 0) {
-        //_complete = true;
+        _complete = true;
     }
 
     // Update the physics world
