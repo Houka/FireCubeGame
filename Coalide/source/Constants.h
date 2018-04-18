@@ -82,7 +82,7 @@
 #define HEIGHT_FIELD        "height"
 
 /** The source for our level file */
-#define LEVEL_FILE   "json/earthrow-icerow.json"
+#define LEVEL_FILE   "json/icebridge.json"
 /** The key for our loaded level */
 #define LEVEL_KEY    "level"
 

@@ -60,12 +60,6 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
 	auto levelInfo = json->get("levelInfo");
 	int canvasH = 64 * levelInfo->get("rows")->asInt();
 	int canvasW = 64 * levelInfo->get("cols")->asInt();
-
-//    auto objects = json->get("objects");
-//    auto onionArray = objects->get("onions");
-//    for(std::shared_ptr<JsonValue> onion : onionArray->_children){
-//        CULog("onion mass: %d", onion->get("mass")->asInt());
-//    }
     
     
 	auto tilesets = json->get(TILESETS_FIELD);
@@ -77,10 +71,6 @@ bool LevelController::preload(const std::shared_ptr<JsonValue>& json) {
     int worldTilesetW = tileW * 21;
     int worldTilesetH = tileH * 8;
 	_worldTilesetDim.set(worldTilesetW, worldTilesetH);
-
-//    int waterTilesetW = tilesets->get(1)->get(IMAGE_WIDTH_FIELD)->asInt();
-//    int waterTilesetH = tilesets->get(1)->get(IMAGE_HEIGHT_FIELD)->asInt();
-//    _waterTilesetDim.set(waterTilesetW, waterTilesetH);
 
 	int worldW = canvasW / tileW;
 	int worldH = canvasH / tileH;
@@ -414,6 +404,8 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int c = onion->get("col")->asInt();
         enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         enemy->setTextureKey(ONION);
+        enemy->setOnion();
+        enemy->setDensity(3);
         
         _world->addObstacle(enemy);
         _enemies.push_back(enemy);
@@ -428,6 +420,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int c = mushroom->get("col")->asInt();
         enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         enemy->setTextureKey(MUSHROOM);
+        enemy->setMushroom();
         
         _world->addObstacle(enemy);
         _enemies.push_back(enemy);
@@ -442,6 +435,8 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int c = crate->get("col")->asInt();
         object = ObjectModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         object->setTextureKey(MOVABLE_NAME);
+        object->setName(MOVABLE_NAME);
+        object->setBodyType(b2_dynamicBody);
         
         _world->addObstacle(object);
         _objects.push_back(object);
@@ -456,6 +451,8 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int c = rock->get("col")->asInt();
         object = ObjectModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         object->setTextureKey(IMMOBILE_NAME);
+        object->setName(IMMOBILE_NAME);
+        object->setBodyType(b2_staticBody);
         
         _world->addObstacle(object);
         _objects.push_back(object);
