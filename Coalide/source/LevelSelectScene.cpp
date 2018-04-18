@@ -96,11 +96,11 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	_background->setScale(yMax / textureHeight, yMax / textureHeight);
 
 	// create the buttons
-	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("levels_button"));
+	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("menu_button"));
 
 	//_startNode->setPosition(50., 50);
 	_backButton = cugl::Button::alloc(_backNode);
-	_backButton->setPosition(0, textureHeight*0.9);
+	_backButton->setPosition(10, textureHeight*0.9);
 
 	_backButton->setListener([=](const std::string& name, bool down) {
 		if (down) {

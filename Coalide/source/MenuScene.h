@@ -1,5 +1,4 @@
 #pragma once
-#include "C:\Users\Paul\Documents\Cornell\Courses\Spring2018\CS4152\FireCubeGame\Coalide\cugl\include\cugl\2d\CUScene.h"
 #include <cugl/cugl.h>
 #include "InputController.h"
 #include "Constants.h"

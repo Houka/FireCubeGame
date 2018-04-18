@@ -27,6 +27,27 @@
     },
     "movable": {
       "file": "textures/spritesheet_crate.png"
+    },
+    "menu": {
+      "file": "textures/login2.png"
+    },
+    "map": {
+      "file": "textures/Map.png"
+    },
+    "start_button": {
+      "file": "textures/start.png"
+    },
+    "levels_button": {
+      "file": "textures/levels.png"
+    },
+    "menu_button": {
+      "file": "textures/menubutton.png"
+    },
+    "pause_button": {
+      "file": "textures/pausebutton.png"
+    },
+    "play_button": {
+      "file": "textures/playbutton.png"
     }
   },
 	"fonts": {

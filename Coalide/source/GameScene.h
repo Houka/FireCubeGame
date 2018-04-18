@@ -182,6 +182,8 @@ public:
 	*/
 	void setGameOver(bool value) { _gameover = value; _losenode->setVisible(value); }
 
+	std::shared_ptr<GameState> getGameState() { return _gamestate; }
+
 
 #pragma mark -
 #pragma mark Scene Graph
