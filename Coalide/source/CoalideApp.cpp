@@ -8,6 +8,7 @@
 #include "Constants.h"
 #include "LevelController.h"
 
+
 // This keeps us from having to write cugl:: all the time
 using namespace cugl;
 
@@ -104,17 +105,48 @@ void CoalideApp::update(float timestep) {
 	}
 	else if (!_loaded) {
 		_loadingScene.dispose(); // Disables the input listeners in this mode
-		_gameScene.init(_assets, _input, LEVEL_KEY);
+		//_gameScene.init(_assets, _input, LEVEL_KEY);
+		_menuScene.init(_assets, _input);
+		_currentScene = CURRENT_SCENE::MENU_SCENE;
+
+		// _levelSelectScene.init(_assets, _input, LEVEL_KEY);
 		_loaded = true;
 	}
 	else {
 		_input.update(timestep);
-		if ((_input.leftKeyPressed())) {
-			//CULog("Pressed left");
-			_gameScene.reset(levelNames[_levelCt]);
-            _levelCt = (_levelCt+1)%5;
+		if (_input.leftKeyPressed()) {
+			
+			if (_currentScene == CURRENT_SCENE::MENU_SCENE) {
+				CULog("switching to game scene");
+				_menuScene.dispose();
+				_gameScene.init(_assets, _input, LEVEL_KEY);
+				_currentScene = CURRENT_SCENE::GAME_SCENE;
+			} else if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
+				_gameScene.dispose();
+				_menuScene.init(_assets, _input);
+				_currentScene = CURRENT_SCENE::MENU_SCENE;
+			}
+			
 		}
-        _gameScene.update(timestep);
+		if (_input.rightKeyPressed()) {
+			if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
+				_gameScene.reset(levelNames[_levelCt]);
+				_levelCt = (_levelCt+1)%5;
+			}
+		}
+		if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
+			CULog("currently game scene");
+			_gameScene.update(timestep);
+		}
+		if (_currentScene == CURRENT_SCENE::MENU_SCENE) {
+			CULog("currently menu scene");
+			_menuScene.update(timestep);
+		}
+		if (_currentScene == CURRENT_SCENE::LEVEL_SELECT_SCENE) {
+			CULog("currently level select scene");
+			_levelSelectScene.update(timestep);
+		}
+        
 	}
 //    {
 //
@@ -143,7 +175,17 @@ void CoalideApp::draw() {
 		_loadingScene.render(_batch);
 	}
 	else {
-		_gameScene.render(_batch);
+		// _gameScene.render(_batch);
+		//_levelSelectScene.render(_batch);
+		if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
+			_gameScene.render(_batch);
+		}
+		if (_currentScene == CURRENT_SCENE::MENU_SCENE) {
+			_menuScene.render(_batch);
+		}
+		if (_currentScene == CURRENT_SCENE::LEVEL_SELECT_SCENE) {
+			_levelSelectScene.render(_batch);
+		}
 	}
 }
 
