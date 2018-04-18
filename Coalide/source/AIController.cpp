@@ -144,10 +144,13 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
         float locy = start.y;
         while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
             locy += dy;
-            if(gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]->isWater()){
+            if(!gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]){
                 //CULog("WATER");
                 return true;
-            }
+			}
+			else {
+				CULog("A");
+			}
 //            CULog("inner Loop");
 
         }
@@ -174,7 +177,7 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 		if (_closedList.empty()) {
 			AStar(pos, slingDist, target, pos, gamestate);
 		}
-		else if (std::get<0>(_closedList.back()).distance(target) < slingDist*1.5) {
+		else if (std::get<0>(_closedList.back()).distance(target) < slingDist*1.5 && !intersectsWater(std::get<0>(_closedList.back()), target, gamestate)) {
 			_closedList.push_back(std::make_tuple(target, std::get<0>(_closedList.back()), -1));
 			break;
 		}
@@ -223,7 +226,7 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 			float d = pos.distance(Vec2(x, y));
             // kyler - I changed this line to check if tile exists in tileboard[y][x] before accessing since I changed water to not be a tile
 			if (x > 0 && x < _bounds.size.getIWidth() && y > 0 && y < _bounds.size.getIHeight()
-				&& d < slingDist && !_closedArray[y][x] && !(i == 0 || j == 0) && !gamestate->getTileBoard()[y][x]->isWater() && !intersectsWater(pos, Vec2(x,y), gamestate)) {
+				&& d < slingDist && !_closedArray[y][x] && !(i == 0 || j == 0) && gamestate->getTileBoard()[y][x] && !intersectsWater(pos, Vec2(x,y), gamestate)) {
 				float h = target.distance(Vec2(x, y));
 				float g = origin.distance(Vec2(x, y));
 				if (!_openArray[y][x]) {
@@ -325,12 +328,16 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				}
 
 				std::vector<Vec2> route = enemy->getRoute();
-				if (enemy->isOnion()) {
-					CULog("A");
-				}
 				aim = route.back() + Vec2(.5,.5) - enemy_pos;
 				route.pop_back();
 				enemy->setRoute(route);
+
+				if (enemy->isOnion()) {
+					CULog("A");
+				}
+				else {
+					CULog("B");
+				}
 
 				float targetDist = aim.length();
 				float a = GLOBAL_AIR_DRAG / m;
@@ -350,11 +357,21 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
                 continue;
             }*/
 
+			if (enemy->isOnion()) {
+				CULog("A");
+			}
+			else {
+				CULog("B");
+			}
+
 			aim = aim.normalize()*impulse;
 
 			if (!intersectsWater(enemy_pos, enemy_pos + aim*1.5, gamestate)) {
 				enemy->setWaterBetween(false);
 				moves.push_back(std::make_tuple(enemy, aim));
+			}
+			else {
+				enemy->setWaterBetween(true);
 			}
 
 			/*enemy->setWaterBetween(false);
