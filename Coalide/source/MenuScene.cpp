@@ -66,12 +66,43 @@ void MenuScene::createSceneGraph(Size dimen) {
 	_rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
 	_rootnode->setPosition(Vec2::ZERO);
 
+	// create the menu background texture
+	cugl::Rect screen = cugl::Rect(0., 0., 500., 500.);
+	std::shared_ptr<cugl::PolygonNode> _background = PolygonNode::allocWithTexture(_assets->get<Texture>("menu"));
+	float xMax = getCamera()->getViewport().getMaxX();
+	float yMax = getCamera()->getViewport().getMaxY();
+	_background->setPosition(xMax / 2., yMax / 2.);
+	float textureWidth = _background->getTexture()->getWidth();
+	float textureHeight = _background->getTexture()->getHeight();
+	_background->setScale(xMax/textureWidth, yMax/textureHeight);
+
+	_rootnode->addChild(_background, UNIT_PRIORITY);
+
+	addChild(_rootnode, 0);
 	
+	_rootnode->setContentSize(dimen);
 
-	//addChild(_rootnode, 0);
-	
+}
 
-	//_rootnode->setContentSize(dimen);
+#pragma mark -
+#pragma mark Gameplay Handling
+/**
+* Executes the core gameplay loop of this world.
+*
+* This method contains the specific update code for this mini-game. It does
+* not handle collisions, as those are managed by the parent class WorldController.
+* This method is called after input is read, but before collisions are resolved.
+* The very last thing that it should do is apply forces to the appropriate objects.
+*
+* @param  dt    Number of seconds since last animation frame
+*/
+void MenuScene::update(float dt) {
+	// Check to see if new level loaded yet
+	_input.update(dt);
 
+	if (_input.didExit()) {
+		CULog("Shutting down");
+		Application::get()->quit();
+	}
 }
 

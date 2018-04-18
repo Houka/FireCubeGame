@@ -37,45 +37,16 @@ protected:
 	// CONTROLLERS
 	/** Controller for abstracting out input across multiple platforms */
 	InputController _input;
-	/** Controller for handling collisions using Box2D */
-	CollisionController _collisions;
-	/** Controller for determining AI behavior */
-	AIController _ai;
 
 	// VIEW
 	/** Reference to the physics root of the scene graph */
 	std::shared_ptr<Node> _rootnode;
-	/** Reference to the win message label */
-	std::shared_ptr<Label> _winnode;
-	/** Reference to the lose message label */
-	std::shared_ptr<Label> _losenode;
-	/** Reference to the reset message label */
-	std::shared_ptr<Label> _loadnode;
 	
-	/** The current game state */
-	std::shared_ptr<GameState> _gamestate;
-
-	/** Whether we have completed this "game" */
-	bool _complete;
 	/** Whether or not debug mode is active */
 	bool _debug;
-	/** Whether or not we have lost */
-	bool _gameover;
+
 	/** WHether or not the level is reloading after a loss or reset */
 	bool _reloading;
-
-	/** Number of enemies remaining. */
-	int _enemyCount;
-
-	/** Level key for loading correct tileset. */
-	std::string _levelKey;
-
-	/**
-	* Activates world collision callbacks on the given physics world and sets the onBeginContact and beforeSolve callbacks
-	*
-	* @param world the physics world to activate world collision callbacks on
-	*/
-	void activateWorldCollisions();
 
 
 public:
@@ -87,7 +58,7 @@ public:
 	* This constructor does not allocate any objects or start the controller.
 	* This allows us to use a controller without a heap pointer.
 	*/
-	LevelSelectScene() : Scene(), _complete(false), _debug(false), _gameover(false), _reloading(false) { };
+	LevelSelectScene() : Scene() { };
 
 	/**
 	* Disposes of all (non-static) resources allocated to this mode.
@@ -116,7 +87,7 @@ public:
 	*
 	* @return true if the controller is initialized properly, false otherwise.
 	*/
-	bool init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey);
+	bool init(const std::shared_ptr<AssetManager>& assets, InputController input);
 
 
 #pragma mark -
@@ -137,52 +108,6 @@ public:
 	*/
 	bool isDebug( ) const { return _debug; }
 
-	/**
-	* Sets whether debug mode is active.
-	*
-	* If true, all objects will display their physics bodies.
-	*
-	* @param value whether debug mode is active.
-	*/
-	void setDebug(bool value) { _debug = value; _gamestate->showDebug(value); }
-
-	/**
-	* Returns true if the level is completed.
-	*
-	* If true, the level will advance after a countdown
-	*
-	* @return true if the level is completed.
-	*/
-	bool isComplete() const { return _complete; }
-
-	/**
-	* Returns true if the level is lost.
-	*
-	* If true, the game over screen will appear.
-	*
-	* @return true if the level is lost.
-	*/
-	bool isGameOver() const { return _gameover; }
-
-	/**
-	* Sets whether the level is completed.
-	*
-	* If true, the level will advance after a countdown
-	*
-	* @param value whether the level is completed.
-	*/
-	void setComplete(bool value) { _complete = value; _winnode->setVisible(value); }
-
-	/**
-	* Sets whether the level is lost.
-	*
-	* If true, the game over screen will appear
-	*
-	* @param value whether the level is completed.
-	*/
-	void setGameOver(bool value) { _gameover = value; _losenode->setVisible(value); }
-
-
 #pragma mark -
 #pragma mark Scene Graph
 	void createSceneGraph(Size dimen);
@@ -198,16 +123,6 @@ public:
 	*/
 	void update(float dt);
 
-	void updateFriction();
-
-	void removeEnemy(std::shared_ptr<EnemyModel> enemy);
-	
-	void removeObject(std::shared_ptr<ObjectModel> object);
-
-	/**
-	* Resets the status of the game so that we can play again.
-	*/
-	void reset(const std::string& file);
 };
 
 #endif /* __RD_GAME_MODE_H__ */

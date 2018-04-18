@@ -133,6 +133,11 @@ void CoalideApp::update(float timestep) {
 				_gameScene.reset(levelNames[_levelCt]);
 				_levelCt = (_levelCt+1)%5;
 			}
+			else if (_currentScene == CURRENT_SCENE::MENU_SCENE) {
+				_menuScene.dispose();
+				_levelSelectScene.init(_assets, _input);
+				_currentScene = CURRENT_SCENE::LEVEL_SELECT_SCENE;
+			}
 		}
 		if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
 			CULog("currently game scene");
@@ -175,8 +180,6 @@ void CoalideApp::draw() {
 		_loadingScene.render(_batch);
 	}
 	else {
-		// _gameScene.render(_batch);
-		//_levelSelectScene.render(_batch);
 		if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
 			_gameScene.render(_batch);
 		}

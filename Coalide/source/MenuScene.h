@@ -54,5 +54,19 @@ public:
 #pragma mark -
 #pragma mark Scene Graph
 	void createSceneGraph(Size dimen);
+
+
+
+#pragma mark -
+#pragma mark Progress Monitoring
+	/**
+	* The method called to update the game mode.
+	*
+	* This method updates the progress bar amount.
+	*
+	* @param dt  The amount of time (in seconds) since the last frame
+	*/
+	void update(float dt);
+
 };
 
