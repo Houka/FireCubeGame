@@ -390,11 +390,54 @@ void GameScene::updateFriction() {
 	PlayerModel* player = _gamestate->getPlayer().get();
 	Vec2 player_pos = player->getPosition();
 	Size gameBounds = _gamestate->getBounds().size;
+    Vec2 currentAim = _input.getCurrentAim();
+    float angle = currentAim.getAngle() * 180.0f / 3.14159f;
 
 	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
     //CULog("in bounds: %d", player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight()));
 	if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
 		if (!player->getCharging()) {
+            
+            if(angle > 0.0f && angle < 35.0f) {
+                std::shared_ptr<Node> currNode = player -> getNode();
+                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 2, false);
+                player->switchNode(currNode, desNode);
+            }
+            else if(angle > 35.0f && angle < 75.0f) {
+                std::shared_ptr<Node> currNode = player -> getNode();
+                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 3, false);
+                player->switchNode(currNode, desNode);
+            }
+            else if(angle > 75.0f && angle < 105.0f) {
+                std::shared_ptr<Node> currNode = player -> getNode();
+                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 4, false);
+                player->switchNode(currNode, desNode);
+            }
+            else if(angle > 105.0f && angle < 145.0f) {
+                std::shared_ptr<Node> currNode = player -> getNode();
+                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 5, false);
+                player->switchNode(currNode, desNode);
+            }
+            else if(angle > 145.0f && angle < 180.0f) {
+                std::shared_ptr<Node> currNode = player -> getNode();
+                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 6, false);
+                player->switchNode(currNode, desNode);
+            }
+            else if(angle < 0.0f && angle > -55.0f) {
+                std::shared_ptr<Node> currNode = player -> getNode();
+                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 1, false);
+                player->switchNode(currNode, desNode);
+            }
+            else if(angle < -55.0f && angle > -125.0f) {
+                std::shared_ptr<Node> currNode = player -> getNode();
+                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 0, false);
+                player->switchNode(currNode, desNode);
+            }
+            else if(angle < -125.0f && angle > -180.0f) {
+                std::shared_ptr<Node> currNode = player -> getNode();
+                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 7, false);
+                player->switchNode(currNode, desNode);
+            }
             
 			float friction = _gamestate->getBoard()[(int)floor(player_pos.y - 0.35)][(int)floor(player_pos.x)];
 			if (friction == 0) {
@@ -405,9 +448,6 @@ void GameScene::updateFriction() {
 			}
 		}
 		else if (player->getFriction() > .1f) {
-            
-            Vec2 currentAim = _input.getCurrentAim();
-            float angle = currentAim.getAngle() * 180.0f / 3.14159f;
             
             if(angle > 0.0f && angle < 35.0f) {
                 std::shared_ptr<Node> currNode = player -> getNode();
