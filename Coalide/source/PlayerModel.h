@@ -31,13 +31,44 @@ private:
     Vec2 _sizePlayer;
     /** whether the player should be stunned when they stop */
     bool _stunOnStop;
-
+    
 protected:
+    std::shared_ptr<AssetManager> _assets;
 	std::shared_ptr<Node> _node;
-	std::shared_ptr<Node> _standingNode;
+	std::shared_ptr<Node> _standingNode_f;
+    std::shared_ptr<Node> _standingNode_fls;
+    std::shared_ptr<Node> _standingNode_l;
+    std::shared_ptr<Node> _standingNode_bls;
+    std::shared_ptr<Node> _standingNode_b;
+    std::shared_ptr<Node> _standingNode_brs;
+    std::shared_ptr<Node> _standingNode_r;
+    std::shared_ptr<Node> _standingNode_frs;
+    std::shared_ptr<Node> _chargingNode_f;
+    std::shared_ptr<Node> _chargingNode_fls;
+    std::shared_ptr<Node> _chargingNode_l;
+    std::shared_ptr<Node> _chargingNode_bls;
+    std::shared_ptr<Node> _chargingNode_b;
+    std::shared_ptr<Node> _chargingNode_brs;
+    std::shared_ptr<Node> _chargingNode_r;
+    std::shared_ptr<Node> _chargingNode_frs;
+    std::shared_ptr<Node> _slidingNode_f;
+    std::shared_ptr<Node> _slidingNode_fls;
+    std::shared_ptr<Node> _slidingNode_l;
+    std::shared_ptr<Node> _slidingNode_bls;
+    std::shared_ptr<Node> _slidingNode_b;
+    std::shared_ptr<Node> _slidingNode_brs;
+    std::shared_ptr<Node> _slidingNode_r;
+    std::shared_ptr<Node> _slidingNode_frs;
+    std::shared_ptr<Node> _buildupNode;
 	std::shared_ptr<Node> _chargingNode;
+    std::shared_ptr<AnimationNode> _animationNode;
 	std::shared_ptr<PathNode> _arrow;
+    /** The body animation */
+    //std::shared_ptr<cugl::AnimationNode> _anim;
 	std::string _texture;
+    
+    /** The animation actions */
+    std::shared_ptr<cugl::Animate> _forward;
 
 	Vec2 _force;
 	b2FrictionJoint* _frictionJoint;
@@ -48,7 +79,10 @@ protected:
 	bool _stunned;
 	bool _onFire;
 
+
 public:
+    float _oldAngle;
+    bool _isSliding;
 #pragma mark Constructors
 	/**
 	* Creates a new player at the origin.
@@ -73,7 +107,7 @@ public:
 	*
 	* @return  true if the obstacle is initialized properly, false otherwise.
 	*/
-	virtual bool init(const Vec2& pos, const Size& size) override;
+	virtual bool init(const Vec2& pos, const Size& size);
 
 
 #pragma mark Static Constructors
@@ -117,8 +151,12 @@ public:
 
 	void setFire(bool fire) { _onFire = fire; }
 
-	void switchStandingNode() { _standingNode->setVisible(true); _chargingNode->setVisible(false); _node = _standingNode; }
-	void switchChargingNode() { _standingNode->setVisible(false); _chargingNode->setVisible(true); _node = _chargingNode; }
+//    void switchStandingNode() { _standingNode->setVisible(true); _chargingNode->setVisible(false); _node = _standingNode; }
+//    void switchChargingNode() { _standingNode->setVisible(false); _chargingNode->setVisible(true); _node = _chargingNode; }
+    
+    void switchNode(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> toNode);
+    std::shared_ptr<Node> getTextNode(int state, int dir);
+    
 #pragma mark -
 #pragma mark Accessors
 	/**
@@ -177,8 +215,8 @@ public:
 	* @param node  The scene graph node representing the player.
 	*/
 	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
-	void setStandingNode(const std::shared_ptr<Node>& node) { _standingNode = node; }
-	void setChargingNode(const std::shared_ptr<Node>& node) { _chargingNode = node; }
+    
+    std::shared_ptr<Node> setTextNode(const std::shared_ptr<Node>& node, int state, int dir, bool set);
 
 	/**
 	* Returns the scene graph node representing the player.

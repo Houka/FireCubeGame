@@ -21,6 +21,8 @@ protected:
 	// pos, parentPos
 	std::vector<std::tuple<Vec2, Vec2, float>> _closedList;
 
+	Rect _bounds;
+
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -42,8 +44,8 @@ public:
      */
     std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> getEnemyMoves(std::shared_ptr<GameState> _gamestate);
 
-	void AStar(Vec2 pos, float slingDist, int g);
+	void AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, std::shared_ptr<GameState> gamestate);
 
-	std::vector<Vec2> calculateRoute(Vec2 pos, Vec2 aim, Vec2 target, std::shared_ptr<GameState> gamestate);
+	std::vector<Vec2> calculateRoute(Vec2 pos, float slingDist, Vec2 target, std::shared_ptr<GameState> gamestate);
 };
 #endif /* __AI_CONTROLLER_H__ */

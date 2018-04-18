@@ -42,7 +42,7 @@ protected:
 	std::shared_ptr<Node> _debugnode;
 
 	std::shared_ptr<ObstacleWorld> _world;
-	std::shared_ptr<PlayerModel> _player;
+    std::shared_ptr<PlayerModel> _player;
 	std::vector<std::shared_ptr<EnemyModel>> _enemies;
 	std::vector<std::shared_ptr<ObjectModel>> _objects;
 	std::vector<std::shared_ptr<TileModel>> _tiles;
@@ -233,6 +233,10 @@ public:
 	* @return the scene graph node for drawing purposes.
 	*/
 	const std::shared_ptr<Node>& getRootNode() const { return _rootnode; }
+    
+    const std::shared_ptr<Node>& getWorldNode() const { return _worldnode; }
+    
+//    void setPlayerTexture() { _player->getNode()->setTexture(); }
 
 	/**
 	* Sets the scene graph node for drawing purposes.
@@ -240,9 +244,9 @@ public:
 	* @param value  the scene graph node for drawing purposes.
 	*
 	* @retain  a reference to this scene graph node
-	* @release the previous scene graph node used by this object
+	* /Users/kylerruvane/Documents/4152/FireCubeGame/Coalide/source/GameScene.cpp@release the previous scene graph node used by this object
 	*/
-	void setRootNode(const std::shared_ptr<Node>& node);
+    void setRootNode(const std::shared_ptr<Node>& node);
 
 	void addSporeNode(const std::shared_ptr<EnemyModel> spore);
 
