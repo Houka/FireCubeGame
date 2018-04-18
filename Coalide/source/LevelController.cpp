@@ -290,11 +290,19 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 				std::shared_ptr<EnemyModel> enemy;
 				std::shared_ptr<ObjectModel> object;
 
+				b2Filter filter;
+
 				switch (objVal) {
 				case -1:
 					break;
 				case 0:
-                    _player = PlayerModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+					_player = PlayerModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
+
+					filter.categoryBits = CATEGORY_PLAYER;
+					filter.maskBits = -1;
+					filter.groupIndex = NULL;
+					_player->setFilterData(filter);
+
 					_world->addObstacle(_player);
 					break;
 				case 1:
@@ -307,6 +315,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 				case 2:
 					enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					enemy->setTextureKey(MUSHROOM);
+					enemy->setMushroom();
 
 					_world->addObstacle(enemy);
 					_enemies.push_back(enemy);
@@ -314,6 +323,8 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 				case 3:
 					enemy = EnemyModel::alloc(Vec2(j + .5, i + .5), UNIT_DIM);
 					enemy->setTextureKey(ONION);
+					enemy->setOnion();
+					enemy->setDensity(3);
 
 					_world->addObstacle(enemy);
 					_enemies.push_back(enemy);
@@ -422,6 +433,7 @@ void LevelController::buildGameState() {
 	_gamestate->setBoard(_board);
 	_gamestate->setTileBoard(_tileBoard);
 	_gamestate->setDrawScale(_scale);
+	_gamestate->setAssets(_assets);
 
 	_levelBuilt = true;
 }
@@ -437,25 +449,34 @@ void LevelController::unload() {
 		_player = nullptr;
 	}
 
-	for (auto it = _enemies.begin(); it != _enemies.end(); ++it) {
+	for (int i = 0; i < _enemies.size(); i++) {
 		if (_world != nullptr) {
-			if (!(*it).get()->isRemoved()) {
-				_gamestate->getWorld()->removeObstacle((*it).get());
+			if (!_enemies[i]->isRemoved()) {
+				_gamestate->getWorld()->removeObstacle(_enemies[i].get());
 			}
 		}
-		(*it) = nullptr;
+		_enemies[i] = nullptr;
 	}
 	_enemies.clear();
 
-	for (auto it = _objects.begin(); it != _objects.end(); ++it) {
+	for (int i = 0; i < _objects.size(); i++) {
 		if (_world != nullptr) {
-			if (!(*it).get()->isRemoved()) {
-				_gamestate->getWorld()->removeObstacle((*it).get());
+			if (!_objects[i]->isRemoved()) {
+				_gamestate->getWorld()->removeObstacle(_objects[i].get());
 			}	
 		}
-		(*it) = nullptr;
+		_objects[i] = nullptr;
 	}
 	_objects.clear();
+
+	for (int i = 0; i < _bounds.size.getIHeight(); i++) {
+		delete[] _board[i];
+		delete[] _tileBoard[i];
+	}
+
+	delete[] _board;
+	delete[] _tileBoard;
+	
 
 	//for (auto it = _tiles.begin(); it != _tiles.end(); ++it) {
 	//	if (_world != nullptr) {

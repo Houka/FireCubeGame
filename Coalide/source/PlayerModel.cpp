@@ -306,7 +306,6 @@ bool PlayerModel::inBounds(int width, int height){
 * @param node  updates the aim arrow.
 */
 void PlayerModel::updateArrow(cugl::Vec2 aim, bool visible) {
-
 	aim *= -.3;
 	cugl::Vec2 playerImageOffset = cugl::Vec2(_node->getWidth() / 2.0, _node->getHeight() / 2.0);
 

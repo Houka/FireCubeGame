@@ -200,9 +200,9 @@ public:
 
 	void updateFriction();
 
-	void removeEnemy(EnemyModel* enemy);
+	void removeEnemy(std::shared_ptr<EnemyModel> enemy);
 	
-	void removeObject(ObjectModel* object);
+	void removeObject(std::shared_ptr<ObjectModel> object);
 
 	/**
 	* Resets the status of the game so that we can play again.

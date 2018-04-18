@@ -51,6 +51,17 @@ protected:
 	bool _stunned;
 	bool _onFire;
 
+	bool _wandering;
+	bool _targeting;
+	
+	bool _mushroom;
+	bool _spore;
+	bool _onion;
+
+	bool _destroyed;
+
+	std::vector<Vec2> _route;
+
 public:
 #pragma mark Constructors
 	/**
@@ -164,6 +175,34 @@ public:
      * @param bool for if charging .
      */
     bool getCharging() { return _charging; }
+
+	bool isTargeting() { return _targeting; }
+
+	void setTargeting() { _targeting = true; _wandering = false; }
+
+	bool isWandering() { return _wandering; }
+
+	void setWandering() { _wandering = true; _targeting = false; }
+
+	bool isMushroom() { return _mushroom; }
+
+	void setMushroom() { _mushroom = true; }
+
+	bool isSpore() { return _spore; }
+
+	void setSpore() { _spore = true; }
+
+	bool isOnion() { return _onion; }
+
+	void setOnion() { _onion = true; }
+
+	bool isDestroyed() { return _destroyed; }
+
+	void setDestroyed() { _destroyed = true; }
+
+	std::vector<Vec2> getRoute() { return _route; }
+
+	void setRoute(std::vector<Vec2> route) { _route = route; }
 
 	/**
 	* Returns the scene graph node representing this enemy.
