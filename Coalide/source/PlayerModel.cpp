@@ -110,48 +110,168 @@ std::shared_ptr<Node> PlayerModel::getTextNode(int state, int dir) {
  * 0->F / 1->FLS / 2->L / 3->BLS / 4->B
  * 5->BRS / 6->R / 7->FRS
  **/
-void PlayerModel::setTextNode(const std::shared_ptr<Node>& node, int state, int dir) {
-    node->setVisible(false);
+std::shared_ptr<Node> PlayerModel::setTextNode(const std::shared_ptr<Node>& node, int state, int dir, bool set) {
     switch(state) {
         case 0:
             switch(dir) {
                 case 0:
-                    _standingNode_f = node;
-                    _standingNode_f->setName("Standing Node f");
+                    if(set) {
+                        node->setVisible(false);
+                        _standingNode_f = node;
+                        _standingNode_f->setName("Standing Node f");
+                        return NULL;
+                    } else {
+                        return _standingNode_f;
+                    }
                     break;
                 case 1:
-                    _standingNode_fls = node;
-                    _standingNode_fls->setName("Standing Node fls");
+                    if(set) {
+                        node->setVisible(false);
+                        _standingNode_fls = node;
+                        _standingNode_fls->setName("Standing Node fls");
+                        return NULL;
+
+                    } else {
+                        return _standingNode_fls;
+                    }
                     break;
                 case 2:
+                    if(set) {
+                    node->setVisible(false);
                     _standingNode_l = node;
                     _standingNode_l->setName("Standing Node l");
+                        return NULL;
+
+                    } else { return _standingNode_l;}
                     break;
                 case 3:
+                    if(set){
+                    node->setVisible(false);
                     _standingNode_bls = node;
                     _standingNode_bls->setName("Standing Node bls");
+                        return NULL;
+
+                    }else{return _standingNode_bls;}
                     break;
                 case 4:
+                    if(set){
+                    node->setVisible(false);
                     _standingNode_b = node;
                     _standingNode_b->setName("Standing Node b");
+                        return NULL;
+
+                    }else{return _standingNode_b;}
                     break;
                 case 5:
+                    if(set){
+                        node->setVisible(false);
                     _standingNode_brs = node;
                     _standingNode_brs->setName("Standing Node brs");
+                        return NULL;
+
+                    }else{return _standingNode_brs;}
                     break;
                 case 6:
+                    if(set){
+                        node->setVisible(false);
                     _standingNode_r = node;
                     _standingNode_r->setName("Standing Node r");
+                        return NULL;
+                    }else{return _standingNode_r;}
                     break;
                 case 7:
+                    if(set){
+                        node->setVisible(false);
                     _standingNode_frs = node;
                     _standingNode_frs->setName("Standing Node frs");
+                    return NULL;
+                    }else{ return _standingNode_frs;}
                     break;
                 default:
                     CUAssertLog(false, "Invalid tile data.");
                     break;
             }
             break;
+        case 1:
+        case 2:
+            switch(dir) {
+                case 0:
+                    if(set) {
+                        node->setVisible(false);
+                        _chargingNode_f = node;
+                        _chargingNode_f->setName("charging Node f");
+                        return NULL;
+                    } else {
+                        return _chargingNode_f;
+                    }
+                    break;
+                case 1:
+                    if(set) {
+                        node->setVisible(false);
+                        _chargingNode_fls = node;
+                        _chargingNode_fls->setName("charging Node fls");
+                        return NULL;
+                        
+                    } else {
+                        return _chargingNode_fls;
+                    }
+                    break;
+                case 2:
+                    if(set) {
+                        node->setVisible(false);
+                        _chargingNode_l = node;
+                        _chargingNode_l->setName("charging Node l");
+                        return NULL;
+                        
+                    } else { return _chargingNode_l;}
+                    break;
+                case 3:
+                    if(set){
+                        node->setVisible(false);
+                        _chargingNode_bls = node;
+                        _chargingNode_bls->setName("charging Node bls");
+                        return NULL;
+                        
+                    }else{return _chargingNode_bls;}
+                    break;
+                case 4:
+                    if(set){
+                        node->setVisible(false);
+                        _chargingNode_b = node;
+                        _chargingNode_b->setName("charging Node b");
+                        return NULL;
+                        
+                    }else{return _chargingNode_b;}
+                    break;
+                case 5:
+                    if(set){
+                        node->setVisible(false);
+                        _chargingNode_brs = node;
+                        _chargingNode_brs->setName("charging Node brs");
+                        return NULL;
+                        
+                    }else{return _chargingNode_brs;}
+                    break;
+                case 6:
+                    if(set){
+                        node->setVisible(false);
+                        _chargingNode_r = node;
+                        _chargingNode_r->setName("charging Node r");
+                        return NULL;
+                    }else{return _chargingNode_r;}
+                    break;
+                case 7:
+                    if(set){
+                        node->setVisible(false);
+                        _chargingNode_frs = node;
+                        _chargingNode_frs->setName("charging Node frs");
+                        return NULL;
+                    }else{ return _chargingNode_frs;}
+                    break;
+                default:
+                    CUAssertLog(false, "Invalid tile data.");
+                    break;
+            }
         default:
             CUAssertLog(false, "Invalid tile data.");
             break;

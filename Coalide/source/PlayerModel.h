@@ -43,6 +43,14 @@ protected:
     std::shared_ptr<Node> _standingNode_brs;
     std::shared_ptr<Node> _standingNode_r;
     std::shared_ptr<Node> _standingNode_frs;
+    std::shared_ptr<Node> _chargingNode_f;
+    std::shared_ptr<Node> _chargingNode_fls;
+    std::shared_ptr<Node> _chargingNode_l;
+    std::shared_ptr<Node> _chargingNode_bls;
+    std::shared_ptr<Node> _chargingNode_b;
+    std::shared_ptr<Node> _chargingNode_brs;
+    std::shared_ptr<Node> _chargingNode_r;
+    std::shared_ptr<Node> _chargingNode_frs;
     std::shared_ptr<Node> _buildupNode;
 	std::shared_ptr<Node> _chargingNode;
     std::shared_ptr<AnimationNode> _animationNode;
@@ -197,7 +205,7 @@ public:
 	*/
 	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
     
-    void setTextNode(const std::shared_ptr<Node>& node, int state, int dir);
+    std::shared_ptr<Node> setTextNode(const std::shared_ptr<Node>& node, int state, int dir, bool set);
 
 	/**
 	* Returns the scene graph node representing the player.

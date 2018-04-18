@@ -94,15 +94,33 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
         auto standingPlayerNode_r = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_nicoal_r"));
         auto standingPlayerNode_frs = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_nicoal_frs"));
         
+        auto chargingPlayerNode_f = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_f"));
+        auto chargingPlayerNode_fls = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_fls"));
+        auto chargingPlayerNode_l = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_l"));
+        auto chargingPlayerNode_bls = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_bls"));
+        auto chargingPlayerNode_b = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_b"));
+        auto chargingPlayerNode_brs = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_brs"));
+        auto chargingPlayerNode_r = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_r"));
+        auto chargingPlayerNode_frs = PolygonNode::allocWithTexture(assets->get<Texture>("nicoal_charging_frs"));
+        
         _player->setNode(playerNode);
-        _player->setTextNode(standingPlayerNode_f, 0, 0);
-        _player->setTextNode(standingPlayerNode_fls, 0, 1);
-        _player->setTextNode(standingPlayerNode_l, 0, 2);
-        _player->setTextNode(standingPlayerNode_bls, 0, 3);
-        _player->setTextNode(standingPlayerNode_b, 0, 4);
-        _player->setTextNode(standingPlayerNode_brs, 0, 5);
-        _player->setTextNode(standingPlayerNode_r, 0, 6);
-        _player->setTextNode(standingPlayerNode_frs, 0, 7);
+        _player->setTextNode(standingPlayerNode_f, 0, 0, true);
+        _player->setTextNode(standingPlayerNode_fls, 0, 1, true);
+        _player->setTextNode(standingPlayerNode_l, 0, 2, true);
+        _player->setTextNode(standingPlayerNode_bls, 0, 3, true);
+        _player->setTextNode(standingPlayerNode_b, 0, 4, true);
+        _player->setTextNode(standingPlayerNode_brs, 0, 5, true);
+        _player->setTextNode(standingPlayerNode_r, 0, 6,true);
+        _player->setTextNode(standingPlayerNode_frs, 0, 7, true);
+        
+        _player->setTextNode(chargingPlayerNode_f, 2, 0, true);
+        _player->setTextNode(chargingPlayerNode_fls, 2, 1, true);
+        _player->setTextNode(chargingPlayerNode_l, 2, 2, true);
+        _player->setTextNode(chargingPlayerNode_bls, 2, 3, true);
+        _player->setTextNode(chargingPlayerNode_b, 2, 4, true);
+        _player->setTextNode(chargingPlayerNode_brs, 2, 5, true);
+        _player->setTextNode(chargingPlayerNode_r, 2, 6,true);
+        _player->setTextNode(chargingPlayerNode_frs, 2, 7, true);
 
 //        chargingPlayerNode->setVisible(false);
 //        _player->setStandingNode(playerNode);
@@ -129,6 +147,14 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<A
         _worldnode->addChild(standingPlayerNode_brs, UNIT_PRIORITY);
         _worldnode->addChild(standingPlayerNode_r, UNIT_PRIORITY);
         _worldnode->addChild(standingPlayerNode_frs, UNIT_PRIORITY);
+        _worldnode->addChild(chargingPlayerNode_f, UNIT_PRIORITY);
+        _worldnode->addChild(chargingPlayerNode_fls, UNIT_PRIORITY);
+        _worldnode->addChild(chargingPlayerNode_l, UNIT_PRIORITY);
+        _worldnode->addChild(chargingPlayerNode_bls, UNIT_PRIORITY);
+        _worldnode->addChild(chargingPlayerNode_b, UNIT_PRIORITY);
+        _worldnode->addChild(chargingPlayerNode_brs, UNIT_PRIORITY);
+        _worldnode->addChild(chargingPlayerNode_r, UNIT_PRIORITY);
+        _worldnode->addChild(chargingPlayerNode_frs, UNIT_PRIORITY);
 //        _worldnode->addChild(chargingPlayerNode, UNIT_PRIORITY);
 	}
 
