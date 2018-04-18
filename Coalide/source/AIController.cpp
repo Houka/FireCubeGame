@@ -144,9 +144,8 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
         float locy = start.y;
         while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
             locy += dy;
-            int friction = gamestate->getBoard()[(int)floor(locy)][(int)floor(locx)];
-            if(friction == 0){
-//                CULog("WATER");
+            if(gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]->isWater()){
+                CULog("WATER");
                 return true;
             }
 //            CULog("inner Loop");
@@ -168,7 +167,7 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 
 	_openList.push_back(std::make_tuple(pos, pos, target.distance(pos)));
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 12; i++) {
 		if (_openList.empty()) {
 			break;
 		}
@@ -189,16 +188,13 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 	auto move = _closedList.back();
 	route.push_back(std::get<0>(move));
 
-	int nMoves = 0;
-
-	while (std::get<0>(move).x != std::get<1>(move).x && std::get<0>(move).y != std::get<1>(move).y && nMoves < 4) {
+	while (std::get<0>(move).x != std::get<1>(move).x && std::get<0>(move).y != std::get<1>(move).y) {
 		route.push_back(std::get<1>(move));
 		for (int j = 0; j < _closedList.size(); j++) {
 			if ((int)std::get<0>(_closedList[j]).x == (int)std::get<1>(move).x && (int)std::get<0>(_closedList[j]).y == (int)std::get<1>(move).y) {
 				move = _closedList[j];
 			}
 		}
-		nMoves += 1;
 	}
 
 	_openList.clear();
@@ -220,13 +216,13 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 	_closedArray[(int)std::get<0>(_openList.back()).y][(int)std::get<0>(_openList.back()).x] = true;
 	_openList.pop_back();
 
-	for (int i = -slingDist; i < slingDist; i++) {
+	for (int i = - ceil(slingDist); i < slingDist; i++) {
 		int x = pos.x + i;
-		for (int j = -slingDist; j < slingDist; j++) {
+		for (int j = -ceil(slingDist); j < slingDist; j++) {
 			int y = pos.y + j;
 			float d = pos.distance(Vec2(x, y));
 			if (x > 0 && x < _bounds.size.getIWidth() && y > 0 && y < _bounds.size.getIHeight()
-				&& d < slingDist && !_closedArray[y][x] && !(i == 0 || j == 0) && !gamestate->getTileBoard()[y][x]->isWater()) {
+				&& d < slingDist && !_closedArray[y][x] && !(i == 0 || j == 0) && !gamestate->getTileBoard()[y][x]->isWater() && !intersectsWater(pos, Vec2(x,y), gamestate)) {
 				float h = target.distance(Vec2(x, y));
 				float g = origin.distance(Vec2(x, y));
 				if (!_openArray[y][x]) {
@@ -292,7 +288,7 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
 
-        if(!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom()){
+        if(!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom() && enemy->timeoutElapsed()){
 			Vec2 enemy_pos = enemy->getPosition();
 			Vec2 aim = player_pos - enemy_pos;
 
@@ -306,7 +302,8 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				float vi = MAX_IMPULSE * 2 / m;
 				float vf = 2;
 
-				float f1 = GLOBAL_AIR_DRAG / m;
+				float f = GLOBAL_AIR_DRAG / m;
+				/*float f1 = GLOBAL_AIR_DRAG / m;
 				float f2 = gamestate->getBoard()[(int)enemy_pos.y][(int)enemy_pos.x];
 
 				float d1 = (vi*vi - vf*vf) / (2 * f1 / m);
@@ -318,21 +315,23 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 					d2 = 0;
 				}
 
-				float d = d1 + d2;
+				float d = d1 + d2;*/
+
+				float d = vi*vi / (2 * f / m);
 
 				if (enemy->getRoute().size() == 0) {
 					enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, gamestate));
 				}
 
 				std::vector<Vec2> route = enemy->getRoute();
-				aim = route.back() - enemy_pos;
+				aim = route.back() + Vec2(.5,.5) - enemy_pos;
 				route.pop_back();
 				enemy->setRoute(route);
 
 				float targetDist = aim.length();
 				float a = GLOBAL_AIR_DRAG / m;
 				float v0 = sqrt(targetDist * 2 * a);
-				impulse = m * v0;
+				impulse = m * v0 / 2;
 				impulse = std::min(MAX_IMPULSE, impulse);
 
 				/*Vec2 projectedLanding = enemy_pos + aim * 3;
@@ -365,12 +364,12 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
                 continue;
             }*/
 
-			aim = aim.normalize()*MAX_IMPULSE;
+			aim = aim.normalize()*impulse;
 
-            enemy->setWaterBetween(false);
-			if (enemy->timeoutElapsed()) {
-				moves.push_back(std::make_tuple(enemy, aim));
+			if (!intersectsWater(enemy_pos, enemy_pos + aim, gamestate)) {
+				enemy->setWaterBetween(false);
 			}
+			moves.push_back(std::make_tuple(enemy, aim));
         }
 		else if(enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {
 			if (enemy->timeoutElapsed()) {
