@@ -38,6 +38,8 @@ using namespace cugl;
 * @return  true if the controller is initialized properly, false otherwise.
 */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey) {
+    //set application to right color
+    Application::get()->setClearColor(Color4(15,82,186,255));
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= GAME_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -142,7 +144,7 @@ void GameScene::createSceneGraph(Size dimen) {
 
 	// This root node becomes the physics world root node, all physics objects are added to this node
 	_gamestate->setAssets(_assets);
-	_gamestate->setRootNode(_rootnode, _assets);
+	_gamestate->setRootNode(_rootnode);
 }
 
 
@@ -653,8 +655,11 @@ void GameScene::reset(const std::string& file) {
 	//_loadnode->setVisible(true);
 	_reloading = true;
 	_assets->load<LevelController>(_levelKey, file);
+	_gamestate = _assets->get<LevelController>(_levelKey)->getGameState();
 	setComplete(false);
 	_gameover = false;
+
+	_ai.init(_gamestate);
     
     // initialize the camera
     cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;

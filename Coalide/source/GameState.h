@@ -229,7 +229,7 @@ public:
 	* @retain  a reference to this scene graph node
 	* /Users/kylerruvane/Documents/4152/FireCubeGame/Coalide/source/GameScene.cpp@release the previous scene graph node used by this object
 	*/
-    void setRootNode(const std::shared_ptr<Node>& node, std::shared_ptr<AssetManager> assets);
+    void setRootNode(const std::shared_ptr<Node>& node);
 
 	void addSporeNode(const std::shared_ptr<EnemyModel> spore);
 

@@ -89,6 +89,8 @@ public:
         /** The JsonValue is an object whose contents are children of the node */
         ObjectType = 5
     };
+    /** The children of this node (only non-empty if array or object) */
+    std::vector<std::shared_ptr<JsonValue>> _children;
 
 private:
     /** The type (see above) of this node */
@@ -106,8 +108,7 @@ private:
     /** The number data stored in this node (only defined if NumberType) */
     double _doubleValue;
     
-    /** The children of this node (only non-empty if array or object) */
-    std::vector<std::shared_ptr<JsonValue>> _children;
+    
 
 #pragma mark -
 #pragma mark cJSON Conversions
