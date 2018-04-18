@@ -133,7 +133,7 @@ void EnemyModel::update(float dt) {
         _shouldStopSoon = false;
         _body->SetLinearVelocity(b2Vec2(0,0));
     }
-    if(!isMushroom() && _waterInbetween && ts.ellapsedMillis(_noLineOfSiteTimeout) >= 2000){
+    /*if(!isMushroom() && _waterInbetween && ts.ellapsedMillis(_noLineOfSiteTimeout) >= 2000){
         _previousTime.mark();
-    }
+    }*/
 }

@@ -145,7 +145,7 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
         while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
             locy += dy;
             if(gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]->isWater()){
-                CULog("WATER");
+                //CULog("WATER");
                 return true;
             }
 //            CULog("inner Loop");
@@ -294,7 +294,7 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 
 			float impulse = MAX_IMPULSE;
 
-			if (player_pos.distance(enemy_pos) > 1.5) {
+			if (intersectsWater(enemy_pos, player_pos, gamestate)) {
 				int p = enemy->getDensity();
 				int A = enemy->getWidth()*enemy->getHeight();
 				int m = p*A;
@@ -324,6 +324,9 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				}
 
 				std::vector<Vec2> route = enemy->getRoute();
+				if (enemy->isOnion()) {
+					CULog("A");
+				}
 				aim = route.back() + Vec2(.5,.5) - enemy_pos;
 				route.pop_back();
 				enemy->setRoute(route);
@@ -340,24 +343,6 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				aim += flock(enemy, gamestate);*/
 			}
 
-			/*aim = aim.normalize()*1.25;
-			Vec2 projectedLanding1 = enemy_pos + aim*.8;
-			Vec2 projectedLanding2;
-			Vec2 projectedLanding3;
-			if (g->getTileBoard()[(int)enemy_pos.y][(int)enemy_pos.x]->getType() == TILE_TYPE::ICE) {
-				 projectedLanding2 = enemy_pos + aim * 2;
-				 projectedLanding3 = enemy_pos + aim * 3;
-			}
-			else {
-				projectedLanding2 = enemy_pos + aim * 1.25;
-				projectedLanding3 = enemy_pos + aim * 1.5;
-			}
-			std::shared_ptr<TileModel> tile1 = g->getTileBoard()[(int)projectedLanding1.y][(int)projectedLanding1.x];
-			std::shared_ptr<TileModel> tile2 = g->getTileBoard()[(int)projectedLanding2.y][(int)projectedLanding2.x];
-			std::shared_ptr<TileModel> tile3 = g->getTileBoard()[(int)projectedLanding3.y][(int)projectedLanding3.x];
-			if (!(tile1->isWater() || tile2->isWater() || tile3->isWater())) {
-				moves.push_back(std::make_tuple(enemy, aim));
-			}*/
 
             /*if(intersectsWater(enemy_pos, player_pos, gamestate)){
                 enemy->setWaterBetween(true);
@@ -366,10 +351,13 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 
 			aim = aim.normalize()*impulse;
 
-			if (!intersectsWater(enemy_pos, enemy_pos + aim, gamestate)) {
+			if (!intersectsWater(enemy_pos, enemy_pos + aim*1.5, gamestate)) {
 				enemy->setWaterBetween(false);
+				moves.push_back(std::make_tuple(enemy, aim));
 			}
-			moves.push_back(std::make_tuple(enemy, aim));
+
+			/*enemy->setWaterBetween(false);
+			moves.push_back(std::make_tuple(enemy, aim));*/
         }
 		else if(enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {
 			if (enemy->timeoutElapsed()) {
