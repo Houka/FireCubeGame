@@ -70,15 +70,34 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	// Add the individual elements
 	for (int i = 0; i < _tiles.size(); i++) {
 		std::shared_ptr<TileModel> tile = _tiles[i];
-		double* tileSubtexture = tile->getSubTexture();
-		auto tileNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
-		tile->setNode(tileNode);
+        std::shared_ptr<PolygonNode> dirtNode;
+        std::shared_ptr<PolygonNode> iceNode;
+        std::shared_ptr<PolygonNode> sandNode;
+        if(tile->getType() == TILE_TYPE::GRASS || tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
+            double* tileSubtexture = tile->getDirtSubTexture();
+            CULog("%d, %d, %d, %d", tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]);
+            dirtNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getDirtTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+        }
+        if(tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
+            double* tileSubtexture = tile->getIceSubTexture();
+            iceNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+            iceNode->setPosition(0, 0);
+            dirtNode->addChild(iceNode);
+        }
+        if(tile->getType() == TILE_TYPE::SAND){
+            double* tileSubtexture = tile->getSandSubTexture();
+            sandNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+            sandNode->setPosition(0, 0);
+            iceNode->addChild(sandNode);
+        }
+        
+		tile->setNode(dirtNode);
 		tile->setDrawScale(_scale.x);
 		//tile->setDebugScene(_debugnode);
 
-		tileNode->setPosition(tile->getPosition()*_scale);
+		dirtNode->setPosition(tile->getPosition()*_scale);
 
-		_worldnode->addChild(tileNode, TILE_PRIORITY);
+		_worldnode->addChild(dirtNode, TILE_PRIORITY);
 	}
 
 	if (_player != nullptr) {

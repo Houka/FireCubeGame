@@ -23,13 +23,22 @@ using namespace cugl;
 class TileModel : public BoxObstacle {
 protected:
 	std::shared_ptr<Node> _node;
-	std::string _tileTexture;
 	TILE_TYPE _tileType;
 	float _friction;
 	
 	float _drawscale;
 
-	double _subtexture[4];
+    std::string _sandTexture; //only exists if tile is sand
+    std::string _iceTexture; //only exists if tile is sand or ice
+    std::string _dirtTexture; //only exists if tile is sand, ice, or dirt
+    
+    double _sandSubtexture[4];
+    double _iceSubtexture[4];
+    double _dirtSubtexture[4];
+
+
+
+
 
 public:
 #pragma mark -
@@ -155,29 +164,85 @@ public:
 	*
 	* @return the texture (key) for this floor tile
 	*/
-	const std::string& getTextureKey() const { return _tileTexture; }
+	const std::string& getSandTextureKey() const { return _sandTexture; }
 
+    /**
+     * Returns the texture (key) for this floor tile
+     *
+     * @return the texture (key) for this floor tile
+     */
+    const std::string& getIceTextureKey() const { return _iceTexture; }
+    /**
+     * Returns the texture (key) for this floor tile
+     *
+     * @return the texture (key) for this floor tile
+     */
+    const std::string& getDirtTextureKey() const { return _dirtTexture; }
 	/**
 	* Sets the texture (key) for this floor tile
 	*
 	* @param  strip    the texture (key) for this floor tile
 	*/
-	void setTextureKey(std::string strip) { _tileTexture = strip; }
-
+	void setSandTextureKey(std::string strip) { _sandTexture = strip; }
+    
+    /**
+     * Sets the texture (key) for this floor tile
+     *
+     * @param  strip    the texture (key) for this floor tile
+     */
+    void setIceTextureKey(std::string strip) { _iceTexture = strip; }
+    
+    /**
+     * Sets the texture (key) for this floor tile
+     *
+     * @param  strip    the texture (key) for this floor tile
+     */
+    void setDirtTextureKey(std::string strip) { _dirtTexture = strip; }
+    
 	/**
 	* Returns the points to get the subtexture for the tile in the tileset.
 	*/
-	double* getSubTexture() { return _subtexture; }
+	double* getSandSubTexture() { return _sandSubtexture; }
+    
+    /**
+     * Returns the points to get the subtexture for the tile in the tileset.
+     */
+    double* getIceSubTexture() { return _iceSubtexture; }
+    
+    /**
+     * Returns the points to get the subtexture for the tile in the tileset.
+     */
+    double* getDirtSubTexture() { return _dirtSubtexture; }
 
 	/**
 	* Sets the points to get the subtexture for the tile in the tileset.
 	*/
-	void setSubTexture(double x0, double y0, double x1, double y1) {
-		_subtexture[0] = x0;
-		_subtexture[1] = y0;
-		_subtexture[2] = x1;
-		_subtexture[3] = y1;
+	void setSandSubTexture(double x0, double y0, double x1, double y1) {
+		_sandSubtexture[0] = x0;
+		_sandSubtexture[1] = y0;
+		_sandSubtexture[2] = x1;
+		_sandSubtexture[3] = y1;
 	}
+    
+    /**
+     * Sets the points to get the subtexture for the tile in the tileset.
+     */
+    void setIceSubTexture(double x0, double y0, double x1, double y1) {
+        _iceSubtexture[0] = x0;
+        _iceSubtexture[1] = y0;
+        _iceSubtexture[2] = x1;
+        _iceSubtexture[3] = y1;
+    }
+    
+    /**
+     * Sets the points to get the subtexture for the tile in the tileset.
+     */
+    void setDirtSubTexture(double x0, double y0, double x1, double y1) {
+        _dirtSubtexture[0] = x0;
+        _dirtSubtexture[1] = y0;
+        _dirtSubtexture[2] = x1;
+        _dirtSubtexture[3] = y1;
+    }
 
 	/**
 	* Returns the ratio of the sprite to the physics body.
