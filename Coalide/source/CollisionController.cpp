@@ -37,6 +37,7 @@ void CollisionController::dispose() { }
 * @param  contact  The two bodies that collided
 */
 void CollisionController::beginContact(b2Contact* contact) {
+    
     b2Body* bodyA = contact->GetFixtureA()->GetBody();
     b2Body* bodyB = contact->GetFixtureB()->GetBody();
     SimpleObstacle* soA = (SimpleObstacle*)(bodyA->GetUserData());
@@ -58,7 +59,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 			}
 		}
 
-		if (enemy->isOnion() && enemy->getCharging()) {
+		if (enemy->isOnion() && !enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)) {
 			enemy->stunEnemy(4500);
 		}
 	}
@@ -81,9 +82,10 @@ void CollisionController::beginContact(b2Contact* contact) {
 			}
 		}
 
-		if (enemy->isOnion() && enemy->getCharging()) {
-			enemy->stunEnemy(4500);
-		}
+        if (enemy->isOnion() && !enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)) {
+            enemy->stunEnemy(4500);
+        }
+        
 	}
 
 	// player or enemy shoves something stationary
