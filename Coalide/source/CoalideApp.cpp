@@ -98,7 +98,7 @@ void CoalideApp::onShutdown() {
  */
 void CoalideApp::update(float timestep) {
     //std::string levelNames[5] = {"json/demo/enemy_no_water.json", "json/demo/map.json", "json/demo/island_all_enemies.json", "json/demo/3.json", "json/demo/enemy_water.json"};
-    std::string levelNames[5] = {"json/updatedJsons/earthrow-icerow.json", "json/updatedJsons/icebridge.json", "json/updatedJsons/input.json", "json/updatedJsons/onlyice.json", "json/updatedJsons/onlyonion.json"};
+    std::string levelNames[6] = {"json/updatedJsons/nicoalonly.json", "json/updatedJsons/rings.json", "json/updatedJsons/ishape.json", "json/updatedJsons/large.json", "json/updatedJsons/onionfight.json", "json/updatedJsons/icebridge.json"};
 	
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
@@ -137,6 +137,13 @@ void CoalideApp::update(float timestep) {
 				_menuScene.init(_assets, _input);
 				_currentScene = CURRENT_SCENE::MENU_SCENE;
 			}
+			else if (_levelSelectScene.didClickLevel()) {
+				_levelSelectScene.dispose();
+				_gameScene.init(_assets, _input, LEVEL_KEY);
+				_levelCt = _levelSelectScene.getCurrentLevel();
+				_gameScene.reset(levelNames[_levelCt]);
+				_currentScene = CURRENT_SCENE::GAME_SCENE;
+			}
 			else {
 				_levelSelectScene.update(timestep);
 			}
@@ -147,23 +154,21 @@ void CoalideApp::update(float timestep) {
 				_gameScene.dispose();
 				_menuScene.init(_assets, _input);
 				_currentScene = CURRENT_SCENE::MENU_SCENE;
+			} 
+			else if (_gameScene.isComplete()) {
+				_levelCt = (_levelCt + 1) % 6;
+				_gameScene.reset(levelNames[_levelCt]);
+			}
+			else if (_gameScene.isGameOver()) {
+				_gameScene.reset(levelNames[_levelCt]);
 			}
 			else {
 				_gameScene.update(timestep);
 			}
 
 			if (_input.rightKeyPressed()) {
-				_gameScene.dispose();
-				_levelCt = (_levelCt + 1) % 5;
-				_gameScene.init(_assets, _input, LEVEL_KEY);
+				_levelCt = (_levelCt + 1) % 6;
 				_gameScene.reset(levelNames[_levelCt]);
-			}
-		}	
-		if (_input.rightKeyPressed()) {
-			if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
-
-				//_gameScene.reset(levelNames[_levelCt]);
-				//_levelCt = (_levelCt+1)%5;
 			}
 		}	
 	}

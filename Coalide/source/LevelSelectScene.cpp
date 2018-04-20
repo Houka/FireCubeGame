@@ -55,6 +55,7 @@ bool LevelSelectScene::init(const std::shared_ptr<AssetManager>& assets, InputCo
 	createSceneGraph(dimen);
 
 	_didClickBack = false;
+	_didClickLevel = false;
 
 	// initialize the camera
 	//cugl::Vec2 cameraPos = getCamera()->getPosition();
@@ -97,10 +98,34 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 
 	// create the buttons
 	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("menu_button"));
+	std::shared_ptr<cugl::Node> _lvl0Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl1Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl2Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl3Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl4Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl5Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
 
 	//_startNode->setPosition(50., 50);
 	_backButton = cugl::Button::alloc(_backNode);
+	_lvl0 = cugl::Button::alloc(_lvl0Node);
+	_lvl0->setScale(2, 2);
+	_lvl1 = cugl::Button::alloc(_lvl1Node);
+	_lvl1->setScale(2, 2);
+	_lvl2 = cugl::Button::alloc(_lvl2Node);
+	_lvl2->setScale(2, 2);
+	_lvl3 = cugl::Button::alloc(_lvl3Node);
+	_lvl3->setScale(2, 2);
+	_lvl4 = cugl::Button::alloc(_lvl4Node);
+	_lvl4->setScale(2, 2);
+	_lvl5 = cugl::Button::alloc(_lvl5Node);
+	_lvl5->setScale(2, 2);
 	_backButton->setPosition(10, textureHeight*0.9);
+	_lvl0->setPosition(textureWidth*.08, textureHeight*.26);
+	_lvl1->setPosition(textureWidth*.08, textureHeight*.75);
+	_lvl2->setPosition(textureWidth*.20, textureHeight*.55);
+	_lvl3->setPosition(textureWidth*.17, textureHeight*.20);
+	_lvl4->setPosition(textureWidth*.28, textureHeight*.26);
+	_lvl5->setPosition(textureWidth*.32, textureHeight*.67);
 
 	_backButton->setListener([=](const std::string& name, bool down) {
 		if (down) {
@@ -110,11 +135,60 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 		}
 	});
 
+	_lvl0->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 0;
+			_didClickLevel = true;
+		}
+	});
+	_lvl1->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 1;
+			_didClickLevel = true;
+		}
+	});
+	_lvl2->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 2;
+			_didClickLevel = true;
+		}
+	});
+	_lvl3->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 3;
+			_didClickLevel = true;
+		}
+	});
+	_lvl4->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 4;
+			_didClickLevel = true;
+		}
+	});
+	_lvl5->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 5;
+			_didClickLevel = true;
+		}
+	});
+
 
 	_backButton->activate(4);
+	_lvl0->activate(8);
+	_lvl1->activate(9);
+	_lvl2->activate(10);
+	_lvl3->activate(11);
+	_lvl4->activate(12);
+	_lvl5->activate(13);
 
 	_rootnode->addChild(_background, UNIT_PRIORITY);
 	_background->addChild(_backButton, UNIT_PRIORITY);
+	_background->addChild(_lvl0, UNIT_PRIORITY);
+	_background->addChild(_lvl1, UNIT_PRIORITY);
+	_background->addChild(_lvl2, UNIT_PRIORITY);
+	_background->addChild(_lvl3, UNIT_PRIORITY);
+	_background->addChild(_lvl4, UNIT_PRIORITY);
+	_background->addChild(_lvl5, UNIT_PRIORITY);
 
 	addChild(_rootnode, 0);
 
@@ -139,6 +213,7 @@ void LevelSelectScene::update(float dt) {
 	_input.update(dt);
 
 	_didClickBack = false;
+	_didClickLevel = false;
 
 	if (_input.didExit()) {
 		CULog("Shutting down");

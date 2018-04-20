@@ -220,12 +220,12 @@ void GameScene::update(float dt) {
 	_gamestate->resetDidClickMenu();
 
 	if (_gameover || _input.didReset()) {
-		reset(LEVEL_FILE);
+		//reset(LEVEL_FILE);
 		return;
 	}
 
 	if (_complete) {
-		reset(LEVEL_FILE);
+		//reset(LEVEL_FILE);
 		//_winnode->setVisible(true);
 		return;
 	}
@@ -254,10 +254,12 @@ void GameScene::update(float dt) {
 		//CULog("SLOW DOWN");
         world->setStepsize(SLOW_MOTION);
         player->setColor(Color4::ORANGE);
-        if(!player->getCharging() && !_input.getCurrentAim().isNearZero()){
+        if(!player->getCharging() ){
             Vec2 currentAim = _input.getCurrentAim();
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;
+            CULog("angle: %f", angle);
             player->_oldAngle = angle;
+            CULog("in here");
             if(angle > 0.0f && angle < 35.0f) {
                 std::shared_ptr<Node> currNode = player -> getNode();
                 std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 2, false);
@@ -300,6 +302,7 @@ void GameScene::update(float dt) {
             }
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), true);
+            CULog("Current Aim: %f", _input.getCurrentAim().getAngle() * 180.0f / 3.14159f);
         }
         
         
@@ -480,7 +483,7 @@ void GameScene::update(float dt) {
     
     // LEVEL COMPLETE: If all enemies are dead then level completed
     if (_enemyCount == 0) {
-        //_complete = true;
+        _complete = true;
     }
 
     // Update the physics world
@@ -579,6 +582,8 @@ void GameScene::updateFriction() {
 	// Loops through enemies and sets friction and also checks for in bounds/death conditions
 	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
 		std::shared_ptr<EnemyModel> enemy = _gamestate->getEnemies()[i];
+        if(enemy->isRemoved())
+            continue;
 		Vec2 enemy_pos = enemy->getPosition();
 		if (!enemy->isSpore() && enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
