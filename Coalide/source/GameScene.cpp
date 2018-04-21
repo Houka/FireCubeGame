@@ -227,6 +227,7 @@ void GameScene::update(float dt) {
 	if (_complete) {
 		//reset(LEVEL_FILE);
 		//_winnode->setVisible(true);
+		_complete = false;
 		return;
 	}
 
@@ -674,6 +675,7 @@ void GameScene::reset(const std::string& file) {
 	_gamestate = _assets->get<LevelController>(_levelKey)->getGameState();
 	setComplete(false);
 	_gameover = false;
+	_gamestate->resetDidClickMenu();
 
 	_ai.init(_gamestate);
     

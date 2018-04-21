@@ -83,6 +83,12 @@
       "file": "textures/playbutton.png"
     }
   },
+    "soundfx": {
+        "harlem": {
+            "file":     "sounds/harlem.wav",
+            "volume":   0.5
+        }
+    },
 	"fonts": {
 		"charlemagne": {
 			"file":     "fonts/Charlemagne.ttf",
