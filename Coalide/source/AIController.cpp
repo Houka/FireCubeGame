@@ -144,12 +144,9 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
         float locy = start.y;
         while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
             locy += dy;
-            if(gamestate->getBoard()[(int)floor(locy)][(int)floor(locx)] == 0){
+            if(!gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]){
                 //CULog("WATER");
                 return true;
-			}
-			else {
-				CULog("A");
 			}
 //            CULog("inner Loop");
 
@@ -332,13 +329,6 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				route.pop_back();
 				enemy->setRoute(route);
 
-				if (enemy->isOnion()) {
-					CULog("A");
-				}
-				else {
-					CULog("B");
-				}
-
 				float targetDist = aim.length();
 				float a = GLOBAL_AIR_DRAG / m;
 				float v0 = sqrt(targetDist * 2 * a);
@@ -357,21 +347,15 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
                 continue;
             }*/
 
-			if (enemy->isOnion()) {
-				CULog("A");
-			}
-			else {
-				CULog("B");
-			}
-
 			aim = aim.normalize()*impulse;
 
 			Vec2 landing = enemy_pos + aim;
-			if (gamestate->getBoard()[(int)landing.y][(int)landing.x] > 0 && !intersectsWater(enemy_pos, enemy_pos + aim*1.5, gamestate)) {
+			if (gamestate->getTileBoard()[(int)landing.y][(int)landing.x] && !intersectsWater(enemy_pos, enemy_pos + aim*1.5, gamestate)) {
 				enemy->setWaterBetween(false);
 				moves.push_back(std::make_tuple(enemy, aim));
 			}
 			else {
+				enemy->setRoute(std::vector<Vec2>());
 				enemy->setWaterBetween(true);
 			}
 
