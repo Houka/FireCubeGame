@@ -198,7 +198,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     tile->setDirtSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21), (subTextureY / 8) + TILE_BORDER, (endY / 8));
                 }
                 _tiles.push_back(tile);
-                _tileBoard[r][c] = tile;
+                _tileBoard[rows - 1 - r][c] = tile;
             }
         }
     }

@@ -95,7 +95,7 @@
 
 #define MAX_PLAYER_SPEED 20
 
-#define MAX_IMPULSE 1.5f
+#define MAX_IMPULSE 12.0f
 
 #pragma mark -
 #pragma mark Object Types

@@ -145,7 +145,7 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
         while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
             locy += dy;
             if(!gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]){
-                //CULog("WATER");
+				//CULog("WATER");
                 return true;
 			}
 //            CULog("inner Loop");
@@ -156,30 +156,57 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
     return false;
 }
 
+bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyModel> enemy, std::shared_ptr<GameState> gamestate) {
+	if (landing.x < 0 || landing.x >= _bounds.size.getIWidth() || landing.y < 0 || landing.y >= _bounds.size.getIHeight()) {
+		return true;
+	}
+	
+	float friction = gamestate->getBoard()[(int)landing.y][(int)landing.x];
+
+	int m = enemy->getMass();
+
+	float vi = MIN_SPEED_FOR_CHARGING;
+	float vf = 0;
+
+	float a = friction / m + GLOBAL_AIR_DRAG * 24.0f;
+	float d = ((vi*vi) - (vf*vf)) / (2.0f * a);
+	//CULog("Sliding %f", d);
+	Vec2 slide = landing + aim*d;
+
+	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x]) {
+		return true;
+	}
+	return false;
+}
+
 
 bool sortByScore(std::tuple<Vec2, Vec2, float> a, std::tuple<Vec2, Vec2, float> b) {
 	return std::get<2>(a) > std::get<2>(b);
 }
 
 
-std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 target, std::shared_ptr<GameState> gamestate) {
+std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 target, std::shared_ptr<EnemyModel> enemy, std::shared_ptr<GameState> gamestate) {
 	int step = 0;
 
 	_openList.push_back(std::make_tuple(pos, pos, target.distance(pos)));
 
 	for (int i = 0; i < 12; i++) {
 		if (_openList.empty()) {
+			CULog("A");
 			break;
 		}
 		if (_closedList.empty()) {
-			AStar(pos, slingDist, target, pos, gamestate);
+			CULog("B");
+			AStar(pos, slingDist, target, pos, enemy, gamestate);
 		}
-		else if (std::get<0>(_closedList.back()).distance(target) < slingDist*1.5) {
-			_closedList.push_back(std::make_tuple(target, std::get<0>(_closedList.back()), -1));
+		else if (!intersectsWater(std::get<0>(_closedList.back()), target, gamestate)) {
+			CULog("C");
+			_closedList.push_back(std::make_tuple(target, std::get<0>(_closedList.back()), 0));
 			break;
 		}
 		else {
-			AStar(std::get<0>(_closedList.back()), slingDist, target, pos, gamestate);
+			CULog("D");
+			AStar(std::get<0>(_closedList.back()), slingDist, target, pos, enemy, gamestate);
 		}
 	}
 
@@ -197,6 +224,8 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 		}
 	}
 
+	CULog("There are %x moves in the route", route.size());
+
 	_openList.clear();
 	_closedList.clear();
 
@@ -211,29 +240,32 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 }
 
 
-void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, std::shared_ptr<GameState> gamestate) {
+void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, std::shared_ptr<EnemyModel> enemy, std::shared_ptr<GameState> gamestate) {
 	_closedList.push_back(_openList.back());
 	_closedArray[(int)std::get<0>(_openList.back()).y][(int)std::get<0>(_openList.back()).x] = true;
 	_openList.pop_back();
 
-	for (int i = - ceil(slingDist); i < slingDist; i++) {
+	for (int i = -ceil(slingDist); i < slingDist; i++) {
 		int x = pos.x + i;
 		for (int j = -ceil(slingDist); j < slingDist; j++) {
 			int y = pos.y + j;
-			float d = pos.distance(Vec2(x, y));
+			Vec2 vec = Vec2(x+.5, y+.5);
+			float d = pos.distance(vec);
+			Vec2 aim = vec - pos;
+			aim.normalize();
             // kyler - I changed this line to check if tile exists in tileboard[y][x] before accessing since I changed water to not be a tile
-			if (x > 0 && x < _bounds.size.getIWidth() && y > 0 && y < _bounds.size.getIHeight()
-				&& d < slingDist && !_closedArray[y][x] && !(i == 0 || j == 0) && gamestate->getBoard()[y][x] > 0 && !intersectsWater(pos, Vec2(x,y), gamestate)) {
-				float h = target.distance(Vec2(x, y));
-				float g = origin.distance(Vec2(x, y));
+			if (x >= 0 && x < _bounds.size.getIWidth() && y >= 0 && y < _bounds.size.getIHeight()
+				&& d < slingDist && !_closedArray[y][x] && !(i == 0 && j == 0) && gamestate->getTileBoard()[y][x] && !slipperySlope(vec, aim, enemy, gamestate)) {
+				float h = target.distance(vec);
+				float g = origin.distance(vec);
 				if (!_openArray[y][x]) {
-					_openList.push_back(std::make_tuple(Vec2(x, y), pos, g + h));
+					_openList.push_back(std::make_tuple(vec, pos, g + h));
 				}
 				else {
 					for (int k = 0; k < _openList.size(); i++) {
 						if ((int)std::get<0>(_openList[k]).x == i && (int)std::get<0>(_openList[k]).y == j) {
 							if (std::get<2>(_openList[k]) > g + h) {
-								_openList[k] = std::make_tuple(Vec2(x, y), pos, g + h);
+								_openList[k] = std::make_tuple(vec, pos, g + h);
 							}
 						}
 					}
@@ -292,18 +324,38 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
         if(!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom() && enemy->timeoutElapsed()){
 			Vec2 enemy_pos = enemy->getPosition();
 			Vec2 aim = player_pos - enemy_pos;
-
+			aim.normalize();
 			float impulse = MAX_IMPULSE;
 
+			/*int m = enemy->getMass();
+
+			float vi = MAX_IMPULSE / m;
+			float vf = MIN_SPEED_FOR_CHARGING;
+
+			float a = GLOBAL_AIR_DRAG * 24.0f;
+			float d = ((vi*vi) - (vf*vf)) / (2.0f * a);
+			float v0 = sqrt(d * 2.0f * a + vf*vf);
+			impulse = m * v0;
+
+			if (!enemy->isOnion()) {
+				CULog("m is %x", m);
+				CULog("vi is %f", vi);
+				CULog("d is %f", d);
+				CULog("Impulse needed: %f", impulse);
+			}*/
+
 			if (intersectsWater(enemy_pos, player_pos, gamestate)) {
-				int p = enemy->getDensity();
+				/*int p = enemy->getDensity();
 				int A = enemy->getWidth()*enemy->getHeight();
-				int m = p*A;
+				int m = p*A;*/
+				int m = enemy->getMass();
 
-				float vi = MAX_IMPULSE * 2 / m;
-				float vf = 2;
+				float vi = MAX_IMPULSE / m;
+				float vf = MIN_SPEED_FOR_CHARGING;
 
-				float f = GLOBAL_AIR_DRAG / m;
+				float a = GLOBAL_AIR_DRAG * 24.0f;
+				float d = ((vi*vi) - (vf*vf)) / (2.0f * a);
+
 				/*float f1 = GLOBAL_AIR_DRAG / m;
 				float f2 = gamestate->getBoard()[(int)enemy_pos.y][(int)enemy_pos.x];
 
@@ -318,22 +370,29 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 
 				float d = d1 + d2;*/
 
-				float d = vi*vi / (2 * f / m);
-
 				if (enemy->getRoute().size() == 0) {
-					enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, gamestate));
+					enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, enemy, gamestate));
 				}
 
 				std::vector<Vec2> route = enemy->getRoute();
-				aim = route.back() + Vec2(.5,.5) - enemy_pos;
+				aim = route.back() - enemy_pos;
 				route.pop_back();
 				enemy->setRoute(route);
 
 				float targetDist = aim.length();
-				float a = GLOBAL_AIR_DRAG / m;
-				float v0 = sqrt(targetDist * 2 * a);
-				impulse = m * v0 / 2;
+				float v0 = sqrt(targetDist * 2 * a + vf*vf);
+				impulse = m * v0;
 				impulse = std::min(MAX_IMPULSE, impulse);
+
+				if (!enemy->isOnion()) {
+					CULog("m is %x", m);
+					CULog("vi is %f", vi);
+					//CULog("d1 is %f", d1);
+					CULog("d is %f", d);
+					CULog("targetDist is %f", targetDist);
+					CULog("v0 needed: %f", v0);
+					CULog("Impulse needed: %f", impulse);
+				}
 
 				/*Vec2 projectedLanding = enemy_pos + aim * 3;
 				Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);
@@ -349,7 +408,7 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 
 			aim = aim.normalize()*impulse;
 
-			Vec2 landing = enemy_pos + aim;
+			/*Vec2 landing = enemy_pos + aim;
 			if (gamestate->getTileBoard()[(int)landing.y][(int)landing.x] && !intersectsWater(enemy_pos, enemy_pos + aim*1.5, gamestate)) {
 				enemy->setWaterBetween(false);
 				moves.push_back(std::make_tuple(enemy, aim));
@@ -357,16 +416,17 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 			else {
 				enemy->setRoute(std::vector<Vec2>());
 				enemy->setWaterBetween(true);
-			}
+			}*/
 
-			/*enemy->setWaterBetween(false);
-			moves.push_back(std::make_tuple(enemy, aim));*/
+			enemy->setWaterBetween(false);
+			moves.push_back(std::make_tuple(enemy, aim));
         }
 		else if(enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {
 			if (enemy->timeoutElapsed()) {
 				moves.push_back(std::make_tuple(enemy, Vec2(0,0)));
 				Vec2 aim = player_pos - enemy->getPosition();
 				aim.normalize();
+				aim *= MAX_IMPULSE;
 				std::shared_ptr<EnemyModel> spore = shootSpore(enemy->getPosition(), aim, gamestate);
 				std::tuple<std::shared_ptr<EnemyModel>, Vec2> nextMove = std::make_tuple(spore, aim/2);
 				_nextMoves.push_back(nextMove);

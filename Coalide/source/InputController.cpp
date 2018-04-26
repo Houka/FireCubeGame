@@ -150,7 +150,7 @@ cugl::Vec2 InputController::getCurrentAim() {
 	}
 
 	// _currentAim.scale(SLING_VECTOR_SCALE);
-	CULog("(%f,%f)", _currentAim.x, _currentAim.y);
+	//CULog("(%f,%f)", _currentAim.x, _currentAim.y);
 	return _currentAim;
 }
 

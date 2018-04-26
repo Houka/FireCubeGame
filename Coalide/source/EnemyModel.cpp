@@ -71,7 +71,7 @@ void EnemyModel::dispose() {
 void EnemyModel::applyLinearImpulse(Vec2& impulse) {
     _previousTime.mark();
     _rndTimerReduction = std::rand() % 3000;
-    _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * b2Vec2(impulse.x,impulse.y), true);
+    _body->ApplyLinearImpulseToCenter(b2Vec2(impulse.x,impulse.y), true);
 }
 
 /**

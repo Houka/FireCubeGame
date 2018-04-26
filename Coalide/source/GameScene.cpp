@@ -257,9 +257,9 @@ void GameScene::update(float dt) {
         if(!player->getCharging() ){
             Vec2 currentAim = _input.getCurrentAim();
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;
-            CULog("angle: %f", angle);
+            //CULog("angle: %f", angle);
             player->_oldAngle = angle;
-            CULog("in here");
+            //CULog("in here");
             if(angle > 0.0f && angle < 35.0f) {
                 std::shared_ptr<Node> currNode = player -> getNode();
                 std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 2, false);
@@ -302,7 +302,7 @@ void GameScene::update(float dt) {
             }
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), true);
-            CULog("Current Aim: %f", _input.getCurrentAim().getAngle() * 180.0f / 3.14159f);
+            //CULog("Current Aim: %f", _input.getCurrentAim().getAngle() * 180.0f / 3.14159f);
         }
         
         
@@ -614,6 +614,8 @@ void GameScene::updateFriction() {
         // Changes enemy state from charging if below speed threshold
         if(enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
             enemy->setCharging(false);
+			//CULog(enemy->getPosition().toString().c_str());
+			//enemy->setLinearVelocity(Vec2(0, 0));
 		}
 		else {
 			enemy->setCharging(true);
