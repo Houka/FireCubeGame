@@ -39,7 +39,7 @@
 #define MOVABLE_NAME	"movable"
 #define IMMOBILE_NAME	"immobile"
 
-#define MENU_NAME	"menu"
+#define MENU_NAME		"menu"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -95,7 +95,7 @@
 
 #define MAX_PLAYER_SPEED 20
 
-#define MAX_IMPULSE 12.0f
+#define MAX_IMPULSE 16.0f
 
 #pragma mark -
 #pragma mark Object Types
