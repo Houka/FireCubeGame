@@ -44,7 +44,9 @@ void CoalideApp::onStartup() {
     _assets->attach<Font>(FontLoader::alloc()->getHook());
 	_assets->attach<Node>(SceneLoader::alloc()->getHook());
 	_assets->attach<LevelController>(GenericLoader<LevelController>::alloc()->getHook());
-    	
+	_assets->attach<Sound>(SoundLoader::alloc()->getHook());
+	AudioEngine::start();
+
     // This reads the given JSON file and uses it to load all other assets
     _assets->loadDirectory("json/assets.json");
 
@@ -109,6 +111,10 @@ void CoalideApp::update(float timestep) {
 		_menuScene.init(_assets, _input);
 		_currentScene = CURRENT_SCENE::MENU_SCENE;
 
+		if (!AudioEngine::get()->isActiveEffect("harlem")) {
+			auto source = _assets->get<Sound>("harlem");
+			AudioEngine::get()->playEffect("harlem", source, true, source->getVolume());
+		}
 		// _levelSelectScene.init(_assets, _input, LEVEL_KEY);
 		_loaded = true;
 	}

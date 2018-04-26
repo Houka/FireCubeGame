@@ -174,10 +174,10 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x]) {
 		return true;
 	}
-	if (!enemy->isOnion()) {
+	/*if (!enemy->isOnion()) {
 		CULog("Sliding %f", d);
 		CULog("Landing %x", gamestate->getBoard()[(int)slide.y][(int)slide.x]);
-	}
+	}*/
 	return false;
 }
 
@@ -194,20 +194,20 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 
 	for (int i = 0; i < 24; i++) {
 		if (_openList.empty()) {
-			CULog("A");
+			//CULog("A");
 			break;
 		}
 		if (_closedList.empty()) {
-			CULog("B");
+			//CULog("B");
 			AStar(pos, slingDist, target, pos, enemy, gamestate);
 		}
 		else if (!intersectsWater(std::get<0>(_closedList.back()), target, gamestate)) {
-			CULog("C");
+			//CULog("C");
 			_closedList.push_back(std::make_tuple(target, std::get<0>(_closedList.back()), 0));
 			break;
 		}
 		else {
-			CULog("D");
+			//CULog("D");
 			AStar(std::get<0>(_closedList.back()), slingDist, target, pos, enemy, gamestate);
 		}
 	}
@@ -215,8 +215,8 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 	std::vector<Vec2> route;
 
 	auto move = _closedList.back();
-	CULog(std::get<0>(move).toString().c_str());
-	CULog(std::get<1>(move).toString().c_str());
+	/*CULog(std::get<0>(move).toString().c_str());
+	CULog(std::get<1>(move).toString().c_str());*/
 	route.push_back(std::get<0>(move));
 
 	while (std::get<0>(move).x != std::get<1>(move).x && std::get<0>(move).y != std::get<1>(move).y) {
@@ -228,7 +228,7 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 		}
 	}
 
-	CULog("There are %x moves in the route", route.size());
+	//CULog("There are %x moves in the route", route.size());
 
 	_openList.clear();
 	_closedList.clear();
