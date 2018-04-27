@@ -169,15 +169,11 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 
 	float a = friction / m;
 	float d = (vi*vi) / (2 * a);
-	Vec2 slide = landing + aim*d*1.5;
+	Vec2 slide = landing + aim*d*1.25;
 
 	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(landing, slide, gamestate)) {
 		return true;
 	}
-	/*if (!enemy->isOnion()) {
-		CULog("Sliding %f", d);
-		CULog("Landing %x", gamestate->getBoard()[(int)slide.y][(int)slide.x]);
-	}*/
 	return false;
 }
 
@@ -247,9 +243,9 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 	_openList.pop_back();
 
 	for (int i = -ceil(slingDist); i < slingDist; i++) {
-		int x = pos.x + i;
+		int x = (int)floor(pos.x + i);
 		for (int j = -ceil(slingDist); j < slingDist; j++) {
-			int y = pos.y + j;
+			int y = (int)floor(pos.y + j);
 			Vec2 vec = Vec2(x+.5, y+.5);
 			float d = pos.distance(vec);
 			Vec2 aim = vec - pos;
@@ -328,13 +324,16 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 			float impulse = MAX_IMPULSE;
 
 			if (intersectsWater(enemy_pos, player_pos, gamestate)) {
-				float a = GLOBAL_AIR_DRAG * 24;
 				int m = enemy->getMass();
+				float a = GLOBAL_AIR_DRAG / m * 24;
 				float vi = MAX_IMPULSE / m;
 				float vf = MIN_SPEED_FOR_CHARGING;
 
 				if (enemy->getRoute().empty()) {
 					float d = ((vi*vi) - (vf*vf)) / (2 * a);
+					if (enemy->isOnion()) {
+						CULog("d is %f", d);
+					}
 					enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, enemy, gamestate));
 				}
 
@@ -347,15 +346,13 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				float v0 = sqrt(targetDist * 2 * a + vf*vf);
 				impulse = m * v0;
 
-				//if (!enemy->isOnion()) {
-				//	CULog("m is %x", m);
-				//	CULog("vi is %f", vi);
-				//	//CULog("d1 is %f", d1);
-				//	CULog("d is %f", d);
-				//	CULog("targetDist is %f", targetDist);
-				//	CULog("v0 needed: %f", v0);
-				//	CULog("Impulse needed: %f", impulse);
-				//}
+				if (enemy->isOnion()) {
+					CULog("m is %x", m);
+					CULog("vi is %f", vi);
+					CULog("targetDist is %f", targetDist);
+					CULog("v0 needed: %f", v0);
+					CULog("Impulse needed: %f", impulse);
+				}
 
 				/*Vec2 projectedLanding = enemy_pos + aim * 3;
 				Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);

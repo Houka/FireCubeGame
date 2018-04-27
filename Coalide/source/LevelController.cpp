@@ -242,9 +242,8 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int c = onion->get("col")->asInt();
         enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
         enemy->setTextureKey(ONION);
-        enemy->setOnion();
-        enemy->setDensity(3);
-        
+		enemy->setOnion();
+
         _world->addObstacle(enemy);
         _enemies.push_back(enemy);
     }
