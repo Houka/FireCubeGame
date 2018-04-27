@@ -113,7 +113,7 @@ void CoalideApp::update(float timestep) {
 
 		if (!AudioEngine::get()->isActiveEffect("harlem")) {
 			auto source = _assets->get<Sound>("harlem");
-			AudioEngine::get()->playEffect("harlem", source, true, source->getVolume());
+			//AudioEngine::get()->playEffect("harlem", source, true, source->getVolume());
 		}
 		// _levelSelectScene.init(_assets, _input, LEVEL_KEY);
 		_loaded = true;

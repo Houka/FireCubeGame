@@ -169,9 +169,9 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 
 	float a = friction / m;
 	float d = (vi*vi) / (2 * a);
-	Vec2 slide = landing + aim*d;
+	Vec2 slide = landing + aim*d*1.5;
 
-	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x]) {
+	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(landing, slide, gamestate)) {
 		return true;
 	}
 	/*if (!enemy->isOnion()) {
@@ -192,18 +192,16 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 
 	_openList.push_back(std::make_tuple(pos, pos, target.distance(pos)));
 
+	AStar(pos, slingDist, target, pos, enemy, gamestate);
+
 	for (int i = 0; i < 24; i++) {
 		if (_openList.empty()) {
 			//CULog("A");
 			break;
 		}
-		if (_closedList.empty()) {
-			//CULog("B");
-			AStar(pos, slingDist, target, pos, enemy, gamestate);
-		}
 		else if (!intersectsWater(std::get<0>(_closedList.back()), target, gamestate)) {
 			//CULog("C");
-			_closedList.push_back(std::make_tuple(target, std::get<0>(_closedList.back()), 0));
+			//_closedList.push_back(std::make_tuple(target, std::get<0>(_closedList.back()), 0));||
 			break;
 		}
 		else {
@@ -213,10 +211,8 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 	}
 
 	std::vector<Vec2> route;
-
+	
 	auto move = _closedList.back();
-	/*CULog(std::get<0>(move).toString().c_str());
-	CULog(std::get<1>(move).toString().c_str());*/
 	route.push_back(std::get<0>(move));
 
 	while (std::get<0>(move).x != std::get<1>(move).x && std::get<0>(move).y != std::get<1>(move).y) {
@@ -224,6 +220,7 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 		for (int j = 0; j < _closedList.size(); j++) {
 			if ((int)std::get<0>(_closedList[j]).x == (int)std::get<1>(move).x && (int)std::get<0>(_closedList[j]).y == (int)std::get<1>(move).y) {
 				move = _closedList[j];
+				break;
 			}
 		}
 	}
@@ -349,7 +346,6 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				float targetDist = aim.length();
 				float v0 = sqrt(targetDist * 2 * a + vf*vf);
 				impulse = m * v0;
-				impulse = std::min(MAX_IMPULSE, impulse);
 
 				//if (!enemy->isOnion()) {
 				//	CULog("m is %x", m);
