@@ -115,7 +115,7 @@ Vec2 flock(std::shared_ptr<EnemyModel> enemy, std::shared_ptr<GameState> gamesta
 	if (nFlock > 0) {
 		flockV /= nFlock;
 		flockV.normalize();
-		flockV *= .4;
+		flockV *= .6;
 	}
 
 	if (nRepel > 0) {
@@ -169,8 +169,8 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 
 	float a = friction / m;
 	float d = (vi*vi) / (2 * a);
-	Vec2 slide = landing + aim*d*1.25;
-
+	Vec2 slide = landing + aim*d*1.2;
+	CULog("sliding %f", d);
 	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(landing, slide, gamestate)) {
 		return true;
 	}
@@ -275,10 +275,11 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 
 
 std::shared_ptr<EnemyModel> shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameState> gamestate) {
-	std::shared_ptr<EnemyModel> spore = EnemyModel::alloc(pos, UNIT_DIM/2);
+	std::shared_ptr<EnemyModel> spore = EnemyModel::alloc(pos, UNIT_DIM/4);
 	spore->setTextureKey(SPORE);
 	spore->setSpore();
 	spore->setLinearDamping(0);
+	spore->setDensity(6);
 
 	b2Filter filter;
 	filter.categoryBits = CATEGORY_SPORE;
@@ -317,64 +318,67 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
 
-        if(!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom() && enemy->timeoutElapsed()){
-			Vec2 enemy_pos = enemy->getPosition();
-			Vec2 aim = player_pos - enemy_pos;
-			aim.normalize();
-			float impulse = MAX_IMPULSE;
-
-			if (intersectsWater(enemy_pos, player_pos, gamestate)) {
-				int m = enemy->getMass();
-				float a = GLOBAL_AIR_DRAG / m * 24;
-				float vi = MAX_IMPULSE / m;
-				float vf = MIN_SPEED_FOR_CHARGING;
-
-				if (enemy->getRoute().empty()) {
-					float d = ((vi*vi) - (vf*vf)) / (2 * a);
-					if (enemy->isOnion()) {
-						CULog("d is %f", d);
-					}
-					enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, enemy, gamestate));
-				}
-
-				std::vector<Vec2> route = enemy->getRoute();
-				aim = route.back() - enemy_pos;
-				route.pop_back();
-				enemy->setRoute(route);
-
-				float targetDist = aim.length();
-				float v0 = sqrt(targetDist * 2 * a + vf*vf);
-				impulse = m * v0;
-
-				if (enemy->isOnion()) {
-					CULog("m is %x", m);
-					CULog("vi is %f", vi);
-					CULog("targetDist is %f", targetDist);
-					CULog("v0 needed: %f", v0);
-					CULog("Impulse needed: %f", impulse);
-				}
-
-				/*Vec2 projectedLanding = enemy_pos + aim * 3;
-				Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);
-				aim += avoidance;
-				aim += flock(enemy, gamestate);*/
-			}
-
-			aim = aim.normalize()*impulse;
-
-			enemy->setWaterBetween(false);
-			moves.push_back(std::make_tuple(enemy, aim));
-        }
-		else if(enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {
-			if (enemy->timeoutElapsed()) {
-				moves.push_back(std::make_tuple(enemy, Vec2(0,0)));
-				Vec2 aim = player_pos - enemy->getPosition();
+		if (enemy->isTargeting()) {
+			if (!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom() && enemy->timeoutElapsed()) {
+				Vec2 enemy_pos = enemy->getPosition();
+				Vec2 aim = player_pos - enemy_pos;
 				aim.normalize();
-				aim *= MAX_IMPULSE;
-				std::shared_ptr<EnemyModel> spore = shootSpore(enemy->getPosition(), aim, gamestate);
-				std::tuple<std::shared_ptr<EnemyModel>, Vec2> nextMove = std::make_tuple(spore, aim/2);
-				_nextMoves.push_back(nextMove);
+				float impulse = MAX_IMPULSE;
+
+				if (intersectsWater(enemy_pos, player_pos, gamestate)) {
+					int m = enemy->getMass();
+					float a = GLOBAL_AIR_DRAG / m * 24;
+					float vi = MAX_IMPULSE / m;
+					float vf = MIN_SPEED_FOR_CHARGING;
+
+					if (enemy->getRoute().empty()) {
+						float d = ((vi*vi) - (vf*vf)) / (2 * a);
+						if (enemy->isOnion()) {
+							CULog("d is %f", d);
+						}
+						enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, enemy, gamestate));
+					}
+
+					std::vector<Vec2> route = enemy->getRoute();
+					aim = route.back() - enemy_pos;
+					route.pop_back();
+					enemy->setRoute(route);
+
+					float targetDist = aim.length();
+					float v0 = sqrt(targetDist * 2 * a + vf*vf);
+					impulse = m * v0;
+
+					if (enemy->isOnion()) {
+						CULog("m is %x", m);
+						CULog("vi is %f", vi);
+						CULog("targetDist is %f", targetDist);
+						CULog("v0 needed: %f", v0);
+						CULog("Impulse needed: %f", impulse);
+					}
+
+					/*Vec2 projectedLanding = enemy_pos + aim * 3;
+					Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);
+					aim += avoidance;
+					aim += flock(enemy, gamestate);*/
+				}
+
+				aim = aim.normalize()*impulse;
+				moves.push_back(std::make_tuple(enemy, aim));
 			}
+			else if (enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {
+				if (enemy->timeoutElapsed()) {
+					moves.push_back(std::make_tuple(enemy, Vec2(0, 0)));
+					Vec2 aim = player_pos - enemy->getPosition();
+					aim.normalize();
+					aim *= MAX_IMPULSE*0.6;
+					std::shared_ptr<EnemyModel> spore = shootSpore(enemy->getPosition(), aim, gamestate);
+					std::tuple<std::shared_ptr<EnemyModel>, Vec2> nextMove = std::make_tuple(spore, aim / 2);
+					_nextMoves.push_back(nextMove);
+				}
+			}
+		}
+		else {
+			//Wandering
 		}
     }
     return moves;

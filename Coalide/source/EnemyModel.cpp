@@ -10,8 +10,7 @@
 #define MAX_SPEED_FOR_SLING 2
 #define IMPULSE_SCALE 8
 #define SLING_TIMEOUT 4000
-#define SPORE_TIMEOUT 5000
-#define ONION_TIMEOUT 4000
+#define SPORE_TIMEOUT 6000
 #define COLLISION_TIMEOUT 0
 
 using namespace cugl;
@@ -40,14 +39,16 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_stunned = false;
 		_onFire = false;
 
-		_wandering = true;
-		_targeting = false;
+		_wandering = false;
+		_targeting = true;
 
 		_mushroom = false;
 		_spore = false;
 		_onion = false;
 
 		_destroyed = false;
+
+		_waterInbetween = false;
 
 		_previousTime = Timestamp();
         unsigned int rnd_seed = (unsigned int) (100 * pos.x + pos.y);
@@ -96,9 +97,6 @@ bool EnemyModel::timeoutElapsed(){
     //wait between 2 and 5 seconds
 	if (isMushroom()) {
 		return Timestamp().ellapsedMillis(_previousTime) >= (SPORE_TIMEOUT - _rndTimerReduction);
-	}
-	if (isOnion()) {
-		return Timestamp().ellapsedMillis(_previousTime) >= (ONION_TIMEOUT - _rndTimerReduction);
 	}
 	/*CULog(to_string(Timestamp().ellapsedMillis(_previousTime)).c_str());
 	CULog(to_string((SLING_TIMEOUT - _rndTimerReduction)).c_str());*/
