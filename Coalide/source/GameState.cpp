@@ -56,11 +56,14 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		clearRootNode();
 	}
 
+	CULog("switching to game scene");
+
 	_rootnode = node;
 	_isPaused = false;
 
 	// Create, but transfer ownership to root
 	_worldnode = Node::alloc();
+
 	_worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
 	_worldnode->setPosition(Vec2::ZERO);
 

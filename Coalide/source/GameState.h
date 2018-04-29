@@ -58,7 +58,7 @@ protected:
 	std::shared_ptr<cugl::Button> _playButton;
 
 	bool _didClickMenu;
-	bool _isPaused;
+	bool _isPaused = false;
 
 	std::shared_ptr<cugl::AssetManager> _assets;
 
