@@ -83,6 +83,7 @@ class Terrain:
     def __init__(self, ttype):
         self.texture = -1
         self.t_water = -1
+        self.t_water_decal = -1
         self.t_dirt = -1
         self.t_ice = -1
         self.t_sand = -1
@@ -364,6 +365,7 @@ def makeJson():
     global numR
     global numC
     waterTextures = [[0 for x in range(numC)] for y in range(numR)]
+    waterDecals = [[0 for x in range(numC)] for y in range(numR)]
     dirtTextures = [[0 for x in range(numC)] for y in range(numR)]
     iceTextures = [[0 for x in range(numC)] for y in range(numR)]
     sandTextures = [[0 for x in range(numC)] for y in range(numR)]
@@ -381,6 +383,7 @@ def makeJson():
     for r in range(numR):
         for c in range(numC):
             waterTextures[r][c] = background[r][c].t_water
+            waterDecals[r][c] = background[r][c].t_water_decal
             dirtTextures[r][c] = terrain[r][c].t_dirt
             iceTextures[r][c] = terrain[r][c].t_ice
             sandTextures[r][c] = terrain[r][c].t_sand
@@ -457,6 +460,7 @@ def makeJson():
             "cols": numC
         },
         "textures":{
+            "waterDecals": waterDecals,
             "water": waterTextures,
             "grass": dirtTextures,
             "ice": iceTextures,
@@ -485,6 +489,7 @@ def makeJson():
 
 
 def autoTexture(terrain):
+    waterDecals = [[0 for x in range(numC)] for y in range(numR)]
     for r in range(1, 99):
         for c in range(1, 99):
             tl = terrain[r-1][c-1].texture
@@ -503,6 +508,21 @@ def autoTexture(terrain):
             h_b = False
             h_tr = False
             h_r = False
+            tmp = classifyFloor(cn)
+            if tmp == "water" and classifyFloor(t) != "water":
+                tmp = classifyFloor(tl)
+                h_tl = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
+                tmp = classifyFloor(tr)
+                h_tr = int(tmp == "dirt" or tmp == "ice" or tmp == "sand")
+                w_combined = h_tl + 2 * h_tr
+                if h_tl and classifyFloor(l) != "water":
+                    waterDecals[r][c-1] += 2
+                if h_tr and classifyFloor(rh) != "water":
+                    waterDecals[r][c+1] += 1
+                if w_combined == 0:
+                    waterDecals[r][c] = 4 #only the middle on
+                else:
+                    waterDecals[r][c] = w_combined
             tmp = classifyFloor(cn)
             if tmp == "dirt" or tmp == "ice" or tmp == "sand":
                 tmp = classifyFloor(tl)
@@ -534,6 +554,7 @@ def autoTexture(terrain):
                 textureCoord = spriteSheetMap[str(combined)]
 
                 terrain[r][c].t_dirt = imageCoordToID((textureCoord[0], textureCoord[1]))
+                background[r][c].t_water = imageCoordToID((textureCoord[0], textureCoord[1]))
 
             tmp = classifyFloor(cn)
             if tmp == "sand" or tmp == "ice":
@@ -596,6 +617,18 @@ def autoTexture(terrain):
                     combined += (h_tl * 2 ** 7)
                 textureCoord = spriteSheetMap[str(combined)]
                 terrain[r][c].t_sand = imageCoordToID((textureCoord[0], textureCoord[1] + 14))
+    for r in range(1, numR):
+        for c in range(1, numC):
+            if waterDecals[r][c] == 4:
+                background[r][c].t_water_decal = imageCoordToID((6,5))
+            if waterDecals[r][c] == 3:
+                background[r][c].t_water_decal = imageCoordToID((7,0))
+            if waterDecals[r][c] == 1:
+                background[r][c].t_water_decal = imageCoordToID((7,1))
+            if waterDecals[r][c] == 2:
+                background[r][c].t_water_decal = imageCoordToID((6,6))
+
+
 
 
 
@@ -778,6 +811,7 @@ while True:
                                 background[r][c] = Terrain("water")
                         elif event.buttons[2] == 1:
                             terrain[r][c] = Terrain("empty")
+                            background[r][c] = Terrain("water")
                         elif event.buttons[0] == 1:
                             if placingElement == "setDirt":
                                 terrain[r][c] = Terrain("dirt")
@@ -921,6 +955,7 @@ while True:
                             if not setZone and event.button == RIGHT:
                                 if editingLayer == "terrain":
                                     terrain[r][c] = Terrain("empty")
+                                    background[r][c] = Terrain("water")
                                 elif editingLayer == "objects":
                                     objects[r][c] = Object("empty")
                             elif placingElement == "setPlayerLoc":
@@ -1140,13 +1175,17 @@ while True:
                 else:
                     if backgroundVisible:
                         if background[r][c].ttype == "water":
-                            if showTextures:
-                                texCord = imageIDToCoord(background[r][c].texture)
-                                tex = waterset.image_at((64 * texCord[1], 64 *texCord[0], 64, 64))
-                                screen.blit(pg.transform.scale(tex, (boxwidth, boxwidth)), (leftOffset + boxwidth * c, topOffset + boxwidth * r))
-                            else:
-                                pg.draw.rect(screen, blue,
+                            pg.draw.rect(screen, blue,
                                          [leftOffset + boxwidth * c, topOffset + boxwidth * r, (boxwidth - 1), (boxwidth - 1)], 0)
+                            if showTextures:
+                                if background[r][c].t_water != -1:
+                                    texCord = imageIDToCoord(background[r][c].t_water)
+                                    tex = waterset.image_at((64 * texCord[1], 64 *texCord[0], 64, 64))
+                                    screen.blit(pg.transform.scale(tex, (boxwidth, boxwidth)), (leftOffset + boxwidth * c, topOffset + boxwidth * r))
+                                if background[r][c].t_water_decal != -1:
+                                    texCord = imageIDToCoord(background[r][c].t_water_decal)
+                                    tex = waterset.image_at((64 * texCord[1], 64 *texCord[0], 64, 64))
+                                    screen.blit(pg.transform.scale(tex, (boxwidth, boxwidth)), (leftOffset + boxwidth * c, topOffset + boxwidth * r))
                     if terrainVisible:
                         if showTextures:
                             if terrain[r][c].t_dirt != -1:
@@ -1431,8 +1470,12 @@ while True:
                 screen.blit(textureLabel, (width - rightOffset +
                                            5, height - botOffset - 300 + 40))
 
-                textureDisplay = myfont.render(str(terrain[tr][tc].texture), False, (255, 255, 255))
-                screen.blit(textureDisplay, (width - rightOffset + 122, height - botOffset - 300 + 40))
+                if editingLayer == "terrain":
+                    textureDisplay = myfont.render(str(terrain[tr][tc].texture), False, (255, 255, 255))
+                    screen.blit(textureDisplay, (width - rightOffset + 122, height - botOffset - 300 + 40))
+                else:
+                    textureDisplay = myfont.render(str(background[tr][tc].t_water), False, (255, 255, 255))
+                    screen.blit(textureDisplay, (width - rightOffset + 122, height - botOffset - 300 + 40))
 
                 if editingLayer == "terrain":
                     # display zone info
