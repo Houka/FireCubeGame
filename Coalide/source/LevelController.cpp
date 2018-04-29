@@ -163,13 +163,13 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                 
                 }
                 if(type == "ice"){
-                    _board[rows - 1 - r][c] = 2;
+					_board[rows - 1 - r][c] = 2;
                     tile->setType(TILE_TYPE::ICE);
                     tile->setIceTextureKey("tileset_forest.png");
                     tile->setDirtTextureKey("tileset_forest.png");
                 }
                 if(type == "dirt"){
-                    _board[rows - 1 - r][c] = 10;
+					_board[rows - 1 - r][c] = 10;
                     tile->setType(TILE_TYPE::GRASS);
                     tile->setDirtTextureKey("tileset_forest.png");
                 }

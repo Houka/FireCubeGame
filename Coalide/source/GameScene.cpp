@@ -474,6 +474,7 @@ void GameScene::update(float dt) {
         for(std::tuple<std::shared_ptr<EnemyModel>, Vec2> pair : enemiesToMove){
 			std::shared_ptr<EnemyModel> enemy = std::get<0>(pair);
             Vec2 sling = std::get<1>(pair);
+			//CULog("Slinging at %f", sling.length());
             enemy->applyLinearImpulse(sling);
             enemy->setCharging(true);
         }
@@ -597,6 +598,7 @@ void GameScene::updateFriction() {
                 }
             }
 			else if (enemy->getFriction() > .1f) {
+				//CULog("ENEMY INCOMING %f", enemy->getLinearVelocity().length());
 				enemy->setFriction(0);
 			}
         }
@@ -606,13 +608,13 @@ void GameScene::updateFriction() {
 		}
         
         // Caps enemy speed to MAX_PLAYER SPEED
-        if(enemy->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
+        /*if(enemy->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
             Vec2 capped_speed = enemy->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
             enemy->setLinearVelocity(capped_speed);
-        }
+        }*/
         
         // Changes enemy state from charging if below speed threshold
-        if(enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
+        if(enemy->getCharging() && enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
             enemy->setCharging(false);
 			//CULog(enemy->getPosition().toString().c_str());
 			//enemy->setLinearVelocity(Vec2(0, 0));

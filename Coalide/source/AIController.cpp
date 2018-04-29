@@ -170,8 +170,9 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 	float a = friction / m;
 	float d = (vi*vi) / (2 * a);
 	Vec2 slide = landing + aim*d*1.2;
-	CULog("sliding %f", d);
-	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(landing, slide, gamestate)) {
+	Vec2 shortland = landing - aim*d*0.2;
+	//CULog("sliding %f", d);
+	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(shortland, slide, gamestate)) {
 		return true;
 	}
 	return false;
@@ -243,15 +244,17 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 	_openList.pop_back();
 
 	for (int i = -ceil(slingDist); i < slingDist; i++) {
-		int x = (int)floor(pos.x + i);
+		int xi = (int)floor(pos.x + i);
 		for (int j = -ceil(slingDist); j < slingDist; j++) {
-			int y = (int)floor(pos.y + j);
-			Vec2 vec = Vec2(x+.5, y+.5);
-			float d = pos.distance(vec);
-			Vec2 aim = vec - pos;
+			int yi = (int)floor(pos.y + j);
+			Vec2 aim = Vec2(xi + .5, yi + .5) - pos;
 			aim.normalize();
+			Vec2 vec = pos + aim * slingDist;
+			int x = (int)floor(vec.x);
+			int y = (int)floor(vec.y);
+
 			if (x >= 0 && x < _bounds.size.getIWidth() && y >= 0 && y < _bounds.size.getIHeight()
-				&& d < slingDist && !_closedArray[y][x] && !(i == 0 && j == 0) && gamestate->getTileBoard()[y][x] && !slipperySlope(vec, aim, enemy, gamestate)) {
+				&& !_closedArray[y][x] && !(i == 0 && j == 0) && gamestate->getTileBoard()[y][x] && !slipperySlope(vec, aim, enemy, gamestate)) {
 				float h = target.distance(vec);
 				float g = origin.distance(vec);
 				if (!_openArray[y][x]) {
@@ -318,24 +321,22 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
 
-		if (enemy->isTargeting()) {
-			if (!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom() && enemy->timeoutElapsed()) {
+		if (enemy->isTargeting() && gamestate->getWorld()->getStepsize() > SLOW_MOTION) {
+			if (!enemy->isRemoved() && !enemy->isStunned() && enemy->canSling() && !enemy->isMushroom() && enemy->timeoutElapsed()) {
 				Vec2 enemy_pos = enemy->getPosition();
 				Vec2 aim = player_pos - enemy_pos;
 				aim.normalize();
 				float impulse = MAX_IMPULSE;
 
-				if (intersectsWater(enemy_pos, player_pos, gamestate)) {
-					int m = enemy->getMass();
-					float a = GLOBAL_AIR_DRAG / m * 24;
-					float vi = MAX_IMPULSE / m;
-					float vf = MIN_SPEED_FOR_CHARGING;
+				int m = enemy->getMass();
+				float a = GLOBAL_AIR_DRAG * 7.45;
+				float vi = MAX_IMPULSE;
+				float vf = MIN_SPEED_FOR_CHARGING;
+				float d = ((vi*vi) - (vf*vf)) / (2 * a);
+				//CULog("d is %f", d);
 
+				if (intersectsWater(enemy_pos, player_pos, gamestate)) {
 					if (enemy->getRoute().empty()) {
-						float d = ((vi*vi) - (vf*vf)) / (2 * a);
-						if (enemy->isOnion()) {
-							CULog("d is %f", d);
-						}
 						enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, enemy, gamestate));
 					}
 
@@ -344,25 +345,38 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 					route.pop_back();
 					enemy->setRoute(route);
 
-					float targetDist = aim.length();
-					float v0 = sqrt(targetDist * 2 * a + vf*vf);
-					impulse = m * v0;
+					//float targetDist = aim.length();
+					//CULog("targetDist is %f", targetDist);
+					//if (targetDist > 0) {
+					//	float v0 = sqrt(targetDist * 2 * a + vf*vf);
+					//	impulse = m * v0;
+					//}
 
-					if (enemy->isOnion()) {
+					/*if (enemy->isOnion()) {
 						CULog("m is %x", m);
 						CULog("vi is %f", vi);
 						CULog("targetDist is %f", targetDist);
 						CULog("v0 needed: %f", v0);
 						CULog("Impulse needed: %f", impulse);
-					}
+					}*/
 
 					/*Vec2 projectedLanding = enemy_pos + aim * 3;
 					Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);
 					aim += avoidance;
 					aim += flock(enemy, gamestate);*/
 				}
+				/*else {
+					Vec2 landing = enemy_pos + aim*d;
+					float landingDist = landing.distance(enemy_pos);
+					float playerDist = player_pos.distance(enemy_pos);
+					if (landingDist < playerDist && landingDist > playerDist*0.8) {
+						impulse *= 0.7;
+					}
+				}*/
 
-				aim = aim.normalize()*impulse;
+				aim.normalize();
+				aim *= impulse;
+				//CULog("Impulsed %f", impulse);
 				moves.push_back(std::make_tuple(enemy, aim));
 			}
 			else if (enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {

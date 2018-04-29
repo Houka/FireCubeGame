@@ -53,7 +53,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_previousTime = Timestamp();
         unsigned int rnd_seed = (unsigned int) (100 * pos.x + pos.y);
         std::srand(rnd_seed);
-		_rndTimerReduction = std::rand() % 3000;
+		_rndTimerReduction = std::rand() % 2000;
 
 		return true;
 	}
@@ -72,7 +72,7 @@ void EnemyModel::dispose() {
 void EnemyModel::applyLinearImpulse(Vec2& impulse) {
     _previousTime.mark();
     _rndTimerReduction = std::rand() % 3000;
-    _body->ApplyLinearImpulseToCenter(b2Vec2(impulse.x,impulse.y), true);
+    _body->SetLinearVelocity(b2Vec2(impulse.x,impulse.y));
 }
 
 /**

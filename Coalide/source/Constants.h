@@ -90,12 +90,12 @@
 #define LEVEL_KEY    "level"
 
 /** Time slowdown rates */
-#define NORMAL_MOTION .015
+#define NORMAL_MOTION .015625
 #define SLOW_MOTION .002
 
 #define MAX_PLAYER_SPEED 20
 
-#define MAX_IMPULSE 16.0f
+#define MAX_IMPULSE 12.0f
 
 #pragma mark -
 #pragma mark Object Types
