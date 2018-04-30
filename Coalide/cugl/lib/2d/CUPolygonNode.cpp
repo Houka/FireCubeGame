@@ -96,6 +96,29 @@ void PolygonNode::setPolygon(const Rect& rect) {
 }
 
 /**
+ * Translates the polygon by the given amount.
+ *
+ * Remember that translating the polygon has no effect on the shape or position.
+ * Because the polygon is expressed in texture coordinates, all it does is shift
+ * the texture coords of the polygon.  Hence this method can be used for animation
+ * and filmstrips.
+ *
+ * Calling this method is faster than changing the polygon and resetting it.
+ *
+ * @param   dx  The amount to shift horizontally.
+ * @param   dx  The amount to shift horizontally.
+ */
+void PolygonNode::shiftPolygon(float dx, float dy) {
+    _polygon += Vec2(dx,dy);
+    float w = (float)_texture->getWidth();
+    float h = (float)_texture->getHeight();
+    for(auto it = _vertices.begin(); it != _vertices.end(); ++it) {
+        it->texcoord.x += dx/w;
+        it->texcoord.y -= dy/h;
+    }
+}
+
+/**
  * Draws this Node via the given SpriteBatch.
  *
  * This method only worries about drawing the current node.  It does not

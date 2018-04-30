@@ -253,7 +253,9 @@ void GameScene::update(float dt) {
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
 
-
+    
+//    player->getCircle()
+    
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
         world->setStepsize(SLOW_MOTION);
