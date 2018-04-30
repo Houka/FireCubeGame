@@ -129,6 +129,11 @@
 		EBC1471C1E27F0BB005494CE /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBC1471B1E27F0BB005494CE /* ImageIO.framework */; };
 		EBFE7C051E19B496001007C2 /* json in Resources */ = {isa = PBXBuildFile; fileRef = EBFE7C041E19B496001007C2 /* json */; };
 		EBFE7C091E19B4AC001007C2 /* json in Resources */ = {isa = PBXBuildFile; fileRef = EBFE7C041E19B496001007C2 /* json */; };
+		ED1A4AB4209690FE007711C8 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = ED1A4AB0209690FE007711C8 /* sounds */; };
+		ED1A4AB5209690FE007711C8 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = ED1A4AB0209690FE007711C8 /* sounds */; };
+		ED1A4AB6209690FE007711C8 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = ED1A4AB0209690FE007711C8 /* sounds */; };
+		ED1A4AB720969108007711C8 /* ObjectModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0858822E2068BC9800F2E4B9 /* ObjectModel.cpp */; };
+		ED1A4AB820969109007711C8 /* ObjectModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0858822E2068BC9800F2E4B9 /* ObjectModel.cpp */; };
 		ED24AD2A2087622800326406 /* MenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD282087622700326406 /* MenuScene.cpp */; };
 		ED24AD2B2087622800326406 /* MenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD282087622700326406 /* MenuScene.cpp */; };
 		ED24AD2C2087622800326406 /* MenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD282087622700326406 /* MenuScene.cpp */; };
@@ -229,6 +234,7 @@
 		EBC147191E27F0A8005494CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		EBC1471B1E27F0BB005494CE /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		EBFE7C041E19B496001007C2 /* json */ = {isa = PBXFileReference; lastKnownFileType = folder; path = json; sourceTree = "<group>"; };
+		ED1A4AB0209690FE007711C8 /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		ED24AD232087622700326406 /* LevelSelectScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelSelectScene.h; sourceTree = "<group>"; };
 		ED24AD272087622700326406 /* MenuScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuScene.h; sourceTree = "<group>"; };
 		ED24AD282087622700326406 /* MenuScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuScene.cpp; sourceTree = "<group>"; };
@@ -308,6 +314,7 @@
 		EB2BE9B71D749870002FE78B /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				ED1A4AB0209690FE007711C8 /* sounds */,
 				EBFE7C041E19B496001007C2 /* json */,
 				EB2BE9BA1D7498D2002FE78B /* textures */,
 				EB2BE9B81D7498C9002FE78B /* fonts */,
@@ -520,7 +527,7 @@
 					};
 					EB74548B1D74D75C002FBAE6 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 4ZMUDM94F7;
+						DevelopmentTeam = Y6P433UDB9;
 					};
 					EBBF18901D74904A008E2001 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -584,6 +591,7 @@
 			files = (
 				EB0FF61A2016EFC500517030 /* json in Resources */,
 				EB0FF61B2016EFC500517030 /* textures in Resources */,
+				ED1A4AB6209690FE007711C8 /* sounds in Resources */,
 				EB0FF61C2016EFC500517030 /* fonts in Resources */,
 				EB0FF6172016EFB200517030 /* iOS.xcassets in Resources */,
 				EB0FF6182016EFB200517030 /* Landscape.storyboard in Resources */,
@@ -597,6 +605,7 @@
 			files = (
 				EB7454D01D750623002FBAE6 /* textures in Resources */,
 				EB7454D11D750623002FBAE6 /* fonts in Resources */,
+				ED1A4AB5209690FE007711C8 /* sounds in Resources */,
 				EB7454AB1D74D846002FBAE6 /* iOS.xcassets in Resources */,
 				EB7454AC1D74D846002FBAE6 /* Landscape.storyboard in Resources */,
 				EBFE7C051E19B496001007C2 /* json in Resources */,
@@ -608,6 +617,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED1A4AB4209690FE007711C8 /* sounds in Resources */,
 				EBFE7C091E19B4AC001007C2 /* json in Resources */,
 				EB2BE9BB1D7498D2002FE78B /* textures in Resources */,
 				EB2BE9B91D7498C9002FE78B /* fonts in Resources */,
@@ -629,6 +639,7 @@
 				085EBB082057884200F6FAD2 /* CollisionController.cpp in Sources */,
 				085EBB092057884200F6FAD2 /* CollisionController.h in Sources */,
 				085EBB0A2057884200F6FAD2 /* Constants.h in Sources */,
+				ED1A4AB820969109007711C8 /* ObjectModel.cpp in Sources */,
 				085EBB0B2057884200F6FAD2 /* EnemyModel.cpp in Sources */,
 				085EBB0C2057884200F6FAD2 /* EnemyModel.h in Sources */,
 				085EBB0D2057884200F6FAD2 /* GameScene.cpp in Sources */,
@@ -662,6 +673,7 @@
 				085EBAF12057874300F6FAD2 /* CollisionController.cpp in Sources */,
 				085EBAF22057874300F6FAD2 /* CollisionController.h in Sources */,
 				085EBAF32057874300F6FAD2 /* Constants.h in Sources */,
+				ED1A4AB720969108007711C8 /* ObjectModel.cpp in Sources */,
 				085EBAF42057874300F6FAD2 /* EnemyModel.cpp in Sources */,
 				085EBAF52057874300F6FAD2 /* EnemyModel.h in Sources */,
 				085EBAF62057874300F6FAD2 /* GameScene.cpp in Sources */,
@@ -786,7 +798,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: kyler.ruvane@gmail.com (39NSK29Z6T)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 4ZMUDM94F7;
+				DEVELOPMENT_TEAM = Y6P433UDB9;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
@@ -794,7 +806,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.gdiac.ios.HelloWorld;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.gdiac.ios.Coalide;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -809,7 +821,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: kyler.ruvane@gmail.com (39NSK29Z6T)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 4ZMUDM94F7;
+				DEVELOPMENT_TEAM = Y6P433UDB9;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
@@ -817,7 +829,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.gdiac.ios.HelloWorld;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.gdiac.ios.Coalide;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

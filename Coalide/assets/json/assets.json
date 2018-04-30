@@ -6,38 +6,38 @@
         "nicoal_f": [0, 0, 64, 64],
         "nicoal_fls": [64, 0, 128, 64],
         "nicoal_l": [128, 0, 196, 64],
-        "nicoal_bls": [196, 0, 260, 64],
-        "nicoal_b": [260, 0, 324, 64],
-        "nicoal_brs": [324, 0, 388, 64],
-        "nicoal_r": [388, 0, 452, 64],
-        "nicoal_frs": [452, 0, 516, 64],
+        "nicoal_bls": [196, 0, 256, 64],
+        "nicoal_b": [256, 0, 320, 64],
+        "nicoal_brs": [320, 0, 384, 64],
+        "nicoal_r": [384, 0, 448, 64],
+        "nicoal_frs": [448, 0, 512, 64],
 
         "buildup_f": [ 0, 64, 64, 128],
         "buildup_fls": [64, 64, 128, 128],
         "buildup_l": [128, 64, 196, 128],
-        "buildup_bls": [196, 64, 260, 128],
-        "buildup_b": [260, 64, 324, 128],
-        "buildup_brs": [324, 64, 388, 128],
-        "buildup_r": [388, 64, 452, 128],
-        "buildup_frs": [452, 64, 516, 128],
+        "buildup_bls": [196, 64, 256, 128],
+        "buildup_b": [256, 64, 320, 128],
+        "buildup_brs": [320, 64, 384, 128],
+        "buildup_r": [384, 64, 448, 128],
+        "buildup_frs": [448, 64, 512, 128],
 
         "charging_f": [ 0, 128, 64, 196],
         "charging_fls": [64, 128, 128, 196],
         "charging_l": [128, 128, 196, 196],
-        "charging_bls": [196, 128, 260, 196],
-        "charging_b": [260, 128, 324, 196],
-        "charging_brs": [324, 128, 388, 196],
-        "charging_r": [388, 128, 452, 196],
-        "charging_frs": [452, 128, 516, 196],
+        "charging_bls": [196, 128, 256, 196],
+        "charging_b": [256, 128, 320, 196],
+        "charging_brs": [320, 128, 384, 196],
+        "charging_r": [384, 128, 448, 196],
+        "charging_frs": [448, 128, 512, 196],
 
-        "sliding_f": [ 0, 196, 64, 260],
-        "sliding_fls": [64, 196, 128, 260],
-        "sliding_l": [128, 196, 196, 260],
-        "sliding_bls": [196, 196, 260, 260],
-        "sliding_b": [260, 196, 324, 260],
-        "sliding_brs": [324, 196, 388, 260],
-        "sliding_r": [388, 196, 452, 260],
-        "sliding_frs": [452, 196, 516, 260]
+        "sliding_f": [ 0, 196, 64, 256],
+        "sliding_fls": [64, 196, 128, 256],
+        "sliding_l": [128, 196, 196, 256],
+        "sliding_bls": [196, 196, 256, 256],
+        "sliding_b": [256, 196, 320, 256],
+        "sliding_brs": [320, 196, 384, 256],
+        "sliding_r": [384, 196, 448, 256],
+        "sliding_frs": [448, 196, 512, 256]
       }
     },
     "acorn": {
@@ -70,6 +70,12 @@
     "map": {
       "file": "textures/Map.png"
     },
+    "arrow_indicator": {
+      "file": "textures/arrow.png"
+    },
+    "circle_indicator": {
+      "file": "textures/circle.png"
+    },
     "start_button": {
       "file": "textures/start.png"
     },
@@ -86,6 +92,12 @@
       "file": "textures/playbutton.png"
     }
   },
+    "soundfx": {
+        "harlem": {
+            "file":     "sounds/harlem.wav",
+            "volume":   0.5
+        }
+    },
 	"fonts": {
 		"charlemagne": {
 			"file":     "fonts/Charlemagne.ttf",

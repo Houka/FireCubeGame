@@ -22,6 +22,7 @@ private:
     bool _mousepan;
 	bool _panning;
 	cugl::Vec2 _cameraPan;
+    bool _mousedown;
     // TOUCH SUPPORT
     /** The initial touch location for the current gesture */
     cugl::Vec2 _initTouch;

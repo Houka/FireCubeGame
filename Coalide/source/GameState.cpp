@@ -61,6 +61,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 
 	// Create, but transfer ownership to root
 	_worldnode = Node::alloc();
+
 	_worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
 	_worldnode->setPosition(Vec2::ZERO);
 
@@ -163,15 +164,24 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		_player->setDrawScale(_scale.x);
 		//_player->setDebugScene(_debugnode);
 
-        // create the aim arrow
-        const std::vector<cugl::Vec2> arrowLine = { cugl::Vec2(0,0), cugl::Vec2(0, 2) };
-        std::shared_ptr<cugl::PathNode> _arrow = PathNode::allocWithVertices(arrowLine, 1, cugl::PathJoint::NONE, cugl::PathCap::NONE, false);
-        _arrow->setAnchor(cugl::Vec2(0.0, 0.0));
+        //Arrow indicator for Nicoal
+        Rect box = Rect(0.0f,0.0f,100.0f,65.0f);
+        std::shared_ptr<cugl::Node> _arrow = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow_indicator"));
+        _arrow->setScale(0.5f);
+        std::shared_ptr<cugl::Node> _circle = PolygonNode::allocWithTexture(_assets->get<Texture>("circle_indicator"), box);
+
+//        const std::vector<cugl::Vec2> arrowLine = { cugl::Vec2(0,0), cugl::Vec2(0, 2) };
+//        std::shared_ptr<cugl::PathNode> _arrow = PathNode::allocWithVertices(arrowLine, 1, cugl::PathJoint::NONE, cugl::PathCap::NONE, false);
+        _arrow->setAnchor(cugl::Vec2(2.0, 2.0));
         _arrow->setVisible(false);
+//        _circle->setAnchor(cugl::Vec2(2.0, 2.0));
+        _circle->setVisible(false);
         _player->setArrow(_arrow);
+        _player->setCircle(_circle);
         
         // Create the polygon node (empty, as the model will initialize)
-        playerNode->addChild(_arrow, UNIT_PRIORITY);
+        _worldnode->addChild(_arrow, UNIT_PRIORITY);
+        _worldnode->addChild(_circle, UNIT_PRIORITY);
         _worldnode->addChild(playerNode, UNIT_PRIORITY);
         _worldnode->addChild(standingPlayerNode_f, UNIT_PRIORITY);
         _worldnode->addChild(standingPlayerNode_fls, UNIT_PRIORITY);
@@ -223,7 +233,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 			_worldnode->addChild(objectNode, UNIT_PRIORITY);
 		}
 	}
-
+    
 	// create the UI buttons
 	_uiNode = Node::alloc();
 	_uiNode->setPosition(300, 300);

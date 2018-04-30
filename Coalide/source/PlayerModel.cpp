@@ -5,6 +5,8 @@
 
 #include "PlayerModel.h"
 #include "Constants.h"
+#include <math.h>       /* pow */
+
 
 #define IMPULSE_SCALE .05
 #define COLLISION_TIMEOUT 0
@@ -385,22 +387,47 @@ bool PlayerModel::inBounds(int width, int height){
 *
 * @param node  updates the aim arrow.
 */
-void PlayerModel::updateArrow(cugl::Vec2 aim, bool visible) {
-	aim *= -.3;
+void PlayerModel::updateArrow(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bool visible) {
+    aim *= -.3;
 	cugl::Vec2 playerImageOffset = cugl::Vec2(_node->getWidth() / 2.0, _node->getHeight() / 2.0);
 
-	float scaleFactor = aim.length();
-	float angle = -1 * aim.getAngle();
+	//float scaleFactor = aim.length();
+    float angle = -1 * aim.getAngle();
+    angle += 2.35619;
 
-	_arrow->setScale(cugl::Vec2(scaleFactor, 1));
-	_arrow->setAngle(angle);
-	_arrow->setPosition(cugl::Vec2(playerImageOffset.x + aim.x, playerImageOffset.y - aim.y));
+	//_arrow->setScale(cugl::Vec2(scaleFactor, 1));
+	//_arrow->setAngle(angle);
+    
+    _arrow->setAngle(angle);
+    _arrow->setPosition(currNode->getWorldPosition());
 	_arrow->setVisible(visible);
-	_arrow->setColor(cugl::Color4::RED);
+	//_arrow->setColor(cugl::Color4::RED);
+}
+
+void PlayerModel::updateCircle(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bool visible) {
+    aim *= -.3;
+    cugl::Vec2 playerImageOffset = cugl::Vec2(_node->getWidth() / 2.0, _node->getHeight() / 2.0);
+    
+    //float scaleFactor = aim.length();
+    //float angle = -1 * aim.getAngle();
+    //angle += 2.35619;
+    
+    //_arrow->setScale(cugl::Vec2(scaleFactor, 1));
+    //_arrow->setAngle(angle);
+    
+    //_circle->setAngle(angle);
+    Vec2 scalingNumber = aim.scale(0.135f) * powf(aim.length(), 1.15f);
+    _circle->setPosition(cugl::Vec2(currNode->getWorldPosition().x + scalingNumber.x, currNode->getWorldPosition().y - scalingNumber.y - (currNode->getHeight() / 2.0f)));
+    _circle->setVisible(visible);
+    //_arrow->setColor(cugl::Color4::RED);
 }
 
 void PlayerModel::updateArrow(bool visible) {
 	_arrow->setVisible(visible);
+}
+
+void PlayerModel::updateCircle(bool visible) {
+    _circle->setVisible(visible);
 }
 
 

@@ -227,6 +227,7 @@ void GameScene::update(float dt) {
 	if (_complete) {
 		//reset(LEVEL_FILE);
 		//_winnode->setVisible(true);
+		_complete = false;
 		return;
 	}
 
@@ -243,23 +244,16 @@ void GameScene::update(float dt) {
     std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
-    
-    //CULog("\nGame Width: %d, Game Height: %d \nPlayer Position: %s \nPlayer in Bounds: %d \nPlayer Speed: %f", gameBounds.getIWidth(), gameBounds.getIHeight(), player_pos.toString().c_str(), player->inBounds(gameBounds.getIWidth(), gameBounds.getIWidth()), player->getLinearVelocity().length());
-
 
 
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
-		//CULog("CURRENT STEP SIZE: %f", std::abs(world->getStepsize() - NORMAL_MOTION));
-		//CULog("SLOW DOWN");
         world->setStepsize(SLOW_MOTION);
         player->setColor(Color4::ORANGE);
         if(!player->getCharging() ){
             Vec2 currentAim = _input.getCurrentAim();
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;
-            //CULog("angle: %f", angle);
             player->_oldAngle = angle;
-            //CULog("in here");
             if(angle > 0.0f && angle < 35.0f) {
                 std::shared_ptr<Node> currNode = player -> getNode();
                 std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 2, false);
@@ -301,15 +295,19 @@ void GameScene::update(float dt) {
                 player->switchNode(currNode, desNode);
             }
             // update the aim arrow
-            player->updateArrow(_input.getCurrentAim(), true);
-            //CULog("Current Aim: %f", _input.getCurrentAim().getAngle() * 180.0f / 3.14159f);
+            player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
+//            CULog("%f", _input.getCurrentAim().length());
+            if(_input.getCurrentAim().length() > 175.0f) {
+                player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
+            } else
+            {
+                player->updateCircle(false);
+            }
         }
         
         
         
-//        CULog("Current Aim: %f", _input.getCurrentAim().getAngle() * 180.0f / 3.14159f);
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
-		//CULog("SPEED UP");
         world->setStepsize(NORMAL_MOTION);
         player->setColor(Color4::WHITE);
     }
@@ -319,7 +317,7 @@ void GameScene::update(float dt) {
         cugl::Vec2 sling = _input.getLatestSlingVector();
         player->applyLinearImpulse(sling);
         player->setCharging(true);
-        player->updateArrow(false);
+//        player->updateArrow(false);
         
         Vec2 currentAim = _input.getCurrentAim();
         float angle = currentAim.getAngle() * 180.0f / 3.14159f;
@@ -466,6 +464,7 @@ void GameScene::update(float dt) {
     
     if(!player->canSling()) {
         player->updateArrow(false);
+        //player->updateCircle(false);
     }
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state
@@ -530,10 +529,9 @@ void GameScene::update(float dt) {
 
 	cugl::Vec2 pan = _input.getCameraPan();
 	if (pan.length() > 0) {
-		_cameraPanTo = pan
-		_input.setCameraPan(Vec2(0, 0));
+		cameraTransX = pan.x;
+		cameraTransY = pan.y;
 	}
-	else if (_cameraPanTo.length() > 0)
 	else {
 		cameraTransX = playerPos.x - cameraPos.x;
 		cameraTransY = playerPos.y - cameraPos.y;
@@ -571,7 +569,6 @@ void GameScene::updateFriction() {
 	Size gameBounds = _gamestate->getBounds().size;
 
 	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
-    //CULog("in bounds: %d", player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight()));
     if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
         if (!player->getCharging()) {
             float friction = _gamestate->getBoard()[(int)floor(player_pos.y - 0.35)][(int)floor(player_pos.x)];
@@ -690,6 +687,7 @@ void GameScene::reset(const std::string& file) {
 	_gamestate = _assets->get<LevelController>(_levelKey)->getGameState();
 	setComplete(false);
 	_gameover = false;
+	_gamestate->resetDidClickMenu();
 
 	_ai.init(_gamestate);
     
