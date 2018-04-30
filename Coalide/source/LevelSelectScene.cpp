@@ -87,14 +87,17 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 
 	// create the menu background texture
 	cugl::Rect screen = cugl::Rect(0., 0., 500., 500.);
-	std::shared_ptr<cugl::PolygonNode> _background = PolygonNode::allocWithTexture(_assets->get<Texture>("map"));
+	_background = PolygonNode::allocWithTexture(_assets->get<Texture>("map"));
 	float xMax = getCamera()->getViewport().getMaxX();
 	float yMax = getCamera()->getViewport().getMaxY();
 	float textureWidth = _background->getTexture()->getWidth();
 	float textureHeight = _background->getTexture()->getHeight();
-	float scaledWidth = textureWidth*(yMax / textureHeight);
-	_background->setPosition(scaledWidth / 2., yMax / 2.);
+	_scaledWidth = textureWidth*(yMax / textureHeight);
+	_background->setPosition(_scaledWidth / 2., yMax / 2.);
 	_background->setScale(yMax / textureHeight, yMax / textureHeight);
+	_maxX = _scaledWidth / 2.;
+	_minX = xMax - _scaledWidth / 2.;
+	_prevOffset = 0;
 
 	// create the buttons
 	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("menu_button"));
@@ -215,14 +218,37 @@ void LevelSelectScene::update(float dt) {
 	_didClickBack = false;
 	_didClickLevel = false;
 
-	//CULog("offset: %f", _input.getCurrentAim());
-	_input.getCurrentAim();
-	
 
 	if (_input.didExit()) {
 		CULog("Shutting down");
 		Application::get()->quit();
 	}
+
+
+	float xPos = _background->getPositionX();
+	float currentOffset = _input.getCurrentAim().x;
+	if (currentOffset == 0.0) {
+		_prevOffset = 0;
+	}
+	float newOffset = currentOffset - _prevOffset;
+
+	CULog("xPos: %f", xPos);
+	CULog("xOffset: %f", newOffset);
+
+	CULog("maxX: %f", _maxX);
+	CULog("minX: %f", _minX);
+
+	if (xPos + newOffset >= _maxX) {
+		return;
+	}
+	else if (xPos + newOffset <= _minX) {
+		return;
+	}
+
+	_background->setPositionX(xPos + newOffset);
+	_prevOffset = currentOffset;
+
+	
 
 
 	// update the camera
@@ -231,6 +257,13 @@ void LevelSelectScene::update(float dt) {
 	//cugl::Vec2 playerPos = player->getNode()->getPosition();
 	float cameraTransX;
 	float cameraTransY;
+
+	
+
+	cameraTransX = _input.getCurrentAim().x;
+	cameraTransY = 5;
+
+	getCamera()->translate(cugl::Vec2(cameraTransX, cameraTransY));
 	
 	//cugl::Vec2 gameBound = cugl::Vec2(_gamestate->getBounds().size.getIWidth(), _gamestate->getBounds().size.getIHeight());
 	//cugl::Vec2 gameBound = _gamestate->getBounds().size * 64;

@@ -83,8 +83,11 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	createSceneGraph(dimen);
 
 	_gamestate->showGameOverScreen(false);
+	_gamestate->showWinScreen(false);
 	_gamestate->resetDidClickMenu();
 	_gamestate->resetDidClickRestart();
+	_gamestate->resetDidClickNext();
+	_gamestate->resetDidClickMute();
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
@@ -219,7 +222,10 @@ void GameScene::update(float dt) {
 	}
 	_input.update(dt);
 
+	_gamestate->resetDidClickMute();
 	_gamestate->resetDidClickMenu();
+	_gamestate->resetDidClickNext();
+	_gamestate->resetDidClickRestart();
 
 	if (_gameover) {
 		_gamestate->showGameOverScreen(true);
@@ -227,9 +233,8 @@ void GameScene::update(float dt) {
 	}
 
 	if (_complete) {
-		//reset(LEVEL_FILE);
-		//_winnode->setVisible(true);
-		_complete = false;
+		//_complete = false;
+		_gamestate->showWinScreen(true);
 		return;
 	}
 
@@ -375,6 +380,8 @@ void GameScene::update(float dt) {
     if(player->getCharging() && player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
         player->setCharging(false);
         player->_isSliding = true;
+        player->updateCircle(false);
+
         float angle = player->_oldAngle;
         if(angle > 0.0f && angle < 35.0f) {
             std::shared_ptr<Node> currNode = player -> getNode();
@@ -461,6 +468,7 @@ void GameScene::update(float dt) {
             std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 7, false);
             player->switchNode(currNode, desNode);
         }
+        player->updateCircle(false);
     }
     
     if(!player->canSling()) {

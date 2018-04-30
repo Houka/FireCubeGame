@@ -132,27 +132,38 @@ Vec2 flock(std::shared_ptr<EnemyModel> enemy, std::shared_ptr<GameState> gamesta
 }
 
 bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate){
-    int h = gamestate->getBounds().size.getIHeight();
-    int w = gamestate->getBounds().size.getIWidth();
-    float dx = (end.x - start.x) / 30;
-    float dy = (end.y - start.y) / 30;
-    float locx = start.x;
-    int ct = 0;
-    while(locx < w && locx > 0 && ((locx > (end.x + dx) && dx < 0) || (locx < (end.x - dx) && dx > 0))){
-        ct++;
-        locx += dx;
-        float locy = start.y;
-        while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
-            locy += dy;
-            if(!gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]){
-				//CULog("WATER");
-                return true;
-			}
-//            CULog("inner Loop");
+	int h = gamestate->getBounds().size.getIHeight();
+	int w = gamestate->getBounds().size.getIWidth();
 
-        }
-//        CULog("outer Loop %d", ct);
-    }
+	Vec2 trajectory = end - start;
+	for (int i = 1; i <= 30; i++) {
+		Vec2 pt = start + trajectory / 30 * i;
+		if (pt.x < w-1 && pt.x > 0 && pt.y < h-1 && pt.y > 0) {
+			if (!gamestate->getTileBoard()[(int)floor(pt.y)][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)+1][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)-1][(int)floor(pt.x)]) {
+				return true;
+			}
+		}
+	}
+    
+//    float dx = (end.x - start.x) / 40;
+//    float dy = (end.y - start.y) / 40;
+//    float locx = start.x;
+//    int ct = 0;
+//    while(locx < w && locx > 0 && ((locx > (end.x + dx) && dx < 0) || (locx < (end.x - dx) && dx > 0))){
+//        ct++;
+//        locx += dx;
+//        float locy = start.y;
+//        while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
+//            locy += dy;
+//            if(!gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]){
+//				//CULog("WATER");
+//                return true;
+//			}
+////            CULog("inner Loop");
+//
+//        }
+////        CULog("outer Loop %d", ct);
+//    }
     return false;
 }
 
@@ -169,8 +180,8 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 
 	float a = friction / m;
 	float d = (vi*vi) / (2 * a);
-	Vec2 slide = landing + aim*d*1.2;
-	Vec2 shortland = landing - aim*d*0.2;
+	Vec2 slide = landing + aim*d*1.3;
+	Vec2 shortland = landing - aim*d*0.4;
 	//CULog("sliding %f", d);
 	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(shortland, slide, gamestate)) {
 		return true;
@@ -250,6 +261,7 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 			Vec2 aim = Vec2(xi + .5, yi + .5) - pos;
 			aim.normalize();
 			Vec2 vec = pos + aim * slingDist;
+			//Vec2 vec = Vec2(xi + .5, yi + .5);
 			int x = (int)floor(vec.x);
 			int y = (int)floor(vec.y);
 
@@ -345,12 +357,12 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 					route.pop_back();
 					enemy->setRoute(route);
 
-					//float targetDist = aim.length();
-					//CULog("targetDist is %f", targetDist);
-					//if (targetDist > 0) {
-					//	float v0 = sqrt(targetDist * 2 * a + vf*vf);
-					//	impulse = m * v0;
-					//}
+					/*float targetDist = aim.length();
+					CULog("targetDist is %f", targetDist);
+					if (targetDist > 0) {
+						float v0 = sqrt(targetDist * 2 * a + vf*vf);
+						impulse = m * v0;
+					}*/
 
 					/*if (enemy->isOnion()) {
 						CULog("m is %x", m);

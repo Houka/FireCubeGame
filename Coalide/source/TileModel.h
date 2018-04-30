@@ -263,7 +263,6 @@ public:
      * Sets the points to get the subtexture for the tile in the tileset.
      */
     void setWaterDecalSubTexture(double x0, double y0, double x1, double y1) {
-        CULog("setting true");
         _hasWaterDecal = true;
         _waterDecalSubtexture[0] = x0;
         _waterDecalSubtexture[1] = y0;
