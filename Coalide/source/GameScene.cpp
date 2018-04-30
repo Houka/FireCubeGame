@@ -90,7 +90,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	getCamera()->translate(gameCenter - cameraPos);
-    counter = 0.0f;
+    counter = 0;
     deltaImage = 0.0f;
     up = true;
 	return true;
@@ -304,25 +304,36 @@ void GameScene::update(float dt) {
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
             if(_input.getCurrentAim().length() > 175.0f) {
-                if (up == true && deltaImage <= 402.0f) {
-                    deltaImage += 100.5f;
-                    counter = 100.5f;
-                    if (deltaImage == 402.0f) {
-                        up = false;
-                    }
-                } else {
-                    up = false;
-                    deltaImage -= 100.5f;
-                    counter = -100.5f;
-                    
-                    if (deltaImage == 0) {
-                        up = true;
-                    }
-                }
+//                if (up == true && deltaImage < 408.0f) {
+//
+//                    counter = 102;
+////                    if (deltaImage == 408.0f) {
+////                        up = false;
+////                    }
+//                } else {
+//                    up = false;
+//                    counter = -102;
+//
+//                    if (deltaImage == 0) {
+//                        up = true;
+//                    }
+//                }
                 
                 CULog("Delta Image: %f", deltaImage);
                 player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
-                player->getCircle()->shiftPolygon(counter, 0.0f);
+                if(hacky_fix_sorry > 6){
+                    player->getCircle()->shiftPolygon(counter, 0.0f);
+                    deltaImage += counter;
+                    if(deltaImage == 0){
+                        counter=102;
+                    } else if(deltaImage == 306){
+                        counter=-306;
+                    }
+                    hacky_fix_sorry = 0;
+                } else{
+                    hacky_fix_sorry++;
+                }
+                
 
             } else
             {

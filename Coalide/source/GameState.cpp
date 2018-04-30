@@ -220,7 +220,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		//_player->setDebugScene(_debugnode);
 
         //Arrow indicator for Nicoal
-        Rect box = Rect(0.0f,0.0f,100.0f,65.0f);
+        Rect box = Rect(0.0f,0.0f,102.0f,65.0f);
         std::shared_ptr<cugl::Node> _arrow = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow_indicator"));
         _arrow->setScale(0.5f);
         std::shared_ptr<cugl::PolygonNode> _circle = PolygonNode::allocWithTexture(_assets->get<Texture>("circle_indicator"), box);
