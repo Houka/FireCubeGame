@@ -20,6 +20,8 @@ private:
     bool _active = false;
     /** Whether or not are in an active mouse pan */
     bool _mousepan;
+	bool _panning;
+	cugl::Vec2 _cameraPan;
     // TOUCH SUPPORT
     /** The initial touch location for the current gesture */
     cugl::Vec2 _initTouch;
@@ -159,7 +161,7 @@ public:
 	* @param t     The touch information
 	* @param event The associated event
 	*/
-	void touchBeganCB(const cugl::TouchEvent& event, bool focus);
+	void touchBeganCB(const cugl::TouchEvent& event, bool focus, int fingers);
 
 	/**
 	* Callback for continuing a touch event
@@ -205,6 +207,8 @@ public:
 	* A polling method to ask where the user is aiming
 	*/
 	cugl::Vec2 getCurrentAim();
+
+	cugl::Vec2 getCameraPan() { return _cameraPan; };
 };
 
 #endif /* __INPUT_CONTROLLER_H__ */

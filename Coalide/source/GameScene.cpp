@@ -517,8 +517,8 @@ void GameScene::update(float dt) {
 	player->getNode()->getScene()->setOffset(cugl::Vec2(0,0));
 	cugl::Vec2 cameraPos = player->getNode()->getScene()->getCamera()->getPosition();
 	cugl::Vec2 playerPos = player->getNode()->getPosition();
-	float cameraTransX;
-	float cameraTransY;
+	float cameraTransX = 0;
+	float cameraTransY = 0;
 	
 	//cugl::Vec2 gameBound = cugl::Vec2(_gamestate->getBounds().size.getIWidth(), _gamestate->getBounds().size.getIHeight());
 	cugl::Vec2 gameBound = _gamestate->getBounds().size * 64;
@@ -528,17 +528,28 @@ void GameScene::update(float dt) {
 	cugl::Vec2 boundBottom = Scene::screenToWorldCoords(cugl::Vec2());
 	cugl::Vec2 boundTop = Scene::screenToWorldCoords(cugl::Vec2(xMax,yMax));
 
-	cameraTransX = playerPos.x - cameraPos.x;
-	cameraTransY = playerPos.y - cameraPos.y;
+	cugl::Vec2 pan = _input.getCameraPan();
+	if (pan.length() > 0) {
+		_cameraPanTo = pan
+		_input.setCameraPan(Vec2(0, 0));
+	}
+	else if (_cameraPanTo.length() > 0)
+	else {
+		cameraTransX = playerPos.x - cameraPos.x;
+		cameraTransY = playerPos.y - cameraPos.y;
+	}
+	
 
-	// smooth pan
-    if (std::abs(cameraTransX) > 5) {
-        cameraTransX *= .05;
-    }
+	//// smooth pan
+ //   if (std::abs(cameraTransX) > 5) {
+ //       cameraTransX *= .05;
+ //   }
 
-    if (std::abs(cameraTransY) > 5) {
-        cameraTransY *= .05;
-    }
+ //   if (std::abs(cameraTransY) > 5) {
+ //       cameraTransY *= .05;
+ //   }
+	
+	//CULog(pan.toString().c_str());
 
     if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
         cameraTransX = 0;
@@ -547,7 +558,8 @@ void GameScene::update(float dt) {
     if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
         cameraTransY = 0;
     }
-        
+    
+
 	_gamestate->setUIPosition(player->getNode()->getScene()->getCamera()->getPosition());
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
 	

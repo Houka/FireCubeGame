@@ -29,6 +29,8 @@ bool InputController::init() {
 	_exitPressed = false;
     bool success = true;
 	_mousepan = false;
+	_panning = false;
+	_cameraPan = cugl::Vec2();
 
 	Size dimen = Application::get()->getDisplaySize();
 
@@ -58,7 +60,7 @@ bool InputController::init() {
     success = Input::activate<Accelerometer>();
     Touchscreen* touch = Input::get<Touchscreen>();
     touch->addBeginListener(LISTENER_KEY,[=](const cugl::TouchEvent& event, bool focus) {
-        this->touchBeganCB(event,focus);
+        this->touchBeganCB(event,focus,touch->touchCount());
     });
     touch->addEndListener(LISTENER_KEY,[=](const cugl::TouchEvent& event, bool focus) {
         this->touchEndedCB(event,focus);
@@ -162,11 +164,15 @@ cugl::Vec2 InputController::getCurrentAim() {
 * @param t     The touch information
 * @param event The associated event
 */
-void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
+void InputController::touchBeganCB(const TouchEvent& event, bool focus, int fingers) {
     _initTouch = event.position;
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = true;
+	/*if (fingers == 2) {
+		
+	}*/
+	_panning = true;
 }
 
 /**
@@ -177,6 +183,9 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
 */
 void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
 	_currentTouch = event.position;
+	if (_panning) {
+		_cameraPan = _currentTouch - _previousTouch;
+	}
 	_previousTouch = event.position;
 	_mousepan = true;
 }
@@ -201,6 +210,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = false;
+	_panning = false;
 }
 
 /**
@@ -215,6 +225,7 @@ void InputController::mouseDownCB(const cugl::MouseEvent& event, Uint8 clicks, b
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = true;
+	_panning = true;
 }
 
 /**
@@ -235,8 +246,15 @@ void InputController::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, boo
 	}
     
 	_currentTouch = event.position;
+
+	if (_panning) {
+		_cameraPan = _currentTouch - _previousTouch;
+		//CULog(getCameraPan().toString().c_str());
+	}
+
     _previousTouch = event.position;
     _mousepan = false;
+	_panning = false;
 }
 
 /**
@@ -250,5 +268,9 @@ void InputController::mouseMovedCB(const cugl::MouseEvent& event, const Vec2& pr
     if (_mousepan) {
         _currentTouch = event.position;
     }
+	if (_panning) {
+		_cameraPan = event.position - previous;
+		//CULog(getCameraPan().toString().c_str());
+	}
 }
 
