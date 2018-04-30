@@ -375,6 +375,8 @@ void GameScene::update(float dt) {
     if(player->getCharging() && player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
         player->setCharging(false);
         player->_isSliding = true;
+        player->updateCircle(false);
+
         float angle = player->_oldAngle;
         if(angle > 0.0f && angle < 35.0f) {
             std::shared_ptr<Node> currNode = player -> getNode();
@@ -461,6 +463,7 @@ void GameScene::update(float dt) {
             std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 7, false);
             player->switchNode(currNode, desNode);
         }
+        player->updateCircle(false);
     }
     
     if(!player->canSling()) {
