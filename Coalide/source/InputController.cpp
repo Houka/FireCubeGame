@@ -165,10 +165,12 @@ cugl::Vec2 InputController::getCurrentAim() {
 * @param event The associated event
 */
 void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
+    CULog("touch began");
     _initTouch = event.position;
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = true;
+    _mousedown = true;
 }
 
 /**
@@ -178,6 +180,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
 * @param event The associated event
 */
 void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
+    CULog("touch motion");
 	_currentTouch = event.position;
 	_previousTouch = event.position;
 	_mousepan = true;
@@ -191,6 +194,7 @@ void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
 * @param event The associated event
 */
 void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
+    CULog("touch ended");
     _latestSling = Vec2(_initTouch.x - event.position.x, event.position.y - _initTouch.y);
     if(_latestSling.length() >= MIN_SLING_DISTANCE){
         _didSling = true;
@@ -203,6 +207,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = false;
+    _mousedown = false;
 }
 
 /**
@@ -244,7 +249,7 @@ void InputController::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, boo
     _previousTouch = event.position;
     _mousepan = false;
 //    CULog("down: %s", _mousedown ? "true" : "false");
-//    _mousedown = false;
+    _mousedown = false;
 }
 
 /**
@@ -256,8 +261,8 @@ void InputController::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, boo
  */
 void InputController::mouseMovedCB(const cugl::MouseEvent& event, const Vec2& previous, bool focus) {
     //CULog("mouse moved");
-//    CULog("down: %s", _mousedown ? "true" : "false");
-    if (_mousepan) {
+    CULog("down: %s", _mousedown ? "true" : "false");
+    if (_mousedown) {
 //        CULog("mousepan true");
         _currentTouch = event.position;
     }

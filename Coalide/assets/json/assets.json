@@ -70,6 +70,9 @@
     "arrow_indicator": {
       "file": "textures/arrow.png"
     },
+    "circle_indicator": {
+      "file": "textures/circle.png"
+    },
     "start_button": {
       "file": "textures/start.png"
     },
