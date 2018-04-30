@@ -83,8 +83,10 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	createSceneGraph(dimen);
 
 	_gamestate->showGameOverScreen(false);
+	_gamestate->showWinScreen(false);
 	_gamestate->resetDidClickMenu();
 	_gamestate->resetDidClickRestart();
+	_gamestate->resetDidClickNext();
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
@@ -227,9 +229,8 @@ void GameScene::update(float dt) {
 	}
 
 	if (_complete) {
-		//reset(LEVEL_FILE);
-		//_winnode->setVisible(true);
-		_complete = false;
+		//_complete = false;
+		_gamestate->showWinScreen(true);
 		return;
 	}
 

@@ -293,6 +293,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	std::shared_ptr<cugl::Node> _playNode = PolygonNode::allocWithTexture(_assets->get<Texture>("play_button"));
 	std::shared_ptr<cugl::Node> _restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>("restart_button"));
 	std::shared_ptr<cugl::Node> _quitNode = PolygonNode::allocWithTexture(_assets->get<Texture>("quit_button"));
+	std::shared_ptr<cugl::Node> _nextNode = PolygonNode::allocWithTexture(_assets->get<Texture>("restart_button"));
 	_gameOverScreen = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over_screen"));
 	_gameOverText = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over"));
 
@@ -323,6 +324,10 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_restartButton = cugl::Button::alloc(_restartNode);
 	_restartButton->setPosition(-200, 10000);
 	_restartButton->setVisible(false);
+
+	_nextButton = cugl::Button::alloc(_nextNode);
+	_nextButton->setPosition(-200, 10000);
+	_nextButton->setVisible(false);
 
 	_menuButton->setListener([=](const std::string& name, bool down) {
 		if (!down) {
@@ -364,17 +369,25 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		}
 	});
 
+	_nextButton->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_didClickNext = true;
+		}
+	});
+
 	_menuButton->activate(5);
 	_pauseButton->activate(6);
 	_playButton->activate(7);
 	_quitButton->activate(8);
 	_restartButton->activate(9);
+	_nextButton->activate(10);
 	_uiNode->addChild(_menuButton, UNIT_PRIORITY);
 	_uiNode->addChild(_pauseButton, UNIT_PRIORITY);
 	_uiNode->addChild(_playButton, UNIT_PRIORITY);
 	_uiNode->addChild(_gameOverScreen, UNIT_PRIORITY);
 	_uiNode->addChild(_gameOverText, UNIT_PRIORITY);
 	_uiNode->addChild(_quitButton, UNIT_PRIORITY);
+	_uiNode->addChild(_nextButton, UNIT_PRIORITY);
 	_uiNode->addChild(_restartButton, UNIT_PRIORITY);
 	
 	_worldnode->addChild(_uiNode, 2);
@@ -406,7 +419,25 @@ void GameState::showGameOverScreen(bool showing) {
 		_gameOverScreen->setVisible(false);
 		_gameOverText->setVisible(false);
 	}
-	
+}
+
+void GameState::showWinScreen(bool showing) {
+	if (showing) {
+		_quitButton->setVisible(true);
+		_quitButton->setPosition(-150, -50);
+		_nextButton->setVisible(true);
+		_nextButton->setPosition(30, -50);
+		_gameOverScreen->setVisible(true);
+		_gameOverText->setVisible(true);
+	}
+	else {
+		_quitButton->setVisible(false);
+		_quitButton->setPosition(-200, 10000);
+		_nextButton->setVisible(false);
+		_nextButton->setPosition(0, 10000);
+		_gameOverScreen->setVisible(false);
+		_gameOverText->setVisible(false);
+	}
 }
 
 /**

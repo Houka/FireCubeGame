@@ -161,7 +161,7 @@ void CoalideApp::update(float timestep) {
 				_menuScene.init(_assets, _input);
 				_currentScene = CURRENT_SCENE::MENU_SCENE;
 			} 
-			else if (_gameScene.isComplete()) {
+			else if (_gameScene.getGameState()->didClickNext()) {
 				_levelCt = (_levelCt + 1) % 6;
 				_gameScene.reset(levelNames[_levelCt]);
 			}
