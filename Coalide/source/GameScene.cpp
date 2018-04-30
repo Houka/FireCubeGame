@@ -90,6 +90,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	getCamera()->translate(gameCenter - cameraPos);
+    counter = 0.0f;
+    deltaImage = 0.0f;
+    up = true;
 	return true;
 }
 
@@ -249,7 +252,6 @@ void GameScene::update(float dt) {
     Vec2 player_pos = player->getPosition();
 
     
-//    player->getCircle()
     
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
@@ -298,10 +300,30 @@ void GameScene::update(float dt) {
                 std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 7, false);
                 player->switchNode(currNode, desNode);
             }
+            
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
             if(_input.getCurrentAim().length() > 175.0f) {
+                if (up == true && deltaImage <= 402.0f) {
+                    deltaImage += 100.5f;
+                    counter = 100.5f;
+                    if (deltaImage == 402.0f) {
+                        up = false;
+                    }
+                } else {
+                    up = false;
+                    deltaImage -= 100.5f;
+                    counter = -100.5f;
+                    
+                    if (deltaImage == 0) {
+                        up = true;
+                    }
+                }
+                
+                CULog("Delta Image: %f", deltaImage);
                 player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
+                player->getCircle()->shiftPolygon(counter, 0.0f);
+
             } else
             {
                 player->updateCircle(false);

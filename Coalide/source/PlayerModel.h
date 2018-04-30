@@ -63,7 +63,7 @@ protected:
 	std::shared_ptr<Node> _chargingNode;
     std::shared_ptr<AnimationNode> _animationNode;
 	std::shared_ptr<Node> _arrow;
-    std::shared_ptr<Node> _circle;
+    std::shared_ptr<PolygonNode> _circle;
     /** The body animation */
     //std::shared_ptr<cugl::AnimationNode> _anim;
 	std::string _texture;
@@ -227,7 +227,7 @@ public:
 	* @return the scene graph node representing the player.
 	*/
 	const std::shared_ptr<Node>& getArrow() const { return _arrow; }
-    const std::shared_ptr<Node>& getCircle() const { return _circle; }
+    const std::shared_ptr<PolygonNode>& getCircle() const { return _circle; }
 
 	/**
 	* Sets the scene graph node representing the player.
@@ -235,7 +235,7 @@ public:
 	* @param node  The scene graph node representing the player.
 	*/
 	void setArrow(const std::shared_ptr<Node>& arrow) { _arrow = arrow; }
-    void setCircle(const std::shared_ptr<Node>& circle) { _circle = circle; }
+    void setCircle(const std::shared_ptr<PolygonNode>& circle) { _circle = circle; }
 
 	/**
 	* Returns the texture (key) for the player.

@@ -223,7 +223,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
         Rect box = Rect(0.0f,0.0f,100.0f,65.0f);
         std::shared_ptr<cugl::Node> _arrow = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow_indicator"));
         _arrow->setScale(0.5f);
-        std::shared_ptr<cugl::Node> _circle = PolygonNode::allocWithTexture(_assets->get<Texture>("circle_indicator"), box);        
+        std::shared_ptr<cugl::PolygonNode> _circle = PolygonNode::allocWithTexture(_assets->get<Texture>("circle_indicator"), box);
         
 //        const std::vector<cugl::Vec2> arrowLine = { cugl::Vec2(0,0), cugl::Vec2(0, 2) };
 //        std::shared_ptr<cugl::PathNode> _arrow = PathNode::allocWithVertices(arrowLine, 1, cugl::PathJoint::NONE, cugl::PathCap::NONE, false);
