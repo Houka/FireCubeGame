@@ -129,7 +129,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
     auto iceTextureArray = textures->get("ice");
     auto dirtTextureArray = textures->get("grass");
     auto waterBaseArray = textures->get("water");
-    auto waterDecalArray = textures->get("waterDecal");
+    auto waterDecalArray = textures->get("waterDecals");
     
     
     _board = new int*[worldH];
