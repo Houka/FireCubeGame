@@ -20,6 +20,7 @@ private:
     bool _active = false;
     /** Whether or not are in an active mouse pan */
     bool _mousepan;
+    bool _mousedown;
     // TOUCH SUPPORT
     /** The initial touch location for the current gesture */
     cugl::Vec2 _initTouch;
