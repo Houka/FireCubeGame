@@ -174,8 +174,11 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus, int fing
 	_finger = event.touch;
 	if (fingers == 2) {
 		_panning = true;
+		_mousedown = false;
 	}
-    _mousedown = true;
+	else {
+		_mousedown = true;
+	}
 }
 
 /**
@@ -201,20 +204,24 @@ void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
 * @param event The associated event
 */
 void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
-    _latestSling = Vec2(_initTouch.x - event.position.x, event.position.y - _initTouch.y);
-    if(_latestSling.length() >= MIN_SLING_DISTANCE){
-        _didSling = true;
-    }
+	if (_panning) {
+		_panning = false;
+		_cameraPan = Vec2(0, 0);
+	}
+	else if (_mousedown) {
+		_latestSling = Vec2(_initTouch.x - event.position.x, event.position.y - _initTouch.y);
+		if (_latestSling.length() >= MIN_SLING_DISTANCE) {
+			_didSling = true;
+		}
 
-	if (_latestSling.length() > _maxSling) {
-		_latestSling.scale(1.0 / _latestSling.length() * _maxSling);
+		if (_latestSling.length() > _maxSling) {
+			_latestSling.scale(1.0 / _latestSling.length() * _maxSling);
+		}
 	}
 
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = false;
-	_panning = false;
-	_cameraPan = Vec2(0, 0);
     _mousedown = false;
 }
 
@@ -233,7 +240,9 @@ void InputController::mouseDownCB(const cugl::MouseEvent& event, Uint8 clicks, b
 	if (event.buttons.hasRight()) {
 		_panning = true;
 	}
-    _mousedown = true;
+	else {
+		_mousedown = true;
+	}
 }
 
 /**
@@ -244,22 +253,25 @@ void InputController::mouseDownCB(const cugl::MouseEvent& event, Uint8 clicks, b
  * @parm   focus       Whether the listener currently has focus
  */
 void InputController::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, bool focus) {
-    _latestSling = Vec2(_initTouch.x - event.position.x, event.position.y - _initTouch.y);
-    if(_latestSling.length() >= MIN_SLING_DISTANCE){
-        _didSling = true;
-    }
+	if (_panning) {
+		_panning = false;
+		_cameraPan = Vec2(0, 0);
+	}
+	else {
+		_latestSling = Vec2(_initTouch.x - event.position.x, event.position.y - _initTouch.y);
+		if (_latestSling.length() >= MIN_SLING_DISTANCE) {
+			_didSling = true;
+		}
 
-	if (_latestSling.length() > _maxSling) {
-		_latestSling.scale(1.0 / _latestSling.length() * _maxSling);
+		if (_latestSling.length() > _maxSling) {
+			_latestSling.scale(1.0 / _latestSling.length() * _maxSling);
+		}
+		_mousedown = false;
 	}
     
 	_currentTouch = event.position;
-
     _previousTouch = event.position;
     _mousepan = false;
-	_panning = false;
-	_cameraPan = Vec2(0, 0);
-    _mousedown = false;
 }
 
 /**
