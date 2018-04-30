@@ -174,12 +174,12 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 
 
 	_backButton->activate(4);
-	_lvl0->activate(8);
-	_lvl1->activate(9);
-	_lvl2->activate(10);
-	_lvl3->activate(11);
-	_lvl4->activate(12);
-	_lvl5->activate(13);
+	_lvl0->activate(100);
+	_lvl1->activate(101);
+	_lvl2->activate(102);
+	_lvl3->activate(103);
+	_lvl4->activate(104);
+	_lvl5->activate(105);
 
 	_rootnode->addChild(_background, UNIT_PRIORITY);
 	_background->addChild(_backButton, UNIT_PRIORITY);
@@ -214,6 +214,10 @@ void LevelSelectScene::update(float dt) {
 
 	_didClickBack = false;
 	_didClickLevel = false;
+
+	//CULog("offset: %f", _input.getCurrentAim());
+	_input.getCurrentAim();
+	
 
 	if (_input.didExit()) {
 		CULog("Shutting down");

@@ -53,11 +53,17 @@ protected:
 
 	// BUTTONS
 	std::shared_ptr<cugl::Node> _uiNode;
+	std::shared_ptr<cugl::Node> _gameOverScreen;
+	std::shared_ptr<cugl::Node> _gameOverText;
 	std::shared_ptr<cugl::Button> _pauseButton;
 	std::shared_ptr<cugl::Button> _menuButton;
 	std::shared_ptr<cugl::Button> _playButton;
+	std::shared_ptr<cugl::Button> _quitButton;
+	std::shared_ptr<cugl::Button> _restartButton;
 
-	bool _didClickMenu;
+
+	bool _didClickMenu = false;
+	bool _didClickRestart = false;
 	bool _isPaused = false;
 
 	std::shared_ptr<cugl::AssetManager> _assets;
@@ -87,8 +93,10 @@ public:
 	void dispose();
 
 	bool didClickMenu() { return _didClickMenu; }
+	bool didClickRestart() { return _didClickRestart; }
 	bool isPaused() { return _isPaused; }
 	void resetDidClickMenu() { _didClickMenu = false; }
+	void resetDidClickRestart() { _didClickRestart = false; }
 
 	void setUIPosition(Vec2 pos) { _uiNode->setPosition(pos); }
 
@@ -249,6 +257,8 @@ public:
     void setRootNode(const std::shared_ptr<Node>& node);
 
 	void addSporeNode(const std::shared_ptr<EnemyModel> spore);
+
+	void showGameOverScreen(bool show);
 
 	/**
 	* Returns the drawing scale for this game level

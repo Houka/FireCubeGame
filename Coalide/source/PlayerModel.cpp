@@ -445,9 +445,7 @@ void PlayerModel::update(float dt) {
         if(_stunned){
             _node->setColor(Color4::GREEN);
         }
-        else if(!canSling()){
-            _node->setColor(Color4::RED);
-        } else {
+        else {
             _node->setColor(_color);
         }
 	}

@@ -100,7 +100,7 @@ void CoalideApp::onShutdown() {
  */
 void CoalideApp::update(float timestep) {
     //std::string levelNames[5] = {"json/demo/enemy_no_water.json", "json/demo/map.json", "json/demo/island_all_enemies.json", "json/demo/3.json", "json/demo/enemy_water.json"};
-    std::string levelNames[6] = {"json/updatedJsons/nicoalonly.json", "json/updatedJsons/rings.json", "json/updatedJsons/ishape.json", "json/updatedJsons/large.json", "json/updatedJsons/onionfight.json", "json/updatedJsons/icebridge.json"};
+    std::string levelNames[6] = {"json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json"};
 	
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
@@ -113,7 +113,7 @@ void CoalideApp::update(float timestep) {
 
 		if (!AudioEngine::get()->isActiveEffect("harlem")) {
 			auto source = _assets->get<Sound>("harlem");
-			AudioEngine::get()->playEffect("harlem", source, true, source->getVolume());
+			//AudioEngine::get()->playEffect("harlem", source, true, source->getVolume());
 		}
 		// _levelSelectScene.init(_assets, _input, LEVEL_KEY);
 		_loaded = true;
@@ -125,6 +125,7 @@ void CoalideApp::update(float timestep) {
 			if (_menuScene.didClickStart()) {
 				_menuScene.dispose();
 				_gameScene.init(_assets, _input, LEVEL_KEY);
+				_gameScene.reset(levelNames[_levelCt]);
 				_currentScene = CURRENT_SCENE::GAME_SCENE;
 			}
 			else if (_menuScene.didClickLevels()) {
@@ -155,7 +156,6 @@ void CoalideApp::update(float timestep) {
 			}
 		}
 		if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
-			//CULog("currently game scene");
 			if (_gameScene.getGameState()->didClickMenu()) {
 				_gameScene.dispose();
 				_menuScene.init(_assets, _input);
@@ -165,7 +165,7 @@ void CoalideApp::update(float timestep) {
 				_levelCt = (_levelCt + 1) % 6;
 				_gameScene.reset(levelNames[_levelCt]);
 			}
-			else if (_gameScene.isGameOver()) {
+			else if (_gameScene.getGameState()->didClickRestart()) {
 				_gameScene.reset(levelNames[_levelCt]);
 			}
 			else {

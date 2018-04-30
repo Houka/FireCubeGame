@@ -21,6 +21,9 @@ using namespace cugl;
 * they can be attached later as part of the scene graph.
 */
 class TileModel : public BoxObstacle {
+private:
+    bool _hasWaterBase = false;
+    bool _hasWaterDecal = false;
 protected:
 	std::shared_ptr<Node> _node;
 	TILE_TYPE _tileType;
@@ -31,10 +34,13 @@ protected:
     std::string _sandTexture; //only exists if tile is sand
     std::string _iceTexture; //only exists if tile is sand or ice
     std::string _dirtTexture; //only exists if tile is sand, ice, or dirt
+    std::string _waterTexture;
     
     double _sandSubtexture[4] = {-5.0,-5.0,-5.0,-5.0};
     double _iceSubtexture[4]= {-5.0,-5.0,-5.0,-5.0};
     double _dirtSubtexture[4]= {-5.0,-5.0,-5.0,-5.0};
+    double _waterBaseSubtexture[4]= {-5.0,-5.0,-5.0,-5.0};
+    double _waterDecalSubtexture[4]= {-5.0,-5.0,-5.0,-5.0};
 
 
 
@@ -134,6 +140,10 @@ public:
 	* Sets the tile type.
 	*/
 	void setType(TILE_TYPE tileType) { _tileType = tileType; }
+    
+    bool hasWaterBase(){ return _hasWaterBase;}
+    bool hasWaterDecal(){ return _hasWaterDecal;}
+    
 
 	/**
 	* Returns the friction.
@@ -165,6 +175,13 @@ public:
 	* @return the texture (key) for this floor tile
 	*/
 	const std::string& getSandTextureKey() const { return _sandTexture; }
+    
+    /**
+     * Returns the texture (key) for this floor tile
+     *
+     * @return the texture (key) for this floor tile
+     */
+    const std::string& getWaterTextureKey() const { return _waterTexture; }
 
     /**
      * Returns the texture (key) for this floor tile
@@ -190,6 +207,13 @@ public:
      *
      * @param  strip    the texture (key) for this floor tile
      */
+    void setWaterTextureKey(std::string strip) { _waterTexture = strip; }
+    
+    /**
+     * Sets the texture (key) for this floor tile
+     *
+     * @param  strip    the texture (key) for this floor tile
+     */
     void setIceTextureKey(std::string strip) { _iceTexture = strip; }
     
     /**
@@ -207,6 +231,16 @@ public:
     /**
      * Returns the points to get the subtexture for the tile in the tileset.
      */
+    double* getWaterBaseSubTexture() { return _waterBaseSubtexture; }
+    
+    /**
+     * Returns the points to get the subtexture for the tile in the tileset.
+     */
+    double* getWaterDecalSubTexture() { return _waterDecalSubtexture; }
+    
+    /**
+     * Returns the points to get the subtexture for the tile in the tileset.
+     */
     double* getIceSubTexture() { return _iceSubtexture; }
     
     /**
@@ -214,6 +248,29 @@ public:
      */
     double* getDirtSubTexture() { return _dirtSubtexture; }
 
+    /**
+     * Sets the points to get the subtexture for the tile in the tileset.
+     */
+    void setWaterBaseSubTexture(double x0, double y0, double x1, double y1) {
+        _hasWaterBase = true;
+        _waterBaseSubtexture[0] = x0;
+        _waterBaseSubtexture[1] = y0;
+        _waterBaseSubtexture[2] = x1;
+        _waterBaseSubtexture[3] = y1;
+    }
+    
+    /**
+     * Sets the points to get the subtexture for the tile in the tileset.
+     */
+    void setWaterDecalSubTexture(double x0, double y0, double x1, double y1) {
+        CULog("setting true");
+        _hasWaterDecal = true;
+        _waterDecalSubtexture[0] = x0;
+        _waterDecalSubtexture[1] = y0;
+        _waterDecalSubtexture[2] = x1;
+        _waterDecalSubtexture[3] = y1;
+    }
+    
 	/**
 	* Sets the points to get the subtexture for the tile in the tileset.
 	*/

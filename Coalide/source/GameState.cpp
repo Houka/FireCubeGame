@@ -73,15 +73,69 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_rootnode->addChild(_worldnode, 0);
 	_rootnode->addChild(_debugnode, 1);
 
+//    // Add the individual elements
+//    for (int i = 0; i < _tiles.size(); i++) {
+//        std::shared_ptr<TileModel> tile = _tiles[i];
+//        std::shared_ptr<PolygonNode> dirtNode;
+//        std::shared_ptr<PolygonNode> iceNode;
+//        std::shared_ptr<PolygonNode> sandNode;
+//        if(tile->getType() == TILE_TYPE::GRASS || tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
+//            double* tileSubtexture = tile->getDirtSubTexture();
+//            dirtNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getDirtTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+//        }
+//        if(tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
+//            double* tileSubtexture = tile->getIceSubTexture();
+//            iceNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+//            iceNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+//            dirtNode->addChild(iceNode);
+//        }
+//        if(tile->getType() == TILE_TYPE::SAND){
+//            double* tileSubtexture = tile->getSandSubTexture();
+//            sandNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+//            sandNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+//            iceNode->addChild(sandNode);
+//        }
+//
+//        tile->setNode(dirtNode);
+//        tile->setDrawScale(_scale.x);
+//        //tile->setDebugScene(_debugnode);
+//
+//        dirtNode->setPosition(tile->getPosition()*_scale);
+//
+//        _worldnode->addChild(dirtNode, TILE_PRIORITY);
+//    }
 	// Add the individual elements
-	for (int i = 0; i < _tiles.size(); i++) {
-		std::shared_ptr<TileModel> tile = _tiles[i];
-        std::shared_ptr<PolygonNode> dirtNode;
-        std::shared_ptr<PolygonNode> iceNode;
-        std::shared_ptr<PolygonNode> sandNode;
+    for (int i = 0; i < _tiles.size(); i++) {
+        std::shared_ptr<TileModel> tile = _tiles[i];
+        std::shared_ptr<PolygonNode> dirtNode = nullptr;
+        std::shared_ptr<PolygonNode> iceNode = nullptr;
+        std::shared_ptr<PolygonNode> sandNode = nullptr;
+        std::shared_ptr<PolygonNode> waterDecal = nullptr;
+        std::shared_ptr<PolygonNode> waterBase = nullptr;
+
+        if(tile->hasWaterDecal()){
+            double* tileSubtexture = tile->getWaterDecalSubTexture();
+            waterDecal = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getWaterTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+        }
+        if(tile->hasWaterBase()){
+            double* tileSubtexture = tile->getWaterBaseSubTexture();
+            waterBase = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getWaterTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+            if(waterDecal != nullptr){
+                waterBase->setPosition(.5f *_scale.x, +.5f *_scale.y);
+                waterDecal->addChild(waterBase);
+            }
+        }
         if(tile->getType() == TILE_TYPE::GRASS || tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getDirtSubTexture();
             dirtNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getDirtTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+            if(waterBase!=nullptr){
+                dirtNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+
+                waterBase->addChild(dirtNode);
+            } else if(waterDecal != nullptr) {
+                waterDecal->addChild(dirtNode);
+                dirtNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+            }
         }
         if(tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getIceSubTexture();
@@ -92,18 +146,19 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
         if(tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getSandSubTexture();
             sandNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
-            sandNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+            sandNode->setPosition(.5f *_scale.x, +.5f *_scale.y);;
             iceNode->addChild(sandNode);
         }
-        
-		tile->setNode(dirtNode);
-		tile->setDrawScale(_scale.x);
-		//tile->setDebugScene(_debugnode);
-
-		dirtNode->setPosition(tile->getPosition()*_scale);
-
-		_worldnode->addChild(dirtNode, TILE_PRIORITY);
-	}
+        if(waterDecal!=nullptr){
+            tile->setNode(waterDecal);
+            waterDecal->setPosition(tile->getPosition()*_scale);
+            _worldnode->addChild(waterDecal, TILE_PRIORITY);
+        }else if(waterBase!=nullptr){
+            tile->setNode(waterBase);
+            waterBase->setPosition(tile->getPosition()*_scale);
+            _worldnode->addChild(waterBase, TILE_PRIORITY);
+        }
+    }
 
 	if (_player != nullptr) {
         auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()));
@@ -213,7 +268,13 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	if (_enemies.size() > 0) {
 		for (auto it = _enemies.begin(); it != _enemies.end(); ++it) {
 			std::shared_ptr<EnemyModel> enemy = *it;
-			auto enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()));
+            std::shared_ptr<PolygonNode> enemyNode = nullptr;
+            if(enemy->isOnion() || enemy->isMushroom())
+                enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()),Rect(0,0,128,128));
+            else {
+                CULog("here %s", enemy->getTextureKey().c_str());
+                enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()),Rect(0,0,64,64));
+            }
 			enemy->setNode(enemyNode);
 			enemy->setDrawScale(_scale.x);
 			//enemy->setDebugScene(_debugnode);
@@ -225,9 +286,10 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	if (_objects.size() > 0) {
 		for (auto it = _objects.begin(); it != _objects.end(); ++it) {
 			std::shared_ptr<ObjectModel> object = *it;
-			auto objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()));
+			auto objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()), Rect(0, 0, 64, 64));
 			object->setNode(objectNode);
 			object->setDrawScale(_scale.x);
+            objectNode->setScale(.75, 1);
 			//object->setDebugScene(_debugnode);
 
 			_worldnode->addChild(objectNode, UNIT_PRIORITY);
@@ -240,37 +302,47 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("menu_button"));
 	std::shared_ptr<cugl::Node> _pauseNode = PolygonNode::allocWithTexture(_assets->get<Texture>("pause_button"));
 	std::shared_ptr<cugl::Node> _playNode = PolygonNode::allocWithTexture(_assets->get<Texture>("play_button"));
+	std::shared_ptr<cugl::Node> _restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>("restart_button"));
+	std::shared_ptr<cugl::Node> _quitNode = PolygonNode::allocWithTexture(_assets->get<Texture>("quit_button"));
+	_gameOverScreen = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over_screen"));
+	_gameOverText = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over"));
 
 	float xMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
 	float yMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
 
-	//_startNode->setPosition(50., 50);
+	_gameOverScreen->setVisible(false);
+	_gameOverScreen->setPosition(0, 0);
+	_gameOverText->setVisible(false);
+	_gameOverText->setPosition(0, 75);
+
 	_menuButton = cugl::Button::alloc(_backNode);
 	_menuButton->setPosition(0, 10000);
 	_menuButton->setVisible(false);
-
 
 	_pauseButton = cugl::Button::alloc(_pauseNode);
 	_pauseButton->setPosition(-xMax/2.0, -yMax/2.0);
 	_pauseButton->setScale(.5, .5);
 
-
 	_playButton = cugl::Button::alloc(_playNode);
 	_playButton->setPosition(-200, 10000);
 	_playButton->setVisible(false);
 
+	_quitButton = cugl::Button::alloc(_quitNode);
+	_quitButton->setPosition(-200, 10000);
+	_quitButton->setVisible(false);
+
+	_restartButton = cugl::Button::alloc(_restartNode);
+	_restartButton->setPosition(-200, 10000);
+	_restartButton->setVisible(false);
+
 	_menuButton->setListener([=](const std::string& name, bool down) {
-		if (down) {
-		}
-		else {
+		if (!down) {
 			_didClickMenu = true;
 		}
 	});
 
 	_pauseButton->setListener([=](const std::string& name, bool down) {
-		if (down) {
-		}
-		else {
+		if (!down) {
 			_isPaused = true;
 			_playButton->setVisible(true);
 			_playButton->setPosition(-200, -100);
@@ -281,9 +353,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	});
 
 	_playButton->setListener([=](const std::string& name, bool down) {
-		if (down) {
-		}
-		else {
+		if (!down) {
 			_isPaused = false;
 			_playButton->setVisible(false);
 			_playButton->setPosition(-200, 10000);
@@ -293,12 +363,31 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		}
 	});
 
+	_quitButton->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_didClickMenu = true;
+		}
+	});
+
+	_restartButton->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_didClickRestart = true;
+		}
+	});
+
 	_menuButton->activate(5);
 	_pauseButton->activate(6);
 	_playButton->activate(7);
+	_quitButton->activate(8);
+	_restartButton->activate(9);
 	_uiNode->addChild(_menuButton, UNIT_PRIORITY);
 	_uiNode->addChild(_pauseButton, UNIT_PRIORITY);
 	_uiNode->addChild(_playButton, UNIT_PRIORITY);
+	_uiNode->addChild(_gameOverScreen, UNIT_PRIORITY);
+	_uiNode->addChild(_gameOverText, UNIT_PRIORITY);
+	_uiNode->addChild(_quitButton, UNIT_PRIORITY);
+	_uiNode->addChild(_restartButton, UNIT_PRIORITY);
+	
 	_worldnode->addChild(_uiNode, 2);
 }
 
@@ -309,6 +398,26 @@ void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {
     //spore->setDebugScene(_debugnode);
     
     _worldnode->addChild(sporeNode, UNIT_PRIORITY);
+}
+
+void GameState::showGameOverScreen(bool showing) {
+	if (showing) {
+		_quitButton->setVisible(true);
+		_quitButton->setPosition(-150, -50);
+		_restartButton->setVisible(true);
+		_restartButton->setPosition(30, -50);
+		_gameOverScreen->setVisible(true);
+		_gameOverText->setVisible(true);
+	}
+	else {
+		_quitButton->setVisible(false);
+		_quitButton->setPosition(-200, 10000);
+		_restartButton->setVisible(false);
+		_restartButton->setPosition(0, 10000);
+		_gameOverScreen->setVisible(false);
+		_gameOverText->setVisible(false);
+	}
+	
 }
 
 /**

@@ -151,6 +151,9 @@ cugl::Vec2 InputController::getCurrentAim() {
 		_currentAim.scale(1.0 / _currentAim.length() * _maxSling);
 	}
 
+	CULog("INIT TOUCH: %f", _initTouch);
+	CULog("CURRENT TOUCH: %f", _currentTouch);
+
 	// _currentAim.scale(SLING_VECTOR_SCALE);
 	return _currentAim;
 }
