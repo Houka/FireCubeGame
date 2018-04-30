@@ -492,6 +492,7 @@ def autoTexture(terrain):
     waterDecals = [[0 for x in range(numC)] for y in range(numR)]
     for r in range(1, 99):
         for c in range(1, 99):
+            background[r][c].t_water_decal = -1
             tl = terrain[r-1][c-1].texture
             l = terrain[r][c-1].texture
             bl = terrain[r+1][c-1].texture
