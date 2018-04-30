@@ -63,6 +63,7 @@ protected:
 	std::shared_ptr<Node> _chargingNode;
     std::shared_ptr<AnimationNode> _animationNode;
 	std::shared_ptr<Node> _arrow;
+    std::shared_ptr<Node> _circle;
     /** The body animation */
     //std::shared_ptr<cugl::AnimationNode> _anim;
 	std::string _texture;
@@ -134,6 +135,7 @@ public:
             _stunTimeout.mark();
             _stunDuration = 3000;
             updateArrow(false);
+            updateCircle(false);
         }
 
     }
@@ -144,6 +146,7 @@ public:
             _stunDuration = millis;
             _stunOnStop = true;
             updateArrow(false);
+            updateCircle(false);
         }
     }
 
@@ -224,6 +227,7 @@ public:
 	* @return the scene graph node representing the player.
 	*/
 	const std::shared_ptr<Node>& getArrow() const { return _arrow; }
+    const std::shared_ptr<Node>& getCircle() const { return _circle; }
 
 	/**
 	* Sets the scene graph node representing the player.
@@ -231,6 +235,7 @@ public:
 	* @param node  The scene graph node representing the player.
 	*/
 	void setArrow(const std::shared_ptr<Node>& arrow) { _arrow = arrow; }
+    void setCircle(const std::shared_ptr<Node>& circle) { _circle = circle; }
 
 	/**
 	* Returns the texture (key) for the player.
@@ -279,8 +284,10 @@ public:
 	*
 	* @param node  updates the aim arrow.
 	*/
-	void updateArrow(cugl::Vec2 aim, bool visible);
+    void updateArrow(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bool visible);
 	void updateArrow(bool visible);
+    void updateCircle(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bool visible);
+    void updateCircle(bool visible);
 
 #pragma mark -
 #pragma mark Physics
