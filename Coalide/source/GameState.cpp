@@ -40,6 +40,12 @@ void GameState::dispose() {
 	_pauseButton = nullptr;
 	_playButton = nullptr;
 	_menuButton = nullptr;
+	_quitButton = nullptr;
+	_nextButton = nullptr;
+	_restartButton = nullptr;
+	_winText = nullptr;
+	_gameOverScreen = nullptr;
+	_gameOverText = nullptr;
 	clearRootNode();
 }
 
@@ -301,12 +307,14 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_uiNode->setPosition(300, 300);
 	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("menu_button"));
 	std::shared_ptr<cugl::Node> _pauseNode = PolygonNode::allocWithTexture(_assets->get<Texture>("pause_button"));
+	std::shared_ptr<cugl::Node> _muteNode = PolygonNode::allocWithTexture(_assets->get<Texture>("mute_button"));
 	std::shared_ptr<cugl::Node> _playNode = PolygonNode::allocWithTexture(_assets->get<Texture>("play_button"));
 	std::shared_ptr<cugl::Node> _restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>("restart_button"));
 	std::shared_ptr<cugl::Node> _quitNode = PolygonNode::allocWithTexture(_assets->get<Texture>("quit_button"));
 	std::shared_ptr<cugl::Node> _nextNode = PolygonNode::allocWithTexture(_assets->get<Texture>("restart_button"));
 	_gameOverScreen = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over_screen"));
 	_gameOverText = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over"));
+	_winText = PolygonNode::allocWithTexture(_assets->get<Texture>("win"));
 
 	float xMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
 	float yMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
@@ -315,6 +323,8 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_gameOverScreen->setPosition(0, 0);
 	_gameOverText->setVisible(false);
 	_gameOverText->setPosition(0, 75);
+	_winText->setVisible(false);
+	_winText->setPosition(0, 75);
 
 	_menuButton = cugl::Button::alloc(_backNode);
 	_menuButton->setPosition(0, 10000);
@@ -323,6 +333,10 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_pauseButton = cugl::Button::alloc(_pauseNode);
 	_pauseButton->setPosition(-xMax/2.0, -yMax/2.0);
 	_pauseButton->setScale(.5, .5);
+
+	_muteButton = cugl::Button::alloc(_muteNode);
+	_muteButton->setPosition(xMax / 2.0 - 50, -yMax / 2.0);
+	_muteButton->setScale(.3, .3);
 
 	_playButton = cugl::Button::alloc(_playNode);
 	_playButton->setPosition(-200, 10000);
@@ -386,17 +400,26 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		}
 	});
 
+	_muteButton->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_didClickMute = true;
+		}
+	});
+
 	_menuButton->activate(5);
 	_pauseButton->activate(6);
-	_playButton->activate(7);
-	_quitButton->activate(8);
-	_restartButton->activate(9);
-	_nextButton->activate(10);
+	_muteButton->activate(7);
+	_playButton->activate(8);
+	_quitButton->activate(9);
+	_restartButton->activate(10);
+	_nextButton->activate(11);
 	_uiNode->addChild(_menuButton, UNIT_PRIORITY);
 	_uiNode->addChild(_pauseButton, UNIT_PRIORITY);
+	_uiNode->addChild(_muteButton, UNIT_PRIORITY);
 	_uiNode->addChild(_playButton, UNIT_PRIORITY);
 	_uiNode->addChild(_gameOverScreen, UNIT_PRIORITY);
 	_uiNode->addChild(_gameOverText, UNIT_PRIORITY);
+	_uiNode->addChild(_winText, UNIT_PRIORITY);
 	_uiNode->addChild(_quitButton, UNIT_PRIORITY);
 	_uiNode->addChild(_nextButton, UNIT_PRIORITY);
 	_uiNode->addChild(_restartButton, UNIT_PRIORITY);
@@ -439,7 +462,7 @@ void GameState::showWinScreen(bool showing) {
 		_nextButton->setVisible(true);
 		_nextButton->setPosition(30, -50);
 		_gameOverScreen->setVisible(true);
-		_gameOverText->setVisible(true);
+		_winText->setVisible(true);
 	}
 	else {
 		_quitButton->setVisible(false);
@@ -447,7 +470,7 @@ void GameState::showWinScreen(bool showing) {
 		_nextButton->setVisible(false);
 		_nextButton->setPosition(0, 10000);
 		_gameOverScreen->setVisible(false);
-		_gameOverText->setVisible(false);
+		_winText->setVisible(false);
 	}
 }
 

@@ -100,7 +100,7 @@ void CoalideApp::onShutdown() {
  */
 void CoalideApp::update(float timestep) {
     //std::string levelNames[5] = {"json/demo/enemy_no_water.json", "json/demo/map.json", "json/demo/island_all_enemies.json", "json/demo/3.json", "json/demo/enemy_water.json"};
-    std::string levelNames[6] = {"json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json"};
+    std::string levelNames[6] = {"json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/lvl1.json", "json/openBetaJsons/lvl2.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json", "json/openBetaJsons/kgr32-test.json"};
 	
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
@@ -111,9 +111,10 @@ void CoalideApp::update(float timestep) {
 		_menuScene.init(_assets, _input);
 		_currentScene = CURRENT_SCENE::MENU_SCENE;
 
+
 		if (!AudioEngine::get()->isActiveEffect("harlem")) {
-			auto source = _assets->get<Sound>("harlem");
-			//AudioEngine::get()->playEffect("harlem", source, true, source->getVolume());
+			_source = _assets->get<Sound>("harlem");
+			AudioEngine::get()->playEffect("harlem", _source, true, _source->getVolume());
 		}
 		// _levelSelectScene.init(_assets, _input, LEVEL_KEY);
 		_loaded = true;
@@ -156,6 +157,22 @@ void CoalideApp::update(float timestep) {
 			}
 		}
 		if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
+			if (_gameScene.getGameState()->didClickMute()) {
+				//if (AudioEngine::get()->getMusicVolume() != 0) {
+				//	AudioEngine::get()->setMusicVolume(0);
+				//}
+				//else {
+				//	AudioEngine::get()->setMusicVolume(_source->getVolume());
+
+				//}
+				if (AudioEngine::get()->getEffectVolume("harlem") != 0) {
+					AudioEngine::get()->setEffectVolume("harlem", 0);
+				}
+				else {
+					AudioEngine::get()->setEffectVolume("harlem", _source->getVolume());
+				}
+
+			}
 			if (_gameScene.getGameState()->didClickMenu()) {
 				_gameScene.dispose();
 				_menuScene.init(_assets, _input);

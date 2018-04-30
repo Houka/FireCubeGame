@@ -87,6 +87,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	_gamestate->resetDidClickMenu();
 	_gamestate->resetDidClickRestart();
 	_gamestate->resetDidClickNext();
+	_gamestate->resetDidClickMute();
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
@@ -221,7 +222,10 @@ void GameScene::update(float dt) {
 	}
 	_input.update(dt);
 
+	_gamestate->resetDidClickMute();
 	_gamestate->resetDidClickMenu();
+	_gamestate->resetDidClickNext();
+	_gamestate->resetDidClickRestart();
 
 	if (_gameover) {
 		_gamestate->showGameOverScreen(true);

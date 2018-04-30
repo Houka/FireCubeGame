@@ -55,7 +55,9 @@ protected:
 	std::shared_ptr<cugl::Node> _uiNode;
 	std::shared_ptr<cugl::Node> _gameOverScreen;
 	std::shared_ptr<cugl::Node> _gameOverText;
+	std::shared_ptr<cugl::Node> _winText;
 	std::shared_ptr<cugl::Button> _pauseButton;
+	std::shared_ptr<cugl::Button> _muteButton;
 	std::shared_ptr<cugl::Button> _menuButton;
 	std::shared_ptr<cugl::Button> _playButton;
 	std::shared_ptr<cugl::Button> _quitButton;
@@ -66,6 +68,7 @@ protected:
 	bool _didClickMenu = false;
 	bool _didClickRestart = false;
 	bool _didClickNext = false;
+	bool _didClickMute = false;
 	bool _isPaused = false;
 
 	std::shared_ptr<cugl::AssetManager> _assets;
@@ -97,10 +100,12 @@ public:
 	bool didClickMenu() { return _didClickMenu; }
 	bool didClickRestart() { return _didClickRestart; }
 	bool didClickNext() { return _didClickNext; }
+	bool didClickMute() { return _didClickMute; }
 	bool isPaused() { return _isPaused; }
 	void resetDidClickMenu() { _didClickMenu = false; }
 	void resetDidClickRestart() { _didClickRestart = false; }
 	void resetDidClickNext() { _didClickNext = false; }
+	void resetDidClickMute() { _didClickMute = false; }
 
 	void setUIPosition(Vec2 pos) { _uiNode->setPosition(pos); }
 
