@@ -146,7 +146,6 @@ bool InputController::didSling(bool shouldReset){
 */
 cugl::Vec2 InputController::getCurrentAim() {
 	_currentAim = _currentTouch - _initTouch;
-//    CULog("(%f,%f)", _initTouch.x, _initTouch.y);
 
 	if (_currentAim.length() > _maxSling) {
 		_currentAim.scale(1.0 / _currentAim.length() * _maxSling);
@@ -156,7 +155,6 @@ cugl::Vec2 InputController::getCurrentAim() {
 	CULog("CURRENT TOUCH: %f", _currentTouch);
 
 	// _currentAim.scale(SLING_VECTOR_SCALE);
-	//CULog("(%f,%f)", _currentAim.x, _currentAim.y);
 	return _currentAim;
 }
 
@@ -169,7 +167,6 @@ cugl::Vec2 InputController::getCurrentAim() {
 * @param event The associated event
 */
 void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
-    CULog("touch began");
     _initTouch = event.position;
     _currentTouch = event.position;
     _previousTouch = event.position;
@@ -184,7 +181,6 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
 * @param event The associated event
 */
 void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
-    CULog("touch motion");
 	_currentTouch = event.position;
 	_previousTouch = event.position;
 	_mousepan = true;
@@ -198,7 +194,6 @@ void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
 * @param event The associated event
 */
 void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
-    CULog("touch ended");
     _latestSling = Vec2(_initTouch.x - event.position.x, event.position.y - _initTouch.y);
     if(_latestSling.length() >= MIN_SLING_DISTANCE){
         _didSling = true;
@@ -222,12 +217,10 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
  * @parm   focus       Whether the listener currently has focus
  */
 void InputController::mouseDownCB(const cugl::MouseEvent& event, Uint8 clicks, bool focus) {
-//    CULog("mouse down");
     _initTouch = event.position;
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = true;
-//    CULog("down: %s", _mousedown ? "true" : "false");
     _mousedown = true;
 }
 
@@ -239,7 +232,6 @@ void InputController::mouseDownCB(const cugl::MouseEvent& event, Uint8 clicks, b
  * @parm   focus       Whether the listener currently has focus
  */
 void InputController::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, bool focus) {
-//    CULog("mouse up");
     _latestSling = Vec2(_initTouch.x - event.position.x, event.position.y - _initTouch.y);
     if(_latestSling.length() >= MIN_SLING_DISTANCE){
         _didSling = true;
@@ -252,7 +244,6 @@ void InputController::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, boo
 	_currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = false;
-//    CULog("down: %s", _mousedown ? "true" : "false");
     _mousedown = false;
 }
 
@@ -264,10 +255,7 @@ void InputController::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, boo
  * @parm   focus       Whether the listener currently has focus
  */
 void InputController::mouseMovedCB(const cugl::MouseEvent& event, const Vec2& previous, bool focus) {
-    //CULog("mouse moved");
-    CULog("down: %s", _mousedown ? "true" : "false");
     if (_mousedown) {
-//        CULog("mousepan true");
         _currentTouch = event.position;
     }
 }
