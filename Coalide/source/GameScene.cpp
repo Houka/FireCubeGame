@@ -82,7 +82,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// Set up the scene graph
 	createSceneGraph(dimen);
 
+	_gamestate->showGameOverScreen(false);
 	_gamestate->resetDidClickMenu();
+	_gamestate->resetDidClickRestart();
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
@@ -219,8 +221,8 @@ void GameScene::update(float dt) {
 
 	_gamestate->resetDidClickMenu();
 
-	if (_gameover || _input.didReset()) {
-		//reset(LEVEL_FILE);
+	if (_gameover) {
+		_gamestate->showGameOverScreen(true);
 		return;
 	}
 
@@ -239,6 +241,7 @@ void GameScene::update(float dt) {
 		CULog("Shutting down");
 		Application::get()->quit();
 	}
+
 
     std::shared_ptr<ObstacleWorld> world = _gamestate->getWorld();
     std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
@@ -678,10 +681,10 @@ void GameScene::reset(const std::string& file) {
 
 	_ai.init(_gamestate);
     
-    // initialize the camera
-    cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
-    cugl::Vec2 cameraPos = getCamera()->getPosition();
-    getCamera()->translate(gameCenter - cameraPos);
+    // reset the camera
+    //cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
+    //cugl::Vec2 cameraPos = getCamera()->getPosition();
+    //getCamera()->translate(gameCenter - cameraPos);
 	
 	return;
 }

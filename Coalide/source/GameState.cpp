@@ -295,37 +295,47 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("menu_button"));
 	std::shared_ptr<cugl::Node> _pauseNode = PolygonNode::allocWithTexture(_assets->get<Texture>("pause_button"));
 	std::shared_ptr<cugl::Node> _playNode = PolygonNode::allocWithTexture(_assets->get<Texture>("play_button"));
+	std::shared_ptr<cugl::Node> _restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>("restart_button"));
+	std::shared_ptr<cugl::Node> _quitNode = PolygonNode::allocWithTexture(_assets->get<Texture>("quit_button"));
+	_gameOverScreen = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over_screen"));
+	_gameOverText = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over"));
 
 	float xMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
 	float yMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
 
-	//_startNode->setPosition(50., 50);
+	_gameOverScreen->setVisible(false);
+	_gameOverScreen->setPosition(0, 0);
+	_gameOverText->setVisible(false);
+	_gameOverText->setPosition(0, 75);
+
 	_menuButton = cugl::Button::alloc(_backNode);
 	_menuButton->setPosition(0, 10000);
 	_menuButton->setVisible(false);
-
 
 	_pauseButton = cugl::Button::alloc(_pauseNode);
 	_pauseButton->setPosition(-xMax/2.0, -yMax/2.0);
 	_pauseButton->setScale(.5, .5);
 
-
 	_playButton = cugl::Button::alloc(_playNode);
 	_playButton->setPosition(-200, 10000);
 	_playButton->setVisible(false);
 
+	_quitButton = cugl::Button::alloc(_quitNode);
+	_quitButton->setPosition(-200, 10000);
+	_quitButton->setVisible(false);
+
+	_restartButton = cugl::Button::alloc(_restartNode);
+	_restartButton->setPosition(-200, 10000);
+	_restartButton->setVisible(false);
+
 	_menuButton->setListener([=](const std::string& name, bool down) {
-		if (down) {
-		}
-		else {
+		if (!down) {
 			_didClickMenu = true;
 		}
 	});
 
 	_pauseButton->setListener([=](const std::string& name, bool down) {
-		if (down) {
-		}
-		else {
+		if (!down) {
 			_isPaused = true;
 			_playButton->setVisible(true);
 			_playButton->setPosition(-200, -100);
@@ -336,9 +346,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	});
 
 	_playButton->setListener([=](const std::string& name, bool down) {
-		if (down) {
-		}
-		else {
+		if (!down) {
 			_isPaused = false;
 			_playButton->setVisible(false);
 			_playButton->setPosition(-200, 10000);
@@ -348,12 +356,31 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		}
 	});
 
+	_quitButton->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_didClickMenu = true;
+		}
+	});
+
+	_restartButton->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_didClickRestart = true;
+		}
+	});
+
 	_menuButton->activate(5);
 	_pauseButton->activate(6);
 	_playButton->activate(7);
+	_quitButton->activate(8);
+	_restartButton->activate(9);
 	_uiNode->addChild(_menuButton, UNIT_PRIORITY);
 	_uiNode->addChild(_pauseButton, UNIT_PRIORITY);
 	_uiNode->addChild(_playButton, UNIT_PRIORITY);
+	_uiNode->addChild(_gameOverScreen, UNIT_PRIORITY);
+	_uiNode->addChild(_gameOverText, UNIT_PRIORITY);
+	_uiNode->addChild(_quitButton, UNIT_PRIORITY);
+	_uiNode->addChild(_restartButton, UNIT_PRIORITY);
+	
 	_worldnode->addChild(_uiNode, 2);
 }
 
@@ -364,6 +391,26 @@ void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {
     //spore->setDebugScene(_debugnode);
     
     _worldnode->addChild(sporeNode, UNIT_PRIORITY);
+}
+
+void GameState::showGameOverScreen(bool showing) {
+	if (showing) {
+		_quitButton->setVisible(true);
+		_quitButton->setPosition(-150, -50);
+		_restartButton->setVisible(true);
+		_restartButton->setPosition(30, -50);
+		_gameOverScreen->setVisible(true);
+		_gameOverText->setVisible(true);
+	}
+	else {
+		_quitButton->setVisible(false);
+		_quitButton->setPosition(-200, 10000);
+		_restartButton->setVisible(false);
+		_restartButton->setPosition(0, 10000);
+		_gameOverScreen->setVisible(false);
+		_gameOverText->setVisible(false);
+	}
+	
 }
 
 /**
