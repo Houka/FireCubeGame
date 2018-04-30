@@ -306,7 +306,7 @@ void GameScene::update(float dt) {
             }
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-            if(_input.getCurrentAim().length() > 175.0f) {
+            if(_input.getCurrentAim().length() > 175.0f && _input.getCameraPan().length() == 0) {
                 player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
             } else
             {
