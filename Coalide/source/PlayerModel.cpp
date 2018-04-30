@@ -416,7 +416,7 @@ void PlayerModel::updateCircle(cugl::Vec2 aim, std::shared_ptr<Node> currNode, b
     //_arrow->setAngle(angle);
     
     //_circle->setAngle(angle);
-    Vec2 scalingNumber = aim.scale(0.135f) * powf(aim.length(), 1.15f);
+    Vec2 scalingNumber = aim.scale(0.1325f) * powf(aim.length(), 1.15f);
     _circle->setPosition(cugl::Vec2(currNode->getWorldPosition().x + scalingNumber.x, currNode->getWorldPosition().y - scalingNumber.y - (currNode->getHeight() / 2.0f)));
     _circle->setVisible(visible);
     //_arrow->setColor(cugl::Color4::RED);
@@ -445,9 +445,7 @@ void PlayerModel::update(float dt) {
         if(_stunned){
             _node->setColor(Color4::GREEN);
         }
-        else if(!canSling()){
-            _node->setColor(Color4::RED);
-        } else {
+        else {
             _node->setColor(_color);
         }
 	}

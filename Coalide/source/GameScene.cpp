@@ -82,7 +82,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// Set up the scene graph
 	createSceneGraph(dimen);
 
+	_gamestate->showGameOverScreen(false);
 	_gamestate->resetDidClickMenu();
+	_gamestate->resetDidClickRestart();
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
@@ -219,8 +221,8 @@ void GameScene::update(float dt) {
 
 	_gamestate->resetDidClickMenu();
 
-	if (_gameover || _input.didReset()) {
-		//reset(LEVEL_FILE);
+	if (_gameover) {
+		_gamestate->showGameOverScreen(true);
 		return;
 	}
 
@@ -240,6 +242,7 @@ void GameScene::update(float dt) {
 		Application::get()->quit();
 	}
 
+
     std::shared_ptr<ObstacleWorld> world = _gamestate->getWorld();
     std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
     Size gameBounds = _gamestate->getBounds().size;
@@ -249,7 +252,6 @@ void GameScene::update(float dt) {
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
         world->setStepsize(SLOW_MOTION);
-        player->setColor(Color4::ORANGE);
         if(!player->getCharging() ){
             Vec2 currentAim = _input.getCurrentAim();
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;
@@ -296,7 +298,6 @@ void GameScene::update(float dt) {
             }
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-//            CULog("%f", _input.getCurrentAim().length());
             if(_input.getCurrentAim().length() > 175.0f) {
                 player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
             } else
@@ -691,10 +692,10 @@ void GameScene::reset(const std::string& file) {
 
 	_ai.init(_gamestate);
     
-    // initialize the camera
-    cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
-    cugl::Vec2 cameraPos = getCamera()->getPosition();
-    getCamera()->translate(gameCenter - cameraPos);
+    // reset the camera
+    //cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
+    //cugl::Vec2 cameraPos = getCamera()->getPosition();
+    //getCamera()->translate(gameCenter - cameraPos);
 	
 	return;
 }

@@ -36,6 +36,7 @@ private:
     cugl::Vec2 _previousTouch;
     /** The current touch location for the current gesture */
     cugl::Vec2 _currentTouch;
+	cugl::TouchID _finger;
 public:
 #pragma mark -
 #pragma mark Constructors
