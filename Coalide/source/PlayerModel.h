@@ -62,7 +62,7 @@ protected:
     std::shared_ptr<Node> _buildupNode;
 	std::shared_ptr<Node> _chargingNode;
     std::shared_ptr<AnimationNode> _animationNode;
-	std::shared_ptr<PathNode> _arrow;
+	std::shared_ptr<Node> _arrow;
     /** The body animation */
     //std::shared_ptr<cugl::AnimationNode> _anim;
 	std::string _texture;
@@ -223,14 +223,14 @@ public:
 	*
 	* @return the scene graph node representing the player.
 	*/
-	const std::shared_ptr<PathNode>& getArrow() const { return _arrow; }
+	const std::shared_ptr<Node>& getArrow() const { return _arrow; }
 
 	/**
 	* Sets the scene graph node representing the player.
 	*
 	* @param node  The scene graph node representing the player.
 	*/
-	void setArrow(const std::shared_ptr<PathNode>& arrow) { _arrow = arrow; }
+	void setArrow(const std::shared_ptr<Node>& arrow) { _arrow = arrow; }
 
 	/**
 	* Returns the texture (key) for the player.

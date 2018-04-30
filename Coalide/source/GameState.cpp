@@ -166,10 +166,12 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		_player->setDrawScale(_scale.x);
 		//_player->setDebugScene(_debugnode);
 
-        // create the aim arrow
-        const std::vector<cugl::Vec2> arrowLine = { cugl::Vec2(0,0), cugl::Vec2(0, 2) };
-        std::shared_ptr<cugl::PathNode> _arrow = PathNode::allocWithVertices(arrowLine, 1, cugl::PathJoint::NONE, cugl::PathCap::NONE, false);
-        _arrow->setAnchor(cugl::Vec2(0.0, 0.0));
+        //Arrow indicator for Nicoal
+        std::shared_ptr<cugl::Node> _arrow = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow_indicator"));
+
+//        const std::vector<cugl::Vec2> arrowLine = { cugl::Vec2(0,0), cugl::Vec2(0, 2) };
+//        std::shared_ptr<cugl::PathNode> _arrow = PathNode::allocWithVertices(arrowLine, 1, cugl::PathJoint::NONE, cugl::PathCap::NONE, false);
+//        _arrow->setAnchor(cugl::Vec2(0.0, 0.0));
         _arrow->setVisible(false);
         _player->setArrow(_arrow);
         
@@ -226,7 +228,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 			_worldnode->addChild(objectNode, UNIT_PRIORITY);
 		}
 	}
-
+    
 	// create the UI buttons
 	_uiNode = Node::alloc();
 	_uiNode->setPosition(300, 300);

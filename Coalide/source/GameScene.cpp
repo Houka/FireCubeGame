@@ -258,9 +258,9 @@ void GameScene::update(float dt) {
         if(!player->getCharging() ){
             Vec2 currentAim = _input.getCurrentAim();
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;
-            CULog("angle: %f", angle);
+//            CULog("angle: %f", angle);
             player->_oldAngle = angle;
-            CULog("in here");
+//            CULog("in here");
             if(angle > 0.0f && angle < 35.0f) {
                 std::shared_ptr<Node> currNode = player -> getNode();
                 std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 2, false);
@@ -302,7 +302,7 @@ void GameScene::update(float dt) {
                 player->switchNode(currNode, desNode);
             }
             // update the aim arrow
-            player->updateArrow(_input.getCurrentAim(), true);
+            player->updateArrow(true);
             CULog("Current Aim: %f", _input.getCurrentAim().getAngle() * 180.0f / 3.14159f);
         }
         
