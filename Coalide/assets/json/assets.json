@@ -41,13 +41,13 @@
       }
     },
     "acorn": {
-      "file": "textures/acorn.png"
+      "file": "textures/spritesheet_acorn_64x64.png"
     },
     "mushroom": {
-      "file": "textures/mushroom.png"
+      "file": "textures/spritesheet_mushroom_128x128.png"
     },
     "onion": {
-      "file": "textures/onion.png"
+      "file": "textures/spritesheet_onion_128x128.png"
     },
     "tileset_forest.png": {
       "file": "textures/tileset_forest.png"
