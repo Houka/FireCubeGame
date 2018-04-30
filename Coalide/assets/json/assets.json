@@ -81,6 +81,18 @@
     },
     "play_button": {
       "file": "textures/playbutton.png"
+    },
+    "quit_button": {
+      "file": "textures/exitbutton.png"
+    },
+    "restart_button": {
+      "file": "textures/restartbutton.png"
+    },
+    "game_over": {
+      "file": "textures/Game_Over.png"
+    },
+    "game_over_screen": {
+      "file": "textures/Game_Over_Screen.png"
     }
   },
     "soundfx": {

@@ -57,10 +57,10 @@
     <ClInclude Include="..\..\source\ObjectModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\MenuScene.h">
+    <ClInclude Include="..\..\source\LevelSelectScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\LevelSelectScene.h">
+    <ClInclude Include="..\..\source\MenuScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
