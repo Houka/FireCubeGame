@@ -172,7 +172,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus, int fing
     _currentTouch = event.position;
     _previousTouch = event.position;
     _mousepan = true;
-	if (fingers == 2) {
+	if (fingers) {
 		_panning = true;
 	}
     _mousedown = true;
@@ -213,10 +213,13 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
 	}
 
     _currentTouch = event.position;
+	if (_panning) {
+		_cameraPan = Vec2(_previousTouch.x - event.position.x, event.position.y - _previousTouch.y);
+	}
     _previousTouch = event.position;
     _mousepan = false;
 	_panning = false;
-	_cameraPan = Vec2(0, 0);
+	//_cameraPan = Vec2(0, 0);
     _mousedown = false;
 }
 
