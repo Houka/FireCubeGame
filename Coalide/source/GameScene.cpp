@@ -303,7 +303,6 @@ void GameScene::update(float dt) {
             }
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-//            CULog("%f", _input.getCurrentAim().length());
             if(_input.getCurrentAim().length() > 175.0f) {
                 player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
             } else
@@ -381,6 +380,8 @@ void GameScene::update(float dt) {
     if(player->getCharging() && player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
         player->setCharging(false);
         player->_isSliding = true;
+        player->updateCircle(false);
+
         float angle = player->_oldAngle;
         if(angle > 0.0f && angle < 35.0f) {
             std::shared_ptr<Node> currNode = player -> getNode();
@@ -467,6 +468,7 @@ void GameScene::update(float dt) {
             std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 7, false);
             player->switchNode(currNode, desNode);
         }
+        player->updateCircle(false);
     }
     
     if(!player->canSling()) {
