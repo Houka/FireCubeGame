@@ -257,7 +257,6 @@ void GameScene::update(float dt) {
 		//CULog("CURRENT STEP SIZE: %f", std::abs(world->getStepsize() - NORMAL_MOTION));
 		//CULog("SLOW DOWN");
         world->setStepsize(SLOW_MOTION);
-        player->setColor(Color4::ORANGE);
         if(!player->getCharging() ){
             Vec2 currentAim = _input.getCurrentAim();
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;

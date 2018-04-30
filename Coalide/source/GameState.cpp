@@ -75,15 +75,69 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_rootnode->addChild(_worldnode, 0);
 	_rootnode->addChild(_debugnode, 1);
 
+//    // Add the individual elements
+//    for (int i = 0; i < _tiles.size(); i++) {
+//        std::shared_ptr<TileModel> tile = _tiles[i];
+//        std::shared_ptr<PolygonNode> dirtNode;
+//        std::shared_ptr<PolygonNode> iceNode;
+//        std::shared_ptr<PolygonNode> sandNode;
+//        if(tile->getType() == TILE_TYPE::GRASS || tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
+//            double* tileSubtexture = tile->getDirtSubTexture();
+//            dirtNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getDirtTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+//        }
+//        if(tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
+//            double* tileSubtexture = tile->getIceSubTexture();
+//            iceNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+//            iceNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+//            dirtNode->addChild(iceNode);
+//        }
+//        if(tile->getType() == TILE_TYPE::SAND){
+//            double* tileSubtexture = tile->getSandSubTexture();
+//            sandNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+//            sandNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+//            iceNode->addChild(sandNode);
+//        }
+//
+//        tile->setNode(dirtNode);
+//        tile->setDrawScale(_scale.x);
+//        //tile->setDebugScene(_debugnode);
+//
+//        dirtNode->setPosition(tile->getPosition()*_scale);
+//
+//        _worldnode->addChild(dirtNode, TILE_PRIORITY);
+//    }
 	// Add the individual elements
-	for (int i = 0; i < _tiles.size(); i++) {
-		std::shared_ptr<TileModel> tile = _tiles[i];
-        std::shared_ptr<PolygonNode> dirtNode;
-        std::shared_ptr<PolygonNode> iceNode;
-        std::shared_ptr<PolygonNode> sandNode;
+    for (int i = 0; i < _tiles.size(); i++) {
+        std::shared_ptr<TileModel> tile = _tiles[i];
+        std::shared_ptr<PolygonNode> dirtNode = nullptr;
+        std::shared_ptr<PolygonNode> iceNode = nullptr;
+        std::shared_ptr<PolygonNode> sandNode = nullptr;
+        std::shared_ptr<PolygonNode> waterDecal = nullptr;
+        std::shared_ptr<PolygonNode> waterBase = nullptr;
+
+        if(tile->hasWaterDecal()){
+            double* tileSubtexture = tile->getWaterDecalSubTexture();
+            waterDecal = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getWaterTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+        }
+        if(tile->hasWaterBase()){
+            double* tileSubtexture = tile->getWaterBaseSubTexture();
+            waterBase = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getWaterTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+            if(waterDecal != nullptr){
+                waterBase->setPosition(.5f *_scale.x, +.5f *_scale.y);
+                waterDecal->addChild(waterBase);
+            }
+        }
         if(tile->getType() == TILE_TYPE::GRASS || tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getDirtSubTexture();
             dirtNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getDirtTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
+            if(waterBase!=nullptr){
+                dirtNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+
+                waterBase->addChild(dirtNode);
+            } else if(waterDecal != nullptr) {
+                waterDecal->addChild(dirtNode);
+                dirtNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+            }
         }
         if(tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getIceSubTexture();
@@ -94,18 +148,19 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
         if(tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getSandSubTexture();
             sandNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
-            sandNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+            sandNode->setPosition(.5f *_scale.x, +.5f *_scale.y);;
             iceNode->addChild(sandNode);
         }
-        
-		tile->setNode(dirtNode);
-		tile->setDrawScale(_scale.x);
-		//tile->setDebugScene(_debugnode);
-
-		dirtNode->setPosition(tile->getPosition()*_scale);
-
-		_worldnode->addChild(dirtNode, TILE_PRIORITY);
-	}
+        if(waterDecal!=nullptr){
+            tile->setNode(waterDecal);
+            waterDecal->setPosition(tile->getPosition()*_scale);
+            _worldnode->addChild(waterDecal, TILE_PRIORITY);
+        }else if(waterBase!=nullptr){
+            tile->setNode(waterBase);
+            waterBase->setPosition(tile->getPosition()*_scale);
+            _worldnode->addChild(waterBase, TILE_PRIORITY);
+        }
+    }
 
 	if (_player != nullptr) {
         auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()));
@@ -218,9 +273,10 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	if (_objects.size() > 0) {
 		for (auto it = _objects.begin(); it != _objects.end(); ++it) {
 			std::shared_ptr<ObjectModel> object = *it;
-			auto objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()));
+			auto objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()), Rect(0, 0, 64, 64));
 			object->setNode(objectNode);
 			object->setDrawScale(_scale.x);
+            objectNode->setScale(.75, 1);
 			//object->setDebugScene(_debugnode);
 
 			_worldnode->addChild(objectNode, UNIT_PRIORITY);
