@@ -180,8 +180,8 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 
 	float a = friction / m;
 	float d = (vi*vi) / (2 * a);
-	Vec2 slide = landing + aim*d*1.3;
-	Vec2 shortland = landing - aim*d*0.4;
+	Vec2 slide = landing + aim*d*1.2;
+	Vec2 shortland = landing - aim*d*0.2;
 	//CULog("sliding %f", d);
 	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(shortland, slide, gamestate)) {
 		return true;

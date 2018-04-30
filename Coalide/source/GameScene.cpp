@@ -549,14 +549,14 @@ void GameScene::update(float dt) {
 	}
 	
 
-	//// smooth pan
- //   if (std::abs(cameraTransX) > 5) {
- //       cameraTransX *= .05;
- //   }
+	// smooth pan
+    if (std::abs(cameraTransX) > 5) {
+        cameraTransX *= .05;
+    }
 
- //   if (std::abs(cameraTransY) > 5) {
- //       cameraTransY *= .05;
- //   }
+    if (std::abs(cameraTransY) > 5) {
+        cameraTransY *= .05;
+    }
 	
 	//CULog(pan.toString().c_str());
 
@@ -570,7 +570,7 @@ void GameScene::update(float dt) {
     
 
 	_gamestate->setUIPosition(player->getNode()->getScene()->getCamera()->getPosition());
-	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
+	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(round(cameraTransX),round(cameraTransY)));
 	
 }
 
