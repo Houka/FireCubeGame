@@ -361,7 +361,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	});
 
 	_pauseButton->setListener([=](const std::string& name, bool down) {
-		if (!down) {
+		if (!down && !_gameOverScreen->isVisible() && !_gameOverScreen->isVisible()) { // add win screen
 			_isPaused = true;
 			_playButton->setVisible(true);
 			_playButton->setPosition(-200, -100);

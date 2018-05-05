@@ -88,6 +88,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	_gamestate->resetDidClickRestart();
 	_gamestate->resetDidClickNext();
 	_gamestate->resetDidClickMute();
+	_gameover = false;
+	_complete = false;
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
@@ -233,7 +235,6 @@ void GameScene::update(float dt) {
 	}
 
 	if (_complete) {
-		//_complete = false;
 		_gamestate->showWinScreen(true);
 		return;
 	}
@@ -689,6 +690,7 @@ void GameScene::reset(const std::string& file) {
 	_gamestate = _assets->get<LevelController>(_levelKey)->getGameState();
 	setComplete(false);
 	_gameover = false;
+	_complete = false;
 	_gamestate->resetDidClickMenu();
 
 	_ai.init(_gamestate);
