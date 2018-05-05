@@ -1,44 +1,7 @@
 {
   "textures": {
     "nicoal": {
-      "file": "textures/nicoal.png",
-      "atlas": {
-        "nicoal_f": [0, 0, 64, 64],
-        "nicoal_fls": [64, 0, 128, 64],
-        "nicoal_l": [128, 0, 196, 64],
-        "nicoal_bls": [196, 0, 256, 64],
-        "nicoal_b": [256, 0, 320, 64],
-        "nicoal_brs": [320, 0, 384, 64],
-        "nicoal_r": [384, 0, 448, 64],
-        "nicoal_frs": [448, 0, 512, 64],
-
-        "buildup_f": [ 0, 64, 64, 128],
-        "buildup_fls": [64, 64, 128, 128],
-        "buildup_l": [128, 64, 196, 128],
-        "buildup_bls": [196, 64, 256, 128],
-        "buildup_b": [256, 64, 320, 128],
-        "buildup_brs": [320, 64, 384, 128],
-        "buildup_r": [384, 64, 448, 128],
-        "buildup_frs": [448, 64, 512, 128],
-
-        "charging_f": [ 0, 128, 64, 196],
-        "charging_fls": [64, 128, 128, 196],
-        "charging_l": [128, 128, 196, 196],
-        "charging_bls": [196, 128, 256, 196],
-        "charging_b": [256, 128, 320, 196],
-        "charging_brs": [320, 128, 384, 196],
-        "charging_r": [384, 128, 448, 196],
-        "charging_frs": [448, 128, 512, 196],
-
-        "sliding_f": [ 0, 196, 64, 256],
-        "sliding_fls": [64, 196, 128, 256],
-        "sliding_l": [128, 196, 196, 256],
-        "sliding_bls": [196, 196, 256, 256],
-        "sliding_b": [256, 196, 320, 256],
-        "sliding_brs": [320, 196, 384, 256],
-        "sliding_r": [384, 196, 448, 256],
-        "sliding_frs": [448, 196, 512, 256]
-      }
+      "file": "textures/nicoal.png"
     },
     "acorn": {
       "file": "textures/spritesheet_acorn_64x64.png"

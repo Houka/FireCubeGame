@@ -161,17 +161,17 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
     }
 
 	if (_player != nullptr) {
-        Rect box1 = Rect(0.0f,0.0f,64.0f,64.0f);
-        auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()), box1);
+        Rect nicoal_start = Rect(0.0f,448.0f,64.0f,64.0f);
+        auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()), nicoal_start);
         
         _player->setNode(playerNode);
 		_player->setDrawScale(_scale.x);
 
         //Arrow indicator for Nicoal
-        Rect box = Rect(0.0f,0.0f,102.0f,65.0f);
+        Rect indicator_start = Rect(0.0f,0.0f,102.0f,65.0f);
         std::shared_ptr<cugl::Node> _arrow = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow_indicator"));
         _arrow->setScale(0.5f);
-        std::shared_ptr<cugl::PolygonNode> _circle = PolygonNode::allocWithTexture(_assets->get<Texture>("circle_indicator"), box);
+        std::shared_ptr<cugl::PolygonNode> _circle = PolygonNode::allocWithTexture(_assets->get<Texture>("circle_indicator"), indicator_start);
         
         _arrow->setAnchor(cugl::Vec2(2.0, 2.0));
         _arrow->setVisible(false);

@@ -24,7 +24,7 @@
 bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 	if (CapsuleObstacle::init(pos, size, Orientation::VERTICAL)) {
 		setName(PLAYER_NAME);
-		setTextureKey("nicoal_nicoal_f");
+		setTextureKey("nicoal");
 		setBodyType(b2_dynamicBody);
         setLinearDamping(GLOBAL_AIR_DRAG);
         
