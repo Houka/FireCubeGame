@@ -260,85 +260,10 @@ void GameScene::update(float dt) {
             Vec2 currentAim = _input.getCurrentAim();
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;
             player->_oldAngle = angle;
-            if(angle > 0.0f && angle < 35.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 2, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle > 35.0f && angle < 75.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 3, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle > 75.0f && angle < 105.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 4, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle > 105.0f && angle < 145.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 5, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle > 145.0f && angle < 180.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 6, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle < 0.0f && angle > -55.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 1, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle < -55.0f && angle > -125.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 0, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle < -125.0f && angle > -180.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 7, false);
-                player->switchNode(currNode, desNode);
-            }
             
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-            if(_input.getCurrentAim().length() > 175.0f) {
-//                if (up == true && deltaImage < 408.0f) {
-//
-//                    counter = 102;
-////                    if (deltaImage == 408.0f) {
-////                        up = false;
-////                    }
-//                } else {
-//                    up = false;
-//                    counter = -102;
-//
-//                    if (deltaImage == 0) {
-//                        up = true;
-//                    }
-//                }
-                
-                CULog("Delta Image: %f", deltaImage);
-                player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
-                if(hacky_fix_sorry > 6){
-                    player->getCircle()->shiftPolygon(counter, 0.0f);
-                    deltaImage += counter;
-                    if(deltaImage == 0){
-                        counter=102;
-                    } else if(deltaImage == 306){
-                        counter=-306;
-                    }
-                    hacky_fix_sorry = 0;
-                } else{
-                    hacky_fix_sorry++;
-                }
-                
 
-            } else
-            {
-                player->updateCircle(false);
-            }
         }
         
         
@@ -358,46 +283,6 @@ void GameScene::update(float dt) {
         Vec2 currentAim = _input.getCurrentAim();
         float angle = currentAim.getAngle() * 180.0f / 3.14159f;
         player->_oldAngle = angle;
-        if(angle > 0.0f && angle < 35.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 2, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 35.0f && angle < 75.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 3, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 75.0f && angle < 105.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 4, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 105.0f && angle < 145.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 5, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 145.0f && angle < 180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 6, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < 0.0f && angle > -55.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 1, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -55.0f && angle > -125.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 0, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -125.0f && angle > -180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 7, false);
-            player->switchNode(currNode, desNode);
-        }
     }
 
     // Caps player speed to MAX_PLAYER SPEED
@@ -413,91 +298,12 @@ void GameScene::update(float dt) {
         player->updateCircle(false);
 
         float angle = player->_oldAngle;
-        if(angle > 0.0f && angle < 35.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 2, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 35.0f && angle < 75.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 3, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 75.0f && angle < 105.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 4, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 105.0f && angle < 145.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 5, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 145.0f && angle < 180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 6, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < 0.0f && angle > -55.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 1, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -55.0f && angle > -125.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 0, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -125.0f && angle > -180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 7, false);
-            player->switchNode(currNode, desNode);
-        }
+
     }
     
     if(player->_isSliding && player->getLinearVelocity().isNearZero()){
         player->_isSliding = false;
         float angle = player->_oldAngle;
-        if(angle > 0.0f && angle < 35.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 2, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 35.0f && angle < 75.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 3, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 75.0f && angle < 105.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 4, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 105.0f && angle < 145.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 5, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 145.0f && angle < 180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 6, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < 0.0f && angle > -55.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 1, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -55.0f && angle > -125.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 0, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -125.0f && angle > -180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 7, false);
-            player->switchNode(currNode, desNode);
-        }
         player->updateCircle(false);
     }
     
