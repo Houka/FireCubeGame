@@ -80,6 +80,10 @@ bool PlayerModel::inBounds(int width, int height){
     return (position.x > 0 && (position.y-0.35) > 0 && position.x < width && (position.y-0.35) < height);
 }
 
+void PlayerModel::setDirectionTexture(float angle){
+    return;
+}
+
 /**
 * Updates the aim arrow.
 *

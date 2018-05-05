@@ -35,33 +35,8 @@ private:
 protected:
     std::shared_ptr<AssetManager> _assets;
 	std::shared_ptr<Node> _node;
-	std::shared_ptr<Node> _standingNode_f;
-    std::shared_ptr<Node> _standingNode_fls;
-    std::shared_ptr<Node> _standingNode_l;
-    std::shared_ptr<Node> _standingNode_bls;
-    std::shared_ptr<Node> _standingNode_b;
-    std::shared_ptr<Node> _standingNode_brs;
-    std::shared_ptr<Node> _standingNode_r;
-    std::shared_ptr<Node> _standingNode_frs;
-    std::shared_ptr<Node> _chargingNode_f;
-    std::shared_ptr<Node> _chargingNode_fls;
-    std::shared_ptr<Node> _chargingNode_l;
-    std::shared_ptr<Node> _chargingNode_bls;
-    std::shared_ptr<Node> _chargingNode_b;
-    std::shared_ptr<Node> _chargingNode_brs;
-    std::shared_ptr<Node> _chargingNode_r;
-    std::shared_ptr<Node> _chargingNode_frs;
-    std::shared_ptr<Node> _slidingNode_f;
-    std::shared_ptr<Node> _slidingNode_fls;
-    std::shared_ptr<Node> _slidingNode_l;
-    std::shared_ptr<Node> _slidingNode_bls;
-    std::shared_ptr<Node> _slidingNode_b;
-    std::shared_ptr<Node> _slidingNode_brs;
-    std::shared_ptr<Node> _slidingNode_r;
-    std::shared_ptr<Node> _slidingNode_frs;
     std::shared_ptr<Node> _buildupNode;
 	std::shared_ptr<Node> _chargingNode;
-    std::shared_ptr<AnimationNode> _animationNode;
 	std::shared_ptr<Node> _arrow;
     std::shared_ptr<PolygonNode> _circle;
     /** The body animation */
@@ -218,8 +193,6 @@ public:
 	* @param node  The scene graph node representing the player.
 	*/
 	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
-    
-    std::shared_ptr<Node> setTextNode(const std::shared_ptr<Node>& node, int state, int dir, bool set);
 
 	/**
 	* Returns the scene graph node representing the player.
@@ -236,6 +209,8 @@ public:
 	*/
 	void setArrow(const std::shared_ptr<Node>& arrow) { _arrow = arrow; }
     void setCircle(const std::shared_ptr<PolygonNode>& circle) { _circle = circle; }
+    
+    void setDirectionTexture(float angle);
 
 	/**
 	* Returns the texture (key) for the player.

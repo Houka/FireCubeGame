@@ -164,6 +164,9 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
         Rect nicoal_start = Rect(0.0f,448.0f,64.0f,64.0f);
         auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()), nicoal_start);
         
+        Rect nicoal_test = Rect(0.0f,0.0f,64.0f,64.0f);
+        playerNode->setPolygon(nicoal_test);
+        
         _player->setNode(playerNode);
 		_player->setDrawScale(_scale.x);
 
