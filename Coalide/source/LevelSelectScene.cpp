@@ -48,6 +48,9 @@ bool LevelSelectScene::init(const std::shared_ptr<AssetManager>& assets, InputCo
 	_input = input;
 
 
+	_currentOffset = 0;
+	_prevOffset = 0;
+
 	// Initialize the controllers used in the game mode
 	_input.init();
 
@@ -224,68 +227,29 @@ void LevelSelectScene::update(float dt) {
 		Application::get()->quit();
 	}
 
-
+	// handle scrolling on the level select screen
 	float xPos = _background->getPositionX();
-	float currentOffset = _input.getCurrentAim().x;
-	//if (currentOffset == 0.0) {
-	//	_prevOffset = 0;
-	//}
-	float newOffset = currentOffset - _prevOffset;
-
-	//CULog("xPos: %f", xPos);
-	//CULog("xOffset: %f", newOffset);
-
-	//CULog("maxX: %f", _maxX);
-	//CULog("minX: %f", _minX);
-
-	if (xPos + newOffset >= _maxX) {
-		return;
+	if (_input.didStartSling()) {
+		_prevOffset = _currentOffset;
+		_currentOffset = _input.getCurrentAim().x;
 	}
-	else if (xPos + newOffset <= _minX) {
-		return;
+	else {
+		if (_currentOffset != 0) { // if a finger is lifted mid-scroll, keep scrolling
+			_prevOffset -= _currentOffset;
+			_currentOffset = 0;
+		}
+		// smoothly slow down the scroll
+		_prevOffset /= 1.2;
+	}
+
+	float newOffset = _currentOffset - _prevOffset;
+	if (xPos + newOffset >= _maxX) {
+		newOffset = _maxX - xPos;
+	}
+	if (xPos + newOffset <= _minX) {
+		newOffset = _minX - xPos;
 	}
 
 	_background->setPositionX(xPos + newOffset);
-	_prevOffset = currentOffset;
-
-	
-
-
-	// update the camera
-	//player->getNode()->getScene()->setOffset(cugl::Vec2(0,0));
-	//cugl::Vec2 cameraPos = player->getNode()->getScene()->getCamera()->getPosition();
-	//cugl::Vec2 playerPos = player->getNode()->getPosition();
-	float cameraTransX;
-	float cameraTransY;
-
-	
-
-	cameraTransX = _input.getCurrentAim().x;
-	cameraTransY = 5;
-
-	getCamera()->translate(cugl::Vec2(cameraTransX, cameraTransY));
-	
-	//cugl::Vec2 gameBound = cugl::Vec2(_gamestate->getBounds().size.getIWidth(), _gamestate->getBounds().size.getIHeight());
-	//cugl::Vec2 gameBound = _gamestate->getBounds().size * 64;
-	//float xMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
-	//float yMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
-	
-	cugl::Vec2 boundBottom = Scene::screenToWorldCoords(cugl::Vec2());
-	//cugl::Vec2 boundTop = Scene::screenToWorldCoords(cugl::Vec2(xMax,yMax));
-
-	//cameraTransX = playerPos.x - cameraPos.x;
-	//cameraTransY = playerPos.y - cameraPos.y;
-
-
-
-    //if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
-      //  cameraTransX = 0;
-    //}
-    
-    //if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
-      //  cameraTransY = 0;
-    //}
-        
-	//player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
 }
 

@@ -62,6 +62,7 @@ protected:
 	float _minX;
 	float _maxX;
 	float _prevOffset;
+	float _currentOffset;
 	
 	/** Whether or not debug mode is active */
 	bool _debug;
