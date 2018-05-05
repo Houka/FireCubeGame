@@ -99,7 +99,7 @@ void CoalideApp::onShutdown() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void CoalideApp::update(float timestep) {
-    std::string levelNames[6] = {"json/openBetaJsons/lvl1.json", "json/openBetaJsons/lvl2.json", "json/openBetaJsons/lvl3.json", "json/openBetaJsons/lvl4.json", "json/openBetaJsons/lvl5.json", "json/openBetaJsons/lvl6.json"};
+    std::string levelNames[6] = {"json/doubletrouble.json", "json/openBetaJsons/lvl2.json", "json/openBetaJsons/lvl3.json", "json/openBetaJsons/lvl4.json", "json/openBetaJsons/lvl5.json", "json/openBetaJsons/lvl6.json"};
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
 	}

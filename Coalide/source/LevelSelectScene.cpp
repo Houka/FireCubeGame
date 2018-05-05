@@ -227,16 +227,16 @@ void LevelSelectScene::update(float dt) {
 
 	float xPos = _background->getPositionX();
 	float currentOffset = _input.getCurrentAim().x;
-	if (currentOffset == 0.0) {
-		_prevOffset = 0;
-	}
+	//if (currentOffset == 0.0) {
+	//	_prevOffset = 0;
+	//}
 	float newOffset = currentOffset - _prevOffset;
 
-	CULog("xPos: %f", xPos);
-	CULog("xOffset: %f", newOffset);
+	//CULog("xPos: %f", xPos);
+	//CULog("xOffset: %f", newOffset);
 
-	CULog("maxX: %f", _maxX);
-	CULog("minX: %f", _minX);
+	//CULog("maxX: %f", _maxX);
+	//CULog("minX: %f", _minX);
 
 	if (xPos + newOffset >= _maxX) {
 		return;

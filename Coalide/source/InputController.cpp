@@ -147,9 +147,9 @@ bool InputController::didSling(bool shouldReset){
 cugl::Vec2 InputController::getCurrentAim() {
 	_currentAim = _currentTouch - _initTouch;
 
-	if (_currentAim.length() > _maxSling) {
-		_currentAim.scale(1.0 / _currentAim.length() * _maxSling);
-	}
+	//if (_currentAim.length() > _maxSling) {
+	//	_currentAim.scale(1.0 / _currentAim.length() * _maxSling);
+	//}
 
 	// _currentAim.scale(SLING_VECTOR_SCALE);
 	return _currentAim;

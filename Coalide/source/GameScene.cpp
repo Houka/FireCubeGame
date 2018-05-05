@@ -259,6 +259,12 @@ void GameScene::update(float dt) {
         world->setStepsize(SLOW_MOTION);
         if(!player->getCharging() ){
             Vec2 currentAim = _input.getCurrentAim();
+
+			// scale down the aim vector if it's larger than the biggest sling you can do
+			if (currentAim.length() > _input.getMaxSling()) {
+				currentAim.scale(1.0 / currentAim.length() * _input.getMaxSling());
+			}
+
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;
             player->_oldAngle = angle;
             if(angle > 0.0f && angle < 35.0f) {
@@ -302,9 +308,11 @@ void GameScene::update(float dt) {
                 player->switchNode(currNode, desNode);
             }
             // update the aim arrow
-            player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-            if(_input.getCurrentAim().length() > 175.0f) {
-                player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
+			//cugl::Vec2 aim = _input.getCurrentAim();
+
+            player->updateArrow(currentAim, player->getNode(), true);
+            if(currentAim.length() > 175.0f) {
+                player->updateCircle(currentAim, player->getNode(), true);
             } else
             {
                 player->updateCircle(false);

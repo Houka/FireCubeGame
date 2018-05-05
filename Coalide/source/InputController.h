@@ -206,6 +206,10 @@ public:
 	* A polling method to ask where the user is aiming
 	*/
 	cugl::Vec2 getCurrentAim();
+
+	float getMaxSling(){
+		return _maxSling; 
+	}
 };
 
 #endif /* __INPUT_CONTROLLER_H__ */
