@@ -250,7 +250,7 @@ void GameScene::update(float dt) {
     std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
-
+    
     
     
     // Touch input for sling is in pogress and sets the time slowing mechanic
@@ -260,6 +260,8 @@ void GameScene::update(float dt) {
             Vec2 currentAim = _input.getCurrentAim();
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;
             player->_oldAngle = angle;
+            
+            player->setDirectionTexture(angle, 0);
             
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);

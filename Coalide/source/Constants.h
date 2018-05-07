@@ -96,6 +96,15 @@
 
 #define MAX_IMPULSE 1.5f
 
+#define WEST_ANGLE 35.0f
+#define SOUTH_WEST_ANGLE -55.0f
+#define SOUTH_ANGLE -125.0f
+#define SOUTH_EAST_ANGLE -180.0f
+#define NORTH_WEST_ANGLE 75.0f
+#define NORTH_ANGLE 105.0f
+#define NORTH_EAST_ANGLE 145.0f
+#define EAST_ANGLE 180.0f
+
 #pragma mark -
 #pragma mark Object Types
 enum class OBJECT_TYPE : int {

@@ -32,9 +32,10 @@ private:
     /** whether the player should be stunned when they stop */
     bool _stunOnStop;
     
+    
 protected:
     std::shared_ptr<AssetManager> _assets;
-	std::shared_ptr<Node> _node;
+	std::shared_ptr<PolygonNode> _node;
     std::shared_ptr<Node> _buildupNode;
 	std::shared_ptr<Node> _chargingNode;
 	std::shared_ptr<Node> _arrow;
@@ -128,12 +129,6 @@ public:
 	bool isFire() { return _onFire; }
 
 	void setFire(bool fire) { _onFire = fire; }
-
-//    void switchStandingNode() { _standingNode->setVisible(true); _chargingNode->setVisible(false); _node = _standingNode; }
-//    void switchChargingNode() { _standingNode->setVisible(false); _chargingNode->setVisible(true); _node = _chargingNode; }
-    
-    void switchNode(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> toNode);
-    std::shared_ptr<Node> getTextNode(int state, int dir);
     
 #pragma mark -
 #pragma mark Accessors
@@ -185,14 +180,14 @@ public:
 	*
 	* @return the scene graph node representing the player.
 	*/
-	const std::shared_ptr<Node>& getNode() const { return _node; }
+	const std::shared_ptr<PolygonNode>& getNode() const { return _node; }
 
 	/**
 	* Sets the scene graph node representing the player.
 	*
 	* @param node  The scene graph node representing the player.
 	*/
-	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
+	void setNode(const std::shared_ptr<PolygonNode>& node) { _node = node; }
 
 	/**
 	* Returns the scene graph node representing the player.
@@ -210,7 +205,7 @@ public:
 	void setArrow(const std::shared_ptr<Node>& arrow) { _arrow = arrow; }
     void setCircle(const std::shared_ptr<PolygonNode>& circle) { _circle = circle; }
     
-    void setDirectionTexture(float angle);
+    void setDirectionTexture(float angle, int mode);
 
 	/**
 	* Returns the texture (key) for the player.
