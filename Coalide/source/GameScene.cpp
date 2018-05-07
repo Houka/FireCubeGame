@@ -250,6 +250,8 @@ void GameScene::update(float dt) {
     std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
+    Vec2 currentAim = _input.getCurrentAim();
+    float angle = currentAim.getAngle() * 180.0f / 3.14159f;
     
     
     
@@ -257,19 +259,11 @@ void GameScene::update(float dt) {
     if(_input.didStartSling() && !player->isStunned()){
         world->setStepsize(SLOW_MOTION);
         if(!player->getCharging() ){
-            Vec2 currentAim = _input.getCurrentAim();
-            float angle = currentAim.getAngle() * 180.0f / 3.14159f;
-            player->_oldAngle = angle;
-            
+            // changes texture of nicoal
             player->setDirectionTexture(angle, 0);
-            
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-
         }
-        
-        
-        
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
         world->setStepsize(NORMAL_MOTION);
         player->setColor(Color4::WHITE);
@@ -277,14 +271,12 @@ void GameScene::update(float dt) {
 
     // Applies vector from touch input to player and set to charging state
     if(_input.didSling(true) && player->canSling() && !player->isStunned()){
+        float angle = currentAim.getAngle() * 180.0f / 3.14159f;
         cugl::Vec2 sling = _input.getLatestSlingVector();
         player->applyLinearImpulse(sling);
         player->setCharging(true);
+        player->setDirectionTexture(angle, 2);
 //        player->updateArrow(false);
-        
-        Vec2 currentAim = _input.getCurrentAim();
-        float angle = currentAim.getAngle() * 180.0f / 3.14159f;
-        player->_oldAngle = angle;
     }
 
     // Caps player speed to MAX_PLAYER SPEED
@@ -298,15 +290,13 @@ void GameScene::update(float dt) {
         player->setCharging(false);
         player->_isSliding = true;
         player->updateCircle(false);
-
-        float angle = player->_oldAngle;
-
+        player->setDirectionTexture(angle, 3);
     }
     
     if(player->_isSliding && player->getLinearVelocity().isNearZero()){
         player->_isSliding = false;
-        float angle = player->_oldAngle;
         player->updateCircle(false);
+        player->setDirectionTexture(angle, 0);
     }
     
     if(!player->canSling()) {
