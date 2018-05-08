@@ -90,6 +90,30 @@ bool EnemyModel::inBounds(int width, int height){
 }
 
 /**
+ * Sets the texture for Nicoal based on angle facing and state
+ *
+ * @param angle  direction Nicoal facing in degrees
+ */
+void EnemyModel::setDirectionTexture(float angle){
+    if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
+        Rect enemy_south = Rect(0.0f, 0.0f, 64.0f, 64.0f);
+        _node->setPolygon(enemy_south);
+    }
+    else if(angle > TWO_ANGLE && angle <= FOUR_ANGLE){
+        Rect enemy_west = Rect(64.0f, 0.0f, 64.0f, 64.0f);
+        _node->setPolygon(enemy_west);
+    }
+    else if(angle > FOUR_ANGLE && angle <= SIX_ANGLE){
+        Rect enemy_north = Rect(128.0f, 0.0f, 64.0f, 64.0f);
+        _node->setPolygon(enemy_north);
+    }
+    else{
+        Rect enemy_east = Rect(192.0f, 0.0f, 64.0f, 64.0f);
+        _node->setPolygon(enemy_east);
+    }
+}
+
+/**
  * Returns true if the enough time has elapsed since the last sling
  */
 bool EnemyModel::timeoutElapsed(){

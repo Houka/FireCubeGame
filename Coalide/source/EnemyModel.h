@@ -284,6 +284,13 @@ public:
      * Returns true if enemy is in bounds
      */
     bool inBounds(int width, int height);
+    
+    /**
+     * Sets the texture for enemy based on angle facing and state
+     *
+     * @param angle  direction enemy facing in degrees
+     */
+    void setDirectionTexture(float angle);
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method
