@@ -100,8 +100,6 @@ bool EnemyModel::timeoutElapsed(){
 	if (isOnion()) {
 		return Timestamp().ellapsedMillis(_previousTime) >= (ONION_TIMEOUT - _rndTimerReduction);
 	}
-	/*CULog(to_string(Timestamp().ellapsedMillis(_previousTime)).c_str());
-	CULog(to_string((SLING_TIMEOUT - _rndTimerReduction)).c_str());*/
     return Timestamp().ellapsedMillis(_previousTime) >= (SLING_TIMEOUT - _rndTimerReduction);
 }
 

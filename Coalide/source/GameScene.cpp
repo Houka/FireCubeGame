@@ -54,10 +54,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// assets and input come from the CoalideApp level
 	_assets = assets;
 	_input = input;
-    
-    // Animation stuff hopefully...
-    //_actions = ActionManager::alloc();
-    //_forward = Animate::alloc(0,11,DURATION,REPEATS);
 
 	_levelKey = levelKey;
 
@@ -212,8 +208,6 @@ void GameScene::update(float dt) {
 			_enemyCount = _gamestate->getEnemies().size();
 
 			_reloading = false;
-
-			//_loadnode->setVisible(false);
 		}
 		else {
 			// Level is not loaded yet; refuse input
@@ -230,8 +224,6 @@ void GameScene::update(float dt) {
 	}
 
 	if (_complete) {
-		//reset(LEVEL_FILE);
-		//_winnode->setVisible(true);
 		_complete = false;
 		return;
 	}

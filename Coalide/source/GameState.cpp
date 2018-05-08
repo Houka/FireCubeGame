@@ -192,7 +192,6 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
             if(enemy->isOnion() || enemy->isMushroom())
                 enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()),Rect(0,0,128,128));
             else {
-                CULog("here %s", enemy->getTextureKey().c_str());
                 enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()),Rect(0,0,64,64));
             }
 			enemy->setNode(enemyNode);

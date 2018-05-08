@@ -146,13 +146,9 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
             locy += dy;
             int friction = gamestate->getBoard()[(int)floor(locy)][(int)floor(locx)];
             if(friction == 0){
-//                CULog("WATER");
                 return true;
             }
-//            CULog("inner Loop");
-
         }
-//        CULog("outer Loop %d", ct);
     }
     return false;
 }

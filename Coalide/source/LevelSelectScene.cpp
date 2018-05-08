@@ -215,7 +215,6 @@ void LevelSelectScene::update(float dt) {
 	_didClickBack = false;
 	_didClickLevel = false;
 
-	//CULog("offset: %f", _input.getCurrentAim());
 	_input.getCurrentAim();
 	
 
