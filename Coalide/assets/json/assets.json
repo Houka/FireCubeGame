@@ -4,13 +4,13 @@
       "file": "textures/nicoal.png"
     },
     "acorn": {
-      "file": "textures/spritesheet_acorn_64x64.png"
+      "file": "textures/acorn_sprite.png"
     },
     "mushroom": {
-      "file": "textures/spritesheet_mushroom_128x128.png"
+      "file": "textures/mushroom_sprite.png"
     },
     "onion": {
-      "file": "textures/spritesheet_onion_128x128.png"
+      "file": "textures/onion_sprite.png"
     },
     "tileset_forest.png": {
       "file": "textures/tileset_forest.png"

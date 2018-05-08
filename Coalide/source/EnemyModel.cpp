@@ -103,7 +103,7 @@ void EnemyModel::setDirectionTexture(float angle){
         Rect enemy_west = Rect(64.0f, 0.0f, 64.0f, 64.0f);
         _node->setPolygon(enemy_west);
     }
-    else if(angle > FOUR_ANGLE && angle <= SIX_ANGLE){
+    else if(angle > FOUR_ANGLE && angle <= SEVEN_ANGLE){
         Rect enemy_north = Rect(128.0f, 0.0f, 64.0f, 64.0f);
         _node->setPolygon(enemy_north);
     }
