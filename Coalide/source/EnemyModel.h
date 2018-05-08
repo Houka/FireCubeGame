@@ -32,7 +32,7 @@ private:
     bool _waterInbetween;
 protected:
 	/** The scene graph node for the enemy */
-	std::shared_ptr<Node> _node;
+	std::shared_ptr<PolygonNode> _node;
 	/** The texture key for the enemy */
 	std::string _texture;
 
@@ -209,14 +209,14 @@ public:
 	*
 	* @return the scene graph node representing this enemy.
 	*/
-	const std::shared_ptr<Node>& getNode() const { return _node; }
+	const std::shared_ptr<PolygonNode>& getNode() const { return _node; }
 
 	/**
 	* Sets the scene graph node representing this enemy.
 	*
 	* @param node  The scene graph node representing this enemy.
 	*/
-	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
+	void setNode(const std::shared_ptr<PolygonNode>& node) { _node = node; }
 
 	/**
 	* Returns the texture (key) for this enemy.
