@@ -94,22 +94,43 @@ bool EnemyModel::inBounds(int width, int height){
  *
  * @param angle  direction Nicoal facing in degrees
  */
-void EnemyModel::setDirectionTexture(float angle){
-    if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
-        Rect enemy_south = Rect(0.0f, 0.0f, 64.0f, 64.0f);
-        _node->setPolygon(enemy_south);
+void EnemyModel::setDirectionTexture(float angle, bool isAcorn){
+    
+    if(isAcorn){
+        if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
+            Rect enemy_south = Rect(0.0f, 0.0f, 64.0f, 64.0f);
+            _node->setPolygon(enemy_south);
+        }
+        else if(angle > TWO_ANGLE && angle <= FOUR_ANGLE){
+            Rect enemy_west = Rect(64.0f, 0.0f, 64.0f, 64.0f);
+            _node->setPolygon(enemy_west);
+        }
+        else if(angle > FOUR_ANGLE && angle <= SEVEN_ANGLE){
+            Rect enemy_north = Rect(128.0f, 0.0f, 64.0f, 64.0f);
+            _node->setPolygon(enemy_north);
+        }
+        else{
+            Rect enemy_east = Rect(192.0f, 0.0f, 64.0f, 64.0f);
+            _node->setPolygon(enemy_east);
+        }
     }
-    else if(angle > TWO_ANGLE && angle <= FOUR_ANGLE){
-        Rect enemy_west = Rect(64.0f, 0.0f, 64.0f, 64.0f);
-        _node->setPolygon(enemy_west);
-    }
-    else if(angle > FOUR_ANGLE && angle <= SEVEN_ANGLE){
-        Rect enemy_north = Rect(128.0f, 0.0f, 64.0f, 64.0f);
-        _node->setPolygon(enemy_north);
-    }
-    else{
-        Rect enemy_east = Rect(192.0f, 0.0f, 64.0f, 64.0f);
-        _node->setPolygon(enemy_east);
+    else {
+        if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
+            Rect enemy_south = Rect(0.0f, 0.0f, 128.0f, 128.0f);
+            _node->setPolygon(enemy_south);
+        }
+        else if(angle > TWO_ANGLE && angle <= FOUR_ANGLE){
+            Rect enemy_west = Rect(128.0f, 0.0f, 128.0f, 128.0f);
+            _node->setPolygon(enemy_west);
+        }
+        else if(angle > FOUR_ANGLE && angle <= SEVEN_ANGLE){
+            Rect enemy_north = Rect(256.0f, 0.0f, 128.0f, 128.0f);
+            _node->setPolygon(enemy_north);
+        }
+        else{
+            Rect enemy_east = Rect(384.0f, 0.0f, 128.0f, 128.0f);
+            _node->setPolygon(enemy_east);
+        }
     }
 }
 

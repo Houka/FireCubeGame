@@ -288,9 +288,10 @@ public:
     /**
      * Sets the texture for enemy based on angle facing and state
      *
-     * @param angle  direction enemy facing in degrees
+     * @param angle   direction enemy facing in degrees
+     * @param isAcorn if the enemy is an acorn or not
      */
-    void setDirectionTexture(float angle);
+    void setDirectionTexture(float angle, bool isAcorn);
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method

@@ -307,7 +307,8 @@ void GameScene::update(float dt) {
             enemy->applyLinearImpulse(sling);
             enemy->setCharging(true);
             float angle = sling.getAngle(Vec2(-1.0f, 0.0f)) * 180.0f / 3.14159;
-            enemy->setDirectionTexture(angle);
+            bool isAcorn = !(enemy->isOnion() || enemy->isMushroom());
+            enemy->setDirectionTexture(angle, isAcorn);
         }
     }
     
