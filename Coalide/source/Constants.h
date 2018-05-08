@@ -96,14 +96,35 @@
 
 #define MAX_IMPULSE 1.5f
 
-#define WEST_ANGLE 35.0f
-#define SOUTH_WEST_ANGLE -55.0f
-#define SOUTH_ANGLE -125.0f
-#define SOUTH_EAST_ANGLE -180.0f
-#define NORTH_WEST_ANGLE 75.0f
-#define NORTH_ANGLE 105.0f
-#define NORTH_EAST_ANGLE 145.0f
-#define EAST_ANGLE 180.0f
+/** Defines the zones for Nicoal textures
+ *     FOUR      FIVE           SIX     SEVEN
+ *       |_       |              |       _|
+ *         |_   3  |     4      |   5  _|
+ *           |_     |          |     _|
+ *             |_    |        |    _|
+ *               |_   |      |   _|
+ *           2     |_  |    |  _|      6
+ *                   |_ |  | _|
+ *  THREE _ _ _ _ _ _ _|_||_|_ _ _ _ _ _ _ _ EIGHT
+ *                      _||_
+ *                    _|    |_
+ *           1      _|        |_      7
+ *                _|            |_
+ *              _|       0        |_
+ *            _|                    |_
+ *          _|                        |_
+ *    TWO  |                            | ONE
+ */
+
+
+#define ONE_ANGLE -135.0f
+#define TWO_ANGLE -45.0f
+#define THREE_ANGLE 0.0f
+#define FOUR_ANGLE 35.0f
+#define FIVE_ANGLE 75.0f
+#define SIX_ANGLE 105.0f
+#define SEVEN_ANGLE 145.0f
+#define EIGHT_ANGLE 180.0f
 
 #pragma mark -
 #pragma mark Object Types

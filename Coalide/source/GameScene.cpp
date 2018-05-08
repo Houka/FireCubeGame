@@ -243,9 +243,8 @@ void GameScene::update(float dt) {
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
     Vec2 currentAim = _input.getCurrentAim();
+    // Much easier to work in degrees...
     float angle = currentAim.getAngle() * 180.0f / 3.14159f;
-    
-    
     
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
@@ -267,6 +266,7 @@ void GameScene::update(float dt) {
         cugl::Vec2 sling = _input.getLatestSlingVector();
         player->applyLinearImpulse(sling);
         player->setCharging(true);
+        // changes texture of nicoal
         player->setDirectionTexture(angle, 2);
 //        player->updateArrow(false);
     }
@@ -282,12 +282,14 @@ void GameScene::update(float dt) {
         player->setCharging(false);
         player->_isSliding = true;
         player->updateCircle(false);
+        // changes texture of nicoal
         player->setDirectionTexture(angle, 3);
     }
     
     if(player->_isSliding && player->getLinearVelocity().isNearZero()){
         player->_isSliding = false;
         player->updateCircle(false);
+        // changes texture of nicoal
         player->setDirectionTexture(angle, 0);
     }
     

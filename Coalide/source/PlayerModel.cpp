@@ -84,35 +84,35 @@ bool PlayerModel::inBounds(int width, int height){
 void PlayerModel::setDirectionTexture(float angle, int mode){
     float row_texture = 448.0f - (mode * 64.0f);
     
-    if(angle < SOUTH_WEST_ANGLE && angle > SOUTH_ANGLE){
+    if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
         Rect nicoal_south = Rect(0.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_south);
     }
-    else if(angle < 0.0f && angle > SOUTH_WEST_ANGLE){
+    else if(angle > TWO_ANGLE && angle <= THREE_ANGLE){
         Rect nicoal_south_west = Rect(64.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_south_west);
     }
-    else if(angle < WEST_ANGLE && angle > 0.0f){
+    else if(angle > THREE_ANGLE && angle <= FOUR_ANGLE){
         Rect nicoal_west = Rect(128.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_west);
     }
-    else if(angle < NORTH_WEST_ANGLE && angle > WEST_ANGLE){
+    else if(angle > FOUR_ANGLE && angle <= FIVE_ANGLE){
         Rect nicoal_north_west = Rect(192.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_north_west);
     }
-    else if(angle < NORTH_ANGLE && angle > NORTH_WEST_ANGLE){
+    else if(angle > FIVE_ANGLE && angle <= SIX_ANGLE){
         Rect nicoal_north = Rect(256.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_north);
     }
-    else if(angle < NORTH_EAST_ANGLE && angle > NORTH_ANGLE){
+    else if(angle > SIX_ANGLE && angle <= SEVEN_ANGLE){
         Rect nicoal_north_east = Rect(320.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_north_east);
     }
-    else if(angle < EAST_ANGLE && angle > NORTH_EAST_ANGLE){
+    else if(angle > SEVEN_ANGLE && angle <= EIGHT_ANGLE){
         Rect nicoal_east = Rect(384.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_east);
     }
-    else if(angle < SOUTH_EAST_ANGLE && angle > EAST_ANGLE){
+    else{
         Rect nicoal_south_east = Rect(448.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_south_east);
     }
