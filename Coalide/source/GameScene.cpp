@@ -306,8 +306,7 @@ void GameScene::update(float dt) {
             Vec2 sling = std::get<1>(pair);
             enemy->applyLinearImpulse(sling);
             enemy->setCharging(true);
-            float angle = sling.negate().getAngle() * 180.0f / 3.14159;
-            CULog("Enemy Angle: %f", angle);
+            float angle = sling.getAngle(Vec2(-1.0f, 0.0f)) * 180.0f / 3.14159;
             enemy->setDirectionTexture(angle);
         }
     }
