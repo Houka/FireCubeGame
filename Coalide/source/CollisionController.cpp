@@ -50,7 +50,8 @@ void CollisionController::beginContact(b2Contact* contact) {
 		}
 
 		if (soB->getName() == "player") {
-			PlayerModel* player = (PlayerModel*)soB;	
+			PlayerModel* player = (PlayerModel*)soB;
+            player->setDirectionTexture(0.0f, 5);
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
 				player->stunOnStop(4500);
@@ -73,6 +74,9 @@ void CollisionController::beginContact(b2Contact* contact) {
 
 		if (soA->getName() == "player") {
 			PlayerModel* player = (PlayerModel*)soA;
+            float angle = player->getLinearVelocity().getAngle();
+            player->setDirectionTexture(angle, 5);
+
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
 				player->stunOnStop(4500);
