@@ -254,6 +254,7 @@ void GameScene::update(float dt) {
             player->setDirectionTexture(angle, 0);
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
+            player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
         }
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
         world->setStepsize(NORMAL_MOTION);
@@ -268,7 +269,6 @@ void GameScene::update(float dt) {
         player->setCharging(true);
         // changes texture of nicoal
         player->setDirectionTexture(angle, 2);
-//        player->updateArrow(false);
     }
 
     // Caps player speed to MAX_PLAYER SPEED
