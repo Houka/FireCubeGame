@@ -255,7 +255,7 @@ void GameScene::update(float dt) {
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
             player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
-            CULog("%f", _input.getCurrentAim().length());
+            CULog("%d", player->getPlayerDirection());
             if(_input.getCurrentAim().length() > 200.0f) {
                 player->setDirectionTexture(angle, 1);
             }
@@ -281,6 +281,11 @@ void GameScene::update(float dt) {
         player->setLinearVelocity(capped_speed);
     }
     
+    if(player->getCoalided() && player->getLinearVelocity().length() <= 0.0f){
+        player->setDirectionTexture(player->getPlayerDirection(), 0);
+        player ->setCoalided(false);
+    }
+
     // Changes player state from charging if below speed threshold
     if(player->getCharging() && player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
         player->setCharging(false);

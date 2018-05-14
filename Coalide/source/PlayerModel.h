@@ -31,6 +31,10 @@ private:
     Vec2 _sizePlayer;
     /** whether the player should be stunned when they stop */
     bool _stunOnStop;
+    /** direction Nicoal is facing based on regions set up in constants file */
+    int player_direction;
+    /** Whether Nicoal got hit in mid collision */
+    bool _collided;
     
     
 protected:
@@ -84,7 +88,7 @@ public:
 	*
 	* @return  true if the obstacle is initialized properly, false otherwise.
 	*/
-	virtual bool init(const Vec2& pos, const Size& size);
+	virtual bool init(const Vec2& pos, const Size& size) override;
 
 
 #pragma mark Static Constructors
@@ -206,6 +210,13 @@ public:
     void setCircle(const std::shared_ptr<PolygonNode>& circle) { _circle = circle; }
     
     void setDirectionTexture(float angle, int mode);
+    void setDirectionTexture(int dir, int mode);
+    
+    void setPlayerDirection(int dir) { player_direction = dir; }
+    int getPlayerDirection() {return player_direction; }
+    
+    void setCoalided(bool collided) { _collided = collided; }
+    bool getCoalided() {return _collided; }
 
 	/**
 	* Returns the texture (key) for the player.

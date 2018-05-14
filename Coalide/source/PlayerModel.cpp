@@ -87,34 +87,87 @@ void PlayerModel::setDirectionTexture(float angle, int mode){
     if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
         Rect nicoal_south = Rect(0.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_south);
+        player_direction = 0;
     }
     else if(angle > TWO_ANGLE && angle <= THREE_ANGLE){
         Rect nicoal_south_west = Rect(64.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_south_west);
+        player_direction = 1;
     }
     else if(angle > THREE_ANGLE && angle <= FOUR_ANGLE){
         Rect nicoal_west = Rect(128.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_west);
+        player_direction = 2;
     }
     else if(angle > FOUR_ANGLE && angle <= FIVE_ANGLE){
         Rect nicoal_north_west = Rect(192.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_north_west);
+        player_direction = 3;
     }
     else if(angle > FIVE_ANGLE && angle <= SIX_ANGLE){
         Rect nicoal_north = Rect(256.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_north);
+        player_direction = 4;
     }
     else if(angle > SIX_ANGLE && angle <= SEVEN_ANGLE){
         Rect nicoal_north_east = Rect(320.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_north_east);
+        player_direction = 5;
     }
     else if(angle > SEVEN_ANGLE && angle <= EIGHT_ANGLE){
         Rect nicoal_east = Rect(384.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_east);
+        player_direction = 6;
     }
     else{
         Rect nicoal_south_east = Rect(448.0f, row_texture, 64.0f, 64.0f);
         _node->setPolygon(nicoal_south_east);
+        player_direction = 7;
+    }
+}
+
+void PlayerModel::setDirectionTexture(int dir, int mode){
+    float row_texture = 512.0f - (mode * 64.0f);
+    
+    if(dir == 0){
+        Rect nicoal_south = Rect(0.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_south);
+        player_direction = 0;
+    }
+    else if(dir == 1){
+        Rect nicoal_south_west = Rect(64.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_south_west);
+        player_direction = 1;
+    }
+    else if(dir == 2){
+        Rect nicoal_west = Rect(128.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_west);
+        player_direction = 2;
+    }
+    else if(dir == 3){
+        Rect nicoal_north_west = Rect(192.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_north_west);
+        player_direction = 3;
+    }
+    else if(dir == 4){
+        Rect nicoal_north = Rect(256.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_north);
+        player_direction = 4;
+    }
+    else if(dir == 5){
+        Rect nicoal_north_east = Rect(320.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_north_east);
+        player_direction = 5;
+    }
+    else if(dir == 6){
+        Rect nicoal_east = Rect(384.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_east);
+        player_direction = 6;
+    }
+    else{
+        Rect nicoal_south_east = Rect(448.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_south_east);
+        player_direction = 7;
     }
 }
 
@@ -125,8 +178,6 @@ void PlayerModel::setDirectionTexture(float angle, int mode){
 */
 void PlayerModel::updateArrow(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bool visible) {
     aim *= -.3;
-	cugl::Vec2 playerImageOffset = cugl::Vec2(_node->getWidth() / 2.0, _node->getHeight() / 2.0);
-
 	//float scaleFactor = aim.length();
     float angle = -1 * aim.getAngle();
     angle += 2.35619;
