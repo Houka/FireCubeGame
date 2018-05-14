@@ -255,6 +255,10 @@ void GameScene::update(float dt) {
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
             player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
+            CULog("%f", _input.getCurrentAim().length());
+            if(_input.getCurrentAim().length() > 200.0f) {
+                player->setDirectionTexture(angle, 1);
+            }
         }
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
         world->setStepsize(NORMAL_MOTION);
@@ -295,7 +299,7 @@ void GameScene::update(float dt) {
     
     if(!player->canSling()) {
         player->updateArrow(false);
-        //player->updateCircle(false);
+        player->updateCircle(false);
     }
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state

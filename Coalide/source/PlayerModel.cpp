@@ -82,7 +82,7 @@ bool PlayerModel::inBounds(int width, int height){
  * @param mode   the state of Nicoal (standing, sliding, chargning, etc)
  */
 void PlayerModel::setDirectionTexture(float angle, int mode){
-    float row_texture = 448.0f - (mode * 64.0f);
+    float row_texture = 512.0f - (mode * 64.0f);
     
     if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
         Rect nicoal_south = Rect(0.0f, row_texture, 64.0f, 64.0f);
