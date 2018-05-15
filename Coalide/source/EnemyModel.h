@@ -169,6 +169,8 @@ public:
      */
     void setCharging(bool charge) { _charging = charge; }
     
+	Vec2 getPosition();
+
     /**
      * Sets whether enemy is charging or floored.
      *

@@ -55,7 +55,7 @@
 #define MIN_SPEED_FOR_CHARGING 5.0f
 #define GLOBAL_AIR_DRAG 1.5f
 
-#define UNIT_DIM Vec2(1,1)
+#define UNIT_DIM Vec2(1,.5)
 
 #pragma	mark -
 #pragma mark Level Constants

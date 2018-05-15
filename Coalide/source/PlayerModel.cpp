@@ -39,9 +39,11 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
         _charging = false;
         _sizePlayer = size;
 
-		setDensity(2.0f);
+		setDensity(4.0f);
 		setRestitution(0.4f);
 		setFixedRotation(true);
+
+		
 
 		_stunned = false;
         _stunOnStop = false;
@@ -428,6 +430,10 @@ void PlayerModel::updateArrow(bool visible) {
 
 void PlayerModel::updateCircle(bool visible) {
     _circle->setVisible(visible);
+}
+
+Vec2 PlayerModel::getPosition() {
+	return Vec2(CapsuleObstacle::getPosition().x, CapsuleObstacle::getPosition().y + 0.25);
 }
 
 

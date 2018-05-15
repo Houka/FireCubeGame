@@ -255,7 +255,6 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
     // player
     auto player = objects->get("player");
     _player = PlayerModel::alloc(Vec2(player->get("col")->asInt() + .5, rows - player->get("row")->asInt() - .5), UNIT_DIM);
-    
     _world->addObstacle(_player);
     
     //acorns
@@ -265,7 +264,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 
         int r = acorn->get("row")->asInt();
         int c = acorn->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), Vec2(0.8, 0.5));
         enemy->setTextureKey(ACORN);
         
         _world->addObstacle(enemy);

@@ -29,10 +29,10 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		setName(ENEMY_NAME);
 		setBodyType(b2_dynamicBody);
         setLinearDamping(GLOBAL_AIR_DRAG);
-		
+
 		_node = nullptr;
 
-		setDensity(2.0f);
+		setDensity(4.8f);
 		setRestitution(0.4f);
 		setFixedRotation(true);
 
@@ -101,6 +101,10 @@ bool EnemyModel::timeoutElapsed(){
 	/*CULog(to_string(Timestamp().ellapsedMillis(_previousTime)).c_str());
 	CULog(to_string((SLING_TIMEOUT - _rndTimerReduction)).c_str());*/
     return Timestamp().ellapsedMillis(_previousTime) >= (SLING_TIMEOUT - _rndTimerReduction);
+}
+
+Vec2 EnemyModel::getPosition() {
+	return Vec2(CapsuleObstacle::getPosition().x, CapsuleObstacle::getPosition().y + 0.25);
 }
 
 /**

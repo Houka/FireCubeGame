@@ -241,8 +241,8 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
         _player->setCircle(_circle);
         
         // Create the polygon node (empty, as the model will initialize)
-        _worldnode->addChild(_arrow, UNIT_PRIORITY);
-        _worldnode->addChild(_circle, UNIT_PRIORITY);
+        _worldnode->addChild(_arrow, 1);
+        _worldnode->addChild(_circle, 1);
         _worldnode->addChild(playerNode, UNIT_PRIORITY);
         _worldnode->addChild(standingPlayerNode_f, UNIT_PRIORITY);
         _worldnode->addChild(standingPlayerNode_fls, UNIT_PRIORITY);
@@ -278,7 +278,6 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
             if(enemy->isOnion() || enemy->isMushroom())
                 enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()),Rect(0,0,128,128));
             else {
-                CULog("here %s", enemy->getTextureKey().c_str());
                 enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()),Rect(0,0,64,64));
             }
 			enemy->setNode(enemyNode);
@@ -424,7 +423,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_uiNode->addChild(_nextButton, UNIT_PRIORITY);
 	_uiNode->addChild(_restartButton, UNIT_PRIORITY);
 	
-	_worldnode->addChild(_uiNode, 2);
+	_worldnode->addChild(_uiNode, 10000);
 }
 
 void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {

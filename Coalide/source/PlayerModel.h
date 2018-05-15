@@ -271,6 +271,8 @@ public:
     void setColor(Color4 c){
         _color = c;
     }
+
+	Vec2 getPosition();
     
     /**
      * Is this player already stopping soon

@@ -248,11 +248,10 @@ void GameScene::update(float dt) {
 		Application::get()->quit();
 	}
 
-
-    std::shared_ptr<ObstacleWorld> world = _gamestate->getWorld();
-    std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
-    Size gameBounds = _gamestate->getBounds().size;
-    Vec2 player_pos = player->getPosition();
+	std::shared_ptr<ObstacleWorld> world = _gamestate->getWorld();
+	std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
+	Size gameBounds = _gamestate->getBounds().size;
+	Vec2 player_pos = player->getPosition();
 
     
 //    player->getCircle()
@@ -497,6 +496,23 @@ void GameScene::update(float dt) {
     if (_enemyCount == 0) {
         _complete = true;
     }
+
+	player->getNode()->setZOrder((_gamestate->getBounds().size.height - player->getPosition().y)*100);
+
+	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
+		std::shared_ptr<EnemyModel> enemy = _gamestate->getEnemies()[i];
+		enemy->getNode()->setZOrder((_gamestate->getBounds().size.height - enemy->getPosition().y)*100);
+	}
+
+	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
+		std::shared_ptr<ObjectModel> object = _gamestate->getObjects()[i];
+		object->getNode()->setZOrder((_gamestate->getBounds().size.height - object->getPosition().y)*100);
+		CULog(to_string(object->getNode()->getZOrder()).c_str());
+	}
+
+	//CULog(to_string(player->getNode()->getZOrder()).c_str());
+
+	_gamestate->getWorldNode()->sortZOrder();
 
     // Update the physics world
     _gamestate->getWorld()->update(dt);
