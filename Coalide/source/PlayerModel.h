@@ -6,6 +6,7 @@
 #define __PLAYER_MODEL_H__
 #include <cugl/cugl.h>
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
+#include "Constants.h"
 
 using namespace cugl;
 
@@ -24,6 +25,9 @@ private:
     bool _shouldStopSoon;
     /** charging or floored */
     bool _charging;
+
+	bool _superCollide;
+	int _superCollideTimer;
     
 	/** milliseconds of stun */
     int _stunDuration;
@@ -274,6 +278,13 @@ public:
 
 	Vec2 getPosition();
     
+	void setSuperCollide(bool superCollide) {
+		_superCollideTimer = SUPER_COLLISION_LENGTH;
+		_superCollide = superCollide;
+	}
+
+	bool isSuperCollide();
+
     /**
      * Is this player already stopping soon
      */

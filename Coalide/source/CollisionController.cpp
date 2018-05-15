@@ -57,6 +57,8 @@ void CollisionController::beginContact(b2Contact* contact) {
 				if (!enemy->alreadyStopping() && enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
 					enemy->setShouldStop();
 			}
+
+			player->setSuperCollide(true);
 		}
 
 		if (enemy->isOnion() && !enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)) {
@@ -80,6 +82,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 					enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
 					enemy->setShouldStop();
 			}
+			player->setSuperCollide(true);
 		}
 
         if (enemy->isOnion() && !enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF)) {

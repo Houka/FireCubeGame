@@ -60,6 +60,19 @@ void CoalideApp::onStartup() {
     Application::onStartup();
 }
 
+
+void CoalideApp::onSuspend() {
+	Application::onSuspend();
+	AudioEngine::get()->pauseAll();
+}
+
+
+void CoalideApp::onResume() {
+	Application::onResume();
+	AudioEngine::get()->resumeAll();
+}
+
+
 /**
  * The method called when the application is ready to quit.
  *
@@ -84,6 +97,7 @@ void CoalideApp::onShutdown() {
 #else
     Input::deactivate<Mouse>();
 #endif
+	AudioEngine::stop();
     Application::onShutdown();
 }
 

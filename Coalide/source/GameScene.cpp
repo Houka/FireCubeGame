@@ -498,12 +498,18 @@ void GameScene::update(float dt) {
     }
     
     updateFriction();
-    
+
+	// Super collisions
+	if (player->isSuperCollide()) {
+		world->setStepsize(SUPER_COLLISION_MOTION);
+	}
+
     // LEVEL COMPLETE: If all enemies are dead then level completed
     if (_enemyCount == 0) {
         _complete = true;
     }
 
+	// Resort draw order
 	player->getNode()->setZOrder((_gamestate->getBounds().size.height - player->getPosition().y)*100);
 
 	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
@@ -516,8 +522,6 @@ void GameScene::update(float dt) {
 		object->getNode()->setZOrder((_gamestate->getBounds().size.height - object->getPosition().y)*100);
 		CULog(to_string(object->getNode()->getZOrder()).c_str());
 	}
-
-	//CULog(to_string(player->getNode()->getZOrder()).c_str());
 
 	_gamestate->getWorldNode()->sortZOrder();
 

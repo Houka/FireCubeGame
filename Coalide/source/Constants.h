@@ -20,6 +20,8 @@
 
 #define STUN_TIME 15
 
+#define SUPER_COLLISION_LENGTH 40;
+
 #pragma mark -
 #pragma mark Model Constants
 
@@ -92,6 +94,7 @@
 /** Time slowdown rates */
 #define NORMAL_MOTION .015625
 #define SLOW_MOTION .002
+#define SUPER_COLLISION_MOTION .001
 
 #define MAX_PLAYER_SPEED 20
 

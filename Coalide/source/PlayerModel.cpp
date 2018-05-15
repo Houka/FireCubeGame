@@ -48,6 +48,8 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		_stunned = false;
         _stunOnStop = false;
 		_onFire = false;
+		_superCollide = false;
+		_superCollideTimer = 0;
 
 		return true;
 	}
@@ -383,6 +385,18 @@ bool PlayerModel::inBounds(int width, int height){
     b2Vec2 position = _body->GetPosition();
     return (position.x > 0 && position.y > 0 && position.x < width && position.y < height);
 }
+
+
+bool PlayerModel::isSuperCollide() {
+	if (_superCollide && _superCollideTimer > 0) {
+		_superCollideTimer -= 1;
+	}
+	else {
+		_superCollide = false;
+	}
+	return _superCollide;
+}
+
 
 /**
 * Updates the aim arrow.
