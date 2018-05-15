@@ -311,11 +311,9 @@ void GameScene::update(float dt) {
                 player->switchNode(currNode, desNode);
             }
             // update the aim arrow
-			//cugl::Vec2 aim = _input.getCurrentAim();
-
-            player->updateArrow(currentAim, player->getNode(), true);
-            if(currentAim.length() > 175.0f) {
-                player->updateCircle(currentAim, player->getNode(), true);
+            player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
+            if(_input.getCurrentAim().length() > 175.0f && _input.getCameraPan().length() == 0) {
+                player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
             } else
             {
                 player->updateCircle(false);
