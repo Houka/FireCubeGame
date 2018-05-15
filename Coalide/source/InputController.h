@@ -211,6 +211,10 @@ public:
 	cugl::Vec2 getCurrentAim();
 
 	cugl::Vec2 getCameraPan() { return _cameraPan; };
+	
+	float getMaxSling(){
+		return _maxSling; 
+	}
 };
 
 #endif /* __INPUT_CONTROLLER_H__ */

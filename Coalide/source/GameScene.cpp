@@ -89,6 +89,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	_gamestate->resetDidClickRestart();
 	_gamestate->resetDidClickNext();
 	_gamestate->resetDidClickMute();
+	_gameover = false;
+	_complete = false;
 
 	// initialize the camera
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
@@ -234,7 +236,6 @@ void GameScene::update(float dt) {
 	}
 
 	if (_complete) {
-		//_complete = false;
 		_gamestate->showWinScreen(true);
 		return;
 	}
@@ -261,6 +262,12 @@ void GameScene::update(float dt) {
         world->setStepsize(SLOW_MOTION);
         if(!player->getCharging() ){
             Vec2 currentAim = _input.getCurrentAim();
+
+			// scale down the aim vector if it's larger than the biggest sling you can do
+			if (currentAim.length() > _input.getMaxSling()) {
+				currentAim.scale(1.0 / currentAim.length() * _input.getMaxSling());
+			}
+
             float angle = currentAim.getAngle() * 180.0f / 3.14159f;
             player->_oldAngle = angle;
             if(angle > 0.0f && angle < 35.0f) {
@@ -304,9 +311,11 @@ void GameScene::update(float dt) {
                 player->switchNode(currNode, desNode);
             }
             // update the aim arrow
-            player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-            if(_input.getCurrentAim().length() > 175.0f) {
-                player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
+			//cugl::Vec2 aim = _input.getCurrentAim();
+
+            player->updateArrow(currentAim, player->getNode(), true);
+            if(currentAim.length() > 175.0f) {
+                player->updateCircle(currentAim, player->getNode(), true);
             } else
             {
                 player->updateCircle(false);
@@ -714,6 +723,7 @@ void GameScene::reset(const std::string& file) {
 	_gamestate = _assets->get<LevelController>(_levelKey)->getGameState();
 	setComplete(false);
 	_gameover = false;
+	_complete = false;
 	_gamestate->resetDidClickMenu();
 
 	_ai.init(_gamestate);
