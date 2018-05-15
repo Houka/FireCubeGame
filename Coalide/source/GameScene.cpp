@@ -282,8 +282,12 @@ void GameScene::update(float dt) {
     }
     
     if(player->getCoalided() && player->getLinearVelocity().length() <= 0.0f){
-        player->setDirectionTexture(player->getPlayerDirection(), 0);
-        player ->setCoalided(false);
+        if(player->isStunned()){
+            player->setDirectionTexture(player->getPlayerDirection(), 7);
+        } else {
+            player->setDirectionTexture(player->getPlayerDirection(), 0);
+            player ->setCoalided(false);
+        }
     }
 
     // Changes player state from charging if below speed threshold
@@ -404,6 +408,7 @@ void GameScene::updateFriction() {
         if (!player->getCharging()) {
             float friction = _gamestate->getBoard()[(int)floor(player_pos.y - 0.35)][(int)floor(player_pos.x)];
             if (friction == 0) {
+                player->setDirectionTexture(player->getPlayerDirection(), 8);
                 _gameover = true;
             }
             else if (friction != player->getFriction()) {
@@ -417,6 +422,7 @@ void GameScene::updateFriction() {
     else {
         player->setFriction(0);
         player->setCharging(false);
+        player->setDirectionTexture(player->getPlayerDirection(), 8);
         _gameover = true;
     }
 

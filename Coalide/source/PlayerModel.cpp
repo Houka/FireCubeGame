@@ -230,10 +230,10 @@ void PlayerModel::update(float dt) {
 		_node->setPosition(getPosition()*_drawscale);
 		_node->setAngle(getAngle());
         if(_stunned){
-            _node->setColor(Color4::GREEN);
+//            _node->setColor(Color4::GREEN);
         }
         else {
-            _node->setColor(_color);
+//            _node->setColor(_color);
         }
 	}
     if(_shouldStopSoon && Timestamp().ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
