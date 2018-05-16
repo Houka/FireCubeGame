@@ -503,14 +503,14 @@ void GameScene::update(float dt) {
 	// Super collisions
 	if (player->isSuperCollide()) {
 		world->setStepsize(SUPER_COLLISION_MOTION);
-		if (getCamera()->getZoom() < 2) {
+		if (getCamera()->getZoom() < 3) {
 			getCamera()->setZoom(getCamera()->getZoom() + 0.08);
 			noSmoothPan = true;
 		}
 	}
 	else if (getCamera()->getZoom() > 1) {
 		world->setStepsize(NORMAL_MOTION);
-		getCamera()->setZoom(getCamera()->getZoom() - 0.08);
+		getCamera()->setZoom(getCamera()->getZoom() - 0.16);
 		noSmoothPan = true;
 	}
 

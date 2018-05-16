@@ -58,7 +58,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 					enemy->setShouldStop();
 			}
 
-			if (player->getLinearVelocity().length() > 7) {
+			if (player->getLinearVelocity().length() > 9) {
 				player->setSuperCollide(true); 
 			}
 		}
@@ -84,7 +84,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 					enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
 					enemy->setShouldStop();
 			}
-			if (player->getLinearVelocity().length() > 7) {
+			if (player->getLinearVelocity().length() > 9) {
 				player->setSuperCollide(true);
 			}
 		}
