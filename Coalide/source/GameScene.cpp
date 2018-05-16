@@ -499,14 +499,25 @@ void GameScene::update(float dt) {
     
     updateFriction();
 
+	bool noSmoothPan = false;
 	// Super collisions
 	if (player->isSuperCollide()) {
 		world->setStepsize(SUPER_COLLISION_MOTION);
+		if (getCamera()->getZoom() < 2) {
+			getCamera()->setZoom(getCamera()->getZoom() + 0.08);
+			noSmoothPan = true;
+		}
+	}
+	else if (getCamera()->getZoom() > 1) {
+		world->setStepsize(NORMAL_MOTION);
+		getCamera()->setZoom(getCamera()->getZoom() - 0.08);
+		noSmoothPan = true;
 	}
 
     // LEVEL COMPLETE: If all enemies are dead then level completed
     if (_enemyCount == 0) {
         _complete = true;
+		getCamera()->setZoom(1);
     }
 
 	// Resort draw order
@@ -520,7 +531,7 @@ void GameScene::update(float dt) {
 	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
 		std::shared_ptr<ObjectModel> object = _gamestate->getObjects()[i];
 		object->getNode()->setZOrder((_gamestate->getBounds().size.height - object->getPosition().y)*100);
-		CULog(to_string(object->getNode()->getZOrder()).c_str());
+		//CULog(to_string(object->getNode()->getZOrder()).c_str());
 	}
 
 	_gamestate->getWorldNode()->sortZOrder();
@@ -553,20 +564,21 @@ void GameScene::update(float dt) {
 
 	// update the camera
 	player->getNode()->getScene()->setOffset(cugl::Vec2(0,0));
-	cugl::Vec2 cameraPos = player->getNode()->getScene()->getCamera()->getPosition();
+	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	cugl::Vec2 playerPos = player->getNode()->getPosition();
 	float cameraTransX = 0;
 	float cameraTransY = 0;
 	
 	//cugl::Vec2 gameBound = cugl::Vec2(_gamestate->getBounds().size.getIWidth(), _gamestate->getBounds().size.getIHeight());
 	cugl::Vec2 gameBound = _gamestate->getBounds().size * 64;
-	float xMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
-	float yMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
+	float xMax = getCamera()->getViewport().getMaxX();
+	float yMax = getCamera()->getViewport().getMaxY();
 	
 	cugl::Vec2 boundBottom = Scene::screenToWorldCoords(cugl::Vec2());
 	cugl::Vec2 boundTop = Scene::screenToWorldCoords(cugl::Vec2(xMax,yMax));
 
 	cugl::Vec2 pan = _input.getCameraPan();
+
 	if (pan.length() > 0) {
 		cameraTransX = pan.x;
 		cameraTransY = pan.y;
@@ -576,28 +588,32 @@ void GameScene::update(float dt) {
 		cameraTransY = playerPos.y - cameraPos.y;
 
 		// smooth pan
-		if (std::abs(cameraTransX) > 5) {
-			cameraTransX *= .05;
-		}
+		if (!noSmoothPan) {
+			if (std::abs(cameraTransX) > 5) {
+				cameraTransX *= .05;
+			}
 
-		if (std::abs(cameraTransY) > 5) {
-			cameraTransY *= .05;
+			if (std::abs(cameraTransY) > 5) {
+				cameraTransY *= .05;
+			}
 		}
 	}
 	
 	//CULog(pan.toString().c_str());
 
-    if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
-        cameraTransX = 0;
-    }
-    
-    if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
-        cameraTransY = 0;
-    }
+	if (!noSmoothPan) {
+		if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0)) {
+			cameraTransX = 0;
+		}
+
+		if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
+			cameraTransY = 0;
+		}
+	}
     
 
-	_gamestate->setUIPosition(player->getNode()->getScene()->getCamera()->getPosition());
-	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(round(cameraTransX),round(cameraTransY)));
+	_gamestate->setUIPosition(getCamera()->getPosition());
+	getCamera()->translate(cugl::Vec2(round(cameraTransX),round(cameraTransY)));
 	
 }
 
