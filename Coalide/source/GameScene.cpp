@@ -39,7 +39,7 @@ using namespace cugl;
 */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey) {
     //set application to right color
-    Application::get()->setClearColor(Color4(15,82,186,255));
+    Application::get()->setClearColor(Color4(86,210,212,255));
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= GAME_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -414,6 +414,9 @@ void GameScene::update(float dt) {
         if (object->isBroken()) {
             removeObject(object);
         }
+		else if (object->isAnimating()) {
+			object->animate();
+		}
     }
     
     _gamestate->getWorld()->garbageCollect();
@@ -552,7 +555,9 @@ void GameScene::updateFriction() {
 		if (object_pos.x > 0 && object_pos.y > 0 && object_pos.x < _gamestate->getBounds().size.getIWidth() && object_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(object_pos.y)][(int)floor(object_pos.x)];
 			if (friction == 0) {
-				removeObject(object);
+				if (object->isMovable()) {
+					object->animate();
+				}
 			}
 			else if (friction != object->getFriction()) {
 				object->setFriction(friction);

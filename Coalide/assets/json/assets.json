@@ -22,9 +22,12 @@
       "file": "textures/tileset_water.png"
     },
     "immobile": {
-      "file": "textures/spritesheet_stone.png"
+      "file": "textures/stone.png"
     },
     "movable": {
+      "file": "textures/spritesheet_unbreakable_crate.png"
+    },
+    "breakable": {
       "file": "textures/spritesheet_crate.png"
     },
     "menu": {

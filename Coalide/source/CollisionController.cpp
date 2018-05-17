@@ -44,7 +44,6 @@ void CollisionController::beginContact(b2Contact* contact) {
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
 	if (soA->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soA;
-		enemy->setSparky(true);
 
 		if (enemy->isSpore()) {
 			enemy->setDestroyed();
@@ -54,7 +53,13 @@ void CollisionController::beginContact(b2Contact* contact) {
 			PlayerModel* player = (PlayerModel*)soB;
             //player->setDirectionTexture(player->getPlayerDirection(), 5);
             player->setCoalided(true);
-			player->setSparky(true);
+			
+			if (enemy->getLinearVelocity().length() > MIN_SPEED_FOR_CHARGING) {
+				player->setSparky(true);
+			}
+			if (player->getLinearVelocity().length() > MIN_SPEED_FOR_CHARGING) {
+				enemy->setSparky(true);
+			}
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
 				player->stunOnStop(4500);
@@ -74,7 +79,6 @@ void CollisionController::beginContact(b2Contact* contact) {
 
 	if (soB->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soB;
-		enemy->setSparky(true);
 
 		if (enemy->isSpore()) {
 			enemy->setDestroyed();
@@ -85,8 +89,13 @@ void CollisionController::beginContact(b2Contact* contact) {
             float angle = player->getLinearVelocity().getAngle();
             player->setDirectionTexture(player->getPlayerDirection(), 5);
             player->setCoalided(true);
-			player->setSparky(true);
 
+			if (enemy->getLinearVelocity().length() > MIN_SPEED_FOR_CHARGING) {
+				player->setSparky(true);
+			}
+			if (player->getLinearVelocity().length() > MIN_SPEED_FOR_CHARGING) {
+				enemy->setSparky(true);
+			}
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
 				player->stunOnStop(4500);
@@ -140,11 +149,11 @@ void CollisionController::beginContact(b2Contact* contact) {
 	// Remove broken objects
 	if (soA->getName() == BREAKABLE_NAME) {
 		ObjectModel* object = (ObjectModel*)soA;
-		object->setBroken();
+		object->setAnimating();
 	}
 	else if (soB->getName() == BREAKABLE_NAME) {
 		ObjectModel* object = (ObjectModel*)soB;
-		object->setBroken();
+		object->setAnimating();
 	}
 }
 

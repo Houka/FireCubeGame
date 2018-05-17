@@ -308,7 +308,24 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         _enemies.push_back(enemy);
     }
     
-    //crates
+	//breakable crates
+	/*auto breakableCrateArray = objects->get("breakableCrates");
+	for (auto breakableCrate : breakableCrateArray->_children) {
+		std::shared_ptr<ObjectModel> object;
+
+		int r = breakableCrate->get("row")->asInt();
+		int c = breakableCrate->get("col")->asInt();
+		object = ObjectModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
+		object->setTextureKey(BREAKABLE_NAME);
+		object->setName(BREAKABLE_NAME);
+		object->setBodyType(b2_dynamicBody);
+		object->setType(OBJECT_TYPE::BREAKABLE);
+
+		_world->addObstacle(object);
+		_objects.push_back(object);
+	}*/
+
+    //movable crates
     auto crateArray = objects->get("crates");
     for(auto crate : crateArray->_children){
         std::shared_ptr<ObjectModel> object;
@@ -316,9 +333,10 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int r = crate->get("row")->asInt();
         int c = crate->get("col")->asInt();
         object = ObjectModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
-        object->setTextureKey(BREAKABLE_NAME);
-        object->setName(BREAKABLE_NAME);
+        object->setTextureKey(MOVABLE_NAME);
+        object->setName(MOVABLE_NAME);
         object->setBodyType(b2_dynamicBody);
+		object->setType(OBJECT_TYPE::MOVABLE);
         
         _world->addObstacle(object);
         _objects.push_back(object);
@@ -335,7 +353,8 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         object->setTextureKey(IMMOBILE_NAME);
         object->setName(IMMOBILE_NAME);
         object->setBodyType(b2_staticBody);
-        
+		object->setType(OBJECT_TYPE::IMMOBILE);
+
         _world->addObstacle(object);
         _objects.push_back(object);
     }

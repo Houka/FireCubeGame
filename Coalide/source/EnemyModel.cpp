@@ -48,6 +48,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_acorn = false;
 
 		_destroyed = false;
+		_sparky = false;
 
 		_waterInbetween = false;
 
