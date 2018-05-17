@@ -316,8 +316,8 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int r = crate->get("row")->asInt();
         int c = crate->get("col")->asInt();
         object = ObjectModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
-        object->setTextureKey(MOVABLE_NAME);
-        object->setName(MOVABLE_NAME);
+        object->setTextureKey(BREAKABLE_NAME);
+        object->setName(BREAKABLE_NAME);
         object->setBodyType(b2_dynamicBody);
         
         _world->addObstacle(object);
