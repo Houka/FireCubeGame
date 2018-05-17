@@ -227,18 +227,18 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 			if (object->isBreakable()) {
 				std::shared_ptr<AnimationNode> objectNode = AnimationNode::alloc(_assets->get<Texture>(object->getTextureKey()), 1, 6);
 				object->setNode(objectNode);
-				objectNode->setScale(.75, 1);
+				//objectNode->setScale(.75, 1);
 				_worldnode->addChild(objectNode, UNIT_PRIORITY);
 			}
 			else if (object->isMovable()) {
 				std::shared_ptr<AnimationNode> objectNode = AnimationNode::alloc(_assets->get<Texture>(object->getTextureKey()), 1, 12);
 				object->setNode(objectNode);
-				objectNode->setScale(.75, 1);
+				//objectNode->setScale(.75, 1);
 				_worldnode->addChild(objectNode, UNIT_PRIORITY);
 			}
 			else {
-				std::shared_ptr<PolygonNode> objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()), Rect(0, 0, 64, 64));
-				objectNode->setScale(.75, 1);
+				std::shared_ptr<PolygonNode> objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()));
+				//objectNode->setScale(.75, 1);
 				object->setNode(objectNode);
 				_worldnode->addChild(objectNode, UNIT_PRIORITY);
 			}
