@@ -210,8 +210,10 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 			//Collision sparks node
 			std::shared_ptr<cugl::AnimationNode> sparks = AnimationNode::alloc(_assets->get<Texture>("sparks"), 1, 6);
 			sparks->setVisible(false);
-			sparks->setAnchor(Vec2(0,0));
-			sparks->setPosition(Vec2(0,0));
+			if (enemy->isOnion()) {
+				sparks->setAnchor(Vec2(0, 0));
+				sparks->setPosition(Vec2(32, 10));
+			}
 			enemy->setSparks(sparks);
 			enemyNode->addChild(sparks);
 
