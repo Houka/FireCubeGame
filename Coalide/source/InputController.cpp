@@ -111,7 +111,7 @@ void InputController::dispose() {
 * frame, so we need to accumulate all of the data together.
 */
 void InputController::update(float dt) {
-    
+	CULog("update");
     Keyboard* keys = Input::get<Keyboard>();
     
     // Map "keyboard" events to the current frame boundary

@@ -7,6 +7,7 @@
 */
 void MenuScene::dispose() {
 	if (_active) {
+		CULog("disposing menu scene");
 		_input.dispose();
 		Scene::dispose();
 	}
@@ -130,6 +131,7 @@ void MenuScene::createSceneGraph(Size dimen) {
 */
 void MenuScene::update(float dt) {
 	// Check to see if new level loaded yet
+	CULog("menu update");
 	_input.update(dt);
 
 	_didClickStart = false;

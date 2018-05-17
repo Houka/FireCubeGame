@@ -55,6 +55,7 @@ protected:
 	std::shared_ptr<cugl::Node> _uiNode;
 	std::shared_ptr<cugl::Node> _gameOverScreen;
 	std::shared_ptr<cugl::Node> _gameOverText;
+	std::shared_ptr<cugl::Node> _winScreen;
 	std::shared_ptr<cugl::Node> _winText;
 	std::shared_ptr<cugl::Button> _pauseButton;
 	std::shared_ptr<cugl::Button> _muteButton;
@@ -70,6 +71,14 @@ protected:
 	bool _didClickNext = false;
 	bool _didClickMute = false;
 	bool _isPaused = false;
+
+	// UI constants:
+	cugl::Vec2 FAR_FAR_AWAY = cugl::Vec2(0,10000);
+	cugl::Vec2 LOSE_WIN_SCREEN_LOCATION = cugl::Vec2(-400,-500);
+	cugl::Vec2 QUIT_BUTTON_LOCATION = cugl::Vec2(-400, -200);
+	cugl::Vec2 REPLAY_BUTTON_LOCATION = cugl::Vec2(-200, -200);
+	cugl::Vec2 NEXT_BUTTON_LOCATION = cugl::Vec2(400, -200);
+	cugl::Vec2 LOSE_WIN_SCALE = cugl::Vec2(.4,.4);
 
 	std::shared_ptr<cugl::AssetManager> _assets;
 

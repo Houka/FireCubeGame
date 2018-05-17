@@ -311,23 +311,28 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	std::shared_ptr<cugl::Node> _playNode = PolygonNode::allocWithTexture(_assets->get<Texture>("play_button"));
 	std::shared_ptr<cugl::Node> _restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>("restart_button"));
 	std::shared_ptr<cugl::Node> _quitNode = PolygonNode::allocWithTexture(_assets->get<Texture>("quit_button"));
-	std::shared_ptr<cugl::Node> _nextNode = PolygonNode::allocWithTexture(_assets->get<Texture>("restart_button"));
+	std::shared_ptr<cugl::Node> _nextNode = PolygonNode::allocWithTexture(_assets->get<Texture>("next_button"));
 	_gameOverScreen = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over_screen"));
-	_gameOverText = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over"));
-	_winText = PolygonNode::allocWithTexture(_assets->get<Texture>("win"));
+	_winScreen = PolygonNode::allocWithTexture(_assets->get<Texture>("win_screen"));
+	//_gameOverText = PolygonNode::allocWithTexture(_assets->get<Texture>("game_over"));
+	//_winText = PolygonNode::allocWithTexture(_assets->get<Texture>("win"));
 
 	float xMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
 	float yMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
 
 	_gameOverScreen->setVisible(false);
-	_gameOverScreen->setPosition(0, 0);
-	_gameOverText->setVisible(false);
-	_gameOverText->setPosition(0, 75);
-	_winText->setVisible(false);
-	_winText->setPosition(0, 75);
+	_gameOverScreen->setPosition(cugl::Vec2(0,-400));
+	_gameOverScreen->setScale(LOSE_WIN_SCALE);
+	_winScreen->setVisible(false);
+	_winScreen->setPosition(LOSE_WIN_SCREEN_LOCATION);
+	_winScreen->setScale(LOSE_WIN_SCALE);
+	//_gameOverText->setVisible(false);
+	//_gameOverText->setPosition(0, 75);
+	//_winText->setVisible(false);
+	//_winText->setPosition(0, 75);
 
 	_menuButton = cugl::Button::alloc(_backNode);
-	_menuButton->setPosition(0, 10000);
+	_menuButton->setPosition(FAR_FAR_AWAY);
 	_menuButton->setVisible(false);
 
 	_pauseButton = cugl::Button::alloc(_pauseNode);
@@ -339,19 +344,22 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_muteButton->setScale(.3, .3);
 
 	_playButton = cugl::Button::alloc(_playNode);
-	_playButton->setPosition(-200, 10000);
+	_playButton->setPosition(FAR_FAR_AWAY);
 	_playButton->setVisible(false);
 
 	_quitButton = cugl::Button::alloc(_quitNode);
-	_quitButton->setPosition(-200, 10000);
+	_quitButton->setPosition(FAR_FAR_AWAY);
+	_quitButton->setScale(LOSE_WIN_SCALE);
 	_quitButton->setVisible(false);
 
 	_restartButton = cugl::Button::alloc(_restartNode);
-	_restartButton->setPosition(-200, 10000);
+	_restartButton->setPosition(FAR_FAR_AWAY);
+	_restartButton->setScale(LOSE_WIN_SCALE);
 	_restartButton->setVisible(false);
 
 	_nextButton = cugl::Button::alloc(_nextNode);
-	_nextButton->setPosition(-200, 10000);
+	_nextButton->setPosition(FAR_FAR_AWAY);
+	_nextButton->setScale(LOSE_WIN_SCALE);
 	_nextButton->setVisible(false);
 
 	_menuButton->setListener([=](const std::string& name, bool down) {
@@ -361,7 +369,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	});
 
 	_pauseButton->setListener([=](const std::string& name, bool down) {
-		if (!down && !_gameOverScreen->isVisible() && !_gameOverScreen->isVisible()) { // add win screen
+		if (!down && !_gameOverScreen->isVisible() && !_winScreen->isVisible()) {
 			_isPaused = true;
 			_playButton->setVisible(true);
 			_playButton->setPosition(-200, -100);
@@ -418,8 +426,9 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_uiNode->addChild(_muteButton, UNIT_PRIORITY);
 	_uiNode->addChild(_playButton, UNIT_PRIORITY);
 	_uiNode->addChild(_gameOverScreen, UNIT_PRIORITY);
-	_uiNode->addChild(_gameOverText, UNIT_PRIORITY);
-	_uiNode->addChild(_winText, UNIT_PRIORITY);
+	_uiNode->addChild(_winScreen, UNIT_PRIORITY);
+	//_uiNode->addChild(_gameOverText, UNIT_PRIORITY);
+	//_uiNode->addChild(_winText, UNIT_PRIORITY);
 	_uiNode->addChild(_quitButton, UNIT_PRIORITY);
 	_uiNode->addChild(_nextButton, UNIT_PRIORITY);
 	_uiNode->addChild(_restartButton, UNIT_PRIORITY);
@@ -439,38 +448,46 @@ void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {
 void GameState::showGameOverScreen(bool showing) {
 	if (showing) {
 		_quitButton->setVisible(true);
-		_quitButton->setPosition(-150, -50);
+		_quitButton->setPosition(QUIT_BUTTON_LOCATION);
+		_nextButton->setVisible(true);
+		_nextButton->setPosition(NEXT_BUTTON_LOCATION);
 		_restartButton->setVisible(true);
-		_restartButton->setPosition(30, -50);
+		_restartButton->setPosition(REPLAY_BUTTON_LOCATION);
 		_gameOverScreen->setVisible(true);
-		_gameOverText->setVisible(true);
+		//_gameOverText->setVisible(true);
 	}
 	else {
 		_quitButton->setVisible(false);
-		_quitButton->setPosition(-200, 10000);
+		_quitButton->setPosition(FAR_FAR_AWAY);
+		_nextButton->setVisible(false);
+		_nextButton->setPosition(FAR_FAR_AWAY);
 		_restartButton->setVisible(false);
-		_restartButton->setPosition(0, 10000);
+		_restartButton->setPosition(FAR_FAR_AWAY);
 		_gameOverScreen->setVisible(false);
-		_gameOverText->setVisible(false);
+		//_gameOverText->setVisible(false);
 	}
 }
 
 void GameState::showWinScreen(bool showing) {
 	if (showing) {
 		_quitButton->setVisible(true);
-		_quitButton->setPosition(-150, -50);
+		_quitButton->setPosition(QUIT_BUTTON_LOCATION);
 		_nextButton->setVisible(true);
-		_nextButton->setPosition(30, -50);
-		_gameOverScreen->setVisible(true);
-		_winText->setVisible(true);
+		_nextButton->setPosition(NEXT_BUTTON_LOCATION);
+		_restartButton->setVisible(true);
+		_restartButton->setPosition(REPLAY_BUTTON_LOCATION);
+		_winScreen->setVisible(true);
+		//_winText->setVisible(true);
 	}
 	else {
 		_quitButton->setVisible(false);
-		_quitButton->setPosition(-200, 10000);
+		_quitButton->setPosition(FAR_FAR_AWAY);
 		_nextButton->setVisible(false);
-		_nextButton->setPosition(0, 10000);
-		_gameOverScreen->setVisible(false);
-		_winText->setVisible(false);
+		_nextButton->setPosition(FAR_FAR_AWAY);
+		_restartButton->setVisible(false);
+		_restartButton->setPosition(FAR_FAR_AWAY);
+		_winScreen->setVisible(false);
+		//_winText->setVisible(false);
 	}
 }
 

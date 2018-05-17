@@ -216,7 +216,7 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 */
 void LevelSelectScene::update(float dt) {
 	// Check to see if new level loaded yet
-	_input.update(dt);
+	//_input.update(dt);
 
 	_didClickBack = false;
 	_didClickLevel = false;

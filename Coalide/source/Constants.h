@@ -131,4 +131,8 @@ enum class TILE_TYPE : int {
 #define SAND_TEXTURE "sand"
 #define ICE_TEXTURE "ice"
 
+
+// UI button locations
+
+
 #endif /* defined(__LEVEL_CONSTANTS_H__) */
