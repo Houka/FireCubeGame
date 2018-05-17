@@ -24,15 +24,9 @@
 bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 	if (CapsuleObstacle::init(pos, size, Orientation::VERTICAL)) {
 		setName(PLAYER_NAME);
-		setTextureKey("nicoal_nicoal_f");
+		setTextureKey("nicoal");
 		setBodyType(b2_dynamicBody);
         setLinearDamping(GLOBAL_AIR_DRAG);
-        
-//        _anim = AnimationNode::alloc(texture, 7, 8);
-//        _anim->setAnchor(Vec2::ANCHOR_CENTER);
-//        _anim->setScale(2.0f);
-//        _anim->setPosition(size/2);
-//        _anim->setVisible(false);
 
 		_node = nullptr;
         _color = Color4::WHITE;
@@ -43,13 +37,12 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		setRestitution(0.4f);
 		setFixedRotation(true);
 
-		
-
 		_stunned = false;
         _stunOnStop = false;
 		_onFire = false;
 		_superCollide = false;
 		_superCollideTimer = 0;
+		_sparky = false;
 
 		return true;
 	}
@@ -61,308 +54,6 @@ void PlayerModel::dispose() {
 	_frictionJoint = nullptr;
 }
 
-void PlayerModel::switchNode(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> toNode) {
-    fromNode->setVisible(false);
-    toNode->setVisible(true);
-    _node = toNode;
-}
-
-std::shared_ptr<Node> PlayerModel::getTextNode(int state, int dir) {
-    switch(state) {
-        case 0:
-            switch(dir) {
-                case 0:
-                    return _standingNode_f;
-                    break;
-                case 1:
-                    return _standingNode_fls;
-                    break;
-                case 2:
-                    return _standingNode_l;
-                    break;
-                case 3:
-                    return _standingNode_bls;
-                    break;
-                case 4:
-                    return _standingNode_b;
-                    break;
-                case 5:
-                    return _standingNode_brs;
-                    break;
-                case 6:
-                    return _standingNode_r;
-                    break;
-                case 7:
-                    return _standingNode_frs;
-                    break;
-                default:
-                    CUAssertLog(false, "Invalid tile data.");
-                    break;
-            }
-            break;
-        default:
-            CUAssertLog(false, "Invalid tile data.");
-            break;
-    }
-}
-
-/**
- * State:
- * 0: standing
- * 1: build up
- * 2: charging
- *
- * Direction:
- * 0->F / 1->FLS / 2->L / 3->BLS / 4->B
- * 5->BRS / 6->R / 7->FRS
- **/
-std::shared_ptr<Node> PlayerModel::setTextNode(const std::shared_ptr<Node>& node, int state, int dir, bool set) {
-    switch(state) {
-        case 0:
-            switch(dir) {
-                case 0:
-                    if(set) {
-                        node->setVisible(false);
-                        _standingNode_f = node;
-                        _standingNode_f->setName("Standing Node f");
-                        return NULL;
-                    } else {
-                        return _standingNode_f;
-                    }
-                    break;
-                case 1:
-                    if(set) {
-                        node->setVisible(false);
-                        _standingNode_fls = node;
-                        _standingNode_fls->setName("Standing Node fls");
-                        return NULL;
-
-                    } else {
-                        return _standingNode_fls;
-                    }
-                    break;
-                case 2:
-                    if(set) {
-                    node->setVisible(false);
-                    _standingNode_l = node;
-                    _standingNode_l->setName("Standing Node l");
-                        return NULL;
-
-                    } else { return _standingNode_l;}
-                    break;
-                case 3:
-                    if(set){
-                    node->setVisible(false);
-                    _standingNode_bls = node;
-                    _standingNode_bls->setName("Standing Node bls");
-                        return NULL;
-
-                    }else{return _standingNode_bls;}
-                    break;
-                case 4:
-                    if(set){
-                    node->setVisible(false);
-                    _standingNode_b = node;
-                    _standingNode_b->setName("Standing Node b");
-                        return NULL;
-
-                    }else{return _standingNode_b;}
-                    break;
-                case 5:
-                    if(set){
-                        node->setVisible(false);
-                    _standingNode_brs = node;
-                    _standingNode_brs->setName("Standing Node brs");
-                        return NULL;
-
-                    }else{return _standingNode_brs;}
-                    break;
-                case 6:
-                    if(set){
-                        node->setVisible(false);
-                    _standingNode_r = node;
-                    _standingNode_r->setName("Standing Node r");
-                        return NULL;
-                    }else{return _standingNode_r;}
-                    break;
-                case 7:
-                    if(set){
-                        node->setVisible(false);
-                    _standingNode_frs = node;
-                    _standingNode_frs->setName("Standing Node frs");
-                    return NULL;
-                    }else{ return _standingNode_frs;}
-                    break;
-                default:
-                    CUAssertLog(false, "Invalid tile data.");
-                    break;
-            }
-            break;
-        case 1:
-        case 2:
-            switch(dir) {
-                case 0:
-                    if(set) {
-                        node->setVisible(false);
-                        _chargingNode_f = node;
-                        _chargingNode_f->setName("charging Node f");
-                        return NULL;
-                    } else {
-                        return _chargingNode_f;
-                    }
-                    break;
-                case 1:
-                    if(set) {
-                        node->setVisible(false);
-                        _chargingNode_fls = node;
-                        _chargingNode_fls->setName("charging Node fls");
-                        return NULL;
-                        
-                    } else {
-                        return _chargingNode_fls;
-                    }
-                    break;
-                case 2:
-                    if(set) {
-                        node->setVisible(false);
-                        _chargingNode_l = node;
-                        _chargingNode_l->setName("charging Node l");
-                        return NULL;
-                        
-                    } else { return _chargingNode_l;}
-                    break;
-                case 3:
-                    if(set){
-                        node->setVisible(false);
-                        _chargingNode_bls = node;
-                        _chargingNode_bls->setName("charging Node bls");
-                        return NULL;
-                        
-                    }else{return _chargingNode_bls;}
-                    break;
-                case 4:
-                    if(set){
-                        node->setVisible(false);
-                        _chargingNode_b = node;
-                        _chargingNode_b->setName("charging Node b");
-                        return NULL;
-                        
-                    }else{return _chargingNode_b;}
-                    break;
-                case 5:
-                    if(set){
-                        node->setVisible(false);
-                        _chargingNode_brs = node;
-                        _chargingNode_brs->setName("charging Node brs");
-                        return NULL;
-                        
-                    }else{return _chargingNode_brs;}
-                    break;
-                case 6:
-                    if(set){
-                        node->setVisible(false);
-                        _chargingNode_r = node;
-                        _chargingNode_r->setName("charging Node r");
-                        return NULL;
-                    }else{return _chargingNode_r;}
-                    break;
-                case 7:
-                    if(set){
-                        node->setVisible(false);
-                        _chargingNode_frs = node;
-                        _chargingNode_frs->setName("charging Node frs");
-                        return NULL;
-                    }else{ return _chargingNode_frs;}
-                    break;
-                default:
-                    CUAssertLog(false, "Invalid tile data.");
-                    break;
-            }
-            break;
-        case 3:
-            switch(dir) {
-                case 0:
-                    if(set) {
-                        node->setVisible(false);
-                        _slidingNode_f = node;
-                        _slidingNode_f->setName("sliding Node f");
-                        return NULL;
-                    } else {
-                        return _slidingNode_f;
-                    }
-                    break;
-                case 1:
-                    if(set) {
-                        node->setVisible(false);
-                        _slidingNode_fls = node;
-                        _slidingNode_fls->setName("sliding Node fls");
-                        return NULL;
-                        
-                    } else {
-                        return _slidingNode_fls;
-                    }
-                    break;
-                case 2:
-                    if(set) {
-                        node->setVisible(false);
-                        _slidingNode_l = node;
-                        _slidingNode_l->setName("sliding Node l");
-                        return NULL;
-                        
-                    } else { return _slidingNode_l;}
-                    break;
-                case 3:
-                    if(set){
-                        node->setVisible(false);
-                        _slidingNode_bls = node;
-                        _slidingNode_bls->setName("sliding Node bls");
-                        return NULL;
-                        
-                    }else{return _slidingNode_bls;}
-                    break;
-                case 4:
-                    if(set){
-                        node->setVisible(false);
-                        _slidingNode_b = node;
-                        _slidingNode_b->setName("sliding Node b");
-                        return NULL;
-                        
-                    }else{return _slidingNode_b;}
-                    break;
-                case 5:
-                    if(set){
-                        node->setVisible(false);
-                        _slidingNode_brs = node;
-                        _slidingNode_brs->setName("sliding Node brs");
-                        return NULL;
-                        
-                    }else{return _slidingNode_brs;}
-                    break;
-                case 6:
-                    if(set){
-                        node->setVisible(false);
-                        _slidingNode_r = node;
-                        _slidingNode_r->setName("sliding Node r");
-                        return NULL;
-                    }else{return _slidingNode_r;}
-                    break;
-                case 7:
-                    if(set){
-                        node->setVisible(false);
-                        _slidingNode_frs = node;
-                        _slidingNode_frs->setName("sliding Node frs");
-                        return NULL;
-                    }else{ return _slidingNode_frs;}
-                    break;
-                default:
-                    CUAssertLog(false, "Invalid tile data.");
-                    break;
-            }
-        default:
-            CUAssertLog(false, "Invalid tile data.");
-            break;
-    }
-}
 
 /**
 * Applies the impulse to the body of this player
@@ -397,6 +88,101 @@ bool PlayerModel::isSuperCollide() {
 	return _superCollide;
 }
 
+/**
+ * Sets the texture for Nicoal based on angle facing and state
+ *
+ * @param angle  direction Nicoal facing in degrees
+ * @param mode   the state of Nicoal (standing, sliding, chargning, etc)
+ */
+void PlayerModel::setDirectionTexture(float angle, int mode){
+    float row_texture = 512.0f - (mode * 64.0f);
+    
+    if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
+        Rect nicoal_south = Rect(0.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_south);
+        player_direction = 0;
+    }
+    else if(angle > TWO_ANGLE && angle <= THREE_ANGLE){
+        Rect nicoal_south_west = Rect(64.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_south_west);
+        player_direction = 1;
+    }
+    else if(angle > THREE_ANGLE && angle <= FOUR_ANGLE){
+        Rect nicoal_west = Rect(128.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_west);
+        player_direction = 2;
+    }
+    else if(angle > FOUR_ANGLE && angle <= FIVE_ANGLE){
+        Rect nicoal_north_west = Rect(192.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_north_west);
+        player_direction = 3;
+    }
+    else if(angle > FIVE_ANGLE && angle <= SIX_ANGLE){
+        Rect nicoal_north = Rect(256.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_north);
+        player_direction = 4;
+    }
+    else if(angle > SIX_ANGLE && angle <= SEVEN_ANGLE){
+        Rect nicoal_north_east = Rect(320.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_north_east);
+        player_direction = 5;
+    }
+    else if(angle > SEVEN_ANGLE && angle <= EIGHT_ANGLE){
+        Rect nicoal_east = Rect(384.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_east);
+        player_direction = 6;
+    }
+    else{
+        Rect nicoal_south_east = Rect(448.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_south_east);
+        player_direction = 7;
+    }
+}
+
+void PlayerModel::setDirectionTexture(int dir, int mode){
+    float row_texture = 512.0f - (mode * 64.0f);
+    
+    if(dir == 0){
+        Rect nicoal_south = Rect(0.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_south);
+        player_direction = 0;
+    }
+    else if(dir == 1){
+        Rect nicoal_south_west = Rect(64.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_south_west);
+        player_direction = 1;
+    }
+    else if(dir == 2){
+        Rect nicoal_west = Rect(128.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_west);
+        player_direction = 2;
+    }
+    else if(dir == 3){
+        Rect nicoal_north_west = Rect(192.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_north_west);
+        player_direction = 3;
+    }
+    else if(dir == 4){
+        Rect nicoal_north = Rect(256.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_north);
+        player_direction = 4;
+    }
+    else if(dir == 5){
+        Rect nicoal_north_east = Rect(320.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_north_east);
+        player_direction = 5;
+    }
+    else if(dir == 6){
+        Rect nicoal_east = Rect(384.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_east);
+        player_direction = 6;
+    }
+    else{
+        Rect nicoal_south_east = Rect(448.0f, row_texture, 64.0f, 64.0f);
+        _node->setPolygon(nicoal_south_east);
+        player_direction = 7;
+    }
+}
 
 /**
 * Updates the aim arrow.
@@ -405,8 +191,6 @@ bool PlayerModel::isSuperCollide() {
 */
 void PlayerModel::updateArrow(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bool visible) {
     aim *= -.3;
-	cugl::Vec2 playerImageOffset = cugl::Vec2(_node->getWidth() / 2.0, _node->getHeight() / 2.0);
-
 	//float scaleFactor = aim.length();
     float angle = -1 * aim.getAngle();
     angle += 2.35619;
@@ -446,6 +230,24 @@ void PlayerModel::updateCircle(bool visible) {
     _circle->setVisible(visible);
 }
 
+void PlayerModel::updateSparks(bool visible) {
+	_sparks->setVisible(visible);
+}
+
+void PlayerModel::updateSparks() {
+	if (_sparks->isVisible()) {
+		int frame = _sparks->getFrame();
+		if (frame < 5) {
+			_sparks->setFrame(frame + 1);
+		}
+		else {
+			_sparks->setVisible(false);
+			_sparks->setFrame(0);
+		}
+	}
+}
+
+
 Vec2 PlayerModel::getPosition() {
 	return Vec2(CapsuleObstacle::getPosition().x, CapsuleObstacle::getPosition().y + 0.25);
 }
@@ -463,10 +265,10 @@ void PlayerModel::update(float dt) {
 		_node->setPosition(getPosition()*_drawscale);
 		_node->setAngle(getAngle());
         if(_stunned){
-            _node->setColor(Color4::GREEN);
+//            _node->setColor(Color4::GREEN);
         }
         else {
-            _node->setColor(_color);
+//            _node->setColor(_color);
         }
 	}
     if(_shouldStopSoon && Timestamp().ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){

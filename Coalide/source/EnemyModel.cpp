@@ -92,6 +92,51 @@ bool EnemyModel::inBounds(int width, int height){
 }
 
 /**
+ * Sets the texture for Nicoal based on angle facing and state
+ *
+ * @param angle  direction Nicoal facing in degrees
+ */
+void EnemyModel::setDirectionTexture(float angle, bool isAcorn){
+    
+    if(isAcorn){
+        if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
+            Rect enemy_south = Rect(0.0f, 0.0f, 64.0f, 64.0f);
+            _node->setPolygon(enemy_south);
+        }
+        else if(angle > TWO_ANGLE && angle <= FOUR_ANGLE){
+            Rect enemy_west = Rect(64.0f, 0.0f, 64.0f, 64.0f);
+            _node->setPolygon(enemy_west);
+        }
+        else if(angle > FOUR_ANGLE && angle <= SEVEN_ANGLE){
+            Rect enemy_north = Rect(128.0f, 0.0f, 64.0f, 64.0f);
+            _node->setPolygon(enemy_north);
+        }
+        else{
+            Rect enemy_east = Rect(192.0f, 0.0f, 64.0f, 64.0f);
+            _node->setPolygon(enemy_east);
+        }
+    }
+    else {
+        if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
+            Rect enemy_south = Rect(0.0f, 0.0f, 128.0f, 128.0f);
+            _node->setPolygon(enemy_south);
+        }
+        else if(angle > TWO_ANGLE && angle <= FOUR_ANGLE){
+            Rect enemy_west = Rect(128.0f, 0.0f, 128.0f, 128.0f);
+            _node->setPolygon(enemy_west);
+        }
+        else if(angle > FOUR_ANGLE && angle <= SEVEN_ANGLE){
+            Rect enemy_north = Rect(256.0f, 0.0f, 128.0f, 128.0f);
+            _node->setPolygon(enemy_north);
+        }
+        else{
+            Rect enemy_east = Rect(384.0f, 0.0f, 128.0f, 128.0f);
+            _node->setPolygon(enemy_east);
+        }
+    }
+}
+
+/**
  * Returns true if the enough time has elapsed since the last sling
  */
 bool EnemyModel::timeoutElapsed(){
@@ -99,9 +144,25 @@ bool EnemyModel::timeoutElapsed(){
 	if (isMushroom()) {
 		return Timestamp().ellapsedMillis(_previousTime) >= (SPORE_TIMEOUT - _rndTimerReduction);
 	}
-	/*CULog(to_string(Timestamp().ellapsedMillis(_previousTime)).c_str());
-	CULog(to_string((SLING_TIMEOUT - _rndTimerReduction)).c_str());*/
+
     return Timestamp().ellapsedMillis(_previousTime) >= (SLING_TIMEOUT - _rndTimerReduction);
+}
+
+void EnemyModel::updateSparks(bool visible) {
+	_sparks->setVisible(visible);
+}
+
+void EnemyModel::updateSparks() {
+	if (_sparks->isVisible()) {
+		int frame = _sparks->getFrame();
+		if (frame < 5) {
+			_sparks->setFrame(frame + 1);
+		}
+		else {
+			_sparks->setVisible(false);
+			_sparks->setFrame(0);
+		}
+	}
 }
 
 Vec2 EnemyModel::getPosition() {

@@ -44,13 +44,17 @@ void CollisionController::beginContact(b2Contact* contact) {
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
 	if (soA->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soA;
+		enemy->setSparky(true);
 
 		if (enemy->isSpore()) {
 			enemy->setDestroyed();
 		}
 
 		if (soB->getName() == "player") {
-			PlayerModel* player = (PlayerModel*)soB;	
+			PlayerModel* player = (PlayerModel*)soB;
+            //player->setDirectionTexture(player->getPlayerDirection(), 5);
+            player->setCoalided(true);
+			player->setSparky(true);
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
 				player->stunOnStop(4500);
@@ -70,6 +74,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 
 	if (soB->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soB;
+		enemy->setSparky(true);
 
 		if (enemy->isSpore()) {
 			enemy->setDestroyed();
@@ -77,9 +82,15 @@ void CollisionController::beginContact(b2Contact* contact) {
 
 		if (soA->getName() == "player") {
 			PlayerModel* player = (PlayerModel*)soA;
+            float angle = player->getLinearVelocity().getAngle();
+            player->setDirectionTexture(player->getPlayerDirection(), 5);
+            player->setCoalided(true);
+			player->setSparky(true);
+
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
 				player->stunOnStop(4500);
+                player->setDirectionTexture(player->getPlayerDirection(), 7);
 				if (!enemy->alreadyStopping() &&
 					enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
 					enemy->setShouldStop();
@@ -99,10 +110,12 @@ void CollisionController::beginContact(b2Contact* contact) {
     if(soA->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF) && canBeShoved(soA)){
         if(soB->getName() == "player"){
             PlayerModel* player = (PlayerModel*) soB;
+			player->setSparky(false);
             if(!player->alreadyStopping())
                 player->setShouldStop();
         } else if(soB->getName() == "enemy") {
             EnemyModel* enemy = (EnemyModel*) soB;
+			enemy->setSparky(false);
             if(!enemy->alreadyStopping())
                 enemy->setShouldStop();
         }
@@ -112,11 +125,13 @@ void CollisionController::beginContact(b2Contact* contact) {
     if(soB->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF) && canBeShoved(soB)){
         if(soA->getName() == "player"){
             PlayerModel* player = (PlayerModel*) soA;
+			player->setSparky(false);
             if(!player->alreadyStopping()){
                 player->setShouldStop();
             }
         } else if(soA->getName() == "enemy") {
             EnemyModel* enemy = (EnemyModel*) soA;
+			enemy->setSparky(false);
             if(!enemy->alreadyStopping())
                 enemy->setShouldStop();
         }

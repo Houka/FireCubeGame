@@ -164,6 +164,7 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
 //        }
 ////        CULog("outer Loop %d", ct);
 //    }
+
     return false;
 }
 
@@ -173,6 +174,10 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 	}
 	
 	float friction = gamestate->getBoard()[(int)landing.y][(int)landing.x];
+
+	if (friction == 0) {
+		return true;
+	}
 
 	int m = enemy->getMass();
 
