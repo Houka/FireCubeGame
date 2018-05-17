@@ -1,6 +1,7 @@
 import sys
 import json
 import os
+import random
 
 import pygame as pg
 from pygame.locals import *
@@ -553,6 +554,10 @@ def autoTexture(terrain):
                 if h_l and h_t:
                     combined += (h_tl * 2 ** 7)
                 textureCoord = spriteSheetMap[str(combined)]
+                if textureCoord == (6,4):
+                    options = [(6,5),(6,6),(7,0)]
+                    textureCoord = random.choice(options)
+                
 
                 terrain[r][c].t_dirt = imageCoordToID((textureCoord[0], textureCoord[1]))
                 background[r][c].t_water = imageCoordToID((textureCoord[0], textureCoord[1]))
@@ -586,6 +591,10 @@ def autoTexture(terrain):
                 if h_l and h_t:
                     combined += (h_tl * 2 ** 7)
                 textureCoord = spriteSheetMap[str(combined)]
+                if textureCoord == (6,4):
+                    options = [(6,4),(6,5),(6,6),(7,0),(7,1),(7,2),(7,3)]
+                    textureCoord = random.choice(options)
+
                 terrain[r][c].t_ice = imageCoordToID((textureCoord[0], textureCoord[1] + 7))
 
             tmp = classifyFloor(cn)
@@ -617,6 +626,10 @@ def autoTexture(terrain):
                 if h_l and h_t:
                     combined += (h_tl * 2 ** 7)
                 textureCoord = spriteSheetMap[str(combined)]
+                if textureCoord == (6,4):
+                    options = [(6,4),(6,5),(6,6),(7,0),(7,1),(7,2),(7,3),(7,4)]
+                    textureCoord = random.choice(options)
+
                 terrain[r][c].t_sand = imageCoordToID((textureCoord[0], textureCoord[1] + 14))
     for r in range(1, numR):
         for c in range(1, numC):
