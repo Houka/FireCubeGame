@@ -57,6 +57,7 @@ protected:
 	bool _mushroom;
 	bool _spore;
 	bool _onion;
+	bool _acorn;
 
 	bool _destroyed;
 
@@ -197,6 +198,10 @@ public:
 	bool isOnion() { return _onion; }
 
 	void setOnion() { _onion = true; }
+
+	bool isAcorn() { return _acorn; }
+
+	void setAcorn() { _acorn = true; }
 
 	bool isDestroyed() { return _destroyed; }
 

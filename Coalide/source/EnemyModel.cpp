@@ -45,6 +45,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_mushroom = false;
 		_spore = false;
 		_onion = false;
+		_acorn = false;
 
 		_destroyed = false;
 
@@ -104,7 +105,16 @@ bool EnemyModel::timeoutElapsed(){
 }
 
 Vec2 EnemyModel::getPosition() {
-	return Vec2(CapsuleObstacle::getPosition().x, CapsuleObstacle::getPosition().y + 0.25);
+	if (isAcorn()) {
+		return Vec2(CapsuleObstacle::getPosition().x+0.25, CapsuleObstacle::getPosition().y + 0.25);
+	}
+	else if (isOnion()) {
+		return Vec2(CapsuleObstacle::getPosition().x, CapsuleObstacle::getPosition().y + 0.5);
+	}
+	else if (isMushroom()) {
+		return Vec2(CapsuleObstacle::getPosition().x-0.5, CapsuleObstacle::getPosition().y + 0.5);
+	}
+	
 }
 
 /**

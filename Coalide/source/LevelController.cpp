@@ -254,7 +254,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
     
     // player
     auto player = objects->get("player");
-    _player = PlayerModel::alloc(Vec2(player->get("col")->asInt() + .5, rows - player->get("row")->asInt() - .5), UNIT_DIM);
+    _player = PlayerModel::alloc(Vec2(player->get("col")->asInt() + .5, rows - player->get("row")->asInt() - .5), PLAYER_DIM);
     _world->addObstacle(_player);
     
     //acorns
@@ -264,9 +264,10 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 
         int r = acorn->get("row")->asInt();
         int c = acorn->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), Vec2(0.8, 0.5));
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), ACORN_DIM);
         enemy->setTextureKey(ACORN);
-        
+		enemy->setAcorn();
+
         _world->addObstacle(enemy);
         _enemies.push_back(enemy);
     }
@@ -278,7 +279,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         
         int r = onion->get("row")->asInt();
         int c = onion->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), ONION_DIM);
         enemy->setTextureKey(ONION);
 		enemy->setOnion();
 
@@ -293,7 +294,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         
         int r = mushroom->get("row")->asInt();
         int c = mushroom->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), MUSHROOM_DIM);
         enemy->setTextureKey(MUSHROOM);
         enemy->setMushroom();
         
