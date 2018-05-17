@@ -294,7 +294,6 @@ public:
      * Sets the points to get the subtexture for the tile in the tileset.
      */
     void setDirtSubTexture(double x0, double y0, double x1, double y1) {
-//        CULog("%f, %f, %f, %f", x0, y0, x1, y1);
         _dirtSubtexture[0] = x0;
         _dirtSubtexture[1] = y0;
         _dirtSubtexture[2] = x1;

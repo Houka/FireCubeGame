@@ -221,7 +221,6 @@ void LevelSelectScene::update(float dt) {
 	_didClickBack = false;
 	_didClickLevel = false;
 
-
 	if (_input.didExit()) {
 		CULog("Shutting down");
 		Application::get()->quit();

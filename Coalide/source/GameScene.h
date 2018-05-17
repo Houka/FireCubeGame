@@ -66,6 +66,10 @@ protected:
 
 	/** Number of enemies remaining. */
 	int _enemyCount;
+    float counter;
+    float deltaImage;
+    bool up;
+    int hacky_fix_sorry = 0;
 
 	/** Level key for loading correct tileset. */
 	std::string _levelKey;

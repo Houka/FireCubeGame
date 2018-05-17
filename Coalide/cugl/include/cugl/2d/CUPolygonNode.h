@@ -349,6 +349,8 @@ public:
      */
     virtual void setPolygon(const std::vector<Vec2>& vertices) override;
     
+    void shiftPolygon(float dx, float dy) override;
+    
     /**
      * Sets the polygon to the given one in texture space.
      *
