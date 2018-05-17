@@ -63,6 +63,9 @@ void CoalideApp::onStartup() {
 
 void CoalideApp::onSuspend() {
 	Application::onSuspend();
+	if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
+		_gameScene.pause();
+	}
 	AudioEngine::get()->pauseAll();
 }
 

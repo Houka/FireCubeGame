@@ -102,6 +102,7 @@ public:
 	bool didClickNext() { return _didClickNext; }
 	bool didClickMute() { return _didClickMute; }
 	bool isPaused() { return _isPaused; }
+	void didPause();
 	void resetDidClickMenu() { _didClickMenu = false; }
 	void resetDidClickRestart() { _didClickRestart = false; }
 	void resetDidClickNext() { _didClickNext = false; }

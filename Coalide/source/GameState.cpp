@@ -210,6 +210,8 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 			//Collision sparks node
 			std::shared_ptr<cugl::AnimationNode> sparks = AnimationNode::alloc(_assets->get<Texture>("sparks"), 1, 6);
 			sparks->setVisible(false);
+			sparks->setAnchor(Vec2(0,0));
+			sparks->setPosition(Vec2(0,0));
 			enemy->setSparks(sparks);
 			enemyNode->addChild(sparks);
 
@@ -419,6 +421,17 @@ void GameState::showWinScreen(bool showing) {
 		_nextButton->setPosition(0, 10000);
 		_gameOverScreen->setVisible(false);
 		_winText->setVisible(false);
+	}
+}
+
+void GameState::didPause() {
+	if (!_gameOverScreen->isVisible() && !_gameOverScreen->isVisible()) { // add win screen
+		_isPaused = true;
+		_playButton->setVisible(true);
+		_playButton->setPosition(-200, -100);
+		_menuButton->setVisible(true);
+		_menuButton->setPosition(0, -100);
+		_pauseButton->setVisible(false);
 	}
 }
 

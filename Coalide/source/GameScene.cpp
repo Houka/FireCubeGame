@@ -178,6 +178,10 @@ void GameScene::activateWorldCollisions() {
 
 #pragma mark -
 #pragma mark Gameplay Handling
+
+void GameScene::pause() {
+	_gamestate->didPause();
+}
 /**
 * Executes the core gameplay loop of this world.
 *
