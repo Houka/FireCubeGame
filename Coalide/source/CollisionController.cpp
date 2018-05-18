@@ -44,7 +44,6 @@ void CollisionController::beginContact(b2Contact* contact) {
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
 	if (soA->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soA;
-		enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 5);
 		enemy->setCoalided(true);
         enemy->markCollisionTimeout();
 
@@ -86,7 +85,6 @@ void CollisionController::beginContact(b2Contact* contact) {
 
 	if (soB->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soB;
-		enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 5);
 		enemy->setCoalided(true);
         enemy->markCollisionTimeout();
 
@@ -102,7 +100,6 @@ void CollisionController::beginContact(b2Contact* contact) {
             }
 
             float angle = player->getLinearVelocity().getAngle();
-            player->setDirectionTexture(player->getPlayerDirection(), 5);
             player->setCoalided(true);
 
 			if (enemy->getLinearVelocity().length() > MIN_SPEED_FOR_CHARGING) {
