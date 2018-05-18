@@ -250,7 +250,7 @@ public:
 	void setPrepping(bool prepping) { _prepping = prepping; _prepTimer = 20; }
 	bool isPrepping() { return _prepping; }
 
-	void setFell() { _fell = true; _drownTimer = 20; }
+	void setFell() { _fell = true; _drownTimer = 10; }
 	bool didFall() { return _fell; }
 
 	void animateSpore();

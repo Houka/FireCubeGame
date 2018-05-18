@@ -328,6 +328,10 @@ void GameScene::update(float dt) {
     
 	if (player->didFall()) {
 		player->setDirectionTexture(player->getPlayerDirection(), 8);
+		player->_drownTimer -= 1;
+		if (player->_drownTimer <= 0) {
+			_gameover = true;
+		}
 	}
 
     if(!player->canSling() || _input.getCameraPan().length()) {
@@ -380,6 +384,11 @@ void GameScene::update(float dt) {
 
 		if (enemy->didFall()) {
 			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 7);
+			enemy->_drownTimer -= 1;
+			if (enemy->_drownTimer <= 0) {
+				removeEnemy(enemy);
+				_enemyCount--;
+			}
 		}
 	}
     
@@ -552,7 +561,7 @@ void GameScene::updateFriction() {
     if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
         if (!player->getCharging()) {
             float friction = _gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][(int)floor(player_pos.x)];
-            if (friction == 0) {
+			if (friction == 0 && !player->didFall()) {
 				/*if (_gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][std::min(gameBounds.getIWidth()-1, (int)floor(player_pos.x)-1)]) {
 					player->setPosition(player_pos.x + .3, player_pos.y);
 				}
@@ -563,17 +572,9 @@ void GameScene::updateFriction() {
 					player->setPosition(player_pos.x, player_pos.y - .3);
 				}*/
 
-				if (player->didFall()) {
-					player->_drownTimer -= 1;
-					if (player->_drownTimer <= 0) {
-						_gameover = true;
-					}
-				}
-				else {
-					player->setFell();
-					player->setDirectionTexture(player->getPlayerDirection(), 8);
-				}
-            }
+				player->setFell();
+				player->setDirectionTexture(player->getPlayerDirection(), 8);
+			}
             else if (friction != player->getFriction()) {
                 player->setFriction(friction);
             }
@@ -598,18 +599,9 @@ void GameScene::updateFriction() {
 		if (!enemy->isSpore() && enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(enemy_pos.y)][(int)floor(enemy_pos.x)];
             if(!enemy->getCharging()) {
-                if(friction == 0) {
-					if (enemy->didFall()) {
-						enemy->_drownTimer -= 1;
-						if (enemy->_drownTimer <= 0) {
-							removeEnemy(enemy);
-							_enemyCount--;
-						}
-					}
-					else {
-						enemy->setFell();
-						enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 7);
-					}
+                if(friction == 0 && !enemy->didFall()) {
+					enemy->setFell();
+					enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 7);
                 }
                 else if(friction != enemy->getFriction()) {
                     enemy->setFriction(friction);
@@ -619,18 +611,9 @@ void GameScene::updateFriction() {
 				enemy->setFriction(0);
 			}
         }
-        else {
-			if (enemy->didFall()) {
-				enemy->_drownTimer -= 1;
-				if (enemy->_drownTimer == 0) {
-					removeEnemy(enemy);
-					_enemyCount--;
-				}
-			}
-			else {
-				enemy->setFell();
-				enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 8);
-			}
+        else if (enemy->didFall()) {
+			enemy->setFell();
+			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 8);
 		}
         
         // Caps enemy speed to MAX_PLAYER SPEED

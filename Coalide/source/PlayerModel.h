@@ -232,7 +232,7 @@ public:
 	void setSparky(bool sparky) { _sparky = sparky; }
 	bool getSparky() { return _sparky; }
 
-	void setFell() { _fell = true; _drownTimer = 20; }
+	void setFell() { _fell = true; _drownTimer = 10; }
 	bool didFall() { return _fell; }
     
     float getCameraShakeAmplitude(){ return _cameraShakeAmplitude; }
