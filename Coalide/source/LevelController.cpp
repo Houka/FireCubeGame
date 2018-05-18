@@ -13,7 +13,7 @@
 #include <Box2D/Dynamics/b2World.h>
 #include <string>
 
-#define TILE_BORDER  .0007
+#define TILE_BORDER  0.00035
 
 using namespace cugl;
 
@@ -177,7 +177,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                 int waterDecal = innerWaterDecal->get(c)->asInt();
                 tile->setWaterTextureKey("tileset_water.png");
                 if(type == "sand"){
-                    _board[rows - 1 - r][c] = 20;
+                    _board[rows - 1 - r][c] = 40;
                     tile->setType(TILE_TYPE::SAND);
                     tile->setSandTextureKey("tileset_forest.png");
                     tile->setIceTextureKey("tileset_forest.png");
@@ -185,7 +185,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                 
                 }
                 if(type == "ice"){
-                    _board[rows - 1 - r][c] = 2;
+                    _board[rows - 1 - r][c] = 1;
                     tile->setType(TILE_TYPE::ICE);
                     tile->setIceTextureKey("tileset_forest.png");
                     tile->setDirtTextureKey("tileset_forest.png");
@@ -201,7 +201,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     double subTextureX = (sandTexture % 21);
                     double endY = subTextureY + 1;
                     double endX = subTextureX + 1;
-                    tile->setSandSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21), (subTextureY / 8) + TILE_BORDER, (endY / 8));
+                    tile->setSandSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21) - TILE_BORDER, (subTextureY / 8) + TILE_BORDER, (endY / 8) - TILE_BORDER);
                 }
                 if(iceTexture != -1){
                     //gives box to specify texture into texture atlas
@@ -209,7 +209,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     double subTextureX = (iceTexture % 21);
                     double endY = subTextureY + 1;
                     double endX = subTextureX + 1;
-                    tile->setIceSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21), (subTextureY / 8) + TILE_BORDER, (endY / 8));
+                    tile->setIceSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21)- TILE_BORDER, (subTextureY / 8) + TILE_BORDER, (endY / 8) - TILE_BORDER);
                 }
                 if(dirtTexture != -1){
                     //gives box to specify texture into texture atlas
@@ -217,7 +217,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     double subTextureX = (dirtTexture % 21);
                     double endY = subTextureY + 1;
                     double endX = subTextureX + 1;
-                    tile->setDirtSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21), (subTextureY / 8) + TILE_BORDER, (endY / 8));
+                    tile->setDirtSubTexture((subTextureX / 21) + TILE_BORDER, (endX / 21) - TILE_BORDER, (subTextureY / 8) + TILE_BORDER, (endY / 8) - TILE_BORDER);
                 }
                 if(waterBase != -1){
                     //gives box to specify texture into texture atlas
@@ -225,7 +225,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     double subTextureX = (waterBase % 21);
                     double endY = subTextureY + 1;
                     double endX = subTextureX + 1;
-                    tile->setWaterBaseSubTexture((subTextureX / 7) + TILE_BORDER, (endX / 7), (subTextureY / 8) + TILE_BORDER, (endY / 8));
+                    tile->setWaterBaseSubTexture((subTextureX / 7) + TILE_BORDER, (endX / 7) - TILE_BORDER, (subTextureY / 8) + TILE_BORDER, (endY / 8) - TILE_BORDER);
                 }
                 if(waterDecal != -1){
                     //gives box to specify texture into texture atlas
@@ -233,7 +233,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     double subTextureX = (waterDecal % 21);
                     double endY = subTextureY + 1;
                     double endX = subTextureX + 1;
-                    tile->setWaterDecalSubTexture((subTextureX / 7) + TILE_BORDER, (endX / 7), (subTextureY / 8) + TILE_BORDER, (endY / 8));
+                    tile->setWaterDecalSubTexture((subTextureX / 7) + TILE_BORDER, (endX / 7) - TILE_BORDER, (subTextureY / 8) + TILE_BORDER, (endY / 8) - TILE_BORDER);
 
                 }
                 _tiles.push_back(tile);

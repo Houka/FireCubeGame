@@ -289,7 +289,8 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
 
-        if(!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom() && !enemy->getCharging() && gamestate->getWorld()->inBounds((Obstacle*)enemy.get())){
+        if(!enemy->isRemoved() && !enemy->isStunned() && !enemy->isMushroom() &&
+           !enemy->getCharging() && !enemy->slingCollisionLocked() && gamestate->getWorld()->inBounds((Obstacle*)enemy.get())){
 			Vec2 enemy_pos = enemy->getPosition();
 			Vec2 aim = player_pos - enemy_pos;
 

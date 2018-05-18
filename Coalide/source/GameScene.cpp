@@ -39,7 +39,7 @@ using namespace cugl;
 */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey) {
     //set application to right color
-    Application::get()->setClearColor(Color4(15,82,186,255));
+    Application::get()->setClearColor(Color4(86,210,216,255));
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= GAME_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -91,6 +91,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	getCamera()->translate(gameCenter - cameraPos);
+    
     counter = 0;
     deltaImage = 0.0f;
     up = true;
@@ -401,6 +402,9 @@ void GameScene::update(float dt) {
     if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
         cameraTransY = 0;
     }
+    cameraTransX = (int)cameraTransX;
+    cameraTransY = (int)cameraTransY;
+    
         
 	_gamestate->setUIPosition(player->getNode()->getScene()->getCamera()->getPosition());
 	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));

@@ -44,6 +44,7 @@ void CollisionController::beginContact(b2Contact* contact) {
     SimpleObstacle* soB = (SimpleObstacle*)(bodyB->GetUserData());
 	if (soA->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soA;
+        enemy->markCollisionTimeout();
 
 		if (enemy->isSpore()) {
 			enemy->setDestroyed();
@@ -68,6 +69,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 
 	if (soB->getName() == "enemy") {
 		EnemyModel* enemy = (EnemyModel*)soB;
+        enemy->markCollisionTimeout();
 
 		if (enemy->isSpore()) {
 			enemy->setDestroyed();

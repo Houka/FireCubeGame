@@ -17,7 +17,7 @@ class EnemyModel : public CapsuleObstacle {
 private:
     /** random reduction for the timer between slings */
     int _rndTimerReduction;
-    /** to keep track of how long to wait before stopping */
+    /** timeout for dashing after colliding */
     Timestamp _collisionTimeout;
     /** to keep track of how long to wait before resetting the _collisionTimeout */
     Timestamp _noLineOfSiteTimeout;
@@ -30,6 +30,7 @@ private:
     /** milliseconds of stun */
     int _stunDuration;
     bool _waterInbetween;
+    bool _slingCollisionLocked;
 protected:
 	/** The scene graph node for the enemy */
 	std::shared_ptr<PolygonNode> _node;
@@ -260,6 +261,11 @@ public:
      */
     bool canSling();
     
+    bool slingCollisionLocked(){
+        
+        return _slingCollisionLocked;
+    }
+    
     /**
      * Returns true if the enough time has elapsed since the last sling
      */
@@ -276,8 +282,12 @@ public:
      * Stop this enemy after timeout milliseconds
      */
     void setShouldStop(){
-        _collisionTimeout.mark();
         _shouldStopSoon = true;
+    }
+    
+    void markCollisionTimeout(){
+        _slingCollisionLocked = true;
+        _collisionTimeout.mark();
     }
     
     /**

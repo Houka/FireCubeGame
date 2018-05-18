@@ -7,12 +7,12 @@
 #include "Constants.h"
 #include <cugl/util/CUTimestamp.h>
 
-#define MAX_SPEED_FOR_SLING 2
+#define MAX_SPEED_FOR_SLING .1
 #define IMPULSE_SCALE 8
 #define SLING_TIMEOUT 4000
 #define SPORE_TIMEOUT 5000
 #define ONION_TIMEOUT 4000
-#define COLLISION_TIMEOUT 0
+#define COLLISION_TIMEOUT 1500
 
 using namespace cugl;
 
@@ -39,6 +39,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 
 		_stunned = false;
 		_onFire = false;
+        _slingCollisionLocked = false;
 
 		_wandering = true;
 		_targeting = false;
@@ -161,6 +162,9 @@ void EnemyModel::update(float dt) {
 		_node->setAngle(getAngle());
 	}
     auto ts = Timestamp();
+    if(_slingCollisionLocked && ts.ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
+        _slingCollisionLocked = false;
+    }
     if(_stunned){
         _node->setColor(Color4::GREEN);
         if(ts.ellapsedMillis(_stunTimeout) >= _stunDuration) {
@@ -172,7 +176,7 @@ void EnemyModel::update(float dt) {
     } else {
         _node->setColor(Color4::WHITE);
     }
-    if(_shouldStopSoon && ts.ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
+    if(_shouldStopSoon){
         _shouldStopSoon = false;
         _body->SetLinearVelocity(b2Vec2(0,0));
     }
