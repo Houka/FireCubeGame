@@ -49,7 +49,7 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
 	for (int i = 1; i <= 50; i++) {
 		Vec2 pt = start + trajectory / 50 * i;
 		if (pt.x < w-1 && pt.x > 0 && pt.y < h-1 && pt.y > 0) {
-			if (!gamestate->getTileBoard()[(int)floor(pt.y)][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)+1][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)-1][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)][(int)floor(pt.x)+1] || !gamestate->getTileBoard()[(int)floor(pt.y)][(int)floor(pt.x)-1]) {
+			if (!gamestate->getTileBoard()[(int)floor(pt.y)][(int)floor(pt.x)]) {
 				return true;
 			}
 		}
@@ -89,13 +89,12 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 		return true;
 	}
 
-	int m = enemy->getMass();
-//    CULog(to_string(enemy->getMass()).c_str());
+	float m = enemy->getMass();
 	float vi = MIN_SPEED_FOR_CHARGING;
 
 	float a = friction / m;
 	float d = (vi*vi) / (2 * a);
-	Vec2 slide = landing + aim*d*1.2;
+	Vec2 slide = landing + aim*d*1.8;
 	Vec2 shortland = landing - aim*d*0.2;
 	//CULog("sliding %f", d);
 	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(shortland, slide, gamestate)) {
@@ -284,6 +283,30 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 					if (!slipperySlope(enemy_pos + aim*d, aim, enemy, gamestate)) {
 						aim *= impulse;
 						moves.push_back(std::make_tuple(enemy, aim));
+					}
+					else {
+
+						float theta = 3.14159 / 8;
+						float rotated = 0;
+						Vec2 rotatedAim1 = aim;
+						Vec2 rotatedAim2 = aim;
+						while (abs(rotated) < 3.14159) {
+							rotatedAim1 = Vec2(rotatedAim1.x*cos(theta) - rotatedAim1.y*sin(theta), rotatedAim1.x*sin(theta) + rotatedAim1.y*cos(theta));
+							rotatedAim1.normalize();
+							rotatedAim2 = Vec2(rotatedAim2.x*cos(-theta) - rotatedAim2.y*sin(-theta), rotatedAim2.x*sin(-theta) + rotatedAim2.y*cos(-theta));
+							rotatedAim2.normalize();
+							if (!slipperySlope(enemy_pos + rotatedAim1*d, rotatedAim1, enemy, gamestate)) {
+								rotatedAim1 *= impulse;
+								moves.push_back(std::make_tuple(enemy, rotatedAim1));
+								break;
+							}
+							else if (!slipperySlope(enemy_pos + rotatedAim2*d, rotatedAim2, enemy, gamestate)) {
+								rotatedAim2 *= impulse;
+								moves.push_back(std::make_tuple(enemy, rotatedAim2));
+								break;
+							}
+							rotated += theta;
+						}
 					}
 				}
 				else {
