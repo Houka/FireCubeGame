@@ -1,0 +1,54 @@
+the level editor is a python script called main.py
+1) run main.py (install python if you need to)
+
+There are 3 layers to choose from at the top
+1. background
+2. terrain
+3. objects
+
+Background
+    - currently this is prepopulated with water (the blue square on the top left panel)
+    - eventually you should be able to change which water texture is used in each location
+    - click white box left of layer button to toggle visibility
+
+Terrain
+    - You can place the other 3 tiles in this layer (sand, dirt, ice)
+    - once placed you can delete by right clicking on the tile
+    - click on a tile with nothing selected to see details
+    - use the box on the left labeled "zone" to assign zone IDs to tiles
+        - each tile can have multiple zones
+        - like all black boxes with white numbers, you can change the value (see below)
+        - highlighting the zone button will outline all tiles with that zone
+    - click white box left of layer button to toggle visibility
+
+
+Objects
+    - You can place all other objects (below zone button) in this layer
+    - Player is circle
+    - green = acorn
+    - pink = onion
+    - offbrown = ram
+    - white = mushroom
+    - to edit details about each object...
+        - disselect the placement button by clicking any empty space in the app
+        - click on the object you wish to see details for
+        - click the black boxes you wish to edit
+        - all fields except aggro range expect (1-99)
+        - time represents number of tenths of a second (54 = 5.4seconds)
+        - range represents number of tenths of tile away (54 = 5.4 tiles distance)
+        - eneimes with aggrozone or patrolzone should have a number that corresponds to tiles assigned in the terrain layer
+
+General Notes -
+
+Black boxes with white numbers inside can be edited.
+    - click on the box(es) you want to edit
+    - enter a number (most input fields are 1-99 but some can be higher)
+    - hit enter
+
+Press t to autotexture and display the level textured (MAKE SURE TO DO THIS BEFORE PRESSING P TO MAKE THE JSON)
+Press p to make the json (file output is output.json)
+Press l to load a json (file must be called input.json)
+
+Right click to delete things on the grid
+
+

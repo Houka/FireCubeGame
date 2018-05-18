@@ -64,6 +64,9 @@ protected:
 	std::shared_ptr<cugl::AnimationNode> _sparks;
 	bool _sparky;
 
+	bool _shooting;
+	bool _dispersing;
+
 	std::vector<Vec2> _route;
 
 public:
@@ -220,6 +223,12 @@ public:
 	void updateSparks();
 	void updateSparks(bool visible);
 
+	bool isShooting() { return _shooting; }
+	bool isDispersing() { return _dispersing; }
+	void setShooting() { _shooting = true; }
+	void setDispersing() { _dispersing = true; }
+
+	void animateSpore();
 
 	/**
 	* Returns the scene graph node representing this enemy.

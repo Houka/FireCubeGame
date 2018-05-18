@@ -380,7 +380,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 }
 
 void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {
-    auto sporeNode = PolygonNode::allocWithTexture(_assets->get<Texture>(spore->getTextureKey()));
+    auto sporeNode = AnimationNode::alloc(_assets->get<Texture>(spore->getTextureKey()), 1, 7);
     spore->setNode(sporeNode);
     spore->setDrawScale(_scale.x);
     //spore->setDebugScene(_debugnode);

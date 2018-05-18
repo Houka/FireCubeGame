@@ -50,6 +50,9 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_destroyed = false;
 		_sparky = false;
 
+		_shooting = false;
+		_dispersing = false;
+
 		_waterInbetween = false;
 
 		_previousTime = Timestamp();
@@ -166,6 +169,21 @@ void EnemyModel::updateSparks() {
 	}
 }
 
+void EnemyModel::animateSpore() {
+	std::shared_ptr<AnimationNode> node = std::dynamic_pointer_cast<AnimationNode>(_node);
+	int frame = node->getFrame();
+	if (frame == 6) {
+		setDestroyed();
+		return;
+	}
+	if (frame < 4) {
+		node->setFrame(4);
+	}
+	else {
+		node->setFrame(frame + 1);
+	}
+}
+
 Vec2 EnemyModel::getPosition() {
 	if (isAcorn()) {
 		return Vec2(CapsuleObstacle::getPosition().x+0.25, CapsuleObstacle::getPosition().y + 0.25);
@@ -176,7 +194,9 @@ Vec2 EnemyModel::getPosition() {
 	else if (isMushroom()) {
 		return Vec2(CapsuleObstacle::getPosition().x-0.5, CapsuleObstacle::getPosition().y + 0.5);
 	}
-    return nullptr;
+	else {
+		return CapsuleObstacle::getPosition();
+	}
 }
 
 /**

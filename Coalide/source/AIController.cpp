@@ -205,7 +205,7 @@ void AIController::AStar(Vec2 pos, float slingDist, Vec2 target, Vec2 origin, st
 
 
 std::shared_ptr<EnemyModel> shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameState> gamestate) {
-	std::shared_ptr<EnemyModel> spore = EnemyModel::alloc(pos, UNIT_DIM/4);
+	std::shared_ptr<EnemyModel> spore = EnemyModel::alloc(pos, UNIT_DIM);
 	spore->setTextureKey(SPORE);
 	spore->setSpore();
 	spore->setLinearDamping(0);
@@ -216,6 +216,8 @@ std::shared_ptr<EnemyModel> shootSpore(Vec2 pos, Vec2 aim, std::shared_ptr<GameS
 	filter.maskBits = ~CATEGORY_MUSHROOM;
 	filter.groupIndex = NULL;
 	spore->setFilterData(filter);
+
+	spore->setShooting();
 
 	gamestate->addSporeNode(spore);
 	gamestate->getWorld()->addObstacle(spore);
@@ -294,7 +296,7 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 					moves.push_back(std::make_tuple(enemy, Vec2(0, 0)));
 					Vec2 aim = player_pos - enemy->getPosition();
 					aim.normalize();
-					aim *= MAX_IMPULSE*0.6;
+					aim *= MAX_IMPULSE;
 					std::shared_ptr<EnemyModel> spore = shootSpore(enemy->getPosition(), aim, gamestate);
 					std::tuple<std::shared_ptr<EnemyModel>, Vec2> nextMove = std::make_tuple(spore, aim / 2);
 					_nextMoves.push_back(nextMove);
