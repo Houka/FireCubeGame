@@ -12,7 +12,7 @@
 #define SLING_TIMEOUT 4000
 #define ONION_TIMEOUT 4000
 #define COLLISION_TIMEOUT 1500
-#define SPORE_TIMEOUT 6000
+#define SPORE_TIMEOUT 3000
 
 using namespace cugl;
 

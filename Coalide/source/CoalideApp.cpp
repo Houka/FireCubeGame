@@ -117,7 +117,10 @@ void CoalideApp::onShutdown() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void CoalideApp::update(float timestep) {
-    std::string levelNames[6] = {"json/lvl01.json", "json/openBetaJsons/lvl2.json", "json/openBetaJsons/lvl3.json", "json/openBetaJsons/lvl4.json", "json/lvl0.json", "json/openBetaJsons/lvl6.json"};
+//    std::string levelNames[6] = {"json/levels/lvl1.json", "json/levels/lvl2.json", "json/levels/lvl3.json", "json/levels/lvl4.json", "json/levels/lvl5.json", "json/levels/lvl6.json"};
+    
+    //when all buttons are in
+    std::string levelNames[16] = {"json/levels/lvl1.json", "json/levels/lvl2.json", "json/levels/lvl3.json", "json/levels/lvl4.json", "json/levels/lvl5.json", "json/levels/lvl6.json", "json/levels/lvl7.json", "json/levels/lvl8.json", "json/levels/lvl9.json", "json/levels/lvl10.json", "json/levels/lvl11.json", "json/levels/lvl12.json", "json/levels/lvl13.json", "json/levels/lvl14.json", "json/levels/lvl15.json", "json/levels/lvl16.json"};
 
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
@@ -196,7 +199,8 @@ void CoalideApp::update(float timestep) {
 				_currentScene = CURRENT_SCENE::MENU_SCENE;
 			} 
 			else if (_gameScene.getGameState()->didClickNext()) {
-				_levelCt = (_levelCt + 1) % 6;
+//                _levelCt = (_levelCt + 1) % 6;
+                _levelCt = (_levelCt + 1) % 16;
 				_gameScene.reset(levelNames[_levelCt]);
 			}
 			else if (_gameScene.getGameState()->didClickRestart()) {
@@ -207,7 +211,8 @@ void CoalideApp::update(float timestep) {
 			}
 
 			if (_input.rightKeyPressed()) {
-				_levelCt = (_levelCt + 1) % 6;
+//                _levelCt = (_levelCt + 1) % 6;
+                                _levelCt = (_levelCt + 1) % 16;
 				_gameScene.reset(levelNames[_levelCt]);
 			}
 		}	
