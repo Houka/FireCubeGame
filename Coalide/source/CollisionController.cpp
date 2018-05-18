@@ -46,7 +46,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 		EnemyModel* enemy = (EnemyModel*)soA;
 
 		if (enemy->isSpore()) {
-			enemy->setDestroyed();
+			enemy->setDispersing();
 		}
 
 		if (soB->getName() == "player") {
@@ -81,7 +81,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 		EnemyModel* enemy = (EnemyModel*)soB;
 
 		if (enemy->isSpore()) {
-			enemy->setDestroyed();
+			enemy->setDispersing();
 		}
 
 		if (soA->getName() == "player") {

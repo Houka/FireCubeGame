@@ -50,6 +50,9 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_destroyed = false;
 		_sparky = false;
 
+		_shooting = false;
+		_dispersing = false;
+
 		_waterInbetween = false;
 
 		_previousTime = Timestamp();
@@ -162,6 +165,24 @@ void EnemyModel::updateSparks() {
 		else {
 			_sparks->setVisible(false);
 			_sparks->setFrame(0);
+		}
+	}
+}
+
+void EnemyModel::animateSpore() {
+	std::shared_ptr<AnimationNode> node = std::dynamic_pointer_cast<AnimationNode>(_node);
+	int frame = node->getFrame();
+	if (frame == 6) {
+		setDestroyed();
+		return;
+	}
+	if (isDispersing() && frame < 4) {
+		node->setFrame(4);
+	}
+	else {
+		node->setFrame(frame + 1);
+		if (isShooting() && node->getFrame() == 2) {
+			_shooting = false;
 		}
 	}
 }

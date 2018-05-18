@@ -401,15 +401,25 @@ void GameScene::update(float dt) {
     
 	for (int i = 0; i < _gamestate->getSpores().size(); i++) {
 		std::shared_ptr<EnemyModel> spore = _gamestate->getSpores()[i];
-		Vec2 enemy_pos = spore->getPosition();
+		Vec2 spore_pos = spore->getPosition();
 
 		if (spore->isDestroyed()) {
 			removeEnemy(spore);
 		}
 
 		/** Need to remove spore from spore list? */
-		else if (!(enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight())) {
+		else if (!(spore_pos.x > 0 && spore_pos.y > 0 && spore_pos.x < _gamestate->getBounds().size.getIWidth() && spore_pos.y < _gamestate->getBounds().size.getIHeight())) {
 			removeEnemy(spore);
+		}
+
+		else {
+			if (spore->isDispersing()) {
+				spore->animateSpore();
+			}
+			else if (spore->isShooting()) {
+				spore->animateSpore();
+			}
+			
 		}
 	}
 
