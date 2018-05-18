@@ -356,6 +356,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 		}
 	});
 
+
 	_muteButton->setListener([=](const std::string& name, bool down) {
 		if (!down) {
 			_didClickMute = true;
@@ -375,8 +376,6 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_uiNode->addChild(_playButton, UNIT_PRIORITY);
 	_uiNode->addChild(_gameOverScreen, UNIT_PRIORITY);
 	_uiNode->addChild(_winScreen, UNIT_PRIORITY);
-	//_uiNode->addChild(_gameOverText, UNIT_PRIORITY);
-	//_uiNode->addChild(_winText, UNIT_PRIORITY);
 	_uiNode->addChild(_quitButton, UNIT_PRIORITY);
 	_uiNode->addChild(_nextButton, UNIT_PRIORITY);
 	_uiNode->addChild(_restartButton, UNIT_PRIORITY);
@@ -399,6 +398,8 @@ void GameState::showGameOverScreen(bool showing) {
 		_quitButton->setPosition(QUIT_BUTTON_LOCATION);
 		_nextButton->setVisible(true);
 		_nextButton->setPosition(NEXT_BUTTON_LOCATION);
+		_nextButton->deactivate();
+		_nextButton->setColor(cugl::Color4::GRAY);
 		_restartButton->setVisible(true);
 		_restartButton->setPosition(REPLAY_BUTTON_LOCATION);
 		_gameOverScreen->setVisible(true);
@@ -409,6 +410,8 @@ void GameState::showGameOverScreen(bool showing) {
 		_quitButton->setPosition(FAR_FAR_AWAY);
 		_nextButton->setVisible(false);
 		_nextButton->setPosition(FAR_FAR_AWAY);
+		_nextButton->setColor(cugl::Color4::WHITE);
+		_nextButton->activate(11);
 		_restartButton->setVisible(false);
 		_restartButton->setPosition(FAR_FAR_AWAY);
 		_gameOverScreen->setVisible(false);

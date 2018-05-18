@@ -104,6 +104,8 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 
 	// create the buttons
 	std::shared_ptr<cugl::Node> _backNode = PolygonNode::allocWithTexture(_assets->get<Texture>("menu_button"));
+	std::shared_ptr<cugl::Node> _nextNode = PolygonNode::allocWithTexture(_assets->get<Texture>("next_button"));
+	std::shared_ptr<cugl::Node> _copyOfNextNode = PolygonNode::allocWithTexture(_assets->get<Texture>("next_button"));
 	std::shared_ptr<cugl::Node> _lvl0Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
 	std::shared_ptr<cugl::Node> _lvl1Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
 	std::shared_ptr<cugl::Node> _lvl2Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
@@ -111,8 +113,16 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	std::shared_ptr<cugl::Node> _lvl4Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
 	std::shared_ptr<cugl::Node> _lvl5Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
 
+
 	//_startNode->setPosition(50., 50);
 	_backButton = cugl::Button::alloc(_backNode);
+
+	_scrollForwardButton = cugl::Button::alloc(_nextNode);
+	_scrollForwardButton->setScale(LOSE_WIN_SCALE);
+	_scrollBackwardButton = cugl::Button::alloc(_copyOfNextNode);
+	_scrollBackwardButton->setScale(LOSE_WIN_SCALE);
+	_scrollBackwardButton->setAngle(M_PI);
+
 	_lvl0 = cugl::Button::alloc(_lvl0Node);
 	_lvl0->setScale(2, 2);
 	_lvl1 = cugl::Button::alloc(_lvl1Node);
@@ -126,6 +136,8 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	_lvl5 = cugl::Button::alloc(_lvl5Node);
 	_lvl5->setScale(2, 2);
 	_backButton->setPosition(10, textureHeight*0.9);
+	_scrollBackwardButton->setPosition(cugl::Vec2(xMax*.15, _scrollBackwardButton->getHeight()));
+	_scrollForwardButton->setPosition(cugl::Vec2(xMax*.85, 0));
 	_lvl0->setPosition(textureWidth*.08, textureHeight*.26);
 	_lvl1->setPosition(textureWidth*.08, textureHeight*.75);
 	_lvl2->setPosition(textureWidth*.20, textureHeight*.55);
@@ -138,6 +150,25 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 		}
 		else {
 			_didClickBack = true;
+		}
+	});
+
+	_scrollForwardButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+			_levelSelectForwardScroll = true;
+		}
+		else {
+			_levelSelectForwardScroll = false;
+		}
+	});
+
+	_scrollBackwardButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+			_levelSelectBackwardScroll = true;
+			CULog("PRESSED");
+		}
+		else {
+			_levelSelectBackwardScroll = false;
 		}
 	});
 
@@ -180,6 +211,8 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 
 
 	_backButton->activate(4);
+	_scrollForwardButton->activate(201);
+	_scrollBackwardButton->activate(202);
 	_lvl0->activate(100);
 	_lvl1->activate(101);
 	_lvl2->activate(102);
@@ -188,6 +221,8 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	_lvl5->activate(105);
 
 	_rootnode->addChild(_background, UNIT_PRIORITY);
+	_rootnode->addChild(_scrollBackwardButton, UNIT_PRIORITY);
+	_rootnode->addChild(_scrollForwardButton, UNIT_PRIORITY);
 	_background->addChild(_backButton, UNIT_PRIORITY);
 	_background->addChild(_lvl0, UNIT_PRIORITY);
 	_background->addChild(_lvl1, UNIT_PRIORITY);
@@ -242,12 +277,25 @@ void LevelSelectScene::update(float dt) {
 	}
 
 	float newOffset = _currentOffset - _prevOffset;
+
+	// if that shitty android button is pressed then override all this beautiful code
+	if (_levelSelectForwardScroll) {
+		newOffset = -20;
+	}
+	else if (_levelSelectBackwardScroll) {
+		newOffset = 20;
+	}
+
+	// clamp
 	if (xPos + newOffset >= _maxX) {
 		newOffset = _maxX - xPos;
 	}
 	if (xPos + newOffset <= _minX) {
 		newOffset = _minX - xPos;
 	}
+
+	
+
 
 	_background->setPositionX(xPos + newOffset);
 }
