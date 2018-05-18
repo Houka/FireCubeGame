@@ -277,7 +277,7 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				/*if (!slipperySlope(enemy_pos+aim, aim, enemy, gamestate)) {
 					moves.push_back(std::make_tuple(enemy, aim));
 				}
-*/
+				*/
 				if (intersectsWater(enemy_pos, player_pos, gamestate)) {
 					if (!slipperySlope(enemy_pos + aim*d, aim, enemy, gamestate)) {
 						aim *= impulse;
