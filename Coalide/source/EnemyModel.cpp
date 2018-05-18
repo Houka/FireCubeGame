@@ -176,14 +176,11 @@ void EnemyModel::animateSpore() {
 		setDestroyed();
 		return;
 	}
-	if (isDispersing() && frame < 4) {
+	if (frame < 4) {
 		node->setFrame(4);
 	}
 	else {
 		node->setFrame(frame + 1);
-		if (isShooting() && node->getFrame() == 2) {
-			_shooting = false;
-		}
 	}
 }
 
@@ -196,6 +193,9 @@ Vec2 EnemyModel::getPosition() {
 	}
 	else if (isMushroom()) {
 		return Vec2(CapsuleObstacle::getPosition().x-0.5, CapsuleObstacle::getPosition().y + 0.5);
+	}
+	else {
+		return CapsuleObstacle::getPosition();
 	}
 	
 }

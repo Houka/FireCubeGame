@@ -10,7 +10,7 @@
       "file": "textures/mushroom_sprite.png"
     },
     "spore": {
-      "file": "textures/spore.png"
+      "file": "textures/spritesheet_spore.png"
     },
     "onion": {
       "file": "textures/onion_sprite.png"

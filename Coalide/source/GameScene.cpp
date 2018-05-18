@@ -394,6 +394,11 @@ void GameScene::update(float dt) {
 		//CULog(to_string(object->getNode()->getZOrder()).c_str());
 	}
 
+	for (int i = 0; i < _gamestate->getSpores().size(); i++) {
+		std::shared_ptr<EnemyModel> spore = _gamestate->getSpores()[i];
+		spore->getNode()->setZOrder((_gamestate->getBounds().size.height - spore->getPosition().y) * 100);
+	}
+
 	_gamestate->getWorldNode()->sortZOrder();
 
     // Update the physics world
@@ -415,11 +420,7 @@ void GameScene::update(float dt) {
 		else {
 			if (spore->isDispersing()) {
 				spore->animateSpore();
-			}
-			else if (spore->isShooting()) {
-				spore->animateSpore();
-			}
-			
+			}		
 		}
 	}
 
