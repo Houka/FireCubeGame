@@ -115,8 +115,6 @@ public:
 	bool leftKeyPressed() { return _left; }
 	bool rightKeyPressed() { return _right; }
 
-	void setArtificialBreakpoint(bool on) { artificialBreakpoint = on; }
-
 
 #pragma mark -
 #pragma mark Mouse Callbacks

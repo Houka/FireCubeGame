@@ -161,7 +161,6 @@ void CoalideApp::update(float timestep) {
 				_currentScene = CURRENT_SCENE::MENU_SCENE;
 			}
 			else if (_levelSelectScene.didClickLevel()) {
-				_input.setArtificialBreakpoint(true);
 				_levelSelectScene.dispose();
 				_gameScene.init(_assets, _input, LEVEL_KEY);
 				_levelCt = _levelSelectScene.getCurrentLevel();
