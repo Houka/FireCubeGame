@@ -178,8 +178,12 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus) {
 * @param event The associated event
 */
 void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
+	//CULog("touchmotion");
 	_currentTouch = event.position;
 	_previousTouch = event.position;
+	if (artificialBreakpoint) {
+		CULog("breakpoint");
+	}
 	_mousepan = true;
 }
 

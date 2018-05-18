@@ -321,15 +321,11 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	float yMax = _player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
 
 	_gameOverScreen->setVisible(false);
-	_gameOverScreen->setPosition(cugl::Vec2(0,-400));
+	_gameOverScreen->setPosition(LOSE_WIN_SCREEN_LOCATION);
 	_gameOverScreen->setScale(LOSE_WIN_SCALE);
 	_winScreen->setVisible(false);
 	_winScreen->setPosition(LOSE_WIN_SCREEN_LOCATION);
 	_winScreen->setScale(LOSE_WIN_SCALE);
-	//_gameOverText->setVisible(false);
-	//_gameOverText->setPosition(0, 75);
-	//_winText->setVisible(false);
-	//_winText->setPosition(0, 75);
 
 	_menuButton = cugl::Button::alloc(_backNode);
 	_menuButton->setPosition(FAR_FAR_AWAY);

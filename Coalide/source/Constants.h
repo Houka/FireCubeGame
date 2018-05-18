@@ -133,6 +133,12 @@ enum class TILE_TYPE : int {
 
 
 // UI button locations
-
+// UI constants:
+#define FAR_FAR_AWAY               cugl::Vec2(0,10000)
+#define LOSE_WIN_SCREEN_LOCATION   cugl::Vec2(0, 50)
+#define QUIT_BUTTON_LOCATION       cugl::Vec2(-180, -175)
+#define REPLAY_BUTTON_LOCATION     cugl::Vec2(-100, -175)
+#define NEXT_BUTTON_LOCATION       cugl::Vec2(50, -175)
+#define LOSE_WIN_SCALE             cugl::Vec2(.3, .3)
 
 #endif /* defined(__LEVEL_CONSTANTS_H__) */

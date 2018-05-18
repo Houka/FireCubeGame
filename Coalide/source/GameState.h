@@ -73,12 +73,12 @@ protected:
 	bool _isPaused = false;
 
 	// UI constants:
-	cugl::Vec2 FAR_FAR_AWAY = cugl::Vec2(0,10000);
-	cugl::Vec2 LOSE_WIN_SCREEN_LOCATION = cugl::Vec2(-400,-500);
-	cugl::Vec2 QUIT_BUTTON_LOCATION = cugl::Vec2(-400, -200);
-	cugl::Vec2 REPLAY_BUTTON_LOCATION = cugl::Vec2(-200, -200);
-	cugl::Vec2 NEXT_BUTTON_LOCATION = cugl::Vec2(400, -200);
-	cugl::Vec2 LOSE_WIN_SCALE = cugl::Vec2(.4,.4);
+	//cugl::Vec2 FAR_FAR_AWAY = cugl::Vec2(0,10000);
+	//cugl::Vec2 LOSE_WIN_SCREEN_LOCATION = cugl::Vec2(-400,-500);
+	//cugl::Vec2 QUIT_BUTTON_LOCATION = cugl::Vec2(-400, -200);
+	//cugl::Vec2 REPLAY_BUTTON_LOCATION = cugl::Vec2(-200, -200);
+	//cugl::Vec2 NEXT_BUTTON_LOCATION = cugl::Vec2(400, -200);
+	//cugl::Vec2 LOSE_WIN_SCALE = cugl::Vec2(.4,.4);
 
 	std::shared_ptr<cugl::AssetManager> _assets;
 

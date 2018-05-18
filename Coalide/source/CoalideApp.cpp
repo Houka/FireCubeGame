@@ -102,12 +102,13 @@ void CoalideApp::update(float timestep) {
     std::string levelNames[6] = {"json/doubletrouble.json", "json/openBetaJsons/lvl2.json", "json/openBetaJsons/lvl3.json", "json/openBetaJsons/lvl4.json", "json/openBetaJsons/lvl5.json", "json/openBetaJsons/lvl6.json"};
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
+		CULog("loading...");
 	}
 	else if (!_loaded) {
 		_loadingScene.dispose(); // Disables the input listeners in this mode
 		//_gameScene.init(_assets, _input, LEVEL_KEY);
-		_menuScene.init(_assets, _input);
-		_currentScene = CURRENT_SCENE::MENU_SCENE;
+		_gameScene.init(_assets, _input, LEVEL_KEY);
+		_currentScene = CURRENT_SCENE::GAME_SCENE;
 
 
 		if (!AudioEngine::get()->isActiveEffect("harlem")) {
@@ -144,6 +145,7 @@ void CoalideApp::update(float timestep) {
 				_currentScene = CURRENT_SCENE::MENU_SCENE;
 			}
 			else if (_levelSelectScene.didClickLevel()) {
+				_input.setArtificialBreakpoint(true);
 				_levelSelectScene.dispose();
 				_gameScene.init(_assets, _input, LEVEL_KEY);
 				_levelCt = _levelSelectScene.getCurrentLevel();

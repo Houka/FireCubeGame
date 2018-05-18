@@ -34,6 +34,9 @@ private:
     cugl::Vec2 _previousTouch;
     /** The current touch location for the current gesture */
     cugl::Vec2 _currentTouch;
+
+	// DEBUG HELPER
+	bool artificialBreakpoint = false;
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -111,6 +114,8 @@ public:
 
 	bool leftKeyPressed() { return _left; }
 	bool rightKeyPressed() { return _right; }
+
+	void setArtificialBreakpoint(bool on) { artificialBreakpoint = on; }
 
 
 #pragma mark -
