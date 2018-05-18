@@ -10,9 +10,9 @@
 #define MAX_SPEED_FOR_SLING .1
 #define IMPULSE_SCALE 8
 #define SLING_TIMEOUT 4000
-#define SPORE_TIMEOUT 5000
 #define ONION_TIMEOUT 4000
 #define COLLISION_TIMEOUT 1500
+#define SPORE_TIMEOUT 6000
 
 using namespace cugl;
 
@@ -30,10 +30,10 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		setName(ENEMY_NAME);
 		setBodyType(b2_dynamicBody);
         setLinearDamping(GLOBAL_AIR_DRAG);
-		
+
 		_node = nullptr;
 
-		setDensity(2.0f);
+		setDensity(4.8f);
 		setRestitution(0.4f);
 		setFixedRotation(true);
 
@@ -41,19 +41,26 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_onFire = false;
         _slingCollisionLocked = false;
 
-		_wandering = true;
-		_targeting = false;
+		_wandering = false;
+		_targeting = true;
 
 		_mushroom = false;
 		_spore = false;
 		_onion = false;
+		_acorn = false;
 
 		_destroyed = false;
+		_sparky = false;
+
+		_shooting = false;
+		_dispersing = false;
+
+		_waterInbetween = false;
 
 		_previousTime = Timestamp();
         unsigned int rnd_seed = (unsigned int) (100 * pos.x + pos.y);
         std::srand(rnd_seed);
-		_rndTimerReduction = std::rand() % 3000;
+		_rndTimerReduction = std::rand() % 2000;
 
 		return true;
 	}
@@ -72,7 +79,7 @@ void EnemyModel::dispose() {
 void EnemyModel::applyLinearImpulse(Vec2& impulse) {
     _previousTime.mark();
     _rndTimerReduction = std::rand() % 3000;
-    _body->ApplyLinearImpulseToCenter(IMPULSE_SCALE * b2Vec2(impulse.x,impulse.y), true);
+    _body->SetLinearVelocity(b2Vec2(impulse.x,impulse.y));
 }
 
 /**
@@ -143,10 +150,55 @@ bool EnemyModel::timeoutElapsed(){
 	if (isMushroom()) {
 		return Timestamp().ellapsedMillis(_previousTime) >= (SPORE_TIMEOUT - _rndTimerReduction);
 	}
-	if (isOnion()) {
-		return Timestamp().ellapsedMillis(_previousTime) >= (ONION_TIMEOUT - _rndTimerReduction);
-	}
+
     return Timestamp().ellapsedMillis(_previousTime) >= (SLING_TIMEOUT - _rndTimerReduction);
+}
+
+void EnemyModel::updateSparks(bool visible) {
+	_sparks->setVisible(visible);
+}
+
+void EnemyModel::updateSparks() {
+	if (_sparks->isVisible()) {
+		int frame = _sparks->getFrame();
+		if (frame < 5) {
+			_sparks->setFrame(frame + 1);
+		}
+		else {
+			_sparks->setVisible(false);
+			_sparks->setFrame(0);
+		}
+	}
+}
+
+void EnemyModel::animateSpore() {
+	std::shared_ptr<AnimationNode> node = std::dynamic_pointer_cast<AnimationNode>(_node);
+	int frame = node->getFrame();
+	if (frame == 6) {
+		setDestroyed();
+		return;
+	}
+	if (frame < 4) {
+		node->setFrame(4);
+	}
+	else {
+		node->setFrame(frame + 1);
+	}
+}
+
+Vec2 EnemyModel::getPosition() {
+	if (isAcorn()) {
+		return Vec2(CapsuleObstacle::getPosition().x+0.25, CapsuleObstacle::getPosition().y + 0.25);
+	}
+	else if (isOnion()) {
+		return Vec2(CapsuleObstacle::getPosition().x, CapsuleObstacle::getPosition().y + 0.5);
+	}
+	else if (isMushroom()) {
+		return Vec2(CapsuleObstacle::getPosition().x-0.5, CapsuleObstacle::getPosition().y + 0.5);
+	}
+	else {
+		return CapsuleObstacle::getPosition();
+	}
 }
 
 /**
@@ -171,7 +223,7 @@ void EnemyModel::update(float dt) {
             setStunned(false);
         }
     }
-    else if(!canSling()){
+    else if(!canSling() && !isSpore()){
         _node->setColor(Color4::RED);
     } else {
         _node->setColor(Color4::WHITE);
@@ -180,7 +232,7 @@ void EnemyModel::update(float dt) {
         _shouldStopSoon = false;
         _body->SetLinearVelocity(b2Vec2(0,0));
     }
-    if(!isMushroom() && _waterInbetween && ts.ellapsedMillis(_noLineOfSiteTimeout) >= 2000){
+    /*if(!isMushroom() && _waterInbetween && ts.ellapsedMillis(_noLineOfSiteTimeout) >= 2000){
         _previousTime.mark();
-    }
+    }*/
 }

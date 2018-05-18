@@ -33,6 +33,7 @@ protected:
 	Vec2 _force;
 
 	bool _broken;
+	bool _animating;
 
 	/** The ratio of the sprite to the physics body */
 	float _drawscale;
@@ -181,6 +182,18 @@ public:
 	bool alreadyStopping() {
 		return _shouldStopSoon;
 	}
+
+	void setAnimating() {
+		_animating = true;
+	}
+
+	bool isAnimating() {
+		return _animating;
+	}
+
+	void animate();
+
+	Vec2 getPosition();
 
 #pragma mark -
 #pragma mark Physics

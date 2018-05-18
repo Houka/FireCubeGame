@@ -94,6 +94,10 @@ public:
      */
     virtual void onStartup() override;
 
+	virtual void onSuspend() override;
+
+	virtual void onResume() override;
+
     /**
      * The method called when the application is ready to quit.
      *

@@ -170,6 +170,12 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
         Rect nicoal_start = Rect(0.0f,448.0f,64.0f,64.0f);
         auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()), nicoal_start);
         
+		//Collision sparks node
+		std::shared_ptr<cugl::AnimationNode> sparks = AnimationNode::alloc(_assets->get<Texture>("sparks"), 1, 6);
+		sparks->setVisible(false);
+		_player->setSparks(sparks);
+		playerNode->addChild(sparks);
+
         _player->setNode(playerNode);
 		_player->setDrawScale(_scale.x);
 
@@ -186,8 +192,8 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
         _player->setCircle(_circle);
         
         // Create the polygon node (empty, as the model will initialize)
-        _worldnode->addChild(_arrow, UNIT_PRIORITY);
-        _worldnode->addChild(_circle, UNIT_PRIORITY);
+        _worldnode->addChild(_arrow, 1);
+        _worldnode->addChild(_circle, 1);
         _worldnode->addChild(playerNode, UNIT_PRIORITY);
 	}
 
@@ -200,6 +206,17 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
             else {
                 enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()),Rect(0,0,64,64));
             }
+
+			//Collision sparks node
+			std::shared_ptr<cugl::AnimationNode> sparks = AnimationNode::alloc(_assets->get<Texture>("sparks"), 1, 6);
+			sparks->setVisible(false);
+			if (enemy->isOnion()) {
+				sparks->setAnchor(Vec2(0, 0));
+				sparks->setPosition(Vec2(32, 10));
+			}
+			enemy->setSparks(sparks);
+			enemyNode->addChild(sparks);
+
 			enemy->setNode(enemyNode);
 			enemy->setDrawScale(_scale.x);
 			//enemy->setDebugScene(_debugnode);
@@ -211,13 +228,29 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	if (_objects.size() > 0) {
 		for (auto it = _objects.begin(); it != _objects.end(); ++it) {
 			std::shared_ptr<ObjectModel> object = *it;
-			auto objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()), Rect(0, 0, 64, 64));
-			object->setNode(objectNode);
+			if (object->isBreakable()) {
+				std::shared_ptr<AnimationNode> objectNode = AnimationNode::alloc(_assets->get<Texture>(object->getTextureKey()), 1, 6);
+				object->setNode(objectNode);
+				//objectNode->setScale(.75, 1);
+				_worldnode->addChild(objectNode, UNIT_PRIORITY);
+			}
+			else if (object->isMovable()) {
+				std::shared_ptr<AnimationNode> objectNode = AnimationNode::alloc(_assets->get<Texture>(object->getTextureKey()), 1, 12);
+				object->setNode(objectNode);
+				//objectNode->setScale(.75, 1);
+				_worldnode->addChild(objectNode, UNIT_PRIORITY);
+			}
+			else {
+				std::shared_ptr<PolygonNode> objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()));
+				//objectNode->setScale(.75, 1);
+				object->setNode(objectNode);
+				_worldnode->addChild(objectNode, UNIT_PRIORITY);
+			}
+			
 			object->setDrawScale(_scale.x);
-            objectNode->setScale(.75, 1);
+            
 			//object->setDebugScene(_debugnode);
 
-			_worldnode->addChild(objectNode, UNIT_PRIORITY);
 		}
 	}
     
@@ -343,11 +376,11 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_uiNode->addChild(_nextButton, UNIT_PRIORITY);
 	_uiNode->addChild(_restartButton, UNIT_PRIORITY);
 	
-	_worldnode->addChild(_uiNode, 2);
+	_worldnode->addChild(_uiNode, 10000);
 }
 
 void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {
-    auto sporeNode = PolygonNode::allocWithTexture(_assets->get<Texture>(spore->getTextureKey()));
+    auto sporeNode = AnimationNode::alloc(_assets->get<Texture>(spore->getTextureKey()), 1, 7);
     spore->setNode(sporeNode);
     spore->setDrawScale(_scale.x);
     //spore->setDebugScene(_debugnode);
@@ -390,6 +423,17 @@ void GameState::showWinScreen(bool showing) {
 		_nextButton->setPosition(0, 10000);
 		_gameOverScreen->setVisible(false);
 		_winText->setVisible(false);
+	}
+}
+
+void GameState::didPause() {
+	if (!_gameOverScreen->isVisible() && !_gameOverScreen->isVisible()) { // add win screen
+		_isPaused = true;
+		_playButton->setVisible(true);
+		_playButton->setPosition(-200, -100);
+		_menuButton->setVisible(true);
+		_menuButton->setPosition(0, -100);
+		_pauseButton->setVisible(false);
 	}
 }
 

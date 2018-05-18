@@ -58,8 +58,15 @@ protected:
 	bool _mushroom;
 	bool _spore;
 	bool _onion;
+	bool _acorn;
 
 	bool _destroyed;
+
+	std::shared_ptr<cugl::AnimationNode> _sparks;
+	bool _sparky;
+
+	bool _shooting;
+	bool _dispersing;
 
 	std::vector<Vec2> _route;
 
@@ -170,6 +177,8 @@ public:
      */
     void setCharging(bool charge) { _charging = charge; }
     
+	Vec2 getPosition();
+
     /**
      * Sets whether enemy is charging or floored.
      *
@@ -197,6 +206,10 @@ public:
 
 	void setOnion() { _onion = true; }
 
+	bool isAcorn() { return _acorn; }
+
+	void setAcorn() { _acorn = true; }
+
 	bool isDestroyed() { return _destroyed; }
 
 	void setDestroyed() { _destroyed = true; }
@@ -204,6 +217,19 @@ public:
 	std::vector<Vec2> getRoute() { return _route; }
 
 	void setRoute(std::vector<Vec2> route) { _route = route; }
+
+	void setSparks(const std::shared_ptr<AnimationNode>& sparks) { _sparks = sparks; }
+	void setSparky(bool sparky) { _sparky = sparky; }
+	bool getSparky() { return _sparky; }
+	void updateSparks();
+	void updateSparks(bool visible);
+
+	bool isShooting() { return _shooting; }
+	bool isDispersing() { return _dispersing; }
+	void setShooting() { _shooting = true; }
+	void setDispersing() { _dispersing = true; }
+
+	void animateSpore();
 
 	/**
 	* Returns the scene graph node representing this enemy.

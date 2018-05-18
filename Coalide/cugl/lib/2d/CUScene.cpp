@@ -112,8 +112,8 @@ bool Scene::init(float x, float y, float width, float height) {
  *
  * @return the camera for this scene.
  */
-std::shared_ptr<Camera> Scene::getCamera() {
-    return std::dynamic_pointer_cast<Camera>(_camera);
+std::shared_ptr<OrthographicCamera> Scene::getCamera() {
+    return _camera;
 }
 
 /**
@@ -121,8 +121,8 @@ std::shared_ptr<Camera> Scene::getCamera() {
  *
  * @return the camera for this scene.
  */
-const std::shared_ptr<Camera> Scene::getCamera() const {
-    return std::dynamic_pointer_cast<Camera>(_camera);
+const std::shared_ptr<OrthographicCamera> Scene::getCamera() const {
+    return _camera;
 }
 
 /**

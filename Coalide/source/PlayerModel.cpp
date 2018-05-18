@@ -33,13 +33,16 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
         _charging = false;
         _sizePlayer = size;
 
-		setDensity(2.0f);
+		setDensity(4.0f);
 		setRestitution(0.4f);
 		setFixedRotation(true);
 
 		_stunned = false;
         _stunOnStop = false;
 		_onFire = false;
+		_superCollide = false;
+		_superCollideTimer = 0;
+		_sparky = false;
 
 		return true;
 	}
@@ -71,9 +74,19 @@ bool PlayerModel::canSling(){
 **/
 bool PlayerModel::inBounds(int width, int height){
     b2Vec2 position = _body->GetPosition();
-    return (position.x > 0 && (position.y-0.35) > 0 && position.x < width && (position.y-0.35) < height);
+    return (position.x > 0 && position.y > 0 && position.x < width && position.y < height);
 }
 
+
+bool PlayerModel::isSuperCollide() {
+	if (_superCollide && _superCollideTimer > 0) {
+		_superCollideTimer -= 1;
+	}
+	else {
+		_superCollide = false;
+	}
+	return _superCollide;
+}
 
 /**
  * Sets the texture for Nicoal based on angle facing and state
@@ -215,6 +228,28 @@ void PlayerModel::updateArrow(bool visible) {
 
 void PlayerModel::updateCircle(bool visible) {
     _circle->setVisible(visible);
+}
+
+void PlayerModel::updateSparks(bool visible) {
+	_sparks->setVisible(visible);
+}
+
+void PlayerModel::updateSparks() {
+	if (_sparks->isVisible()) {
+		int frame = _sparks->getFrame();
+		if (frame < 5) {
+			_sparks->setFrame(frame + 1);
+		}
+		else {
+			_sparks->setVisible(false);
+			_sparks->setFrame(0);
+		}
+	}
+}
+
+
+Vec2 PlayerModel::getPosition() {
+	return Vec2(CapsuleObstacle::getPosition().x, CapsuleObstacle::getPosition().y + 0.25);
 }
 
 

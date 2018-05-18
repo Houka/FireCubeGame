@@ -20,6 +20,8 @@
 
 #define STUN_TIME 15
 
+#define SUPER_COLLISION_LENGTH 40;
+
 #pragma mark -
 #pragma mark Model Constants
 
@@ -29,6 +31,7 @@
 #define ENEMY_NAME		"enemy"
 #define ACORN			"acorn"
 #define MUSHROOM		"mushroom"
+#define SPORE			"spore"
 #define ONION			"onion"
 
 #define TILE_NAME		"tile"
@@ -38,7 +41,7 @@
 #define MOVABLE_NAME	"movable"
 #define IMMOBILE_NAME	"immobile"
 
-#define MENU_NAME	"menu"
+#define MENU_NAME		"menu"
 
 #pragma mark -
 #pragma mark Physics Constants
@@ -55,6 +58,10 @@
 #define GLOBAL_AIR_DRAG 1.5f
 
 #define UNIT_DIM Vec2(1,1)
+#define PLAYER_DIM Vec2(1,.5)
+#define ACORN_DIM Vec2(.5,.5)
+#define ONION_DIM Vec2(1,1)
+#define MUSHROOM_DIM Vec2(1,1)
 
 #pragma	mark -
 #pragma mark Level Constants
@@ -89,12 +96,13 @@
 #define LEVEL_KEY    "level"
 
 /** Time slowdown rates */
-#define NORMAL_MOTION .015
+#define NORMAL_MOTION .015625
 #define SLOW_MOTION .002
+#define SUPER_COLLISION_MOTION .001
 
 #define MAX_PLAYER_SPEED 20
 
-#define MAX_IMPULSE 1.5f
+#define MAX_IMPULSE 12.0f
 
 /** Defines the zones for Nicoal textures
  *     FOUR      FIVE           SIX     SEVEN

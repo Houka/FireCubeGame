@@ -9,6 +9,9 @@
     "mushroom": {
       "file": "textures/mushroom_sprite.png"
     },
+    "spore": {
+      "file": "textures/spritesheet_spore.png"
+    },
     "onion": {
       "file": "textures/onion_sprite.png"
     },
@@ -19,9 +22,12 @@
       "file": "textures/tileset_water.png"
     },
     "immobile": {
-      "file": "textures/spritesheet_stone.png"
+      "file": "textures/stone.png"
     },
     "movable": {
+      "file": "textures/spritesheet_unbreakable_crate.png"
+    },
+    "breakable": {
       "file": "textures/spritesheet_crate.png"
     },
     "menu": {
@@ -35,6 +41,9 @@
     },
     "circle_indicator": {
       "file": "textures/circle.png"
+    },
+    "sparks": {
+      "file": "textures/spritesheet_impact.png"
     },
     "start_button": {
       "file": "textures/start.png"

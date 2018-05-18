@@ -60,6 +60,22 @@ void CoalideApp::onStartup() {
     Application::onStartup();
 }
 
+
+void CoalideApp::onSuspend() {
+	Application::onSuspend();
+	if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
+		_gameScene.pause();
+	}
+	AudioEngine::get()->pauseAll();
+}
+
+
+void CoalideApp::onResume() {
+	Application::onResume();
+	AudioEngine::get()->resumeAll();
+}
+
+
 /**
  * The method called when the application is ready to quit.
  *
@@ -84,6 +100,7 @@ void CoalideApp::onShutdown() {
 #else
     Input::deactivate<Mouse>();
 #endif
+	AudioEngine::stop();
     Application::onShutdown();
 }
 
@@ -99,8 +116,8 @@ void CoalideApp::onShutdown() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void CoalideApp::update(float timestep) {
-    std::string levelNames[6] = {"json/openBetaJsons/lvl1.json", "json/openBetaJsons/lvl2.json", "json/openBetaJsons/lvl3.json", "json/openBetaJsons/lvl4.json", "json/openBetaJsons/lvl5.json", "json/openBetaJsons/lvl9.json"};
-	
+    std::string levelNames[6] = {"json/lvl01.json", "json/openBetaJsons/lvl2.json", "json/openBetaJsons/lvl3.json", "json/openBetaJsons/lvl4.json", "json/openBetaJsons/lvl5.json", "json/openBetaJsons/lvl6.json"};
+
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
 	}

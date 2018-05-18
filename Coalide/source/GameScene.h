@@ -188,6 +188,8 @@ public:
 
 	std::shared_ptr<GameState> getGameState() { return _gamestate; }
 
+	void pause();
+
 
 #pragma mark -
 #pragma mark Scene Graph

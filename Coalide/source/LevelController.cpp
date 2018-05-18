@@ -191,7 +191,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     tile->setDirtTextureKey("tileset_forest.png");
                 }
                 if(type == "dirt"){
-                    _board[rows - 1 - r][c] = 10;
+					_board[rows - 1 - r][c] = 10;
                     tile->setType(TILE_TYPE::GRASS);
                     tile->setDirtTextureKey("tileset_forest.png");
                 }
@@ -237,7 +237,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
 
                 }
                 _tiles.push_back(tile);
-                _tileBoard[r][c] = tile;
+                _tileBoard[rows - 1 - r][c] = tile;
             }
         }
     }
@@ -254,8 +254,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
     
     // player
     auto player = objects->get("player");
-    _player = PlayerModel::alloc(Vec2(player->get("col")->asInt() + .5, rows - player->get("row")->asInt() - .5), UNIT_DIM);
-    
+    _player = PlayerModel::alloc(Vec2(player->get("col")->asInt() + .5, rows - player->get("row")->asInt() - .5), PLAYER_DIM);
     _world->addObstacle(_player);
     
     //acorns
@@ -265,9 +264,10 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
 
         int r = acorn->get("row")->asInt();
         int c = acorn->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), ACORN_DIM);
         enemy->setTextureKey(ACORN);
-        
+		enemy->setAcorn();
+
         _world->addObstacle(enemy);
         _enemies.push_back(enemy);
     }
@@ -279,11 +279,10 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         
         int r = onion->get("row")->asInt();
         int c = onion->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), ONION_DIM);
         enemy->setTextureKey(ONION);
-        enemy->setOnion();
-        enemy->setDensity(3);
-        
+		enemy->setOnion();
+
         _world->addObstacle(enemy);
         _enemies.push_back(enemy);
     }
@@ -295,7 +294,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         
         int r = mushroom->get("row")->asInt();
         int c = mushroom->get("col")->asInt();
-        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
+        enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), MUSHROOM_DIM);
         enemy->setTextureKey(MUSHROOM);
         enemy->setMushroom();
         
@@ -309,7 +308,24 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         _enemies.push_back(enemy);
     }
     
-    //crates
+	//breakable crates
+	/*auto breakableCrateArray = objects->get("breakableCrates");
+	for (auto breakableCrate : breakableCrateArray->_children) {
+		std::shared_ptr<ObjectModel> object;
+
+		int r = breakableCrate->get("row")->asInt();
+		int c = breakableCrate->get("col")->asInt();
+		object = ObjectModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
+		object->setTextureKey(BREAKABLE_NAME);
+		object->setName(BREAKABLE_NAME);
+		object->setBodyType(b2_dynamicBody);
+		object->setType(OBJECT_TYPE::BREAKABLE);
+
+		_world->addObstacle(object);
+		_objects.push_back(object);
+	}*/
+
+    //movable crates
     auto crateArray = objects->get("crates");
     for(auto crate : crateArray->_children){
         std::shared_ptr<ObjectModel> object;
@@ -320,6 +336,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         object->setTextureKey(MOVABLE_NAME);
         object->setName(MOVABLE_NAME);
         object->setBodyType(b2_dynamicBody);
+		object->setType(OBJECT_TYPE::MOVABLE);
         
         _world->addObstacle(object);
         _objects.push_back(object);
@@ -336,7 +353,8 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         object->setTextureKey(IMMOBILE_NAME);
         object->setName(IMMOBILE_NAME);
         object->setBodyType(b2_staticBody);
-        
+		object->setType(OBJECT_TYPE::IMMOBILE);
+
         _world->addObstacle(object);
         _objects.push_back(object);
     }

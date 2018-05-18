@@ -21,6 +21,8 @@ private:
     bool _active = false;
     /** Whether or not are in an active mouse pan */
     bool _mousepan;
+	bool _panning;
+	cugl::Vec2 _cameraPan;
     bool _mousedown;
     // TOUCH SUPPORT
     /** The initial touch location for the current gesture */
@@ -35,6 +37,7 @@ private:
     cugl::Vec2 _previousTouch;
     /** The current touch location for the current gesture */
     cugl::Vec2 _currentTouch;
+	cugl::TouchID _finger;
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -161,7 +164,7 @@ public:
 	* @param t     The touch information
 	* @param event The associated event
 	*/
-	void touchBeganCB(const cugl::TouchEvent& event, bool focus);
+	void touchBeganCB(const cugl::TouchEvent& event, bool focus, int fingers);
 
 	/**
 	* Callback for continuing a touch event
@@ -208,6 +211,8 @@ public:
 	*/
 	cugl::Vec2 getCurrentAim();
 
+	cugl::Vec2 getCameraPan() { return _cameraPan; };
+	
 	float getMaxSling(){
 		return _maxSling; 
 	}

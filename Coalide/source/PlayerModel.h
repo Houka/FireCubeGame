@@ -6,6 +6,7 @@
 #define __PLAYER_MODEL_H__
 #include <cugl/cugl.h>
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
+#include "Constants.h"
 
 using namespace cugl;
 
@@ -24,6 +25,9 @@ private:
     bool _shouldStopSoon;
     /** charging or floored */
     bool _charging;
+
+	bool _superCollide;
+	int _superCollideTimer;
     
 	/** milliseconds of stun */
     int _stunDuration;
@@ -50,6 +54,8 @@ protected:
     
     /** The animation actions */
     std::shared_ptr<cugl::Animate> _forward;
+	std::shared_ptr<cugl::AnimationNode> _sparks;
+	bool _sparky;
 
 	Vec2 _force;
 	b2FrictionJoint* _frictionJoint;
@@ -208,6 +214,7 @@ public:
 	*/
 	void setArrow(const std::shared_ptr<Node>& arrow) { _arrow = arrow; }
     void setCircle(const std::shared_ptr<PolygonNode>& circle) { _circle = circle; }
+	void setSparks(const std::shared_ptr<AnimationNode>& sparks) { _sparks = sparks; }
     
     void setDirectionTexture(float angle, int mode);
     void setDirectionTexture(int dir, int mode);
@@ -217,6 +224,9 @@ public:
     
     void setCoalided(bool collided) { _collided = collided; }
     bool getCoalided() {return _collided; }
+
+	void setSparky(bool sparky) { _sparky = sparky; }
+	bool getSparky() { return _sparky; }
 
 	/**
 	* Returns the texture (key) for the player.
@@ -252,7 +262,16 @@ public:
     void setColor(Color4 c){
         _color = c;
     }
+
+	Vec2 getPosition();
     
+	void setSuperCollide(bool superCollide) {
+		_superCollideTimer = SUPER_COLLISION_LENGTH;
+		_superCollide = superCollide;
+	}
+
+	bool isSuperCollide();
+
     /**
      * Is this player already stopping soon
      */
@@ -269,6 +288,8 @@ public:
 	void updateArrow(bool visible);
     void updateCircle(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bool visible);
     void updateCircle(bool visible);
+	void updateSparks();
+	void updateSparks(bool visible);
 
 #pragma mark -
 #pragma mark Physics
