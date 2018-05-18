@@ -74,7 +74,7 @@ bool PlayerModel::canSling(){
 **/
 bool PlayerModel::inBounds(int width, int height){
     b2Vec2 position = _body->GetPosition();
-    return (position.x > 0 && position.y > 0 && position.x < width-1 && position.y < height-1);
+    return (position.x >= 0 && position.y >= 0 && position.x < width && position.y < height);
 }
 
 

@@ -165,7 +165,7 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     tile->setWaterDecalSubTexture((subTextureX / 7) + TILE_BORDER, (endX / 7), (subTextureY / 8) + TILE_BORDER, (endY / 8));
                     tile->setWaterTextureKey("tileset_water.png");
                     _tiles.push_back(tile);
-                    _tileBoard[r][c] = tile;
+                    //_tileBoard[r][c] = tile;
                 }
             }
             else {
@@ -234,7 +234,6 @@ bool LevelController::loadTerrain(const std::shared_ptr<JsonValue>& json) {
                     double endY = subTextureY + 1;
                     double endX = subTextureX + 1;
                     tile->setWaterDecalSubTexture((subTextureX / 7) + TILE_BORDER, (endX / 7), (subTextureY / 8) + TILE_BORDER, (endY / 8));
-
                 }
                 _tiles.push_back(tile);
                 _tileBoard[rows - 1 - r][c] = tile;
