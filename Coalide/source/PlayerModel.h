@@ -6,6 +6,7 @@
 #define __PLAYER_MODEL_H__
 #include <cugl/cugl.h>
 #include <Box2D/Dynamics/Joints/b2FrictionJoint.h>
+#include "Constants.h"
 
 using namespace cugl;
 
@@ -24,6 +25,9 @@ private:
     bool _shouldStopSoon;
     /** charging or floored */
     bool _charging;
+
+	bool _superCollide;
+	int _superCollideTimer;
     
 	/** milliseconds of stun */
     int _stunDuration;
@@ -31,45 +35,27 @@ private:
     Vec2 _sizePlayer;
     /** whether the player should be stunned when they stop */
     bool _stunOnStop;
+    /** direction Nicoal is facing based on regions set up in constants file */
+    int player_direction;
+    /** Whether Nicoal got hit in mid collision */
+    bool _collided;
+    
     
 protected:
     std::shared_ptr<AssetManager> _assets;
-	std::shared_ptr<Node> _node;
-	std::shared_ptr<Node> _standingNode_f;
-    std::shared_ptr<Node> _standingNode_fls;
-    std::shared_ptr<Node> _standingNode_l;
-    std::shared_ptr<Node> _standingNode_bls;
-    std::shared_ptr<Node> _standingNode_b;
-    std::shared_ptr<Node> _standingNode_brs;
-    std::shared_ptr<Node> _standingNode_r;
-    std::shared_ptr<Node> _standingNode_frs;
-    std::shared_ptr<Node> _chargingNode_f;
-    std::shared_ptr<Node> _chargingNode_fls;
-    std::shared_ptr<Node> _chargingNode_l;
-    std::shared_ptr<Node> _chargingNode_bls;
-    std::shared_ptr<Node> _chargingNode_b;
-    std::shared_ptr<Node> _chargingNode_brs;
-    std::shared_ptr<Node> _chargingNode_r;
-    std::shared_ptr<Node> _chargingNode_frs;
-    std::shared_ptr<Node> _slidingNode_f;
-    std::shared_ptr<Node> _slidingNode_fls;
-    std::shared_ptr<Node> _slidingNode_l;
-    std::shared_ptr<Node> _slidingNode_bls;
-    std::shared_ptr<Node> _slidingNode_b;
-    std::shared_ptr<Node> _slidingNode_brs;
-    std::shared_ptr<Node> _slidingNode_r;
-    std::shared_ptr<Node> _slidingNode_frs;
+	std::shared_ptr<PolygonNode> _node;
     std::shared_ptr<Node> _buildupNode;
 	std::shared_ptr<Node> _chargingNode;
-    std::shared_ptr<AnimationNode> _animationNode;
 	std::shared_ptr<Node> _arrow;
-    std::shared_ptr<Node> _circle;
+    std::shared_ptr<PolygonNode> _circle;
     /** The body animation */
     //std::shared_ptr<cugl::AnimationNode> _anim;
 	std::string _texture;
     
     /** The animation actions */
     std::shared_ptr<cugl::Animate> _forward;
+	std::shared_ptr<cugl::AnimationNode> _sparks;
+	bool _sparky;
 
 	Vec2 _force;
 	b2FrictionJoint* _frictionJoint;
@@ -108,7 +94,7 @@ public:
 	*
 	* @return  true if the obstacle is initialized properly, false otherwise.
 	*/
-	virtual bool init(const Vec2& pos, const Size& size);
+	virtual bool init(const Vec2& pos, const Size& size) override;
 
 
 #pragma mark Static Constructors
@@ -153,12 +139,6 @@ public:
 	bool isFire() { return _onFire; }
 
 	void setFire(bool fire) { _onFire = fire; }
-
-//    void switchStandingNode() { _standingNode->setVisible(true); _chargingNode->setVisible(false); _node = _standingNode; }
-//    void switchChargingNode() { _standingNode->setVisible(false); _chargingNode->setVisible(true); _node = _chargingNode; }
-    
-    void switchNode(std::shared_ptr<Node> fromNode, std::shared_ptr<Node> toNode);
-    std::shared_ptr<Node> getTextNode(int state, int dir);
     
 #pragma mark -
 #pragma mark Accessors
@@ -210,16 +190,14 @@ public:
 	*
 	* @return the scene graph node representing the player.
 	*/
-	const std::shared_ptr<Node>& getNode() const { return _node; }
+	const std::shared_ptr<PolygonNode>& getNode() const { return _node; }
 
 	/**
 	* Sets the scene graph node representing the player.
 	*
 	* @param node  The scene graph node representing the player.
 	*/
-	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
-    
-    std::shared_ptr<Node> setTextNode(const std::shared_ptr<Node>& node, int state, int dir, bool set);
+	void setNode(const std::shared_ptr<PolygonNode>& node) { _node = node; }
 
 	/**
 	* Returns the scene graph node representing the player.
@@ -227,7 +205,7 @@ public:
 	* @return the scene graph node representing the player.
 	*/
 	const std::shared_ptr<Node>& getArrow() const { return _arrow; }
-    const std::shared_ptr<Node>& getCircle() const { return _circle; }
+    const std::shared_ptr<PolygonNode>& getCircle() const { return _circle; }
 
 	/**
 	* Sets the scene graph node representing the player.
@@ -235,7 +213,20 @@ public:
 	* @param node  The scene graph node representing the player.
 	*/
 	void setArrow(const std::shared_ptr<Node>& arrow) { _arrow = arrow; }
-    void setCircle(const std::shared_ptr<Node>& circle) { _circle = circle; }
+    void setCircle(const std::shared_ptr<PolygonNode>& circle) { _circle = circle; }
+	void setSparks(const std::shared_ptr<AnimationNode>& sparks) { _sparks = sparks; }
+    
+    void setDirectionTexture(float angle, int mode);
+    void setDirectionTexture(int dir, int mode);
+    
+    void setPlayerDirection(int dir) { player_direction = dir; }
+    int getPlayerDirection() {return player_direction; }
+    
+    void setCoalided(bool collided) { _collided = collided; }
+    bool getCoalided() {return _collided; }
+
+	void setSparky(bool sparky) { _sparky = sparky; }
+	bool getSparky() { return _sparky; }
 
 	/**
 	* Returns the texture (key) for the player.
@@ -271,7 +262,16 @@ public:
     void setColor(Color4 c){
         _color = c;
     }
+
+	Vec2 getPosition();
     
+	void setSuperCollide(bool superCollide) {
+		_superCollideTimer = SUPER_COLLISION_LENGTH;
+		_superCollide = superCollide;
+	}
+
+	bool isSuperCollide();
+
     /**
      * Is this player already stopping soon
      */
@@ -288,6 +288,8 @@ public:
 	void updateArrow(bool visible);
     void updateCircle(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bool visible);
     void updateCircle(bool visible);
+	void updateSparks();
+	void updateSparks(bool visible);
 
 #pragma mark -
 #pragma mark Physics

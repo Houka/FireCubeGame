@@ -121,4 +121,12 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\json\assets.json">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\assets\json\loading.json">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>

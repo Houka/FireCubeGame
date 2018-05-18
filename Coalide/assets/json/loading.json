@@ -1,7 +1,7 @@
 {
 	"textures": {
 		"logo": {
-			"file":      "textures/logo.png",
+			"file":      "textures/background_loading_screen.png",
             "wrapS":     "clamp",
             "wrapT":     "clamp",
             "minfilter": "linear",
@@ -21,10 +21,10 @@
             "minfilter": "linear",
             "magfilter": "linear",
             "atlas":     {
-                "background" : [0,    5, 400, 35],
-                "foreground" : [16,  45, 384, 75],
-                "leftcap"    : [0,   45,  16, 75],
-                "rightcap"   : [384, 45, 400, 75]
+                "background" : [6,   5, 394, 35],
+                "foreground" : [6,   45, 394, 73],
+                "leftcap"    : [0,   5,   6, 35],
+                "rightcap"   : [394, 5,  400, 35]
             }
         }
 	},
@@ -43,36 +43,12 @@
                     "data"   : {
                         "texture"  : "logo",
                         "anchor"   : [0.5,0.5],
-                        "scale"    : 0.7
+                        "scale"    : 0.4
                     },
                     "layout" : {
                         "x_anchor" : "center",
                         "y_anchor" : "top",
-                        "y_offset" : -0.4
-                    },
-                    "children" : {
-                        "play"  : {
-                            "type"   : "Button",
-                            "data"   : {
-                                "up"       : {
-                                    "type"   : "Image",
-                                    "data"   : {
-                                        "texture"  : "play"
-                                    }
-                                },
-                                "pushable" : [0,100,29,171,100,200,171,171,200,100,171,29,100,0,29,29],
-                                "visible"  : false,
-                                "anchor"   : [0.5,0.5],
-                                "scale"    : 1.0
-                            },
-                            "layout" : {
-                                "x_anchor" : "center",
-                                "y_anchor" : "middle",
-                                "x_offset" :  0,
-                                "y_offset" : -0.07
-                            }
-                        }
-
+                        "y_offset" : -0.5
                     }
                 },
                 "bar"  : {

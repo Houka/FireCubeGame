@@ -167,108 +167,34 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
     }
 
 	if (_player != nullptr) {
-        auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()));
-        auto standingPlayerNode_f = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_nicoal_f"));
-        auto standingPlayerNode_fls = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_nicoal_fls"));
-        auto standingPlayerNode_l = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_nicoal_l"));
-        auto standingPlayerNode_bls = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_nicoal_bls"));
-        auto standingPlayerNode_b = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_nicoal_b"));
-        auto standingPlayerNode_brs = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_nicoal_brs"));
-        auto standingPlayerNode_r = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_nicoal_r"));
-        auto standingPlayerNode_frs = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_nicoal_frs"));
+        Rect nicoal_start = Rect(0.0f,448.0f,64.0f,64.0f);
+        auto playerNode = PolygonNode::allocWithTexture(_assets->get<Texture>(_player->getTextureKey()), nicoal_start);
         
-        auto chargingPlayerNode_f = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging_f"));
-        auto chargingPlayerNode_fls = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging_fls"));
-        auto chargingPlayerNode_l = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging_l"));
-        auto chargingPlayerNode_bls = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging_bls"));
-        auto chargingPlayerNode_b = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging_b"));
-        auto chargingPlayerNode_brs = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging_brs"));
-        auto chargingPlayerNode_r = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging_r"));
-        auto chargingPlayerNode_frs = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_charging_frs"));
-        
-        auto slidingPlayerNode_f = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_sliding_f"));
-        auto slidingPlayerNode_fls = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_sliding_fls"));
-        auto slidingPlayerNode_l = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_sliding_l"));
-        auto slidingPlayerNode_bls = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_sliding_bls"));
-        auto slidingPlayerNode_b = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_sliding_b"));
-        auto slidingPlayerNode_brs = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_sliding_brs"));
-        auto slidingPlayerNode_r = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_sliding_r"));
-        auto slidingPlayerNode_frs = PolygonNode::allocWithTexture(_assets->get<Texture>("nicoal_sliding_frs"));
-        
+		//Collision sparks node
+		std::shared_ptr<cugl::AnimationNode> sparks = AnimationNode::alloc(_assets->get<Texture>("sparks"), 1, 6);
+		sparks->setVisible(false);
+		_player->setSparks(sparks);
+		playerNode->addChild(sparks);
+
         _player->setNode(playerNode);
-        _player->setTextNode(standingPlayerNode_f, 0, 0, true);
-        _player->setTextNode(standingPlayerNode_fls, 0, 1, true);
-        _player->setTextNode(standingPlayerNode_l, 0, 2, true);
-        _player->setTextNode(standingPlayerNode_bls, 0, 3, true);
-        _player->setTextNode(standingPlayerNode_b, 0, 4, true);
-        _player->setTextNode(standingPlayerNode_brs, 0, 5, true);
-        _player->setTextNode(standingPlayerNode_r, 0, 6,true);
-        _player->setTextNode(standingPlayerNode_frs, 0, 7, true);
-        
-        _player->setTextNode(chargingPlayerNode_f, 2, 0, true);
-        _player->setTextNode(chargingPlayerNode_fls, 2, 1, true);
-        _player->setTextNode(chargingPlayerNode_l, 2, 2, true);
-        _player->setTextNode(chargingPlayerNode_bls, 2, 3, true);
-        _player->setTextNode(chargingPlayerNode_b, 2, 4, true);
-        _player->setTextNode(chargingPlayerNode_brs, 2, 5, true);
-        _player->setTextNode(chargingPlayerNode_r, 2, 6,true);
-        _player->setTextNode(chargingPlayerNode_frs, 2, 7, true);
-        
-        _player->setTextNode(slidingPlayerNode_f, 3, 0, true);
-        _player->setTextNode(slidingPlayerNode_fls, 3, 1, true);
-        _player->setTextNode(slidingPlayerNode_l, 3, 2, true);
-        _player->setTextNode(slidingPlayerNode_bls, 3, 3, true);
-        _player->setTextNode(slidingPlayerNode_b, 3, 4, true);
-        _player->setTextNode(slidingPlayerNode_brs, 3, 5, true);
-        _player->setTextNode(slidingPlayerNode_r, 3, 6,true);
-        _player->setTextNode(slidingPlayerNode_frs, 3, 7, true);
 		_player->setDrawScale(_scale.x);
-		//_player->setDebugScene(_debugnode);
 
         //Arrow indicator for Nicoal
-        Rect box = Rect(0.0f,0.0f,100.0f,65.0f);
+        Rect indicator_start = Rect(0.0f,0.0f,102.0f,65.0f);
         std::shared_ptr<cugl::Node> _arrow = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow_indicator"));
         _arrow->setScale(0.5f);
-        std::shared_ptr<cugl::Node> _circle = PolygonNode::allocWithTexture(_assets->get<Texture>("circle_indicator"), box);
-
-//        const std::vector<cugl::Vec2> arrowLine = { cugl::Vec2(0,0), cugl::Vec2(0, 2) };
-//        std::shared_ptr<cugl::PathNode> _arrow = PathNode::allocWithVertices(arrowLine, 1, cugl::PathJoint::NONE, cugl::PathCap::NONE, false);
+        std::shared_ptr<cugl::PolygonNode> _circle = PolygonNode::allocWithTexture(_assets->get<Texture>("circle_indicator"), indicator_start);
+        
         _arrow->setAnchor(cugl::Vec2(2.0, 2.0));
         _arrow->setVisible(false);
-//        _circle->setAnchor(cugl::Vec2(2.0, 2.0));
         _circle->setVisible(false);
         _player->setArrow(_arrow);
         _player->setCircle(_circle);
         
         // Create the polygon node (empty, as the model will initialize)
-        _worldnode->addChild(_arrow, UNIT_PRIORITY);
-        _worldnode->addChild(_circle, UNIT_PRIORITY);
+        _worldnode->addChild(_arrow, 1);
+        _worldnode->addChild(_circle, 1);
         _worldnode->addChild(playerNode, UNIT_PRIORITY);
-        _worldnode->addChild(standingPlayerNode_f, UNIT_PRIORITY);
-        _worldnode->addChild(standingPlayerNode_fls, UNIT_PRIORITY);
-        _worldnode->addChild(standingPlayerNode_l, UNIT_PRIORITY);
-        _worldnode->addChild(standingPlayerNode_bls, UNIT_PRIORITY);
-        _worldnode->addChild(standingPlayerNode_b, UNIT_PRIORITY);
-        _worldnode->addChild(standingPlayerNode_brs, UNIT_PRIORITY);
-        _worldnode->addChild(standingPlayerNode_r, UNIT_PRIORITY);
-        _worldnode->addChild(standingPlayerNode_frs, UNIT_PRIORITY);
-        _worldnode->addChild(chargingPlayerNode_f, UNIT_PRIORITY);
-        _worldnode->addChild(chargingPlayerNode_fls, UNIT_PRIORITY);
-        _worldnode->addChild(chargingPlayerNode_l, UNIT_PRIORITY);
-        _worldnode->addChild(chargingPlayerNode_bls, UNIT_PRIORITY);
-        _worldnode->addChild(chargingPlayerNode_b, UNIT_PRIORITY);
-        _worldnode->addChild(chargingPlayerNode_brs, UNIT_PRIORITY);
-        _worldnode->addChild(chargingPlayerNode_r, UNIT_PRIORITY);
-        _worldnode->addChild(chargingPlayerNode_frs, UNIT_PRIORITY);
-        _worldnode->addChild(slidingPlayerNode_f, UNIT_PRIORITY);
-        _worldnode->addChild(slidingPlayerNode_fls, UNIT_PRIORITY);
-        _worldnode->addChild(slidingPlayerNode_l, UNIT_PRIORITY);
-        _worldnode->addChild(slidingPlayerNode_bls, UNIT_PRIORITY);
-        _worldnode->addChild(slidingPlayerNode_b, UNIT_PRIORITY);
-        _worldnode->addChild(slidingPlayerNode_brs, UNIT_PRIORITY);
-        _worldnode->addChild(slidingPlayerNode_r, UNIT_PRIORITY);
-        _worldnode->addChild(slidingPlayerNode_frs, UNIT_PRIORITY);
-
 	}
 
 	if (_enemies.size() > 0) {
@@ -278,9 +204,19 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
             if(enemy->isOnion() || enemy->isMushroom())
                 enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()),Rect(0,0,128,128));
             else {
-                CULog("here %s", enemy->getTextureKey().c_str());
                 enemyNode = PolygonNode::allocWithTexture(_assets->get<Texture>(enemy->getTextureKey()),Rect(0,0,64,64));
             }
+
+			//Collision sparks node
+			std::shared_ptr<cugl::AnimationNode> sparks = AnimationNode::alloc(_assets->get<Texture>("sparks"), 1, 6);
+			sparks->setVisible(false);
+			if (enemy->isOnion()) {
+				sparks->setAnchor(Vec2(0, 0));
+				sparks->setPosition(Vec2(32, 10));
+			}
+			enemy->setSparks(sparks);
+			enemyNode->addChild(sparks);
+
 			enemy->setNode(enemyNode);
 			enemy->setDrawScale(_scale.x);
 			//enemy->setDebugScene(_debugnode);
@@ -292,13 +228,29 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	if (_objects.size() > 0) {
 		for (auto it = _objects.begin(); it != _objects.end(); ++it) {
 			std::shared_ptr<ObjectModel> object = *it;
-			auto objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()), Rect(0, 0, 64, 64));
-			object->setNode(objectNode);
+			if (object->isBreakable()) {
+				std::shared_ptr<AnimationNode> objectNode = AnimationNode::alloc(_assets->get<Texture>(object->getTextureKey()), 1, 6);
+				object->setNode(objectNode);
+				//objectNode->setScale(.75, 1);
+				_worldnode->addChild(objectNode, UNIT_PRIORITY);
+			}
+			else if (object->isMovable()) {
+				std::shared_ptr<AnimationNode> objectNode = AnimationNode::alloc(_assets->get<Texture>(object->getTextureKey()), 1, 12);
+				object->setNode(objectNode);
+				//objectNode->setScale(.75, 1);
+				_worldnode->addChild(objectNode, UNIT_PRIORITY);
+			}
+			else {
+				std::shared_ptr<PolygonNode> objectNode = PolygonNode::allocWithTexture(_assets->get<Texture>(object->getTextureKey()));
+				//objectNode->setScale(.75, 1);
+				object->setNode(objectNode);
+				_worldnode->addChild(objectNode, UNIT_PRIORITY);
+			}
+			
 			object->setDrawScale(_scale.x);
-            objectNode->setScale(.75, 1);
+            
 			//object->setDebugScene(_debugnode);
 
-			_worldnode->addChild(objectNode, UNIT_PRIORITY);
 		}
 	}
     
@@ -429,11 +381,11 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
 	_uiNode->addChild(_nextButton, UNIT_PRIORITY);
 	_uiNode->addChild(_restartButton, UNIT_PRIORITY);
 	
-	_worldnode->addChild(_uiNode, 2);
+	_worldnode->addChild(_uiNode, 10000);
 }
 
 void GameState::addSporeNode(std::shared_ptr<EnemyModel> spore) {
-    auto sporeNode = PolygonNode::allocWithTexture(_assets->get<Texture>(spore->getTextureKey()));
+    auto sporeNode = AnimationNode::alloc(_assets->get<Texture>(spore->getTextureKey()), 1, 7);
     spore->setNode(sporeNode);
     spore->setDrawScale(_scale.x);
     //spore->setDebugScene(_debugnode);
@@ -484,6 +436,17 @@ void GameState::showWinScreen(bool showing) {
 		_restartButton->setPosition(FAR_FAR_AWAY);
 		_winScreen->setVisible(false);
 		//_winText->setVisible(false);
+	}
+}
+
+void GameState::didPause() {
+	if (!_gameOverScreen->isVisible() && !_gameOverScreen->isVisible()) { // add win screen
+		_isPaused = true;
+		_playButton->setVisible(true);
+		_playButton->setPosition(-200, -100);
+		_menuButton->setVisible(true);
+		_menuButton->setPosition(0, -100);
+		_pauseButton->setVisible(false);
 	}
 }
 

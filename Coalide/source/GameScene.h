@@ -66,6 +66,10 @@ protected:
 
 	/** Number of enemies remaining. */
 	int _enemyCount;
+    float counter;
+    float deltaImage;
+    bool up;
+    int hacky_fix_sorry = 0;
 
 	/** Level key for loading correct tileset. */
 	std::string _levelKey;
@@ -183,6 +187,8 @@ public:
 	void setGameOver(bool value) { _gameover = value; _losenode->setVisible(value); }
 
 	std::shared_ptr<GameState> getGameState() { return _gamestate; }
+
+	void pause();
 
 
 #pragma mark -

@@ -32,7 +32,7 @@ private:
     bool _waterInbetween;
 protected:
 	/** The scene graph node for the enemy */
-	std::shared_ptr<Node> _node;
+	std::shared_ptr<PolygonNode> _node;
 	/** The texture key for the enemy */
 	std::string _texture;
 
@@ -57,8 +57,15 @@ protected:
 	bool _mushroom;
 	bool _spore;
 	bool _onion;
+	bool _acorn;
 
 	bool _destroyed;
+
+	std::shared_ptr<cugl::AnimationNode> _sparks;
+	bool _sparky;
+
+	bool _shooting;
+	bool _dispersing;
 
 	std::vector<Vec2> _route;
 
@@ -169,6 +176,8 @@ public:
      */
     void setCharging(bool charge) { _charging = charge; }
     
+	Vec2 getPosition();
+
     /**
      * Sets whether enemy is charging or floored.
      *
@@ -196,6 +205,10 @@ public:
 
 	void setOnion() { _onion = true; }
 
+	bool isAcorn() { return _acorn; }
+
+	void setAcorn() { _acorn = true; }
+
 	bool isDestroyed() { return _destroyed; }
 
 	void setDestroyed() { _destroyed = true; }
@@ -204,19 +217,32 @@ public:
 
 	void setRoute(std::vector<Vec2> route) { _route = route; }
 
+	void setSparks(const std::shared_ptr<AnimationNode>& sparks) { _sparks = sparks; }
+	void setSparky(bool sparky) { _sparky = sparky; }
+	bool getSparky() { return _sparky; }
+	void updateSparks();
+	void updateSparks(bool visible);
+
+	bool isShooting() { return _shooting; }
+	bool isDispersing() { return _dispersing; }
+	void setShooting() { _shooting = true; }
+	void setDispersing() { _dispersing = true; }
+
+	void animateSpore();
+
 	/**
 	* Returns the scene graph node representing this enemy.
 	*
 	* @return the scene graph node representing this enemy.
 	*/
-	const std::shared_ptr<Node>& getNode() const { return _node; }
+	const std::shared_ptr<PolygonNode>& getNode() const { return _node; }
 
 	/**
 	* Sets the scene graph node representing this enemy.
 	*
 	* @param node  The scene graph node representing this enemy.
 	*/
-	void setNode(const std::shared_ptr<Node>& node) { _node = node; }
+	void setNode(const std::shared_ptr<PolygonNode>& node) { _node = node; }
 
 	/**
 	* Returns the texture (key) for this enemy.
@@ -284,6 +310,14 @@ public:
      * Returns true if enemy is in bounds
      */
     bool inBounds(int width, int height);
+    
+    /**
+     * Sets the texture for enemy based on angle facing and state
+     *
+     * @param angle   direction enemy facing in degrees
+     * @param isAcorn if the enemy is an acorn or not
+     */
+    void setDirectionTexture(float angle, bool isAcorn);
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method

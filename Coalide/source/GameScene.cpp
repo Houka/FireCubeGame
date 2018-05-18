@@ -39,10 +39,11 @@ using namespace cugl;
 */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey) {
     //set application to right color
-    Application::get()->setClearColor(Color4(15,82,186,255));
+    Application::get()->setClearColor(Color4(86,210,212,255));
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= GAME_WIDTH / dimen.width; // Lock the game to a reasonable resolution
+
 	if (assets == nullptr) {
 		return false;
 	}
@@ -54,10 +55,6 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	// assets and input come from the CoalideApp level
 	_assets = assets;
 	_input = input;
-    
-    // Animation stuff hopefully...
-    //_actions = ActionManager::alloc();
-    //_forward = Animate::alloc(0,11,DURATION,REPEATS);
 
 	_levelKey = levelKey;
 
@@ -95,6 +92,9 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	getCamera()->translate(gameCenter - cameraPos);
+    counter = 0;
+    deltaImage = 0.0f;
+    up = true;
 	return true;
 }
 
@@ -178,6 +178,10 @@ void GameScene::activateWorldCollisions() {
 
 #pragma mark -
 #pragma mark Gameplay Handling
+
+void GameScene::pause() {
+	_gamestate->didPause();
+}
 /**
 * Executes the core gameplay loop of this world.
 *
@@ -214,8 +218,6 @@ void GameScene::update(float dt) {
 			_enemyCount = _gamestate->getEnemies().size();
 
 			_reloading = false;
-
-			//_loadnode->setVisible(false);
 		}
 		else {
 			// Level is not loaded yet; refuse input
@@ -248,80 +250,28 @@ void GameScene::update(float dt) {
 		Application::get()->quit();
 	}
 
-
     std::shared_ptr<ObstacleWorld> world = _gamestate->getWorld();
     std::shared_ptr<PlayerModel> player = _gamestate->getPlayer();
     Size gameBounds = _gamestate->getBounds().size;
     Vec2 player_pos = player->getPosition();
-
+    Vec2 currentAim = _input.getCurrentAim();
+    // Much easier to work in degrees...
+    float angle = currentAim.getAngle() * 180.0f / 3.14159f;
 
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
         world->setStepsize(SLOW_MOTION);
         if(!player->getCharging() ){
-            Vec2 currentAim = _input.getCurrentAim();
-
-			// scale down the aim vector if it's larger than the biggest sling you can do
-			if (currentAim.length() > _input.getMaxSling()) {
-				currentAim.scale(1.0 / currentAim.length() * _input.getMaxSling());
-			}
-
-            float angle = currentAim.getAngle() * 180.0f / 3.14159f;
-            player->_oldAngle = angle;
-            if(angle > 0.0f && angle < 35.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 2, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle > 35.0f && angle < 75.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 3, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle > 75.0f && angle < 105.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 4, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle > 105.0f && angle < 145.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 5, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle > 145.0f && angle < 180.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 6, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle < 0.0f && angle > -55.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 1, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle < -55.0f && angle > -125.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 0, false);
-                player->switchNode(currNode, desNode);
-            }
-            else if(angle < -125.0f && angle > -180.0f) {
-                std::shared_ptr<Node> currNode = player -> getNode();
-                std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 7, false);
-                player->switchNode(currNode, desNode);
-            }
+            // changes texture of nicoal
+            player->setDirectionTexture(angle, 0);
             // update the aim arrow
-			//cugl::Vec2 aim = _input.getCurrentAim();
-
-            player->updateArrow(currentAim, player->getNode(), true);
-            if(currentAim.length() > 175.0f) {
-                player->updateCircle(currentAim, player->getNode(), true);
-            } else
-            {
-                player->updateCircle(false);
+            player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
+            player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
+            CULog("%d", player->getPlayerDirection());
+            if(_input.getCurrentAim().length() > 200.0f) {
+                player->setDirectionTexture(angle, 1);
             }
         }
-        
-        
-        
     } else if(std::abs(world->getStepsize() - SLOW_MOTION) < SLOW_MOTION){
         world->setStepsize(NORMAL_MOTION);
         player->setColor(Color4::WHITE);
@@ -329,54 +279,12 @@ void GameScene::update(float dt) {
 
     // Applies vector from touch input to player and set to charging state
     if(_input.didSling(true) && player->canSling() && !player->isStunned()){
+        float angle = currentAim.getAngle() * 180.0f / 3.14159f;
         cugl::Vec2 sling = _input.getLatestSlingVector();
         player->applyLinearImpulse(sling);
         player->setCharging(true);
-//        player->updateArrow(false);
-        
-        Vec2 currentAim = _input.getCurrentAim();
-        float angle = currentAim.getAngle() * 180.0f / 3.14159f;
-        player->_oldAngle = angle;
-        if(angle > 0.0f && angle < 35.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 2, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 35.0f && angle < 75.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 3, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 75.0f && angle < 105.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 4, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 105.0f && angle < 145.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 5, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 145.0f && angle < 180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 6, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < 0.0f && angle > -55.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 1, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -55.0f && angle > -125.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 0, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -125.0f && angle > -180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 2, 7, false);
-            player->switchNode(currNode, desNode);
-        }
+        // changes texture of nicoal
+        player->setDirectionTexture(angle, 2);
     }
 
     // Caps player speed to MAX_PLAYER SPEED
@@ -385,104 +293,34 @@ void GameScene::update(float dt) {
         player->setLinearVelocity(capped_speed);
     }
     
+    if(player->getCoalided() && player->getLinearVelocity().length() <= 0.0f){
+        if(player->isStunned()){
+            player->setDirectionTexture(player->getPlayerDirection(), 7);
+        } else {
+            player->setDirectionTexture(player->getPlayerDirection(), 0);
+            player ->setCoalided(false);
+        }
+    }
+
     // Changes player state from charging if below speed threshold
     if(player->getCharging() && player->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
         player->setCharging(false);
         player->_isSliding = true;
         player->updateCircle(false);
-
-        float angle = player->_oldAngle;
-        if(angle > 0.0f && angle < 35.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 2, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 35.0f && angle < 75.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 3, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 75.0f && angle < 105.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 4, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 105.0f && angle < 145.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 5, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 145.0f && angle < 180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 6, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < 0.0f && angle > -55.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 1, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -55.0f && angle > -125.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 0, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -125.0f && angle > -180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 3, 7, false);
-            player->switchNode(currNode, desNode);
-        }
+        // changes texture of nicoal
+        player->setDirectionTexture(angle, 3);
     }
     
     if(player->_isSliding && player->getLinearVelocity().isNearZero()){
         player->_isSliding = false;
-        float angle = player->_oldAngle;
-        if(angle > 0.0f && angle < 35.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 2, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 35.0f && angle < 75.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 3, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 75.0f && angle < 105.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 4, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 105.0f && angle < 145.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 5, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle > 145.0f && angle < 180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 6, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < 0.0f && angle > -55.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 1, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -55.0f && angle > -125.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 0, false);
-            player->switchNode(currNode, desNode);
-        }
-        else if(angle < -125.0f && angle > -180.0f) {
-            std::shared_ptr<Node> currNode = player -> getNode();
-            std::shared_ptr<Node> desNode = player-> setTextNode(NULL, 0, 7, false);
-            player->switchNode(currNode, desNode);
-        }
         player->updateCircle(false);
+        // changes texture of nicoal
+        player->setDirectionTexture(angle, 0);
     }
     
     if(!player->canSling()) {
         player->updateArrow(false);
-        //player->updateCircle(false);
+        player->updateCircle(false);
     }
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state
@@ -491,32 +329,98 @@ void GameScene::update(float dt) {
         for(std::tuple<std::shared_ptr<EnemyModel>, Vec2> pair : enemiesToMove){
 			std::shared_ptr<EnemyModel> enemy = std::get<0>(pair);
             Vec2 sling = std::get<1>(pair);
+			//CULog("Slinging at %f", sling.length());
             enemy->applyLinearImpulse(sling);
             enemy->setCharging(true);
+            float angle = sling.getAngle(Vec2(-1.0f, 0.0f)) * 180.0f / 3.14159;
+            bool isAcorn = !(enemy->isOnion() || enemy->isMushroom());
+            enemy->setDirectionTexture(angle, isAcorn);
         }
     }
     
     updateFriction();
-    
+
+	if (player->getSparky()) {
+		player->updateSparks(true);
+		player->setSparky(false);
+	}
+	else {
+		player->updateSparks();
+	}
+
+	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
+		std::shared_ptr<EnemyModel> enemy = _gamestate->getEnemies()[i];
+		if (enemy->getSparky()) {
+			enemy->updateSparks(true);
+			enemy->setSparky(false);
+		}
+		else {
+			enemy->updateSparks();
+		}
+	}
+
+	bool noSmoothPan = false;
+	// Super collisions
+	/*if (player->isSuperCollide()) {
+		world->setStepsize(SUPER_COLLISION_MOTION);
+		if (getCamera()->getZoom() < 3) {
+			getCamera()->setZoom(getCamera()->getZoom() + 0.08);
+			noSmoothPan = true;
+		}
+	}
+	else if (getCamera()->getZoom() > 1) {
+		world->setStepsize(NORMAL_MOTION);
+		getCamera()->setZoom(getCamera()->getZoom() - 0.16);
+		noSmoothPan = true;
+	}*/
+
     // LEVEL COMPLETE: If all enemies are dead then level completed
     if (_enemyCount == 0) {
         _complete = true;
+		getCamera()->setZoom(1);
     }
+
+	// Resort draw order
+	player->getNode()->setZOrder((_gamestate->getBounds().size.height - player->getPosition().y)*100);
+
+	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
+		std::shared_ptr<EnemyModel> enemy = _gamestate->getEnemies()[i];
+		enemy->getNode()->setZOrder((_gamestate->getBounds().size.height - enemy->getPosition().y)*100);
+	}
+
+	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
+		std::shared_ptr<ObjectModel> object = _gamestate->getObjects()[i];
+		object->getNode()->setZOrder((_gamestate->getBounds().size.height - object->getPosition().y)*100);
+		//CULog(to_string(object->getNode()->getZOrder()).c_str());
+	}
+
+	for (int i = 0; i < _gamestate->getSpores().size(); i++) {
+		std::shared_ptr<EnemyModel> spore = _gamestate->getSpores()[i];
+		spore->getNode()->setZOrder((_gamestate->getBounds().size.height - spore->getPosition().y) * 100);
+	}
+
+	_gamestate->getWorldNode()->sortZOrder();
 
     // Update the physics world
     _gamestate->getWorld()->update(dt);
     
 	for (int i = 0; i < _gamestate->getSpores().size(); i++) {
 		std::shared_ptr<EnemyModel> spore = _gamestate->getSpores()[i];
-		Vec2 enemy_pos = spore->getPosition();
+		Vec2 spore_pos = spore->getPosition();
 
 		if (spore->isDestroyed()) {
 			removeEnemy(spore);
 		}
 
 		/** Need to remove spore from spore list? */
-		else if (!(enemy_pos.x > 0 && enemy_pos.y > 0 && enemy_pos.x < _gamestate->getBounds().size.getIWidth() && enemy_pos.y < _gamestate->getBounds().size.getIHeight())) {
+		else if (!(spore_pos.x > 0 && spore_pos.y > 0 && spore_pos.x < _gamestate->getBounds().size.getIWidth() && spore_pos.y < _gamestate->getBounds().size.getIHeight())) {
 			removeEnemy(spore);
+		}
+
+		else {
+			if (spore->isDispersing()) {
+				spore->animateSpore();
+			}		
 		}
 	}
 
@@ -525,47 +429,65 @@ void GameScene::update(float dt) {
         if (object->isBroken()) {
             removeObject(object);
         }
+		else if (object->isAnimating()) {
+			object->animate();
+		}
     }
     
     _gamestate->getWorld()->garbageCollect();
 
 	// update the camera
 	player->getNode()->getScene()->setOffset(cugl::Vec2(0,0));
-	cugl::Vec2 cameraPos = player->getNode()->getScene()->getCamera()->getPosition();
+	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	cugl::Vec2 playerPos = player->getNode()->getPosition();
-	float cameraTransX;
-	float cameraTransY;
+	float cameraTransX = 0;
+	float cameraTransY = 0;
 	
 	//cugl::Vec2 gameBound = cugl::Vec2(_gamestate->getBounds().size.getIWidth(), _gamestate->getBounds().size.getIHeight());
 	cugl::Vec2 gameBound = _gamestate->getBounds().size * 64;
-	float xMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxX();
-	float yMax = player->getNode()->getScene()->getCamera()->getViewport().getMaxY();
+	float xMax = getCamera()->getViewport().getMaxX();
+	float yMax = getCamera()->getViewport().getMaxY();
 	
 	cugl::Vec2 boundBottom = Scene::screenToWorldCoords(cugl::Vec2());
 	cugl::Vec2 boundTop = Scene::screenToWorldCoords(cugl::Vec2(xMax,yMax));
 
-	cameraTransX = playerPos.x - cameraPos.x;
-	cameraTransY = playerPos.y - cameraPos.y;
+	cugl::Vec2 pan = _input.getCameraPan();
 
-	// smooth pan
-    if (std::abs(cameraTransX) > 5) {
-        cameraTransX *= .05;
-    }
+	if (pan.length() > 0) {
+		cameraTransX = pan.x;
+		cameraTransY = pan.y;
+	}
+	else {
+		cameraTransX = playerPos.x - cameraPos.x;
+		cameraTransY = playerPos.y - cameraPos.y;
 
-    if (std::abs(cameraTransY) > 5) {
-        cameraTransY *= .05;
-    }
+		// smooth pan
+		if (!noSmoothPan) {
+			if (std::abs(cameraTransX) > 5) {
+				cameraTransX *= .05;
+			}
 
-    if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0 )) {
-        cameraTransX = 0;
-    }
+			if (std::abs(cameraTransY) > 5) {
+				cameraTransY *= .05;
+			}
+		}
+	}
+	
+	//CULog(pan.toString().c_str());
+
+	if (!noSmoothPan) {
+		if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0)) {
+			cameraTransX = 0;
+		}
+
+		if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
+			cameraTransY = 0;
+		}
+	}
     
-    if ((boundTop.y < 0 && cameraTransY < 0) || (boundBottom.y > gameBound.y && cameraTransY > 0)) {
-        cameraTransY = 0;
-    }
-        
-	_gamestate->setUIPosition(player->getNode()->getScene()->getCamera()->getPosition());
-	player->getNode()->getScene()->getCamera()->translate(cugl::Vec2(cameraTransX,cameraTransY));
+
+	_gamestate->setUIPosition(getCamera()->getPosition());
+	getCamera()->translate(cugl::Vec2(round(cameraTransX),round(cameraTransY)));
 	
 }
 
@@ -579,6 +501,7 @@ void GameScene::updateFriction() {
         if (!player->getCharging()) {
             float friction = _gamestate->getBoard()[(int)floor(player_pos.y - 0.35)][(int)floor(player_pos.x)];
             if (friction == 0) {
+                player->setDirectionTexture(player->getPlayerDirection(), 8);
                 _gameover = true;
             }
             else if (friction != player->getFriction()) {
@@ -592,6 +515,7 @@ void GameScene::updateFriction() {
     else {
         player->setFriction(0);
         player->setCharging(false);
+        player->setDirectionTexture(player->getPlayerDirection(), 8);
         _gameover = true;
     }
 
@@ -613,6 +537,8 @@ void GameScene::updateFriction() {
                 }
             }
 			else if (enemy->getFriction() > .1f) {
+				//CULog("ENEMY INCOMING %f", enemy->getLinearVelocity().length());
+				//enemy->setLinearVelocity(Vec2(0,0));
 				enemy->setFriction(0);
 			}
         }
@@ -622,14 +548,16 @@ void GameScene::updateFriction() {
 		}
         
         // Caps enemy speed to MAX_PLAYER SPEED
-        if(enemy->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
+        /*if(enemy->getLinearVelocity().length() >= MAX_PLAYER_SPEED){
             Vec2 capped_speed = enemy->getLinearVelocity().normalize().scale(MAX_PLAYER_SPEED);
             enemy->setLinearVelocity(capped_speed);
-        }
+        }*/
         
         // Changes enemy state from charging if below speed threshold
-        if(enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
+        if(enemy->getCharging() && enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
             enemy->setCharging(false);
+			//CULog(enemy->getPosition().toString().c_str());
+			//enemy->setLinearVelocity(Vec2(0, 0));
 		}
 		else {
 			enemy->setCharging(true);
@@ -643,7 +571,9 @@ void GameScene::updateFriction() {
 		if (object_pos.x > 0 && object_pos.y > 0 && object_pos.x < _gamestate->getBounds().size.getIWidth() && object_pos.y < _gamestate->getBounds().size.getIHeight()) {
 			float friction = _gamestate->getBoard()[(int)floor(object_pos.y)][(int)floor(object_pos.x)];
 			if (friction == 0) {
-				removeObject(object);
+				if (object->isMovable()) {
+					object->animate();
+				}
 			}
 			else if (friction != object->getFriction()) {
 				object->setFriction(friction);

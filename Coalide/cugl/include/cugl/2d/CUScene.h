@@ -295,14 +295,14 @@ public:
      *
      * @return the camera for this scene.
      */
-    std::shared_ptr<Camera> getCamera();
+    std::shared_ptr<OrthographicCamera> getCamera();
 
     /**
      * Returns the camera for this scene.
      *
      * @return the camera for this scene.
      */
-    const std::shared_ptr<Camera> getCamera() const;
+    const std::shared_ptr<OrthographicCamera> getCamera() const;
     
     /**
      * Returns the tint color for this scene.
