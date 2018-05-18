@@ -324,19 +324,49 @@ void GameScene::update(float dt) {
     }
     
     // Applies movement vector to all enemies curently alive in the game and sets them to charging state
-    if(_enemyCount != 0) {
-        std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
-        for(std::tuple<std::shared_ptr<EnemyModel>, Vec2> pair : enemiesToMove){
+	if (_enemyCount != 0) {
+		std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> enemiesToMove = _ai.getEnemyMoves(_gamestate);
+		for (std::tuple<std::shared_ptr<EnemyModel>, Vec2> pair : enemiesToMove) {
 			std::shared_ptr<EnemyModel> enemy = std::get<0>(pair);
-            Vec2 sling = std::get<1>(pair);
+			Vec2 sling = std::get<1>(pair);
 			//CULog("Slinging at %f", sling.length());
-            enemy->applyLinearImpulse(sling);
-            enemy->setCharging(true);
-            float angle = sling.getAngle(Vec2(-1.0f, 0.0f)) * 180.0f / 3.14159;
-            bool isAcorn = !(enemy->isOnion() || enemy->isMushroom());
-            enemy->setDirectionTexture(angle, isAcorn);
-        }
-    }
+			enemy->applyLinearImpulse(sling);
+			float angle = sling.getAngle(Vec2(-1.0f, 0.0f)) * 180.0f / 3.14159;
+
+			if (!enemy->isSpore()) {
+				enemy->setCharging(true);
+				enemy->setDirectionTexture(angle, enemy->isAcorn(), 2);
+			}
+		}
+	}
+
+	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
+		std::shared_ptr<EnemyModel> enemy = _gamestate->getEnemies()[i];
+		if (enemy->getCoalided() && enemy->getLinearVelocity().length() <= 0.0f) {
+			if (enemy->isStunned()) {
+				enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(),6);
+			}
+			else {
+				enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 0);
+				enemy->setCoalided(false);
+			}
+		}
+
+		if (enemy->getCharging() && enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING) {
+			enemy->setCharging(false);
+			enemy->setSliding(true);
+			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 3);
+		}
+
+		if (enemy->isSliding() && enemy->getLinearVelocity().isNearZero()) {
+			enemy->setSliding(false);
+			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 0);
+		}
+
+		if (enemy->isPrepping()) {
+			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 1);
+		}
+	}
     
     updateFriction();
 
@@ -350,7 +380,7 @@ void GameScene::update(float dt) {
 
 	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
 		std::shared_ptr<EnemyModel> enemy = _gamestate->getEnemies()[i];
-		if (enemy->getSparky()) {
+		if (!enemy->isRemoved() && enemy->getSparky()) {
 			enemy->updateSparks(true);
 			enemy->setSparky(false);
 		}
@@ -417,10 +447,8 @@ void GameScene::update(float dt) {
 			removeEnemy(spore);
 		}
 
-		else {
-			if (spore->isDispersing()) {
-				spore->animateSpore();
-			}		
+		else if (spore->isDispersing()) {
+			spore->animateSpore();
 		}
 	}
 

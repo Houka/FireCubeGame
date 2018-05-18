@@ -4,22 +4,22 @@
       "file": "textures/nicoal.png"
     },
     "acorn": {
-      "file": "textures/acorn_sprite.png"
+      "file": "textures/spritesheet_acorn.png"
     },
     "mushroom": {
-      "file": "textures/mushroom_sprite.png"
+      "file": "textures/spritesheet_mushroom.png"
     },
     "spore": {
       "file": "textures/spritesheet_spore.png"
     },
     "onion": {
-      "file": "textures/onion_sprite.png"
+      "file": "textures/spritesheet_onion.png"
     },
     "tileset_forest.png": {
-      "file": "textures/tileset_forest.png"
+      "file": "textures/tileset_forest_original.png"
     },
     "tileset_water.png": {
-      "file": "textures/tileset_water.png"
+      "file": "textures/tileset_water_original.png"
     },
     "immobile": {
       "file": "textures/stone.png"

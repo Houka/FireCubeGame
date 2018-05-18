@@ -53,6 +53,13 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_shooting = false;
 		_dispersing = false;
 
+		_collided = false;
+		_sliding = false;
+		_prepping = false;
+		_prepTimer = 0;
+
+		_direction = 0;
+
 		_waterInbetween = false;
 
 		_previousTime = Timestamp();
@@ -100,44 +107,102 @@ bool EnemyModel::inBounds(int width, int height){
  *
  * @param angle  direction Nicoal facing in degrees
  */
-void EnemyModel::setDirectionTexture(float angle, bool isAcorn){
-    
+void EnemyModel::setDirectionTexture(float angle, bool isAcorn, int mode){
     if(isAcorn){
+		float row_texture = 448 - (mode * 64.0f);
         if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
-            Rect enemy_south = Rect(0.0f, 0.0f, 64.0f, 64.0f);
+            Rect enemy_south = Rect(0.0f, row_texture, 64.0f, 64.0f);
             _node->setPolygon(enemy_south);
+			_direction = 0;
         }
         else if(angle > TWO_ANGLE && angle <= FOUR_ANGLE){
-            Rect enemy_west = Rect(64.0f, 0.0f, 64.0f, 64.0f);
+            Rect enemy_west = Rect(64.0f, row_texture, 64.0f, 64.0f);
             _node->setPolygon(enemy_west);
+			_direction = 1;
         }
         else if(angle > FOUR_ANGLE && angle <= SEVEN_ANGLE){
-            Rect enemy_north = Rect(128.0f, 0.0f, 64.0f, 64.0f);
+            Rect enemy_north = Rect(128.0f, row_texture, 64.0f, 64.0f);
             _node->setPolygon(enemy_north);
+			_direction = 2;
         }
         else{
-            Rect enemy_east = Rect(192.0f, 0.0f, 64.0f, 64.0f);
+            Rect enemy_east = Rect(192.0f, row_texture, 64.0f, 64.0f);
             _node->setPolygon(enemy_east);
+			_direction = 3;
         }
     }
     else {
+		float row_texture = 896.0f - (mode * 128.0f);
         if(angle > ONE_ANGLE && angle <= TWO_ANGLE){
-            Rect enemy_south = Rect(0.0f, 0.0f, 128.0f, 128.0f);
+            Rect enemy_south = Rect(0.0f, row_texture, 128.0f, 128.0f);
             _node->setPolygon(enemy_south);
+			_direction = 0;
         }
         else if(angle > TWO_ANGLE && angle <= FOUR_ANGLE){
-            Rect enemy_west = Rect(128.0f, 0.0f, 128.0f, 128.0f);
+            Rect enemy_west = Rect(128.0f, row_texture, 128.0f, 128.0f);
             _node->setPolygon(enemy_west);
+			_direction = 1;
         }
         else if(angle > FOUR_ANGLE && angle <= SEVEN_ANGLE){
-            Rect enemy_north = Rect(256.0f, 0.0f, 128.0f, 128.0f);
+            Rect enemy_north = Rect(256.0f, row_texture, 128.0f, 128.0f);
             _node->setPolygon(enemy_north);
+			_direction = 2;
         }
         else{
-            Rect enemy_east = Rect(384.0f, 0.0f, 128.0f, 128.0f);
+            Rect enemy_east = Rect(384.0f, row_texture, 128.0f, 128.0f);
             _node->setPolygon(enemy_east);
+			_direction = 3;
         }
     }
+}
+
+void EnemyModel::setDirectionTexture(int dir, bool isAcorn, int mode) {
+	if (isAcorn) {
+		float row_texture = 448.0f - (mode * 64.0f);
+		if (dir == 0) {
+			Rect enemy_south = Rect(0.0f, row_texture, 64.0f, 64.0f);
+			_node->setPolygon(enemy_south);
+			_direction = 0;
+		}
+		else if (dir == 1) {
+			Rect enemy_west = Rect(64.0f, row_texture, 64.0f, 64.0f);
+			_node->setPolygon(enemy_west);
+			_direction = 1;
+		}
+		else if (dir == 2) {
+			Rect enemy_north = Rect(128.0f, row_texture, 64.0f, 64.0f);
+			_node->setPolygon(enemy_north);
+			_direction = 2;
+		}
+		else {
+			Rect enemy_east = Rect(192.0f, row_texture, 64.0f, 64.0f);
+			_node->setPolygon(enemy_east);
+			_direction = 3;
+		}
+	}
+	else {
+		float row_texture = 896.0f - (mode * 128.0f);
+		if (dir == 0) {
+			Rect enemy_south = Rect(0.0f, row_texture, 128.0f, 128.0f);
+			_node->setPolygon(enemy_south);
+			_direction = 0;
+		}
+		else if (dir == 1) {
+			Rect enemy_west = Rect(128.0f, row_texture, 128.0f, 128.0f);
+			_node->setPolygon(enemy_west);
+			_direction = 1;
+		}
+		else if (dir == 2) {
+			Rect enemy_north = Rect(256.0f, row_texture, 128.0f, 128.0f);
+			_node->setPolygon(enemy_north);
+			_direction = 2;
+		}
+		else {
+			Rect enemy_east = Rect(384.0f, row_texture, 128.0f, 128.0f);
+			_node->setPolygon(enemy_east);
+			_direction = 3;
+		}
+	}
 }
 
 /**
@@ -218,11 +283,11 @@ void EnemyModel::update(float dt) {
             setStunned(false);
         }
     }
-    else if(!canSling() && !isSpore()){
+    /*else if(!canSling() && !isSpore()){
         _node->setColor(Color4::RED);
     } else {
         _node->setColor(Color4::WHITE);
-    }
+    }*/
     if(_shouldStopSoon && ts.ellapsedMillis(_collisionTimeout) >= COLLISION_TIMEOUT){
         _shouldStopSoon = false;
         _body->SetLinearVelocity(b2Vec2(0,0));

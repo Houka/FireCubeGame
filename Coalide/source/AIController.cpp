@@ -95,7 +95,7 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 	float a = friction / m;
 	float d = (vi*vi) / (2 * a);
 	Vec2 slide = landing + aim*d*1.8;
-	Vec2 shortland = landing - aim*d*0.2;
+	Vec2 shortland = landing - aim*d*0.8;
 	//CULog("sliding %f", d);
 	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(shortland, slide, gamestate)) {
 		return true;
@@ -250,8 +250,17 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
 		Vec2 enemy_pos = enemy->getPosition();
 
-		if (!enemy->isRemoved() && !enemy->isStunned() && enemy->isTargeting() && gamestate->getPlayer()->getLinearVelocity().length() < 1 && player_pos.distance(enemy_pos) < 12) {
-			if (enemy->canSling() && !enemy->isMushroom() && enemy->timeoutElapsed() && !gamestate->getPlayer()->getCharging()) {
+		if (!enemy->isRemoved() && !enemy->isStunned() && enemy->canSling() && enemy->isTargeting() && gamestate->getPlayer()->getLinearVelocity().length() < 1 && player_pos.distance(enemy_pos) < 12) {
+			if (enemy->timeoutElapsed() && !enemy->isPrepping()) {
+				enemy->setPrepping(true);
+			}
+			else if (enemy->isPrepping()) {
+				enemy->_prepTimer -= 1;
+				if (enemy->_prepTimer == 0) {
+					enemy->setPrepping(false);
+				}
+			}
+			if (!enemy->isMushroom() && enemy->timeoutElapsed() && !gamestate->getPlayer()->getCharging()) {
 				Vec2 aim = player_pos - enemy_pos;
 				aim.normalize();
 				float impulse = MAX_IMPULSE;
@@ -282,13 +291,16 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				if (intersectsWater(enemy_pos, player_pos, gamestate)) {
 					if (!slipperySlope(enemy_pos + aim*d, aim, enemy, gamestate)) {
 						aim *= impulse;
-						moves.push_back(std::make_tuple(enemy, aim));
+						if (!enemy->isPrepping()) {
+							moves.push_back(std::make_tuple(enemy, aim));
+						}
 					}
 					else {
 						float theta = 3.14159 / 8;
 						float rotated = 0;
 						Vec2 rotatedAim1 = aim;
 						Vec2 rotatedAim2 = aim;
+						bool success = false;
 						while (abs(rotated) < 3.14159) {
 							rotatedAim1 = Vec2(rotatedAim1.x*cos(theta) - rotatedAim1.y*sin(theta), rotatedAim1.x*sin(theta) + rotatedAim1.y*cos(theta));
 							rotatedAim1.normalize();
@@ -296,25 +308,36 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 							rotatedAim2.normalize();
 							if (!slipperySlope(enemy_pos + rotatedAim1*d, rotatedAim1, enemy, gamestate)) {
 								rotatedAim1 *= impulse;
-								moves.push_back(std::make_tuple(enemy, rotatedAim1));
+								if (!enemy->isPrepping()) {
+									moves.push_back(std::make_tuple(enemy, rotatedAim1));
+								}
+								success = true;
 								break;
 							}
 							else if (!slipperySlope(enemy_pos + rotatedAim2*d, rotatedAim2, enemy, gamestate)) {
 								rotatedAim2 *= impulse;
-								moves.push_back(std::make_tuple(enemy, rotatedAim2));
+								if (!enemy->isPrepping()) {
+									moves.push_back(std::make_tuple(enemy, rotatedAim2));
+								}
+								success = true;
 								break;
 							}
 							rotated += theta;
+						}
+						if (!success) {
+							enemy->setPrepping(false);
 						}
 					}
 				}
 				else {
 					aim *= impulse;
-					moves.push_back(std::make_tuple(enemy, aim));
+					if (!enemy->isPrepping()) {
+						moves.push_back(std::make_tuple(enemy, aim));
+					}
 				}
 			}
 			else if (enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {
-				if (enemy->timeoutElapsed()) {
+				if (enemy->timeoutElapsed() && !enemy->isPrepping()) {
 					moves.push_back(std::make_tuple(enemy, Vec2(0, 0)));
 					Vec2 aim = player_pos - enemy->getPosition();
 					aim.normalize();

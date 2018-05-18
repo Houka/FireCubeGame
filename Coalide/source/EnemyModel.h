@@ -67,9 +67,16 @@ protected:
 	bool _shooting;
 	bool _dispersing;
 
+	bool _collided;
+	bool _sliding;
+	bool _prepping;
+
+	int _direction;
+
 	std::vector<Vec2> _route;
 
 public:
+	int _prepTimer;
 #pragma mark Constructors
 	/**
 	* Creates a new enemy at the origin.
@@ -228,6 +235,18 @@ public:
 	void setShooting() { _shooting = true; }
 	void setDispersing() { _dispersing = true; }
 
+	void setCoalided(bool collided) { _collided = collided; }
+	bool getCoalided() { return _collided; }
+
+	void setDirection(int dir) { _direction = dir; }
+	int getDirection() { return _direction; }
+
+	void setSliding(int sliding) { _sliding = sliding; }
+	int isSliding() { return _sliding; }
+
+	void setPrepping(bool prepping) { _prepping = prepping; _prepTimer = 20; }
+	bool isPrepping() { return _prepping; }
+
 	void animateSpore();
 
 	/**
@@ -317,7 +336,8 @@ public:
      * @param angle   direction enemy facing in degrees
      * @param isAcorn if the enemy is an acorn or not
      */
-    void setDirectionTexture(float angle, bool isAcorn);
+    void setDirectionTexture(float angle, bool isAcorn, int mode);
+	void setDirectionTexture(int dir, bool isAcorn, int mode);
 
 	/**
 	* Updates the object's physics state (NOT GAME LOGIC). This is the method
