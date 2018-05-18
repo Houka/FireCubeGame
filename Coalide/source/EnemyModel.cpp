@@ -51,6 +51,8 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 
 		_destroyed = false;
 		_sparky = false;
+		_fell = false;
+		_drownTimer = 0;
 
 		_shooting = false;
 		_dispersing = false;

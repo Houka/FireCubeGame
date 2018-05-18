@@ -61,6 +61,7 @@ protected:
 	bool _acorn;
 
 	bool _destroyed;
+	bool _fell;
 
 	std::shared_ptr<cugl::AnimationNode> _sparks;
 	bool _sparky;
@@ -78,6 +79,7 @@ protected:
 
 public:
 	int _prepTimer;
+	int _drownTimer;
 #pragma mark Constructors
 	/**
 	* Creates a new enemy at the origin.
@@ -247,6 +249,9 @@ public:
 
 	void setPrepping(bool prepping) { _prepping = prepping; _prepTimer = 20; }
 	bool isPrepping() { return _prepping; }
+
+	void setFell() { _fell = true; _drownTimer = 20; }
+	bool didFall() { return _fell; }
 
 	void animateSpore();
 

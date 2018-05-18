@@ -66,10 +66,13 @@ protected:
 	bool _stunned;
 	bool _onFire;
 
+	bool _fell;
 
 public:
     float _oldAngle;
     bool _isSliding;
+	int _drownTimer;
+
 #pragma mark Constructors
 	/**
 	* Creates a new player at the origin.
@@ -227,6 +230,9 @@ public:
 
 	void setSparky(bool sparky) { _sparky = sparky; }
 	bool getSparky() { return _sparky; }
+
+	void setFell() { _fell = true; _drownTimer = 20; }
+	bool didFall() { return _fell; }
 
 	/**
 	* Returns the texture (key) for the player.

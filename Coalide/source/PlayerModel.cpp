@@ -43,6 +43,7 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		_superCollide = false;
 		_superCollideTimer = 0;
 		_sparky = false;
+		_fell = false;
 
 		return true;
 	}
