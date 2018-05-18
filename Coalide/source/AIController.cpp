@@ -285,7 +285,6 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 						moves.push_back(std::make_tuple(enemy, aim));
 					}
 					else {
-
 						float theta = 3.14159 / 8;
 						float rotated = 0;
 						Vec2 rotatedAim1 = aim;

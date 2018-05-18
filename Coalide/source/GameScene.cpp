@@ -499,9 +499,21 @@ void GameScene::updateFriction() {
 	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
     if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
         if (!player->getCharging()) {
-            float friction = _gamestate->getBoard()[(int)floor(player_pos.y - 0.35)][(int)floor(player_pos.x)];
+            float friction = _gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x)];
             if (friction == 0) {
                 player->setDirectionTexture(player->getPlayerDirection(), 8);
+				if (_gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x-.5)]) {
+					player->setPosition(player_pos.x + .2, player_pos.y);
+				}
+				if (_gamestate->getBoard()[(int)floor(player_pos.y)][(int)floor(player_pos.x+.5)]) {
+					player->setPosition(player_pos.x - .2, player_pos.y);
+				}
+				if (_gamestate->getBoard()[(int)floor(player_pos.y-.5)][(int)floor(player_pos.x)]) {
+					player->setPosition(player_pos.x, player_pos.y + .2);
+				}
+				if (_gamestate->getBoard()[(int)floor(player_pos.y+.5)][(int)floor(player_pos.x)]) {
+					player->setPosition(player_pos.x, player_pos.y - .2);
+				}
                 _gameover = true;
             }
             else if (friction != player->getFriction()) {
