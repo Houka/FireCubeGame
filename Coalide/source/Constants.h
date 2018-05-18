@@ -54,7 +54,7 @@
 #define DEFAULT_GRAVITY 0.0f
 #define GRAVITY	9.8f
 
-#define MIN_SPEED_FOR_CHARGING 5.0f
+#define MIN_SPEED_FOR_CHARGING 4.0f
 #define GLOBAL_AIR_DRAG 1.5f
 
 #define UNIT_DIM Vec2(1,1)

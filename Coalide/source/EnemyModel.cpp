@@ -34,7 +34,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_node = nullptr;
 
 		setDensity(4.8f);
-		setRestitution(0.4f);
+		setRestitution(0.5f);
 		setFixedRotation(true);
 
 		_stunned = false;
@@ -61,6 +61,7 @@ bool EnemyModel::init(const Vec2 & pos, const Size & size) {
 		_sliding = false;
 		_prepping = false;
 		_prepTimer = 0;
+		_charging = false;
 
 		_direction = 0;
 
