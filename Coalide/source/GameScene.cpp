@@ -325,6 +325,10 @@ void GameScene::update(float dt) {
         // changes texture of nicoal
         player->setDirectionTexture(angle, 0);
     }
+    
+	if (player->didFall()) {
+		player->setDirectionTexture(player->getPlayerDirection(), 8);
+	}
 
     if(!player->canSling() || _input.getCameraPan().length()) {
         player->updateArrow(false);
@@ -379,11 +383,13 @@ void GameScene::update(float dt) {
 		}
 	}
     
-    updateFriction();
-
 	if (player->getSparky()) {
 		player->updateSparks(true);
 		player->setSparky(false);
+		if (player->getLinearVelocity().length() > MIN_SPEED_FOR_CHARGING) {
+			player->setCharging(true);
+			player->setDirectionTexture(player->getPlayerDirection(), 5);
+		}
 	}
 	else {
 		player->updateSparks();
@@ -394,11 +400,17 @@ void GameScene::update(float dt) {
 		if (!enemy->isRemoved() && enemy->getSparky()) {
 			enemy->updateSparks(true);
 			enemy->setSparky(false);
+			if (enemy->getLinearVelocity().length() > MIN_SPEED_FOR_CHARGING) {
+				enemy->setCharging(true);
+				enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 5);
+			}
 		}
 		else {
 			enemy->updateSparks();
 		}
 	}
+
+	updateFriction();
 
 	bool noSmoothPan = false;
 	// Super collisions
@@ -541,17 +553,26 @@ void GameScene::updateFriction() {
         if (!player->getCharging()) {
             float friction = _gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][(int)floor(player_pos.x)];
             if (friction == 0) {
-                player->setDirectionTexture(player->getPlayerDirection(), 8);
-                if (_gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][std::min(gameBounds.getIWidth()-1, (int)floor(player_pos.x)-1)]) {
-                    player->setPosition(player_pos.x + .3, player_pos.y);
-                }
-                if (_gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][std::min(gameBounds.getIWidth()-1, (int)floor(player_pos.x+.5))]) {
-                    player->setPosition(player_pos.x - .3, player_pos.y);
-                }
-                if (_gamestate->getBoard()[std::min(gameBounds.getIHeight()-1, (int)floor(player_pos.y+.25))][(int)floor(player_pos.x)]) {
-                    player->setPosition(player_pos.x, player_pos.y - .3);
-                }
-                _gameover = true;
+				/*if (_gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][std::min(gameBounds.getIWidth()-1, (int)floor(player_pos.x)-1)]) {
+					player->setPosition(player_pos.x + .3, player_pos.y);
+				}
+				if (_gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][std::min(gameBounds.getIWidth()-1, (int)floor(player_pos.x+.5))]) {
+					player->setPosition(player_pos.x - .3, player_pos.y);
+				}
+				if (_gamestate->getBoard()[std::min(gameBounds.getIHeight()-1, (int)floor(player_pos.y+.25))][(int)floor(player_pos.x)]) {
+					player->setPosition(player_pos.x, player_pos.y - .3);
+				}*/
+
+				if (player->didFall()) {
+					player->_drownTimer -= 1;
+					if (player->_drownTimer <= 0) {
+						_gameover = true;
+					}
+				}
+				else {
+					player->setFell();
+					player->setDirectionTexture(player->getPlayerDirection(), 8);
+				}
             }
             else if (friction != player->getFriction()) {
                 player->setFriction(friction);
