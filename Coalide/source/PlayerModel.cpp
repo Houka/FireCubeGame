@@ -34,7 +34,7 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
         _sizePlayer = size;
 
 		setDensity(4.0f);
-		setRestitution(0.4f);
+		setRestitution(0.5f);
 		setFixedRotation(true);
 
 		_stunned = false;
@@ -44,6 +44,8 @@ bool PlayerModel::init(const Vec2 & pos, const Size & size) {
 		_superCollideTimer = 0;
 		_sparky = false;
 		_fell = false;
+		_isSliding = false;
+		_charging = false;
 
 		return true;
 	}
