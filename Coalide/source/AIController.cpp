@@ -41,105 +41,15 @@ void AIController::dispose() {
 	delete[] _closedArray;
 }
 
-Vec2 avoidCollisions(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate) {
-	Vec2 d = end - start;
-	std::vector<std::shared_ptr<ObjectModel>>& objects = gamestate->getObjects();
-	std::shared_ptr<ObjectModel> nearest;
-
-	for (int i = 0; i < gamestate->getObjects().size(); i++) {
-		std::shared_ptr<ObjectModel> obj = objects[i];
-		Vec2 e = obj->getPosition();
-		Vec2 f = start - e;
-		if (f.length() < d.length()) {
-			float x = e.x;
-			float y = e.y;
-			
-			float a = d.dot(d);
-			float b = 2 * f.dot(d);
-			float c = f.dot(f) - (UNIT_DIM.x+.5) * (UNIT_DIM.x+.5);
-
-			float discriminant = b*b - 4*a*c;
-
-			if (discriminant < 0) {
-				return Vec2();
-			}
-			else {
-				discriminant = sqrt(discriminant);
-
-				float t1 = (-b - discriminant) / (2 * a);
-				float t2 = (-b + discriminant) / (2 * a);
-
-				if ((t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1)) {
-					float aa = end.y - start.y;
-					float bb = end.x - start.x;
-					float cc = start.y + (a / b)*start.x;
-
-					Vec2 closestPt = Vec2(-(aa*cc) / (aa*aa + bb*bb), -(bb*cc) / (aa*aa + bb*bb));
-
-					float forceScale = 5 - (f.length() / d.length());
-
-					Vec2 avoidance = end - e;
-					avoidance.normalize();
-					avoidance *= forceScale;
-					return avoidance;
-				}
-				else {
-					return Vec2();
-				}
-			}
-		}
-	}
-	return Vec2();
-}
-
-Vec2 flock(std::shared_ptr<EnemyModel> enemy, std::shared_ptr<GameState> gamestate) {
-	std::vector<std::shared_ptr<EnemyModel>>& enemies = gamestate->getEnemies();
-	int nFlock = 0;
-	int nRepel = 0;
-	Vec2 flockV = Vec2();
-	Vec2 repelV = Vec2();
-	for (int i = 0; i < enemies.size(); i++) {
-		std::shared_ptr<EnemyModel> fellow = enemies[i];
-		float dist = fellow->getPosition().distance(enemy->getPosition());
-		if (fellow->isTargeting()) {
-			if (dist < 6 && dist >= 3) {
-				nFlock += 1;
-				flockV += fellow->getPosition() - enemy->getPosition();
-			}
-			else if (dist < 3 && dist > .1) {
-				nRepel += 1;
-				repelV += fellow->getPosition() - enemy->getPosition();
-			}
-		}
-	}
-	if (nFlock > 0) {
-		flockV /= nFlock;
-		flockV.normalize();
-		flockV *= .6;
-	}
-
-	if (nRepel > 0) {
-		repelV /= nRepel;
-		repelV *= -1;
-		repelV.normalize();
-		repelV *= .2;
-	}
-
-	Vec2 V = flockV + repelV;
-	V.normalize();
-	V *= .5;
-	return V;
-}
-
 bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate){
 	int h = gamestate->getBounds().size.getIHeight();
 	int w = gamestate->getBounds().size.getIWidth();
 
 	Vec2 trajectory = end - start;
-	for (int i = 1; i <= 30; i++) {
-		Vec2 pt = start + trajectory / 30 * i;
+	for (int i = 1; i <= 50; i++) {
+		Vec2 pt = start + trajectory / 50 * i;
 		if (pt.x < w-1 && pt.x > 0 && pt.y < h-1 && pt.y > 0) {
-			if (!gamestate->getTileBoard()[(int)floor(pt.y)][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)+1][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)-1][(int)floor(pt.x)]) {
+			if (!gamestate->getTileBoard()[(int)floor(pt.y)][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)+1][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)-1][(int)floor(pt.x)] || !gamestate->getTileBoard()[(int)floor(pt.y)][(int)floor(pt.x)+1] || !gamestate->getTileBoard()[(int)floor(pt.y)][(int)floor(pt.x)-1]) {
 				return true;
 			}
 		}
@@ -180,7 +90,7 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 	}
 
 	int m = enemy->getMass();
-
+	CULog(to_string(enemy->getMass()).c_str());
 	float vi = MIN_SPEED_FOR_CHARGING;
 
 	float a = friction / m;
@@ -337,10 +247,10 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
+		Vec2 enemy_pos = enemy->getPosition();
 
-		if (enemy->isTargeting() && gamestate->getWorld()->getStepsize() > SLOW_MOTION) {
-			if (!enemy->isRemoved() && !enemy->isStunned() && enemy->canSling() && !enemy->isMushroom() && enemy->timeoutElapsed() && !gamestate->getPlayer()->getCharging()) {
-				Vec2 enemy_pos = enemy->getPosition();
+		if (!enemy->isRemoved() && !enemy->isStunned() && enemy->isTargeting() && gamestate->getPlayer()->getLinearVelocity().length() < 1 && player_pos.distance(enemy_pos) < 12) {
+			if (enemy->canSling() && !enemy->isMushroom() && enemy->timeoutElapsed() && !gamestate->getPlayer()->getCharging()) {
 				Vec2 aim = player_pos - enemy_pos;
 				aim.normalize();
 				float impulse = MAX_IMPULSE;
@@ -350,9 +260,8 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 				float vi = MAX_IMPULSE;
 				float vf = MIN_SPEED_FOR_CHARGING;
 				float d = ((vi*vi) - (vf*vf)) / (2 * a);
-				//CULog("d is %f", d);
 
-				if (intersectsWater(enemy_pos, player_pos, gamestate)) {
+				/*if (intersectsWater(enemy_pos, player_pos, gamestate)) {
 					if (enemy->getRoute().empty()) {
 						enemy->setRoute(calculateRoute(enemy_pos, d, player_pos, enemy, gamestate));
 					}
@@ -361,40 +270,24 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 					aim = route.back() - enemy_pos;
 					route.pop_back();
 					enemy->setRoute(route);
-
-					/*float targetDist = aim.length();
-					CULog("targetDist is %f", targetDist);
-					if (targetDist > 0) {
-						float v0 = sqrt(targetDist * 2 * a + vf*vf);
-						impulse = m * v0;
-					}*/
-
-					/*if (enemy->isOnion()) {
-						CULog("m is %x", m);
-						CULog("vi is %f", vi);
-						CULog("targetDist is %f", targetDist);
-						CULog("v0 needed: %f", v0);
-						CULog("Impulse needed: %f", impulse);
-					}*/
-
-					/*Vec2 projectedLanding = enemy_pos + aim * 3;
-					Vec2 avoidance = avoidCollisions(enemy_pos, projectedLanding, gamestate);
-					aim += avoidance;
-					aim += flock(enemy, gamestate);*/
-				}
-				/*else {
-					Vec2 landing = enemy_pos + aim*d;
-					float landingDist = landing.distance(enemy_pos);
-					float playerDist = player_pos.distance(enemy_pos);
-					if (landingDist < playerDist && landingDist > playerDist*0.8) {
-						impulse *= 0.7;
-					}
 				}*/
 
 				aim.normalize();
-				aim *= impulse;
-				//CULog("Impulsed %f", impulse);
-				moves.push_back(std::make_tuple(enemy, aim));
+
+				/*if (!slipperySlope(enemy_pos+aim, aim, enemy, gamestate)) {
+					moves.push_back(std::make_tuple(enemy, aim));
+				}
+*/
+				if (intersectsWater(enemy_pos, player_pos, gamestate)) {
+					if (!slipperySlope(enemy_pos + aim*d, aim, enemy, gamestate)) {
+						aim *= impulse;
+						moves.push_back(std::make_tuple(enemy, aim));
+					}
+				}
+				else {
+					aim *= impulse;
+					moves.push_back(std::make_tuple(enemy, aim));
+				}
 			}
 			else if (enemy->isMushroom() && !enemy->isRemoved() && !enemy->isStunned()) {
 				if (enemy->timeoutElapsed()) {

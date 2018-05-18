@@ -527,6 +527,7 @@ void GameScene::updateFriction() {
             }
 			else if (enemy->getFriction() > .1f) {
 				//CULog("ENEMY INCOMING %f", enemy->getLinearVelocity().length());
+				//enemy->setLinearVelocity(Vec2(0,0));
 				enemy->setFriction(0);
 			}
         }
