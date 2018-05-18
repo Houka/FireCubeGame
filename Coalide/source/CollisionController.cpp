@@ -54,6 +54,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 
 		if (soB->getName() == "player") {
 			PlayerModel* player = (PlayerModel*)soB;
+            player->setCameraShakeAmplitude(1);
             player->setDirectionTexture(player->getPlayerDirection(), 5);
             player->setCoalided(true);
 			
@@ -92,6 +93,8 @@ void CollisionController::beginContact(b2Contact* contact) {
 
 		if (soA->getName() == "player") {
 			PlayerModel* player = (PlayerModel*)soA;
+            player->setCameraShakeAmplitude(1);
+
             float angle = player->getLinearVelocity().getAngle();
             player->setDirectionTexture(player->getPlayerDirection(), 5);
             player->setCoalided(true);

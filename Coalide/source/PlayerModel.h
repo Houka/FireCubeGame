@@ -40,6 +40,7 @@ private:
     /** Whether Nicoal got hit in mid collision */
     bool _collided;
     
+    float _cameraShakeAmplitude = 0;
     
 protected:
     std::shared_ptr<AssetManager> _assets;
@@ -233,6 +234,9 @@ public:
 
 	void setFell() { _fell = true; _drownTimer = 20; }
 	bool didFall() { return _fell; }
+    
+    float getCameraShakeAmplitude(){ return _cameraShakeAmplitude; }
+    void setCameraShakeAmplitude(float inp){ _cameraShakeAmplitude = inp; }
 
 	/**
 	* Returns the texture (key) for the player.

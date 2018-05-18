@@ -96,6 +96,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
     counter = 0;
     deltaImage = 0.0f;
     up = true;
+    
+    std::srand(time(NULL));
 	return true;
 }
 
@@ -520,8 +522,12 @@ void GameScene::update(float dt) {
 			cameraTransY = 0;
 		}
 	}
-
-
+    
+    int cameraShakeAmplitude = 40 * (player->getCameraShakeAmplitude());
+    if(cameraShakeAmplitude != 0){
+        cameraTransX += rand() % cameraShakeAmplitude - (cameraShakeAmplitude/2);
+        cameraTransY += rand() % cameraShakeAmplitude - (cameraShakeAmplitude/2);
+    }
 	_gamestate->setUIPosition(getCamera()->getPosition());
 	getCamera()->translate(cugl::Vec2(round(cameraTransX),round(cameraTransY)));
 	

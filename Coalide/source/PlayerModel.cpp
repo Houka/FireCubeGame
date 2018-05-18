@@ -283,4 +283,8 @@ void PlayerModel::update(float dt) {
     if(_stunned && Timestamp().ellapsedMillis(_stunTimeout) >= _stunDuration){
         _stunned = false;
     }
+    
+    _cameraShakeAmplitude *= .9;
+    if(_cameraShakeAmplitude < .01)
+        _cameraShakeAmplitude = 0;
 }
