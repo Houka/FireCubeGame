@@ -266,9 +266,12 @@ void GameScene::update(float dt) {
             // changes texture of nicoal
             player->setDirectionTexture(angle, 0);
             // update the aim arrow
-            player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-            player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
-            CULog("%d", player->getPlayerDirection());
+            Vec2 clampedAim = _input.getCurrentAim();
+            if (clampedAim.length() > _input.getMaxSling()) {
+                clampedAim.scale(1.0 / clampedAim.length() * _input.getMaxSling());
+            }
+            player->updateArrow(clampedAim, player->getNode(), true);
+            player->updateCircle(clampedAim, player->getNode(), true);
             if(_input.getCurrentAim().length() > 200.0f) {
                 player->setDirectionTexture(angle, 1);
             }
