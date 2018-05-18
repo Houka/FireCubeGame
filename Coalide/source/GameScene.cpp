@@ -536,31 +536,22 @@ void GameScene::updateFriction() {
 	Vec2 player_pos = player->getPosition();
 	Size gameBounds = _gamestate->getBounds().size;
 
-	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
+    // LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
     if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
         if (!player->getCharging()) {
             float friction = _gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][(int)floor(player_pos.x)];
             if (friction == 0) {
-				if (_gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][std::min(gameBounds.getIWidth()-1, (int)floor(player_pos.x)-1)]) {
-					player->setPosition(player_pos.x + .3, player_pos.y);
-				}
-				if (_gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][std::min(gameBounds.getIWidth()-1, (int)floor(player_pos.x+.5))]) {
-					player->setPosition(player_pos.x - .3, player_pos.y);
-				}
-				if (_gamestate->getBoard()[std::min(gameBounds.getIHeight()-1, (int)floor(player_pos.y+.25))][(int)floor(player_pos.x)]) {
-					player->setPosition(player_pos.x, player_pos.y - .3);
-				}
-
-				if (player->didFall()) {
-					player->_drownTimer -= 1;
-					if (player->_drownTimer <= 0) {
-						_gameover = true;
-					}
-				}
-				else {
-					player->setFell();
-					player->setDirectionTexture(player->getPlayerDirection(), 8);
-				}
+                player->setDirectionTexture(player->getPlayerDirection(), 8);
+                if (_gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][std::min(gameBounds.getIWidth()-1, (int)floor(player_pos.x)-1)]) {
+                    player->setPosition(player_pos.x + .3, player_pos.y);
+                }
+                if (_gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][std::min(gameBounds.getIWidth()-1, (int)floor(player_pos.x+.5))]) {
+                    player->setPosition(player_pos.x - .3, player_pos.y);
+                }
+                if (_gamestate->getBoard()[std::min(gameBounds.getIHeight()-1, (int)floor(player_pos.y+.25))][(int)floor(player_pos.x)]) {
+                    player->setPosition(player_pos.x, player_pos.y - .3);
+                }
+                _gameover = true;
             }
             else if (friction != player->getFriction()) {
                 player->setFriction(friction);
@@ -573,16 +564,8 @@ void GameScene::updateFriction() {
     else {
         player->setFriction(0);
         player->setCharging(false);
-		if (player->didFall()) {
-			player->_drownTimer -= 1;
-			if (player->_drownTimer <= 0) {
-				_gameover = true;
-			}
-		}
-		else {
-			player->setFell();
-			player->setDirectionTexture(player->getPlayerDirection(), 8);
-		}
+        player->setDirectionTexture(player->getPlayerDirection(), 8);
+        _gameover = true;
     }
 
 	// Loops through enemies and sets friction and also checks for in bounds/death conditions
