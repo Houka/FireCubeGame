@@ -382,7 +382,7 @@ void GameScene::update(float dt) {
 			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 1);
 		}
 
-		if (enemy->didFall()) {
+		if (!enemy->isRemoved() && enemy->didFall()) {
 			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 7);
 			enemy->_drownTimer -= 1;
 			if (enemy->_drownTimer <= 0) {
