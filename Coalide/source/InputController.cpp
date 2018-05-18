@@ -113,7 +113,7 @@ void InputController::dispose() {
 * frame, so we need to accumulate all of the data together.
 */
 void InputController::update(float dt) {
-    
+	CULog("update");
     Keyboard* keys = Input::get<Keyboard>();
     
     // Map "keyboard" events to the current frame boundary
@@ -188,6 +188,7 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus, int fing
 * @param event The associated event
 */
 void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
+	//CULog("touchmotion");
 	_currentTouch = event.position;
 	if (_panning && event.touch == _finger) {
 		_cameraPan = Vec2(_previousTouch.x - event.position.x, event.position.y - _previousTouch.y);
