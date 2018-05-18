@@ -58,7 +58,7 @@ bool InputController::init() {
     });
 	
 #else
-    success = Input::activate<Accelerometer>();
+    success = true;
     Touchscreen* touch = Input::get<Touchscreen>();
     touch->addBeginListener(LISTENER_KEY,[=](const cugl::TouchEvent& event, bool focus) {
         this->touchBeganCB(event,focus,touch->touchCount());
