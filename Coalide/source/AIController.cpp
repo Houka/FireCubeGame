@@ -250,7 +250,7 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
 		Vec2 enemy_pos = enemy->getPosition();
 
-		if (!enemy->isRemoved() && !enemy->isStunned() && enemy->isTargeting() && gamestate->getPlayer()->getLinearVelocity().length() < 1 && player_pos.distance(enemy_pos) < 12) {
+		if (!enemy->isRemoved() && !enemy->isStunned() && enemy->isTargeting() && gamestate->getPlayer()->getLinearVelocity().length() < 1 && player_pos.distance(enemy_pos) < 12 && !enemy->slingCollisionLocked()) {
 			if (enemy->canSling() && !enemy->isMushroom() && enemy->timeoutElapsed() && !gamestate->getPlayer()->getCharging()) {
 				Vec2 aim = player_pos - enemy_pos;
 				aim.normalize();

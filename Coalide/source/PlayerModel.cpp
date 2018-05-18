@@ -205,9 +205,8 @@ void PlayerModel::updateArrow(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bo
 }
 
 void PlayerModel::updateCircle(cugl::Vec2 aim, std::shared_ptr<Node> currNode, bool visible) {
-    aim *= -.3;
+    aim *= -.2875;
     cugl::Vec2 playerImageOffset = cugl::Vec2(_node->getWidth() / 2.0, _node->getHeight() / 2.0);
-    
     //float scaleFactor = aim.length();
     //float angle = -1 * aim.getAngle();
     //angle += 2.35619;
