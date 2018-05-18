@@ -53,6 +53,24 @@ protected:
 	std::shared_ptr<cugl::Button> _lvl3;
 	std::shared_ptr<cugl::Button> _lvl4;
 	std::shared_ptr<cugl::Button> _lvl5;
+	std::shared_ptr<cugl::Button> _lvl6;
+	std::shared_ptr<cugl::Button> _lvl7;
+	std::shared_ptr<cugl::Button> _lvl8;
+	std::shared_ptr<cugl::Button> _lvl9;
+	std::shared_ptr<cugl::Button> _lvl10;
+	std::shared_ptr<cugl::Button> _lvl11;
+	std::shared_ptr<cugl::Button> _lvl12;
+	std::shared_ptr<cugl::Button> _lvl13;
+	std::shared_ptr<cugl::Button> _lvl14;
+	std::shared_ptr<cugl::Button> _lvl15;
+	std::shared_ptr<cugl::Button> _lvl16;
+	std::shared_ptr<cugl::Button> _lvl17;
+	std::shared_ptr<cugl::Button> _lvl18;
+	std::shared_ptr<cugl::Button> _lvl19;
+	std::shared_ptr<cugl::Button> _lvl20;
+	std::shared_ptr<cugl::Button> _lvl21;
+	std::shared_ptr<cugl::Button> _lvl22;
+	std::shared_ptr<cugl::Button> _lvl23;
 
 	int _lvlSelected = 0;
 	bool _didClickLevel;

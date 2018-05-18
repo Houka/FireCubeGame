@@ -112,6 +112,24 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	std::shared_ptr<cugl::Node> _lvl3Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
 	std::shared_ptr<cugl::Node> _lvl4Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
 	std::shared_ptr<cugl::Node> _lvl5Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl6Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl7Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl8Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl9Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl10Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl11Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl12Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl13Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl14Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl15Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl16Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl17Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl18Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl19Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl20Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl21Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl22Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
+	std::shared_ptr<cugl::Node> _lvl23Node = PolygonNode::allocWithTexture(_assets->get<Texture>("immobile"));
 
 
 	//_startNode->setPosition(50., 50);
@@ -135,15 +153,70 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	_lvl4->setScale(2, 2);
 	_lvl5 = cugl::Button::alloc(_lvl5Node);
 	_lvl5->setScale(2, 2);
+	_lvl6 = cugl::Button::alloc(_lvl6Node);
+	_lvl6->setScale(2, 2);
+	_lvl7 = cugl::Button::alloc(_lvl7Node);
+	_lvl7->setScale(2, 2);
+	_lvl8 = cugl::Button::alloc(_lvl8Node);
+	_lvl8->setScale(2, 2);
+	_lvl9 = cugl::Button::alloc(_lvl9Node);
+	_lvl9->setScale(2, 2);
+	_lvl10 = cugl::Button::alloc(_lvl10Node);
+	_lvl10->setScale(2, 2);
+	_lvl11 = cugl::Button::alloc(_lvl11Node);
+	_lvl11->setScale(2, 2);
+	_lvl12 = cugl::Button::alloc(_lvl12Node);
+	_lvl12->setScale(2, 2);
+	_lvl13 = cugl::Button::alloc(_lvl13Node);
+	_lvl13->setScale(2, 2);
+	_lvl14 = cugl::Button::alloc(_lvl14Node);
+	_lvl14->setScale(2, 2);
+	_lvl15 = cugl::Button::alloc(_lvl15Node);
+	_lvl15->setScale(2, 2);
+	_lvl16 = cugl::Button::alloc(_lvl16Node);
+	_lvl16->setScale(2, 2);
+	_lvl17 = cugl::Button::alloc(_lvl17Node);
+	_lvl17->setScale(2, 2);
+	_lvl18 = cugl::Button::alloc(_lvl18Node);
+	_lvl18->setScale(2, 2);
+	_lvl19 = cugl::Button::alloc(_lvl19Node);
+	_lvl19->setScale(2, 2);
+	_lvl20 = cugl::Button::alloc(_lvl20Node);
+	_lvl20->setScale(2, 2);
+	_lvl21 = cugl::Button::alloc(_lvl21Node);
+	_lvl21->setScale(2, 2);
+	_lvl22 = cugl::Button::alloc(_lvl22Node);
+	_lvl22->setScale(2, 2);
+	_lvl23 = cugl::Button::alloc(_lvl23Node);
+	_lvl23->setScale(2, 2);
+
 	_backButton->setPosition(10, textureHeight*0.9);
 	_scrollBackwardButton->setPosition(cugl::Vec2(xMax*.15, _scrollBackwardButton->getHeight()));
 	_scrollForwardButton->setPosition(cugl::Vec2(xMax*.85, 0));
 	_lvl0->setPosition(textureWidth*.08, textureHeight*.26);
-	_lvl1->setPosition(textureWidth*.08, textureHeight*.75);
+	_lvl1->setPosition(textureWidth*.07, textureHeight*.55);
 	_lvl2->setPosition(textureWidth*.20, textureHeight*.55);
 	_lvl3->setPosition(textureWidth*.17, textureHeight*.20);
 	_lvl4->setPosition(textureWidth*.28, textureHeight*.26);
 	_lvl5->setPosition(textureWidth*.32, textureHeight*.67);
+	_lvl6->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl7->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl8->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl9->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl10->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl11->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl12->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl13->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl14->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl15->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl16->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl17->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl18->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl19->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl20->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl21->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl22->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl23->setPosition(textureWidth*.00, textureHeight*.00);
 
 	_backButton->setListener([=](const std::string& name, bool down) {
 		if (down) {
@@ -207,6 +280,114 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 			_didClickLevel = true;
 		}
 	});
+	_lvl6->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 6;
+			_didClickLevel = true;
+		}
+	});
+	_lvl7->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 7;
+			_didClickLevel = true;
+		}
+	});
+	_lvl8->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 8;
+			_didClickLevel = true;
+		}
+	});
+	_lvl9->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 9;
+			_didClickLevel = true;
+		}
+	});
+	_lvl10->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 10;
+			_didClickLevel = true;
+		}
+	});
+	_lvl11->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 11;
+			_didClickLevel = true;
+		}
+	});
+	_lvl12->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 12;
+			_didClickLevel = true;
+		}
+	});
+	_lvl13->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 13;
+			_didClickLevel = true;
+		}
+	});
+	_lvl14->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 14;
+			_didClickLevel = true;
+		}
+	});
+	_lvl15->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 15;
+			_didClickLevel = true;
+		}
+	});
+	_lvl16->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 16;
+			_didClickLevel = true;
+		}
+	});
+	_lvl17->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 17;
+			_didClickLevel = true;
+		}
+	});
+	_lvl18->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 18;
+			_didClickLevel = true;
+		}
+	});
+	_lvl19->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 19;
+			_didClickLevel = true;
+		}
+	});
+	_lvl20->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 20;
+			_didClickLevel = true;
+		}
+	});
+	_lvl21->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 21;
+			_didClickLevel = true;
+		}
+	});
+	_lvl22->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 22;
+			_didClickLevel = true;
+		}
+	});
+	_lvl23->setListener([=](const std::string& name, bool down) {
+		if (!down) {
+			_lvlSelected = 23;
+			_didClickLevel = true;
+		}
+	});
 
 
 	_backButton->activate(4);
@@ -218,6 +399,24 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	_lvl3->activate(103);
 	_lvl4->activate(104);
 	_lvl5->activate(105);
+	_lvl6->activate(106);
+	_lvl7->activate(107);
+	_lvl8->activate(108);
+	_lvl9->activate(109);
+	_lvl10->activate(110);
+	_lvl11->activate(111);
+	_lvl12->activate(112);
+	_lvl13->activate(113);
+	_lvl14->activate(114);
+	_lvl15->activate(115);
+	_lvl16->activate(116);
+	_lvl17->activate(117);
+	_lvl18->activate(118);
+	_lvl19->activate(119);
+	_lvl20->activate(120);
+	_lvl21->activate(121);
+	_lvl22->activate(122);
+	_lvl23->activate(123);
 
 	_rootnode->addChild(_background, UNIT_PRIORITY);
 	_rootnode->addChild(_scrollBackwardButton, UNIT_PRIORITY);
@@ -229,6 +428,24 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	_background->addChild(_lvl3, UNIT_PRIORITY);
 	_background->addChild(_lvl4, UNIT_PRIORITY);
 	_background->addChild(_lvl5, UNIT_PRIORITY);
+	_background->addChild(_lvl6, UNIT_PRIORITY);
+	_background->addChild(_lvl7, UNIT_PRIORITY);
+	_background->addChild(_lvl8, UNIT_PRIORITY);
+	_background->addChild(_lvl9, UNIT_PRIORITY);
+	_background->addChild(_lvl10, UNIT_PRIORITY);
+	_background->addChild(_lvl11, UNIT_PRIORITY);
+	_background->addChild(_lvl12, UNIT_PRIORITY);
+	_background->addChild(_lvl13, UNIT_PRIORITY);
+	_background->addChild(_lvl14, UNIT_PRIORITY);
+	_background->addChild(_lvl15, UNIT_PRIORITY);
+	_background->addChild(_lvl16, UNIT_PRIORITY);
+	_background->addChild(_lvl17, UNIT_PRIORITY);
+	_background->addChild(_lvl18, UNIT_PRIORITY);
+	_background->addChild(_lvl19, UNIT_PRIORITY);
+	_background->addChild(_lvl20, UNIT_PRIORITY);
+	_background->addChild(_lvl21, UNIT_PRIORITY);
+	_background->addChild(_lvl22, UNIT_PRIORITY);
+	_background->addChild(_lvl23, UNIT_PRIORITY);
 
 	addChild(_rootnode, 0);
 
