@@ -165,7 +165,6 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	_scrollBackwardButton->setListener([=](const std::string& name, bool down) {
 		if (down) {
 			_levelSelectBackwardScroll = true;
-			CULog("PRESSED");
 		}
 		else {
 			_levelSelectBackwardScroll = false;

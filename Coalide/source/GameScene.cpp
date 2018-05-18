@@ -67,7 +67,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	}
 
 	// Initialize the controllers used in the game mode
-	_collisions.init();
+	_collisions.init(_assets);
 	_ai.init(_gamestate);
 	_input.init();
 
@@ -96,6 +96,8 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
     counter = 0;
     deltaImage = 0.0f;
     up = true;
+    
+    std::srand(time(NULL));
 	return true;
 }
 
@@ -262,7 +264,9 @@ void GameScene::update(float dt) {
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
         world->setStepsize(SLOW_MOTION);
-        if(!player->getCharging() ){
+        cugl::Vec2 pan = _input.getCameraPan();
+        
+        if(!player->getCharging() && pan.length() == 0){
             // changes texture of nicoal
             player->setDirectionTexture(angle, 0);
             // update the aim arrow
@@ -326,7 +330,7 @@ void GameScene::update(float dt) {
 		player->setDirectionTexture(player->getPlayerDirection(), 8);
 	}
 
-    if(!player->canSling()) {
+    if(!player->canSling() || _input.getCameraPan().length()) {
         player->updateArrow(false);
         player->updateCircle(false);
     }
@@ -337,7 +341,6 @@ void GameScene::update(float dt) {
 		for (std::tuple<std::shared_ptr<EnemyModel>, Vec2> pair : enemiesToMove) {
 			std::shared_ptr<EnemyModel> enemy = std::get<0>(pair);
 			Vec2 sling = std::get<1>(pair);
-			//CULog("Slinging at %f", sling.length());
 			enemy->applyLinearImpulse(sling);
 			float angle = sling.getAngle(Vec2(-1.0f, 0.0f)) * 180.0f / 3.14159;
 
@@ -441,7 +444,6 @@ void GameScene::update(float dt) {
 	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
 		std::shared_ptr<ObjectModel> object = _gamestate->getObjects()[i];
 		object->getNode()->setZOrder((_gamestate->getBounds().size.height - object->getPosition().y)*100);
-		//CULog(to_string(object->getNode()->getZOrder()).c_str());
 	}
 
 	for (int i = 0; i < _gamestate->getSpores().size(); i++) {
@@ -520,8 +522,6 @@ void GameScene::update(float dt) {
 			}
 		}
 	}
-	
-	//CULog(pan.toString().c_str());
 
 	if (!noSmoothPan) {
 		if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0)) {
@@ -532,8 +532,12 @@ void GameScene::update(float dt) {
 			cameraTransY = 0;
 		}
 	}
-
-
+    
+    int cameraShakeAmplitude = 40 * (player->getCameraShakeAmplitude());
+    if(cameraShakeAmplitude != 0){
+        cameraTransX += rand() % cameraShakeAmplitude - (cameraShakeAmplitude/2);
+        cameraTransY += rand() % cameraShakeAmplitude - (cameraShakeAmplitude/2);
+    }
 	_gamestate->setUIPosition(getCamera()->getPosition());
 	getCamera()->translate(cugl::Vec2(round(cameraTransX),round(cameraTransY)));
 	
@@ -544,7 +548,7 @@ void GameScene::updateFriction() {
 	Vec2 player_pos = player->getPosition();
 	Size gameBounds = _gamestate->getBounds().size;
 
-	// LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
+    // LEVEL DEATH: Sets friction for player and checks if in bounds/death conditions for the game
     if (player->inBounds(gameBounds.getIWidth(), gameBounds.getIHeight())) {
         if (!player->getCharging()) {
             float friction = _gamestate->getBoard()[std::max(0, (int)floor(player_pos.y-.25))][(int)floor(player_pos.x)];
@@ -581,16 +585,8 @@ void GameScene::updateFriction() {
     else {
         player->setFriction(0);
         player->setCharging(false);
-		if (player->didFall()) {
-			player->_drownTimer -= 1;
-			if (player->_drownTimer <= 0) {
-				_gameover = true;
-			}
-		}
-		else {
-			player->setFell();
-			player->setDirectionTexture(player->getPlayerDirection(), 8);
-		}
+        player->setDirectionTexture(player->getPlayerDirection(), 8);
+        _gameover = true;
     }
 
 	// Loops through enemies and sets friction and also checks for in bounds/death conditions
@@ -620,8 +616,6 @@ void GameScene::updateFriction() {
                 }
             }
 			else if (enemy->getFriction() > .1f) {
-				//CULog("ENEMY INCOMING %f", enemy->getLinearVelocity().length());
-				//enemy->setLinearVelocity(Vec2(0,0));
 				enemy->setFriction(0);
 			}
         }
@@ -648,8 +642,6 @@ void GameScene::updateFriction() {
         // Changes enemy state from charging if below speed threshold
         if(enemy->getCharging() && enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
             enemy->setCharging(false);
-			//CULog(enemy->getPosition().toString().c_str());
-			//enemy->setLinearVelocity(Vec2(0, 0));
 		}
 		else {
 			enemy->setCharging(true);

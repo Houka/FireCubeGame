@@ -54,26 +54,6 @@ bool intersectsWater(Vec2 start, Vec2 end, std::shared_ptr<GameState> gamestate)
 			}
 		}
 	}
-    
-//    float dx = (end.x - start.x) / 40;
-//    float dy = (end.y - start.y) / 40;
-//    float locx = start.x;
-//    int ct = 0;
-//    while(locx < w && locx > 0 && ((locx > (end.x + dx) && dx < 0) || (locx < (end.x - dx) && dx > 0))){
-//        ct++;
-//        locx += dx;
-//        float locy = start.y;
-//        while(locy < h && locy > 0 && ((locy > (end.y + dy) && dy < 0) || (locy < (end.y - dy) && dy > 0))){
-//            locy += dy;
-//            if(!gamestate->getTileBoard()[(int)floor(locy)][(int)floor(locx)]){
-//				//CULog("WATER");
-//                return true;
-//			}
-////            CULog("inner Loop");
-//
-//        }
-////        CULog("outer Loop %d", ct);
-//    }
 
     return false;
 }
@@ -96,7 +76,6 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 	float d = (vi*vi) / (2 * a);
 	Vec2 slide = landing + aim*d*1.8;
 	Vec2 shortland = landing - aim*d*0.8;
-	//CULog("sliding %f", d);
 	if (slide.x < 0 || slide.x >= _bounds.size.getIWidth() || slide.y < 0 || slide.y >= _bounds.size.getIHeight() || !gamestate->getTileBoard()[(int)slide.y][(int)slide.x] || intersectsWater(shortland, slide, gamestate)) {
 		return true;
 	}
@@ -118,16 +97,12 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 
 	for (int i = 0; i < 24; i++) {
 		if (_openList.empty()) {
-			//CULog("A");
 			break;
 		}
 		else if (!intersectsWater(std::get<0>(_closedList.back()), target, gamestate)) {
-			//CULog("C");
-			//_closedList.push_back(std::make_tuple(target, std::get<0>(_closedList.back()), 0));||
 			break;
 		}
 		else {
-			//CULog("D");
 			AStar(std::get<0>(_closedList.back()), slingDist, target, pos, enemy, gamestate);
 		}
 	}
@@ -146,9 +121,7 @@ std::vector<Vec2> AIController::calculateRoute(Vec2 pos, float slingDist, Vec2 t
 			}
 		}
 	}
-
-	//CULog("There are %x moves in the route", route.size());
-
+    
 	_openList.clear();
 	_closedList.clear();
 

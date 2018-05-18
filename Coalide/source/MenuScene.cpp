@@ -7,7 +7,6 @@
 */
 void MenuScene::dispose() {
 	if (_active) {
-		CULog("disposing menu scene");
 		_input.dispose();
 		Scene::dispose();
 	}

@@ -12,6 +12,10 @@ using namespace cugl;
 
 
 class CollisionController {
+private:
+    
+    std::shared_ptr<cugl::Sound> _thud;
+    
 public:
 #pragma mark -
 #pragma mark Constructors
@@ -21,7 +25,7 @@ public:
 
 	void dispose();
 
-	bool init();
+	bool init(const std::shared_ptr<AssetManager>& assets);
 
 
 #pragma mark -
