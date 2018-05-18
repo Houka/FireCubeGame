@@ -325,8 +325,8 @@ void GameScene::update(float dt) {
         // changes texture of nicoal
         player->setDirectionTexture(angle, 0);
     }
-    
-    if(!player->canSling()) {
+
+    if(!player->canSling() || _input.getCameraPan().length()) {
         player->updateArrow(false);
         player->updateCircle(false);
     }
