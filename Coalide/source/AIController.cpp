@@ -90,7 +90,7 @@ bool AIController::slipperySlope(Vec2 landing, Vec2 aim, std::shared_ptr<EnemyMo
 	}
 
 	int m = enemy->getMass();
-	CULog(to_string(enemy->getMass()).c_str());
+//    CULog(to_string(enemy->getMass()).c_str());
 	float vi = MIN_SPEED_FOR_CHARGING;
 
 	float a = friction / m;
