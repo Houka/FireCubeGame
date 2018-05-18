@@ -197,7 +197,6 @@ Vec2 EnemyModel::getPosition() {
 	else {
 		return CapsuleObstacle::getPosition();
 	}
-	
 }
 
 /**
