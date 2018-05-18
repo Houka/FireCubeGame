@@ -131,7 +131,6 @@ void MenuScene::createSceneGraph(Size dimen) {
 */
 void MenuScene::update(float dt) {
 	// Check to see if new level loaded yet
-	CULog("menu update");
 	_input.update(dt);
 
 	_didClickStart = false;

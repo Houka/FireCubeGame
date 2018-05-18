@@ -113,7 +113,6 @@ void InputController::dispose() {
 * frame, so we need to accumulate all of the data together.
 */
 void InputController::update(float dt) {
-	CULog("update");
     Keyboard* keys = Input::get<Keyboard>();
     
     // Map "keyboard" events to the current frame boundary
@@ -218,6 +217,7 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
 		if (_latestSling.length() > _maxSling) {
 			_latestSling.scale(1.0 / _latestSling.length() * _maxSling);
 		}
+        CULog("lfasdfkljsf: %f", _latestSling.length());
 	}
 
     _currentTouch = event.position;
@@ -268,6 +268,7 @@ void InputController::mouseUpCB(const cugl::MouseEvent& event, Uint8 clicks, boo
 			_latestSling.scale(1.0 / _latestSling.length() * _maxSling);
 		}
 		_mousedown = false;
+
 	}
     
 	_currentTouch = event.position;

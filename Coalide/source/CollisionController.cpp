@@ -46,6 +46,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 		EnemyModel* enemy = (EnemyModel*)soA;
 		enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 5);
 		enemy->setCoalided(true);
+        enemy->markCollisionTimeout();
 
 		if (enemy->isSpore()) {
 			enemy->setDispersing();
@@ -83,6 +84,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 		EnemyModel* enemy = (EnemyModel*)soB;
 		enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 5);
 		enemy->setCoalided(true);
+        enemy->markCollisionTimeout();
 
 		if (enemy->isSpore()) {
 			enemy->setDispersing();

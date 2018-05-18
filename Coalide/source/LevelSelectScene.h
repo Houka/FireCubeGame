@@ -45,7 +45,8 @@ protected:
 	// BUTTONS
 	std::shared_ptr<cugl::Button> _backButton;
 	std::shared_ptr<cugl::PolygonNode> _background;
-
+	std::shared_ptr<cugl::Button> _scrollForwardButton;
+	std::shared_ptr<cugl::Button> _scrollBackwardButton;
 	std::shared_ptr<cugl::Button> _lvl0;
 	std::shared_ptr<cugl::Button> _lvl1;
 	std::shared_ptr<cugl::Button> _lvl2;
@@ -56,6 +57,8 @@ protected:
 	int _lvlSelected = 0;
 	bool _didClickLevel;
 	bool _didClickBack;
+	bool _levelSelectForwardScroll = false;
+	bool _levelSelectBackwardScroll = false;
 
 	/** used to keep track of image scrolling */
 	float _scaledWidth;

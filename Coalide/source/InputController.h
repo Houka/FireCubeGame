@@ -2,6 +2,7 @@
 //	InputController.h
 //	Coalide
 //
+#pragma once
 #ifndef __INPUT_CONTROLLER_H__
 #define __INPUT_CONTROLLER_H__
 #include <cugl/cugl.h>

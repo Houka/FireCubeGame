@@ -39,7 +39,7 @@ using namespace cugl;
 */
 bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputController input, std::string levelKey) {
     //set application to right color
-    Application::get()->setClearColor(Color4(86,210,212,255));
+    Application::get()->setClearColor(Color4(86,210,216,255));
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= GAME_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -92,6 +92,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	cugl::Vec2 gameCenter = _gamestate->getBounds().size * 64. / 2.;
 	cugl::Vec2 cameraPos = getCamera()->getPosition();
 	getCamera()->translate(gameCenter - cameraPos);
+    
     counter = 0;
     deltaImage = 0.0f;
     up = true;
@@ -265,9 +266,12 @@ void GameScene::update(float dt) {
             // changes texture of nicoal
             player->setDirectionTexture(angle, 0);
             // update the aim arrow
-            player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-            //player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
-            CULog("%d", player->getPlayerDirection());
+            Vec2 clampedAim = _input.getCurrentAim();
+            if (clampedAim.length() > _input.getMaxSling()) {
+                clampedAim.scale(1.0 / clampedAim.length() * _input.getMaxSling());
+            }
+            player->updateArrow(clampedAim, player->getNode(), true);
+            player->updateCircle(clampedAim, player->getNode(), true);
             if(_input.getCurrentAim().length() > 200.0f) {
                 player->setDirectionTexture(angle, 1);
             }
@@ -512,7 +516,7 @@ void GameScene::update(float dt) {
 			cameraTransY = 0;
 		}
 	}
-    
+
 
 	_gamestate->setUIPosition(getCamera()->getPosition());
 	getCamera()->translate(cugl::Vec2(round(cameraTransX),round(cameraTransY)));
