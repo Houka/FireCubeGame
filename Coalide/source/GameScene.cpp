@@ -67,7 +67,7 @@ bool GameScene::init(const std::shared_ptr<AssetManager>& assets, InputControlle
 	}
 
 	// Initialize the controllers used in the game mode
-	_collisions.init();
+	_collisions.init(_assets);
 	_ai.init(_gamestate);
 	_input.init();
 

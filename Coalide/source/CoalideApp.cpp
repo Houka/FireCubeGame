@@ -44,7 +44,8 @@ void CoalideApp::onStartup() {
     _assets->attach<Font>(FontLoader::alloc()->getHook());
 	_assets->attach<Node>(SceneLoader::alloc()->getHook());
 	_assets->attach<LevelController>(GenericLoader<LevelController>::alloc()->getHook());
-	_assets->attach<Sound>(SoundLoader::alloc()->getHook());
+	_assets->attach<Music>(MusicLoader::alloc()->getHook());
+    _assets->attach<Sound>(SoundLoader::alloc()->getHook());
 	AudioEngine::start();
 
     // This reads the given JSON file and uses it to load all other assets
@@ -127,9 +128,14 @@ void CoalideApp::update(float timestep) {
 		_currentScene = CURRENT_SCENE::MENU_SCENE;
 
 		if (!AudioEngine::get()->isActiveEffect("harlem")) {
-			_source = _assets->get<Sound>("harlem");
-			AudioEngine::get()->playEffect("harlem", _source, true, _source->getVolume());
+            _source = _assets->get<Music>("harlem");
+            AudioEngine::get()->playMusic(_source, true, _source->getVolume());
 		}
+        
+        if (!AudioEngine::get()->isActiveEffect("thud")) {
+            _thud = _assets->get<Sound>("thud");
+//            AudioEngine::get()->playEffect("thud", _thud, true, _thud->getVolume());
+        }
 		_loaded = true;
 	}
 	else {
@@ -169,12 +175,20 @@ void CoalideApp::update(float timestep) {
 		}
 		if (_currentScene == CURRENT_SCENE::GAME_SCENE) {
 			if (_gameScene.getGameState()->didClickMute()) {
-				if (AudioEngine::get()->getEffectVolume("harlem") != 0) {
-					AudioEngine::get()->setEffectVolume("harlem", 0);
-				}
-				else {
-					AudioEngine::get()->setEffectVolume("harlem", _source->getVolume());
-				}
+                if(AudioEngine::get()->getMusicVolume() != 0) {
+                    AudioEngine::get()->setMusicVolume(0.0f);
+                }
+                else
+                {
+                    AudioEngine::get()->setMusicVolume(_source->getVolume());
+                }
+            
+//                if (AudioEngine::get()->getEffectVolume("harlem") != 0) {
+//                    AudioEngine::get()->setEffectVolume("harlem", 0);
+//                }
+//                else {
+//                    AudioEngine::get()->setEffectVolume("harlem", _source->getVolume());
+//                }
 			}
 			if (_gameScene.getGameState()->didClickMenu()) {
 				_gameScene.dispose();

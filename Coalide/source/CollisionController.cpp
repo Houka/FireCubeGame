@@ -19,8 +19,8 @@ using namespace cugl;
 
 #pragma mark -
 #pragma mark Constructors
-bool CollisionController::init() {
-	return true;
+bool CollisionController::init(const std::shared_ptr<AssetManager>& assets) {
+    _thud = assets->get<Sound>("thud");	return true;
 }
 
 void CollisionController::dispose() { }
@@ -55,6 +55,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 		if (soB->getName() == "player") {
 			PlayerModel* player = (PlayerModel*)soB;
             player->setCameraShakeAmplitude(1);
+            AudioEngine::get()->playEffect("thud", _thud, false, _thud->getVolume());
             player->setDirectionTexture(player->getPlayerDirection(), 5);
             player->setCoalided(true);
 			
@@ -94,6 +95,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 		if (soA->getName() == "player") {
 			PlayerModel* player = (PlayerModel*)soA;
             player->setCameraShakeAmplitude(1);
+            AudioEngine::get()->playEffect("thud", _thud, false, _thud->getVolume());
 
             float angle = player->getLinearVelocity().getAngle();
             player->setDirectionTexture(player->getPlayerDirection(), 5);

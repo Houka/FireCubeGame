@@ -86,6 +86,12 @@
     }
   },
     "soundfx": {
+        "thud": {
+            "file":     "sounds/ThudEffect.wav",
+            "volume":   0.75
+        }
+    },
+    "music": {
         "harlem": {
             "file":     "sounds/harlem.wav",
             "volume":   0.5

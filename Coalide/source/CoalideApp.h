@@ -53,7 +53,8 @@ protected:
     int _numLevels = 6;
 
 	/** Source for audio controller */
-	std::shared_ptr<cugl::Sound> _source;
+	std::shared_ptr<cugl::Music> _source;
+    std::shared_ptr<cugl::Sound> _thud;
 
     /** 
      * Activates the correct scene.
