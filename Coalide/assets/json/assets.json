@@ -46,10 +46,10 @@
       "file": "textures/spritesheet_impact.png"
     },
     "start_button": {
-      "file": "textures/start.png"
+      "file": "textures/Start_Button.png"
     },
     "levels_button": {
-      "file": "textures/levels.png"
+      "file": "textures/Levels_Button.png"
     },
     "menu_button": {
       "file": "textures/menubutton.png"
@@ -61,19 +61,25 @@
       "file": "textures/playbutton.png"
     },
     "quit_button": {
-      "file": "textures/exitbutton.png"
+      "file": "textures/Menu.png"
     },
     "restart_button": {
-      "file": "textures/restartbutton.png"
+      "file": "textures/Restart.png"
+    },
+    "next_button": {
+      "file": "textures/Next.png"
     },
     "game_over": {
       "file": "textures/Game_Over.png"
     },
     "game_over_screen": {
-      "file": "textures/Game_Over_Screen.png"
+      "file": "textures/Lose.png"
     },
     "win": {
       "file": "textures/Congrats.png"
+    },
+    "win_screen": {
+      "file": "textures/Win.png"
     },
     "mute_button": {
       "file": "textures/volumebutton.png"
