@@ -335,7 +335,6 @@ void GameScene::update(float dt) {
 		for (std::tuple<std::shared_ptr<EnemyModel>, Vec2> pair : enemiesToMove) {
 			std::shared_ptr<EnemyModel> enemy = std::get<0>(pair);
 			Vec2 sling = std::get<1>(pair);
-			//CULog("Slinging at %f", sling.length());
 			enemy->applyLinearImpulse(sling);
 			float angle = sling.getAngle(Vec2(-1.0f, 0.0f)) * 180.0f / 3.14159;
 
@@ -431,7 +430,6 @@ void GameScene::update(float dt) {
 	for (int i = 0; i < _gamestate->getObjects().size(); i++) {
 		std::shared_ptr<ObjectModel> object = _gamestate->getObjects()[i];
 		object->getNode()->setZOrder((_gamestate->getBounds().size.height - object->getPosition().y)*100);
-		//CULog(to_string(object->getNode()->getZOrder()).c_str());
 	}
 
 	for (int i = 0; i < _gamestate->getSpores().size(); i++) {
@@ -510,8 +508,6 @@ void GameScene::update(float dt) {
 			}
 		}
 	}
-	
-	//CULog(pan.toString().c_str());
 
 	if (!noSmoothPan) {
 		if ((boundBottom.x < 0 && cameraTransX < 0) || (boundTop.x > gameBound.x && cameraTransX > 0)) {
@@ -614,8 +610,6 @@ void GameScene::updateFriction() {
                 }
             }
 			else if (enemy->getFriction() > .1f) {
-				//CULog("ENEMY INCOMING %f", enemy->getLinearVelocity().length());
-				//enemy->setLinearVelocity(Vec2(0,0));
 				enemy->setFriction(0);
 			}
         }
@@ -642,8 +636,6 @@ void GameScene::updateFriction() {
         // Changes enemy state from charging if below speed threshold
         if(enemy->getCharging() && enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING){
             enemy->setCharging(false);
-			//CULog(enemy->getPosition().toString().c_str());
-			//enemy->setLinearVelocity(Vec2(0, 0));
 		}
 		else {
 			enemy->setCharging(true);
