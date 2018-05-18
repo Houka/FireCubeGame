@@ -132,9 +132,6 @@
 		EBC1471C1E27F0BB005494CE /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBC1471B1E27F0BB005494CE /* ImageIO.framework */; };
 		EBFE7C051E19B496001007C2 /* json in Resources */ = {isa = PBXBuildFile; fileRef = EBFE7C041E19B496001007C2 /* json */; };
 		EBFE7C091E19B4AC001007C2 /* json in Resources */ = {isa = PBXBuildFile; fileRef = EBFE7C041E19B496001007C2 /* json */; };
-		ED1A4AB4209690FE007711C8 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = ED1A4AB0209690FE007711C8 /* sounds */; };
-		ED1A4AB5209690FE007711C8 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = ED1A4AB0209690FE007711C8 /* sounds */; };
-		ED1A4AB6209690FE007711C8 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = ED1A4AB0209690FE007711C8 /* sounds */; };
 		ED1A4AB720969108007711C8 /* ObjectModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0858822E2068BC9800F2E4B9 /* ObjectModel.cpp */; };
 		ED1A4AB820969109007711C8 /* ObjectModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0858822E2068BC9800F2E4B9 /* ObjectModel.cpp */; };
 		ED24AD2A2087622800326406 /* MenuScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ED24AD282087622700326406 /* MenuScene.cpp */; };
@@ -238,7 +235,6 @@
 		EBC147191E27F0A8005494CE /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		EBC1471B1E27F0BB005494CE /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		EBFE7C041E19B496001007C2 /* json */ = {isa = PBXFileReference; lastKnownFileType = folder; path = json; sourceTree = "<group>"; };
-		ED1A4AB0209690FE007711C8 /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		ED24AD232087622700326406 /* LevelSelectScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelSelectScene.h; sourceTree = "<group>"; };
 		ED24AD272087622700326406 /* MenuScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuScene.h; sourceTree = "<group>"; };
 		ED24AD282087622700326406 /* MenuScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuScene.cpp; sourceTree = "<group>"; };
