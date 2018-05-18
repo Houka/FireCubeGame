@@ -264,7 +264,9 @@ void GameScene::update(float dt) {
     // Touch input for sling is in pogress and sets the time slowing mechanic
     if(_input.didStartSling() && !player->isStunned()){
         world->setStepsize(SLOW_MOTION);
-        if(!player->getCharging() ){
+        cugl::Vec2 pan = _input.getCameraPan();
+        
+        if(!player->getCharging() && pan.length() == 0){
             // changes texture of nicoal
             player->setDirectionTexture(angle, 0);
             // update the aim arrow
