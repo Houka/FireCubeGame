@@ -120,11 +120,12 @@ void CoalideApp::update(float timestep) {
 
 	if (!_loaded && _loadingScene.isActive()) {
 		_loadingScene.update(0.01f);
+		CULog("loading...");
 	}
 	else if (!_loaded) {
 		_loadingScene.dispose(); // Disables the input listeners in this mode
-		//_gameScene.init(_assets, _input, LEVEL_KEY);
-		_menuScene.init(_assets, _input);
+        _menuScene.init(_assets, _input);
+//        _gameScene.init(_assets, _input, LEVEL_KEY);
 		_currentScene = CURRENT_SCENE::MENU_SCENE;
 
 
