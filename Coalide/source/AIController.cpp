@@ -222,8 +222,11 @@ std::vector<std::tuple<std::shared_ptr<EnemyModel>, Vec2>> AIController::getEnem
     for(std::shared_ptr<EnemyModel> enemy_ptr : enemies){
 		std::shared_ptr<EnemyModel> enemy = enemy_ptr;
 		Vec2 enemy_pos = enemy->getPosition();
-
-		if (!enemy->didFall() && !enemy->isRemoved() && !enemy->isStunned() && enemy->canSling() && enemy->isTargeting() && gamestate->getPlayer()->getLinearVelocity().length() < 1 && player_pos.distance(enemy_pos) < 12) {
+		int enemyRange = 12;
+		if (enemy->isAcorn()) {
+			enemyRange = 7;
+		}
+		if (!enemy->didFall() && !enemy->isRemoved() && !enemy->isStunned() && enemy->canSling() && enemy->isTargeting() && gamestate->getPlayer()->getLinearVelocity().length() < 1 && player_pos.distance(enemy_pos) < enemyRange) {
 			if (enemy->timeoutElapsed() && !enemy->isPrepping()) {
 				enemy->setPrepping(true);
 			}
