@@ -165,7 +165,6 @@ cugl::Vec2 InputController::getCurrentAim() {
 * @param event The associated event
 */
 void InputController::touchBeganCB(const TouchEvent& event, bool focus, int fingers) {
-    CULog("touch began");
     _initTouch = event.position;
     _currentTouch = event.position;
     _previousTouch = event.position;
@@ -187,7 +186,6 @@ void InputController::touchBeganCB(const TouchEvent& event, bool focus, int fing
 * @param event The associated event
 */
 void InputController::touchMotionCB(const TouchEvent& event, bool focus) {
-	//CULog("touchmotion");
 	_currentTouch = event.position;
 	if (_panning && event.touch == _finger) {
 		_cameraPan = Vec2(_previousTouch.x - event.position.x, event.position.y - _previousTouch.y);
@@ -217,7 +215,6 @@ void InputController::touchEndedCB(const TouchEvent& event, bool focus) {
 		if (_latestSling.length() > _maxSling) {
 			_latestSling.scale(1.0 / _latestSling.length() * _maxSling);
 		}
-        CULog("lfasdfkljsf: %f", _latestSling.length());
 	}
 
     _currentTouch = event.position;
@@ -289,7 +286,6 @@ void InputController::mouseMovedCB(const cugl::MouseEvent& event, const Vec2& pr
     }
 	if (_panning) {
 		_cameraPan = Vec2(previous.x - event.position.x, event.position.y - previous.y);
-		//CULog(getCameraPan().toString().c_str());
 	}
 }
 
