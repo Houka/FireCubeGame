@@ -209,14 +209,14 @@ void LevelSelectScene::createSceneGraph(Size dimen) {
 	_lvl13->setPosition(textureWidth*.64, textureHeight*.35);
 	_lvl14->setPosition(textureWidth*.73, textureHeight*.32);
 	_lvl15->setPosition(textureWidth*.8, textureHeight*.24);
-	_lvl16->setPosition(textureWidth*.9, textureHeight*.3);
-	_lvl17->setPosition(textureWidth*.00, textureHeight*.00);
-	_lvl18->setPosition(textureWidth*.00, textureHeight*.00);
-	_lvl19->setPosition(textureWidth*.00, textureHeight*.00);
-	_lvl20->setPosition(textureWidth*.00, textureHeight*.00);
-	_lvl21->setPosition(textureWidth*.00, textureHeight*.00);
-	_lvl22->setPosition(textureWidth*.00, textureHeight*.00);
-	_lvl23->setPosition(textureWidth*.00, textureHeight*.00);
+	_lvl16->setPosition(-50000, textureHeight*.00);
+	_lvl17->setPosition(-50000, textureHeight*.00);
+	_lvl18->setPosition(-50000, textureHeight*.00);
+	_lvl19->setPosition(-50000, textureHeight*.00);
+	_lvl20->setPosition(-50000, textureHeight*.00);
+	_lvl21->setPosition(-50000, textureHeight*.00);
+	_lvl22->setPosition(-50000, textureHeight*.00);
+	_lvl23->setPosition(-50000, textureHeight*.00);
 
 	_backButton->setListener([=](const std::string& name, bool down) {
 		if (down) {
