@@ -611,9 +611,14 @@ void GameScene::updateFriction() {
 				enemy->setFriction(0);
 			}
         }
-        else if (enemy->didFall()) {
+        else if (!enemy->didFall()) {
 			enemy->setFell();
-			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 8);
+			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 7);
+		}
+		else {
+			enemy->setFriction(0);
+			enemy->setCharging(false);
+			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 7);
 		}
         
         // Caps enemy speed to MAX_PLAYER SPEED
