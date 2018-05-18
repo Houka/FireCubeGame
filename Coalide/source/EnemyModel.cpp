@@ -278,7 +278,6 @@ void EnemyModel::update(float dt) {
 	}
     auto ts = Timestamp();
     if(_stunned){
-        _node->setColor(Color4::GREEN);
         if(ts.ellapsedMillis(_stunTimeout) >= _stunDuration) {
             setStunned(false);
         }

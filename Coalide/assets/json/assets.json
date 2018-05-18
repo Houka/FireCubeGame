@@ -16,10 +16,10 @@
       "file": "textures/spritesheet_onion.png"
     },
     "tileset_forest.png": {
-      "file": "textures/tileset_forest_original.png"
+      "file": "textures/tileset_forest_pastel.png"
     },
     "tileset_water.png": {
-      "file": "textures/tileset_water_original.png"
+      "file": "textures/tileset_water_pastel.png"
     },
     "immobile": {
       "file": "textures/stone.png"

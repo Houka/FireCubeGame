@@ -128,6 +128,7 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
             waterBase = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getWaterTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
             if(waterDecal != nullptr){
                 waterBase->setPosition(.5f *_scale.x, +.5f *_scale.y);
+				waterBase->setScale(1.01f);
                 waterDecal->addChild(waterBase);
             }
         }
@@ -136,32 +137,37 @@ void GameState::setRootNode(const std::shared_ptr<Node>& node) {
             dirtNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getDirtTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
             if(waterBase!=nullptr){
                 dirtNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
-
+				dirtNode->setScale(1.01f);
                 waterBase->addChild(dirtNode);
             } else if(waterDecal != nullptr) {
                 waterDecal->addChild(dirtNode);
                 dirtNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+				dirtNode->setScale(1.01f);
             }
         }
         if(tile->getType() == TILE_TYPE::ICE || tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getIceSubTexture();
             iceNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
             iceNode->setPosition(.5f *_scale.x, +.5f *_scale.y);
+			iceNode->setScale(1.01f);
             dirtNode->addChild(iceNode);
         }
         if(tile->getType() == TILE_TYPE::SAND){
             double* tileSubtexture = tile->getSandSubTexture();
             sandNode = PolygonNode::allocWithTexture(_assets->get<Texture>(tile->getIceTextureKey())->getSubTexture(tileSubtexture[0], tileSubtexture[1], tileSubtexture[2], tileSubtexture[3]));
             sandNode->setPosition(.5f *_scale.x, +.5f *_scale.y);;
+			sandNode->setScale(1.01f);
             iceNode->addChild(sandNode);
         }
         if(waterDecal!=nullptr){
             tile->setNode(waterDecal);
             waterDecal->setPosition(tile->getPosition()*_scale);
+			waterDecal->setScale(1.005f);
             _worldnode->addChild(waterDecal, TILE_PRIORITY);
         }else if(waterBase!=nullptr){
             tile->setNode(waterBase);
             waterBase->setPosition(tile->getPosition()*_scale);
+			waterBase->setScale(1.005f);
             _worldnode->addChild(waterBase, TILE_PRIORITY);
         }
     }

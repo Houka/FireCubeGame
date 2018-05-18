@@ -64,7 +64,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 			}
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
-				player->stunOnStop(4500);
+				player->stunOnStop(4000);
 				if (!enemy->alreadyStopping() && enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))
 					enemy->setShouldStop();
 			}
@@ -102,7 +102,7 @@ void CollisionController::beginContact(b2Contact* contact) {
 			}
 
 			if (enemy->isOnion() && !enemy->isStunned()) {
-				player->stunOnStop(4500);
+				player->stunOnStop(4000);
                 player->setDirectionTexture(player->getPlayerDirection(), 7);
 				if (!enemy->alreadyStopping() &&
 					enemy->getLinearVelocity().isNearZero(SPECIAL_COLLISION_SPEED_CUTOFF))

@@ -266,7 +266,7 @@ void GameScene::update(float dt) {
             player->setDirectionTexture(angle, 0);
             // update the aim arrow
             player->updateArrow(_input.getCurrentAim(), player->getNode(), true);
-            player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
+            //player->updateCircle(_input.getCurrentAim(), player->getNode(), true);
             CULog("%d", player->getPlayerDirection());
             if(_input.getCurrentAim().length() > 200.0f) {
                 player->setDirectionTexture(angle, 1);
@@ -342,16 +342,6 @@ void GameScene::update(float dt) {
 
 	for (int i = 0; i < _gamestate->getEnemies().size(); i++) {
 		std::shared_ptr<EnemyModel> enemy = _gamestate->getEnemies()[i];
-		if (enemy->getCoalided() && enemy->getLinearVelocity().length() <= 0.0f) {
-			if (enemy->isStunned()) {
-				enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(),6);
-			}
-			else {
-				enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 0);
-				enemy->setCoalided(false);
-			}
-		}
-
 		if (enemy->getCharging() && enemy->getLinearVelocity().length() < MIN_SPEED_FOR_CHARGING) {
 			enemy->setCharging(false);
 			enemy->setSliding(true);
@@ -361,6 +351,16 @@ void GameScene::update(float dt) {
 		if (enemy->isSliding() && enemy->getLinearVelocity().isNearZero()) {
 			enemy->setSliding(false);
 			enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 0);
+		}
+
+		if (enemy->getCoalided() && enemy->getLinearVelocity().length() <= 0.0f) {
+			if (enemy->isStunned()) {
+				enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 6);
+			}
+			else {
+				enemy->setDirectionTexture(enemy->getDirection(), enemy->isAcorn(), 0);
+				enemy->setCoalided(false);
+			}
 		}
 
 		if (enemy->isPrepping()) {

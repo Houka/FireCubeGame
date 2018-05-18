@@ -280,6 +280,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int c = onion->get("col")->asInt();
         enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), ONION_DIM);
         enemy->setTextureKey(ONION);
+		enemy->setDensity(2.5);
 		enemy->setOnion();
 
         _world->addObstacle(enemy);
@@ -295,6 +296,7 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int c = mushroom->get("col")->asInt();
         enemy = EnemyModel::alloc(Vec2(c + .5, (rows - r) - .5), MUSHROOM_DIM);
         enemy->setTextureKey(MUSHROOM);
+		enemy->setDensity(2.5);
         enemy->setMushroom();
         
         b2Filter filter;
@@ -332,10 +334,10 @@ bool LevelController::loadUnits(const std::shared_ptr<cugl::JsonValue>& json) {
         int r = crate->get("row")->asInt();
         int c = crate->get("col")->asInt();
         object = ObjectModel::alloc(Vec2(c + .5, (rows - r) - .5), UNIT_DIM);
-        object->setTextureKey(MOVABLE_NAME);
-        object->setName(MOVABLE_NAME);
+        object->setTextureKey(BREAKABLE_NAME);
+        object->setName(BREAKABLE_NAME);
         object->setBodyType(b2_dynamicBody);
-		object->setType(OBJECT_TYPE::MOVABLE);
+		object->setType(OBJECT_TYPE::BREAKABLE);
         
         _world->addObstacle(object);
         _objects.push_back(object);

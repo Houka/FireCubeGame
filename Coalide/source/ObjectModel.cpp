@@ -31,7 +31,7 @@ bool ObjectModel::init(const Vec2 & pos, const Size & size) {
 
 		_node = nullptr;
 
-		setDensity(4.0f);
+		setDensity(10.0f);
 		setRestitution(0.4f);
 		setFixedRotation(true);
 

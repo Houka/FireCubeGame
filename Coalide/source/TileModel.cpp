@@ -17,10 +17,9 @@ using namespace cugl;
 * @return  true if the obstacle is initialized properly, false otherwise.
 */
 bool TileModel::init(const Vec2 & pos, const Size & size) {
-	if (BoxObstacle::init(pos, Vec2(size.width+1, size.height+1))) {
+	if (BoxObstacle::init(pos, Vec2(size.width, size.height))) {
 		setName(TILE_NAME);
 		setBodyType(b2_staticBody);
-
 		return true;
 	}
 	return false;
